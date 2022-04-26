@@ -1,0 +1,15 @@
+@import 'carbon-components/scss/globals/scss/styles.scss';
+
+body {
+    padding-top: 4rem;
+    padding-left: 4rem;
+}
+
+// @see https://web-components.carbondesignsystem.com/?path=/docs/components-ui-shell--header#using-with-header-nav
+bx-header ~ bx-side-nav {
+    margin-top: 3rem;
+    height: calc(100% - 3rem);
+}
+bx-side-nav-items {
+    padding-top: 0;
+}

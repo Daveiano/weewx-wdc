@@ -1,0 +1,28 @@
+{
+  "name": "weewx-wdc",
+  "version": "1.0.0-alpha1",
+  "description": "Weather Data Center skin for weewx.",
+  "author": "David Baetge <david.baetge@gmail.com>",
+  "license": "GPL-3.0",
+  "source": [
+    "skins/weewx-wdc/src/js/index.js",
+    "skins/weewx-wdc/src/scss/index.scss"
+  ],
+  "targets": {
+    "default": {
+      "distDir": "./skins/weewx-wdc/dist"
+    }
+  },
+  "dependencies": {
+    "carbon-components": "^10.56.0"
+  },
+  "devDependencies": {
+    "@parcel/transformer-sass": "2.5.0",
+    "parcel": "^2.5.0"
+  },
+  "scripts": {
+    "dev": "parcel watch --no-hmr",
+    "build": "parcel build",
+    "deploy-local": "sudo cp -R ./skins/weewx-wdc /etc/weewx/skins && sudo systemctl restart weewx && sudo /usr/share/weewx/wee_reports"
+  }
+}

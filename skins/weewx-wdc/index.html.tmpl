@@ -1,0 +1,76 @@
+#errorCatcher Echo
+#encoding UTF-8
+<!doctype html>
+<html>
+  <head>
+    #if $encoding == 'utf8'
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    #end if    
+    <title>$station.location - $gettext("Current Weather Conditions")</title>
+    <link rel="stylesheet" href="dist/scss/index.css">
+    <link rel="icon" type="image/png" href="favicon.ico" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.6.0/webcomponents-loader.min.js"></script>
+    <script>
+      window.WebComponents = window.WebComponents || {};
+      window.WebComponents.root = 'node_modules/@webcomponents/webcomponentsjs/';
+    </script>
+
+     <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/ui-shell.min.js"></script>
+
+     <script src="dist/js/index.js"></script>
+  </head>
+
+  <body>
+
+    <bx-header aria-label="Weewx $station.location - $current.dateTime">
+      <bx-header-menu-button button-label-active="Close menu" button-label-inactive="Open menu"></bx-header-menu-button>
+      <bx-header-name href="javascript:void 0" prefix="Weewx">$station.location - $current.dateTime</bx-header-name>
+      <bx-header-nav menu-bar-label="Weewx $station.location - $current.dateTime">
+        <bx-header-nav-item href="javascript:void 0">Link 1</bx-header-nav-item>
+        <bx-header-nav-item href="javascript:void 0">Link 2</bx-header-nav-item>
+        <bx-header-nav-item href="javascript:void 0">Link 3</bx-header-nav-item>
+        <bx-header-menu menu-label="Link 4" trigger-content="Link 4">
+          <bx-header-menu-item href="javascript:void 0">Sub-link 1</bx-header-menu-item>
+          <bx-header-menu-item href="javascript:void 0">Sub-link 2</bx-header-menu-item>
+          <bx-header-menu-item href="javascript:void 0">Sub-link 3</bx-header-menu-item>
+        </bx-header-menu>
+      </bx-header-nav>
+    </bx-header>
+
+    <bx-side-nav aria-label="Side navigation" collapse-mode="rail">
+      <bx-side-nav-items>
+        <bx-side-nav-menu title="L0 menu">
+          <bx-side-nav-menu-item href="www.ibm.com"> L0 menu item </bx-side-nav-menu-item>
+          <bx-side-nav-menu-item href="www.ibm.com"> L0 menu item </bx-side-nav-menu-item>
+          <bx-side-nav-menu-item href="www.ibm.com"> L0 menu item </bx-side-nav-menu-item>
+        </bx-side-nav-menu>
+        <bx-side-nav-menu title="L0 menu">
+          <bx-side-nav-menu-item href="www.ibm.com"> L0 menu item </bx-side-nav-menu-item>
+          <bx-side-nav-menu-item active aria-current="page" href="www.ibm.com"> L0 menu item </bx-side-nav-menu-item>
+          <bx-side-nav-menu-item href="www.ibm.com"> L0 menu item </bx-side-nav-menu-item>
+        </bx-side-nav-menu>
+        <bx-side-nav-menu title="L0 menu">
+          <bx-side-nav-menu-item href="www.ibm.com"> L0 menu item </bx-side-nav-menu-item>
+          <bx-side-nav-menu-item href="www.ibm.com"> L0 menu item </bx-side-nav-menu-item>
+          <bx-side-nav-menu-item href="www.ibm.com"> L0 menu item </bx-side-nav-menu-item>
+        </bx-side-nav-menu>
+        <bx-side-nav-divider></bx-side-nav-divider>
+        <bx-side-nav-link href="javascript:void(0)">L0 link</bx-side-nav-link>
+        <bx-side-nav-link href="javascript:void(0)">L0 link</bx-side-nav-link>
+      </bx-side-nav-items>
+    </bx-side-nav>
+
+    
+    <div id='content'>
+    </div>
+
+    <div id='footer'>
+      <p>
+        weewx: $station.uptime<br/>
+        server: $station.os_uptime<br/>
+        weewx $station.version with $station.hardware<br/>
+      </p>
+    </div>
+  </body>
+</html>

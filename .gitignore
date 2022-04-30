@@ -1,5 +1,14 @@
+# Caches.
 __pycache__
-node_modules
+.parcel-cache
+
+# Editor config.
 .idea
 
+# Python venv.
+.venv
+
+node_modules
+
+# Project specific.
 skins/weewx-wdc/dist

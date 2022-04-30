@@ -1,15 +1,66 @@
-@import 'carbon-components/scss/globals/scss/styles.scss';
+@import "~@carbon/themes/scss/themes";
+$carbon--theme: $carbon--theme--g10;
+@include carbon--theme();
 
-body {
-    padding-top: 4rem;
-    padding-left: 4rem;
-}
+@import "~@carbon/layout/scss/convert";
+$carbon--grid-breakpoints: (
+  sm: (
+    columns: 4,
+    margin: 0,
+    width: carbon--rem(320px),
+  ),
+  md: (
+    columns: 8,
+    margin: carbon--rem(16px),
+    width: carbon--rem(672px),
+  ),
+  lg: (
+    columns: 16,
+    margin: carbon--rem(16px),
+    width: carbon--rem(1056px),
+  ),
+  xlg: (
+    columns: 16,
+    margin: carbon--rem(16px),
+    width: carbon--rem(1312px),
+  ),
+  max: (
+    columns: 16,
+    margin: carbon--rem(24px),
+    width: carbon--rem(1850px),
+  ),
+);
+@import "~carbon-components/scss/globals/scss/styles.scss";
+@import "~@carbon/colors/scss/mixins";
+@include carbon--colors();
 
-// @see https://web-components.carbondesignsystem.com/?path=/docs/components-ui-shell--header#using-with-header-nav
+// @see https://www.carbondesignsystem.com/guidelines/typography/code/
+@import "~@carbon/type/scss/type";
+
+@import "~@carbon/type/scss/font-face/mono";
+@import "~@carbon/type/scss/font-face/sans";
+@import "~@carbon/type/scss/font-face/serif";
+
+@import "~@carbon/type/scss/classes";
+@include carbon--type-classes();
+@import "~@carbon/type/scss/styles";
+
+@include carbon--type-reset();
+@include carbon--font-face-mono();
+@include carbon--font-face-sans();
+@include carbon--font-face-serif();
+
+// Side nav width is $spacing-09.
 bx-header ~ bx-side-nav {
-    margin-top: 3rem;
-    height: calc(100% - 3rem);
+  margin-top: 3rem;
+  height: calc(100% - 3rem);
 }
-bx-side-nav-items {
-    padding-top: 0;
+
+.bx--content {
+  margin-top: $spacing-09;
+}
+
+#footer {
+  padding: 2rem;
+  margin-top: $spacing-09;
 }

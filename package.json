@@ -3,10 +3,10 @@
   "version": "1.0.0-alpha1",
   "description": "Weather Data Center skin for weewx.",
   "author": "David Baetge <david.baetge@gmail.com>",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "source": [
-    "skins/weewx-wdc/src/js/index.js",
-    "skins/weewx-wdc/src/scss/index.scss"
+    "./skins/weewx-wdc/src/js/index.js",
+    "./skins/weewx-wdc/src/scss/index.scss"
   ],
   "targets": {
     "default": {
@@ -14,15 +14,20 @@
     }
   },
   "dependencies": {
-    "carbon-components": "^10.56.0"
+    "@carbon/colors": "10.34.0",
+    "@carbon/themes": "10.40.0",
+    "@carbon/type": "10.39.0",
+    "carbon-components": "10.25.0"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "2.5.0",
-    "parcel": "^2.5.0"
+    "parcel": "^2.5.0",
+    "prettier": "2.6.2"
   },
   "scripts": {
     "dev": "parcel watch --no-hmr",
     "build": "parcel build",
-    "deploy-local": "sudo cp -R ./skins/weewx-wdc /etc/weewx/skins && sudo systemctl restart weewx && sudo /usr/share/weewx/wee_reports"
+    "deploy:local": "sudo cp -R ./skins/weewx-wdc /etc/weewx/skins && sudo systemctl restart weewx && sudo /usr/share/weewx/wee_reports",
+    "serve:local": "docker run -it --rm -d -p 8080:80 --name web -v /var/www/html/weewx:/usr/share/nginx/html nginx"
   }
 }

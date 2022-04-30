@@ -1,0 +1,7 @@
+{
+  "python.linting.pylintEnabled": false,
+  "python.linting.pycodestyleEnabled": true,
+  "python.linting.enabled": true,
+  "files.associations": { "*.inc": "html", "*.html.tpl": "html" },
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
+}

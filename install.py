@@ -35,6 +35,7 @@ class BasicInstaller(ExtensionInstaller):
                   'skins/weewx-wdc/lang/en.conf',
                   'skins/weewx-wdc/dist/css/index.css',
                   'skins/weewx-wdc/dist/js/index.js',
+                  'skins/weewx-wdc/favicon.ico'
                   ]),
             ]
         )

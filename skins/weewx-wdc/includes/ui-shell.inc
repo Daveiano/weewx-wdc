@@ -10,8 +10,8 @@
     button-label-active="Close menu"
     button-label-inactive="Open menu"
   ></bx-header-menu-button>
-  <bx-header-name href="javascript:void 0" prefix="Weewx">
-    $station.location - $current.dateTime
+  <bx-header-name href="index.html" prefix="Weewx">
+    $station.location
   </bx-header-name>
   <bx-header-nav menu-bar-label="Weewx $station.location - $current.dateTime">
     <bx-header-nav-item href="index.html">$gettext("Today")</bx-header-nav-item>
@@ -51,42 +51,41 @@
       </svg>
       $gettext("Celestial")
     </bx-side-nav-link>
-    <bx-side-nav-link href="stats.html"
-      >$gettext("Statistics")</bx-side-nav-link
-    >
+    <bx-side-nav-link href="stats.html">
+      <svg
+        slot="title-icon"
+        width="16"
+        height="16"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 32 32"
+      >
+        <defs>
+          <style>
+            .cls-1 {
+              fill: none;
+            }
+          </style>
+        </defs>
+        <title>analytics</title>
+        <path d="M4,2H2V28a2,2,0,0,0,2,2H30V28H4Z" />
+        <path
+          d="M30,9H23v2h3.59L19,18.59l-4.29-4.3a1,1,0,0,0-1.42,0L6,21.59,7.41,23,14,16.41l4.29,4.3a1,1,0,0,0,1.42,0L28,12.41V16h2Z"
+        />
+        <rect
+          id="_Transparent_Rectangle_"
+          data-name="&lt;Transparent Rectangle&gt;"
+          class="cls-1"
+          width="32"
+          height="32"
+        />
+      </svg>
+      $gettext("Statistics")
+    </bx-side-nav-link>
     <bx-side-nav-divider></bx-side-nav-divider>
     <bx-side-nav-menu title="Temperature">
-      <bx-side-nav-menu-item href="www.ibm.com">
-        L0 menu item
-      </bx-side-nav-menu-item>
-      <bx-side-nav-menu-item href="www.ibm.com">
-        L0 menu item
-      </bx-side-nav-menu-item>
-      <bx-side-nav-menu-item href="www.ibm.com">
-        L0 menu item
-      </bx-side-nav-menu-item>
-    </bx-side-nav-menu>
-    <bx-side-nav-menu title="L0 menu">
-      <bx-side-nav-menu-item href="www.ibm.com">
-        L0 menu item
-      </bx-side-nav-menu-item>
-      <bx-side-nav-menu-item active aria-current="page" href="www.ibm.com">
-        L0 menu item
-      </bx-side-nav-menu-item>
-      <bx-side-nav-menu-item href="www.ibm.com">
-        L0 menu item
-      </bx-side-nav-menu-item>
-    </bx-side-nav-menu>
-    <bx-side-nav-menu title="L0 menu">
-      <bx-side-nav-menu-item href="www.ibm.com">
-        L0 menu item
-      </bx-side-nav-menu-item>
-      <bx-side-nav-menu-item href="www.ibm.com">
-        L0 menu item
-      </bx-side-nav-menu-item>
-      <bx-side-nav-menu-item href="www.ibm.com">
-        L0 menu item
-      </bx-side-nav-menu-item>
+      <bx-side-nav-menu-item href="#"> 1 </bx-side-nav-menu-item>
+      <bx-side-nav-menu-item href="#"> 2 </bx-side-nav-menu-item>
+      <bx-side-nav-menu-item href="#"> 3 </bx-side-nav-menu-item>
     </bx-side-nav-menu>
   </bx-side-nav-items>
 </bx-side-nav>

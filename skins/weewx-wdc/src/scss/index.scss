@@ -56,6 +56,47 @@ bx-header ~ bx-side-nav {
   height: calc(100% - 3rem);
 }
 
+header.page-header {
+  margin-bottom: $spacing-07;
+  h1 {
+    @include carbon--type-style("expressive-heading-06");
+  }
+  h2 {
+    @include carbon--type-style("expressive-heading-03");
+  }
+}
+
+.stat-tile {
+  margin-bottom: $spacing-06;
+  > .bx--row {
+    align-items: center;
+    .label {
+      @include carbon--type-style("expressive-heading-02");
+    }
+    .value {
+      display: flex;
+      align-items: center;
+      svg {
+        max-width: 32px;
+        display: inline-block;
+        margin-right: $spacing-02;
+      }
+      span {
+        @include carbon--type-style("productive-heading-05");
+      }
+    }
+    .stat-label {
+      @include carbon--type-style("label-01");
+    }
+    .stat-value {
+      @include carbon--type-style("productive-heading-01");
+    }
+  }
+  .bx--row ~ .bx--row {
+    margin-top: $spacing-04;
+  }
+}
+
 .bx--content {
   margin-top: $spacing-09;
 }

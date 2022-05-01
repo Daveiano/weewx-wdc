@@ -1,19 +1,19 @@
-#errorCatcher Echo
-#encoding UTF-8
-<!doctype html>
+#errorCatcher Echo #encoding UTF-8
+<!DOCTYPE html>
 <html>
   <head>
     #if $encoding == 'utf8'
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    #end if    
+    #end if
     <title>$station.location - $gettext("Current Weather Conditions")</title>
-    <link rel="stylesheet" href="dist/scss/index.css">
+    <link rel="stylesheet" href="dist/scss/index.css" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.6.0/webcomponents-loader.min.js"></script>
     <script>
       window.WebComponents = window.WebComponents || {};
-      window.WebComponents.root = 'node_modules/@webcomponents/webcomponentsjs/';
+      window.WebComponents.root =
+        "node_modules/@webcomponents/webcomponentsjs/";
     </script>
 
     <script src="dist/js/index.js"></script>
@@ -21,35 +21,38 @@
 
   <body>
     #include "includes/ui-shell.inc"
-    
+
     <main>
       <section class="main bx--content">
-        <pre>
-          $record
-        </pre>
-        $month.outTemp.max <br/>
-        $current.barometer
-        
         <div class="bx--grid bx--grid--full-width">
           <div class="bx--row">
-            <div class="bx--col">1/4</div> 
-            <div class="bx--col">1/4</div>
-            <div class="bx--col">1/4</div>
-            <div class="bx--col">1/4</div>
+            <header class="bx--col page-header">
+              <h1>$gettext("Current Weather Conditions")</h1>
+              <h2>$current.dateTime</h2>
+            </header>
+          </div>
+          <div class="bx--row">
+            <!--prettier-ignore-->
+            #for $skin_obs in $Extras.Appearance.observations
+              #if $getattr($current, $skin_obs).has_data
+                #set global $partial_obs = $skin_obs
+                #include "includes/stat-tile.inc"
+              #end if
+            #end for
           </div>
         </div>
       </section>
     </main>
 
-    <div id='footer'>
+    <div id="footer">
       <div class="bx--grid bx--grid--full-width">
         <div class="bx--row">
           <div class="bx--col">
             <p>
-              weewx: $station.uptime<br/>
-              server: $station.os_uptime<br/>
-              weewx $station.version with $station.hardware<br/>
-            </p>  
+              weewx: $station.uptime<br />
+              server: $station.os_uptime<br />
+              weewx $station.version with $station.hardware<br />
+            </p>
           </div>
         </div>
       </div>

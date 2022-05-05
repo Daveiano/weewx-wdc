@@ -40,6 +40,15 @@
               #end if
             #end for
           </div>
+          <div class="bx--row">
+            <!--prettier-ignore-->
+            #for $skin_obs in $Extras.Appearance.observations
+              #if $getattr($current, $skin_obs).has_data
+                #set global $partial_obs = $skin_obs
+                #include "includes/diagram-tile.inc"
+              #end if
+            #end for
+          </div>
         </div>
       </section>
     </main>

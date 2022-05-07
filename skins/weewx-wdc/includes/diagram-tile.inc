@@ -10,7 +10,7 @@
           #end if
           $obs.label[$partial_obs]
         </p>
-        <p class="value">
+        <div class="value">
           #set $series_name = $partial_obs + 'Series'
           <script>
             // prettier-ignore
@@ -18,8 +18,17 @@
                                                          time_series='start', time_unit='unix_epoch').round(2).json;
           </script>
 
-          <div class="diagram" data-value="$series_name" data-unit="$getattr($unit.label, $partial_obs)"></div>
-        </p>
+          <!--
+            @todo Define helper fn for data-obs
+            Add e.g. "temp" for all diagrams which should be rendered as temp diagram (insludes also heaut anmd windchill)
+          -->
+          <div
+            class="diagram"
+            data-value="$series_name"
+            data-unit="$getattr($unit.label, $partial_obs)"
+            data-obs="$partial_obs"
+          ></div>
+        </div>
       </div>
     </div>
   </div>

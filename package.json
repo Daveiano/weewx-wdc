@@ -5,9 +5,10 @@
   "author": "David Baetge <david.baetge@gmail.com>",
   "license": "MIT",
   "source": [
-    "./skins/weewx-wdc/src/js/index.ts",
+    "./skins/weewx-wdc/src/js/index.tsx",
     "./skins/weewx-wdc/src/scss/index.scss"
   ],
+  "browserslist": "> 0.5%, last 2 versions, not dead",
   "targets": {
     "default": {
       "distDir": "./skins/weewx-wdc/dist"
@@ -21,6 +22,7 @@
     "@nivo/core": "^0.79.0",
     "@nivo/line": "^0.79.1",
     "carbon-components": "10.25.0",
+    "prop-types": "^15.8.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0"
   },

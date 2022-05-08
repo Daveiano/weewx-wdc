@@ -56,6 +56,10 @@ bx-header ~ bx-side-nav {
   height: calc(100% - 3rem);
 }
 
+.bx--content {
+  margin-top: $spacing-09;
+}
+
 header.page-header {
   margin-bottom: $spacing-07;
   h1 {
@@ -63,6 +67,14 @@ header.page-header {
   }
   h2 {
     @include carbon--type-style("expressive-heading-03");
+  }
+}
+
+header.section-header {
+  margin-top: $spacing-07;
+  margin-bottom: $spacing-07;
+  h2 {
+    @include carbon--type-style("expressive-heading-06");
   }
 }
 
@@ -97,8 +109,12 @@ header.page-header {
   }
 }
 
-.bx--content {
-  margin-top: $spacing-09;
+.diagram-tile {
+  margin-bottom: $spacing-06;
+}
+
+.diagram-tooltip {
+  font-family: carbon--font-family("mono"), monospace;
 }
 
 #footer {

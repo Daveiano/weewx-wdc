@@ -41,7 +41,7 @@
   "scripts": {
     "dev": "parcel watch --no-hmr",
     "build": "parcel build",
-    "deploy:local": "sudo cp -R ./skins/weewx-wdc /etc/weewx/skins && sudo cp ./bin/user/get_icon.py /usr/share/weewx/user/get_icon.py && sudo systemctl restart weewx && sudo /usr/share/weewx/wee_reports",
+    "deploy:local": "sudo cp -R ./skins/weewx-wdc /etc/weewx/skins && sudo cp ./bin/user/util.py /usr/share/weewx/user/util.py && sudo systemctl restart weewx && sudo /usr/share/weewx/wee_reports",
     "serve:local": "docker run -it --rm -d -p 8080:80 --name web -v /var/www/html/weewx:/usr/share/nginx/html nginx"
   }
 }

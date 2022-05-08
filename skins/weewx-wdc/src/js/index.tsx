@@ -13,7 +13,7 @@ diagrams.forEach((diagram) => {
     const root = createRoot(diagram);
     const series = window[diagram.dataset.value];
 
-    if (diagram.dataset.obs.toLowerCase().includes("temp")) {
+    if (diagram.dataset.obs === "temp") {
       root.render(
         <TemperatureDiagram unit={diagram.dataset.unit} series={series} />
       );

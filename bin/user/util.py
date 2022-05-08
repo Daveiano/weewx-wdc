@@ -1,7 +1,7 @@
 from weewx.cheetahgenerator import SearchList
 
 
-class GetIcon(SearchList):
+class Util(SearchList):
 
     def get_icon(self, observation):
         """
@@ -69,3 +69,22 @@ class GetIcon(SearchList):
 
         elif 'Humid' in observation:
             return icon_path + 'humidity.svg'
+
+    def get_diagram_type(self, observation):
+        """
+        Set e.g. "temp" for all diagrams which should be rendered as temp
+        diagram (includes also heat anmd windchill).
+
+        Args:
+            observation (string): The observation
+
+        Returns:
+            str: A diagram type string
+        """
+        temp_obs = [
+            'outTemp', 'inTemp',
+            'dewpoint', 'windchill',
+            'heatindex', 'appTemp'
+        ]
+        if observation in temp_obs or 'temp' in observation.lower():
+            return 'temp'

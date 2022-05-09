@@ -92,17 +92,34 @@ class Util(SearchList):
         if 'humidity' in observation.lower():
             return 'humidity'
 
+        if observation == 'windSpeed' or observation == 'windGust':
+            return 'wind'
+
         if observation == 'barometer':
             return 'pressure'
 
-    def get_color(self, observation):
-        if observation in self.temp_obs or 'temp' in observation.lower():
-            return '#8B0000'
+        return observation
 
+    def get_color(self, observation):
         if 'humidity' in observation.lower():
             return '#0099CC'
 
         if observation == 'barometer':
             return '#666666'
+
+        if observation == 'dewpoint':
+            return '#5F9EA0'
+
+        if observation == 'appTemp':
+            return '#C41E3A'
+
+        if observation == 'windSpeed':
+            return '#ffc000'
+
+        if observation == 'windGust':
+            return '#666666'
+
+        if observation in self.temp_obs or 'temp' in observation.lower():
+            return '#8B0000'
 
         return 'black'

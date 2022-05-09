@@ -3,11 +3,23 @@ import { ResponsiveLine } from "@nivo/line";
 
 import { DiagramBaseProps } from "./types";
 import { TooltipLine } from "../components/tooltip-line";
+import { getyScaleOffset, enableArea, getyScale, getCurve } from "../util/util";
+import { sliceTooltip } from "../components/tooltip-slice";
 
 export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
   props: DiagramBaseProps
 ): React.ReactElement => {
   console.log(props);
+
+  let combinedData: any[] = [];
+  if (props.data.length > 1) {
+    for (const serie of props.data) {
+      combinedData = [...combinedData, ...serie.data];
+    }
+  } else {
+    combinedData = props.data[0].data;
+  }
+
   let markers: any[] | undefined = [];
   if (props.observation === "temp") {
     markers = [
@@ -21,7 +33,8 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
           strokeOpacity: 0.75,
           strokeDasharray: "10, 10",
         },
-        legend: "0 °C",
+        // @todo Does only work with °C.
+        legend: `0 ${props.unit}`,
         legendOrientation: "horizontal",
       },
     ];
@@ -38,19 +51,47 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
         }}
         axisLeft={{
           legend: props.unit,
-          legendOffset: -35,
+          legendOffset: props.observation === "pressure" ? -43 : -35,
           legendPosition: "middle",
           tickSize: 0,
           tickPadding: 10,
         }}
         colors={props.color}
-        curve="natural"
+        curve={getCurve(props.observation)}
         data={props.data}
+        enableArea={enableArea.includes(props.observation)}
+        areaOpacity={props.observation === "wind" ? 0.5 : 0.07}
+        areaBaselineValue={
+          props.observation === "humidity" || props.observation === "windDir"
+            ? 0
+            : Math.min(...combinedData.map((item) => item.y)) -
+              getyScaleOffset(props.observation)
+        }
         enableCrosshair={true}
         enablePoints={true}
+        enableSlices={props.data.length > 1 ? "x" : false}
+        sliceTooltip={(slice) => sliceTooltip(slice)}
         isInteractive={true}
+        legends={
+          props.data.length > 1
+            ? [
+                {
+                  anchor: "top-right",
+                  direction: "row",
+                  itemWidth: 120,
+                  itemHeight: 20,
+                  itemsSpacing: 10,
+                },
+              ]
+            : undefined
+        }
         lineWidth={2}
-        margin={{ top: 20, right: 10, bottom: 20, left: 40 }}
+        margin={{
+          top: 20,
+          right: 10,
+          bottom: 20,
+          left: props.observation === "pressure" ? 48 : 40,
+        }}
         markers={markers}
         pointSize={5}
         tooltip={(point) => <TooltipLine point={point.point} />}
@@ -60,11 +101,7 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
           type: "time",
           format: "%s",
         }}
-        yScale={{
-          type: "linear",
-          min: Math.min(...props.data[0].data.map((item) => item.y)) - 3,
-          max: Math.max(...props.data[0].data.map((item) => item.y)) + 3,
-        }}
+        yScale={getyScale(props.observation, combinedData)}
         xFormat="time:%Y/%m/%d %H:%M"
         yFormat={(value) => `${value} ${props.unit}`}
       />

@@ -22,6 +22,7 @@
           -->
           <div
             class="diagram"
+            data-labels="['$obs.label[$partial_obs]']"
             data-color="['$get_color($partial_obs)']"
             data-value="$series_name"
             data-unit="$getattr($unit.label, $partial_obs)"

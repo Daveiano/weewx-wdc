@@ -18,12 +18,14 @@
           <!--prettier-ignore-->
           #set $series_names = []
           #set $series_colors = []
+          #set $series_labels = []
 
           <!--prettier-ignore-->
           #for $combined_obs in $combined_diagram.obs.keys()
           #set $series_name = $combined_obs + 'Series' + str($diagram_index)
           #silent $series_names.append($series_name)
-          #silent $series_colors.append($combined_diagram.obs[$combined_obs].color)
+          #silent $series_labels.append($obs.label[$combined_obs])
+          #if 'color' in $combined_diagram.obs[$combined_obs] then $series_colors.append($combined_diagram.obs[$combined_obs].color) else $series_colors.append($get_color($combined_obs))#
           <script>
             /* prettier-ignore */
             var $series_name = $getattr($span($hour_delta=24), $combined_obs).series(aggregate_type='avg', aggregate_interval='900', time_series='start', time_unit='unix_epoch').round(2).json;
@@ -32,6 +34,7 @@
 
           <div
             class="diagram combined"
+            data-labels="$series_labels"
             data-value="$series_names"
             data-color="$series_colors"
             data-unit="$getattr($unit.label, $combined_diagram.obs.keys()[0])"

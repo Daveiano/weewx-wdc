@@ -9,6 +9,7 @@ diagrams.forEach((diagram) => {
   if (
     diagram instanceof HTMLElement &&
     diagram.dataset.value &&
+    diagram.dataset.labels &&
     diagram.dataset.obs &&
     diagram.dataset.color
   ) {
@@ -17,21 +18,21 @@ diagrams.forEach((diagram) => {
     const root = createRoot(diagram);
 
     if (combined) {
+      const labels = JSON.parse(diagram.dataset.labels.replace(/'/g, '"'));
       const series = JSON.parse(diagram.dataset.value.replace(/'/g, '"'));
-      console.log(series);
-      for (const serie of series) {
-        console.log(serie);
+
+      series.forEach((serie, index) => {
         data = [
           ...data,
           {
-            id: serie,
+            id: labels[index],
             data: window[serie].map((item: number[]) => ({
               x: item[0],
               y: item[1],
             })),
           },
         ];
-      }
+      });
     } else {
       data = [
         {

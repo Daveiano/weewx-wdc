@@ -1,6 +1,10 @@
+import type { Serie } from "@nivo/line";
+
 type DiagramBaseProps = {
+  color: string[];
   unit?: string;
-  series: Array<Array<number>>;
+  data: Serie[];
+  observation: string;
 };
 
 export { DiagramBaseProps };

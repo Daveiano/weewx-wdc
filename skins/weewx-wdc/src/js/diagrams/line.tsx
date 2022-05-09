@@ -4,9 +4,29 @@ import { ResponsiveLine } from "@nivo/line";
 import { DiagramBaseProps } from "./types";
 import { TooltipLine } from "../components/tooltip-line";
 
-export const TemperatureDiagram: FunctionComponent<DiagramBaseProps> = (
+export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
   props: DiagramBaseProps
 ): React.ReactElement => {
+  console.log(props);
+  let markers: any[] | undefined = [];
+  if (props.observation === "temp") {
+    markers = [
+      ...markers,
+      {
+        axis: "y",
+        value: 0,
+        lineStyle: {
+          stroke: "#00BFFF",
+          strokeWidth: 2,
+          strokeOpacity: 0.75,
+          strokeDasharray: "10, 10",
+        },
+        legend: "0 °C",
+        legendOrientation: "horizontal",
+      },
+    ];
+  }
+
   return (
     <div style={{ height: "400px" }}>
       <ResponsiveLine
@@ -23,36 +43,15 @@ export const TemperatureDiagram: FunctionComponent<DiagramBaseProps> = (
           tickSize: 0,
           tickPadding: 10,
         }}
-        colors={["#8B0000"]}
+        colors={props.color}
         curve="natural"
-        data={[
-          {
-            id: "temperature",
-            data: props.series.map((item) => ({
-              x: item[0],
-              y: item[1],
-            })),
-          },
-        ]}
+        data={props.data}
         enableCrosshair={true}
         enablePoints={true}
         isInteractive={true}
         lineWidth={2}
         margin={{ top: 20, right: 10, bottom: 20, left: 40 }}
-        markers={[
-          {
-            axis: "y",
-            value: 0,
-            lineStyle: {
-              stroke: "#00BFFF",
-              strokeWidth: 2,
-              strokeOpacity: 0.75,
-              strokeDasharray: "10, 10",
-            },
-            legend: "0 °C",
-            legendOrientation: "horizontal",
-          },
-        ]}
+        markers={markers}
         pointSize={5}
         tooltip={(point) => <TooltipLine point={point.point} />}
         useMesh={true}
@@ -63,8 +62,8 @@ export const TemperatureDiagram: FunctionComponent<DiagramBaseProps> = (
         }}
         yScale={{
           type: "linear",
-          min: Math.min(...props.series.map((item) => item[1])) - 3,
-          max: Math.max(...props.series.map((item) => item[1])) + 3,
+          min: Math.min(...props.data[0].data.map((item) => item.y)) - 3,
+          max: Math.max(...props.data[0].data.map((item) => item.y)) + 3,
         }}
         xFormat="time:%Y/%m/%d %H:%M"
         yFormat={(value) => `${value} ${props.unit}`}

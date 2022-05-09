@@ -2,6 +2,11 @@ from weewx.cheetahgenerator import SearchList
 
 
 class Util(SearchList):
+    temp_obs = [
+        'outTemp', 'inTemp',
+        'dewpoint', 'windchill',
+        'heatindex', 'appTemp'
+    ]
 
     def get_icon(self, observation):
         """
@@ -81,10 +86,23 @@ class Util(SearchList):
         Returns:
             str: A diagram type string
         """
-        temp_obs = [
-            'outTemp', 'inTemp',
-            'dewpoint', 'windchill',
-            'heatindex', 'appTemp'
-        ]
-        if observation in temp_obs or 'temp' in observation.lower():
+        if observation in self.temp_obs or 'temp' in observation.lower():
             return 'temp'
+
+        if 'humidity' in observation.lower():
+            return 'humidity'
+
+        if observation == 'barometer':
+            return 'pressure'
+
+    def get_color(self, observation):
+        if observation in self.temp_obs or 'temp' in observation.lower():
+            return '#8B0000'
+
+        if 'humidity' in observation.lower():
+            return '#0099CC'
+
+        if observation == 'barometer':
+            return '#666666'
+
+        return 'black'

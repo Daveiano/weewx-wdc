@@ -1,6 +1,7 @@
 import { Serie } from "@nivo/line";
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { BarDiagram } from "./diagrams/bar";
 
 import { LineDiagram } from "./diagrams/line";
 
@@ -19,7 +20,9 @@ diagrams.forEach((diagram) => {
 
     if (combined) {
       const labels = JSON.parse(diagram.dataset.labels.replace(/'/g, '"'));
-      const series = JSON.parse(diagram.dataset.value.replace(/'/g, '"'));
+      const series: string[] = JSON.parse(
+        diagram.dataset.value.replace(/'/g, '"')
+      );
 
       series.forEach((serie, index) => {
         data = [
@@ -45,13 +48,26 @@ diagrams.forEach((diagram) => {
       ];
     }
 
-    root.render(
-      <LineDiagram
-        color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
-        unit={diagram.dataset.unit}
-        data={data}
-        observation={diagram.dataset.obs}
-      />
-    );
+    switch (diagram.dataset.diagram) {
+      case "bar":
+        root.render(
+          <BarDiagram
+            color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
+            unit={diagram.dataset.unit}
+            data={data}
+            observation={diagram.dataset.obs}
+          />
+        );
+        break;
+      default:
+        root.render(
+          <LineDiagram
+            color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
+            unit={diagram.dataset.unit}
+            data={data}
+            observation={diagram.dataset.obs}
+          />
+        );
+    }
   }
 });

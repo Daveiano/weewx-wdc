@@ -28,7 +28,7 @@
           #if 'color' in $combined_diagram.obs[$combined_obs] then $series_colors.append($combined_diagram.obs[$combined_obs].color) else $series_colors.append($get_color($combined_obs))#
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($span($hour_delta=24), $combined_obs).series(aggregate_type='avg', aggregate_interval='900', time_series='start', time_unit='unix_epoch').round(2).json;
+            var $series_name = $getattr($span($hour_delta=$get_delta($partial_obs)), $combined_obs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs), time_series='start', time_unit='unix_epoch').round($get_rounding($combined_obs)).json;
           </script>
           #end for
 
@@ -39,6 +39,7 @@
             data-color="$series_colors"
             data-unit="$getattr($unit.label, $combined_diagram.obs.keys()[0])"
             data-obs="$get_diagram_type($combined_diagram.obs.keys()[0])"
+            data-diagram="$get_diagram($combined_diagram.obs.keys()[0])"
           ></div>
         </div>
       </div>

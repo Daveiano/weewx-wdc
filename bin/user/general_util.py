@@ -1,7 +1,8 @@
+import datetime
 from weewx.cheetahgenerator import SearchList
 
 
-class Util(SearchList):
+class GeneralUtil(SearchList):
     temp_obs = [
         'outTemp', 'inTemp',
         'dewpoint', 'windchill',
@@ -75,32 +76,16 @@ class Util(SearchList):
         elif 'Humid' in observation:
             return icon_path + 'humidity.svg'
 
-    def get_diagram_type(self, observation):
+    def get_color(self, observation):
         """
-        Set e.g. "temp" for all diagrams which should be rendered as temp
-        diagram (includes also heat anmd windchill).
+        Color settings for observations.
 
         Args:
             observation (string): The observation
 
         Returns:
-            str: A diagram type string
+            str: A color string
         """
-        if observation in self.temp_obs or 'temp' in observation.lower():
-            return 'temp'
-
-        if 'humidity' in observation.lower():
-            return 'humidity'
-
-        if observation == 'windSpeed' or observation == 'windGust':
-            return 'wind'
-
-        if observation == 'barometer':
-            return 'pressure'
-
-        return observation
-
-    def get_color(self, observation):
         if 'humidity' in observation.lower():
             return '#0099CC'
 
@@ -113,13 +98,104 @@ class Util(SearchList):
         if observation == 'appTemp':
             return '#C41E3A'
 
+        if observation == 'windchill':
+            return '#0099CC'
+
+        if observation == 'heatindex':
+            return '#610000'
+
         if observation == 'windSpeed':
             return '#ffc000'
 
         if observation == 'windGust':
             return '#666666'
 
+        if observation == 'radiation':
+            return '#ff8c00'
+
+        if observation == 'UV':
+            return '#e61919'
+
+        if observation == 'cloudbase':
+            return '#92b6f0'
+
+        if observation == 'ET':
+            return '#E97451'
+
+        if observation == 'rain':
+            return '#0198E1'
+
+        if observation == 'rainRate':
+            return '#0a6794'
+
         if observation in self.temp_obs or 'temp' in observation.lower():
             return '#8B0000'
 
         return 'black'
+
+    def get_aggregate_type(self, observation):
+        """
+        aggregate_type for observations series.
+        @see https://github.com/weewx/weewx/wiki/Tags-for-series#syntax
+
+        Args:
+            observation (string): The observation
+
+        Returns:
+            string: aggregate_type
+        """
+        if observation == 'ET' or observation == 'rain':
+            return 'sum'
+
+        return 'avg'
+
+    def get_aggregate_interval(self, observation):
+        """
+        aggregate_interval for observations series.
+        @see https://github.com/weewx/weewx/wiki/Tags-for-series#syntax
+
+        Args:
+            observation (string): The observation
+
+        Returns:
+            int: aggregate_interval
+        """
+        if observation == 'ET' or observation == 'rain':
+            return 3600
+
+        return 900
+
+    def get_rounding(self, observation):
+        """
+        Rounding settings for observations.
+
+        Args:
+            observation (string): The observation
+
+        Returns:
+            int: A rounding
+        """
+        if observation == 'UV' or observation == 'cloudbase':
+            return 0
+
+        if observation == 'ET':
+            return 2
+
+        return 1
+
+    def get_delta(self, observation):
+        """
+        Get delta for $span($hour_delta=$delta) call.
+
+        Args:
+            observation (string): The observation
+
+        Returns:
+            float: A delta
+        """
+        if observation == 'rain' or observation == 'ET':
+            # @todo Use time of last record instead of now.minute
+            now = datetime.datetime.now()
+            return round(24 + (now.minute / 60), 2)
+
+        return 24

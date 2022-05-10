@@ -15,12 +15,14 @@
       </div>
     </div>
     <div class="bx--row">
+      #if $get_show_min_stat($partial_obs)
       <div class="bx--col">
-        <p class="stat-label">$gettext("Min") $obs.label[$partial_obs]</p>
+        <p class="stat-label">$gettext("Min")</p>
         <p class="stat-value">$getattr($day, $partial_obs).min</p>
       </div>
+      #end if
       <div class="bx--col">
-        <p class="stat-label">$gettext("Max") $obs.label[$partial_obs]</p>
+        <p class="stat-label">$gettext("Max")</p>
         <p class="stat-value">$getattr($day, $partial_obs).max</p>
       </div>
     </div>

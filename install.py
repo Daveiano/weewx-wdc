@@ -28,7 +28,11 @@ class BasicInstaller(ExtensionInstaller):
                 }
             },
             files=[
-                ('bin/user', ['bin/user/get_icon.py']),
+                ('bin/user', [
+                    'bin/user/diagram_util.py'
+                    'bin/user/stats_util.py'
+                    'bin/user/general_util.py'
+                ]),
                 ('skins/weewx-wdc',
                  ['skins/weewx-wdc/index.html.tmpl',
                   'skins/weewx-wdc/skin.conf',
@@ -37,6 +41,7 @@ class BasicInstaller(ExtensionInstaller):
                   'skins/weewx-wdc/dist/scss/index.css',
                   'skins/weewx-wdc/dist/js/index.js',
                   'skins/weewx-wdc/favicon.ico',
+                  'skins/weewx-wdc/includes/combined-diagram-tile.inc',
                   'skins/weewx-wdc/includes/diagram-tile.inc',
                   'skins/weewx-wdc/includes/stat-tile.inc',
                   'skins/weewx-wdc/includes/ui-shell.inc',

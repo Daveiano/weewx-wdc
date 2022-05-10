@@ -3,7 +3,15 @@ import { ResponsiveLine } from "@nivo/line";
 
 import { DiagramBaseProps } from "./types";
 import { TooltipLine } from "../components/tooltip-line";
-import { getyScaleOffset, enableArea, getyScale, getCurve } from "../util/util";
+import {
+  getyScaleOffset,
+  enableArea,
+  getyScale,
+  getCurve,
+  areaBaselineValue0,
+  getMargins,
+  getAxisLeftLegendOffset,
+} from "../util/util";
 import { sliceTooltip } from "../components/tooltip-slice";
 
 export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
@@ -51,7 +59,7 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
         }}
         axisLeft={{
           legend: props.unit,
-          legendOffset: props.observation === "pressure" ? -43 : -35,
+          legendOffset: getAxisLeftLegendOffset(props.observation),
           legendPosition: "middle",
           tickSize: 0,
           tickPadding: 10,
@@ -62,7 +70,7 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
         enableArea={enableArea.includes(props.observation)}
         areaOpacity={props.observation === "wind" ? 0.5 : 0.07}
         areaBaselineValue={
-          props.observation === "humidity" || props.observation === "windDir"
+          areaBaselineValue0.includes(props.observation)
             ? 0
             : Math.min(...combinedData.map((item) => item.y)) -
               getyScaleOffset(props.observation)
@@ -86,12 +94,7 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
             : undefined
         }
         lineWidth={2}
-        margin={{
-          top: 20,
-          right: 10,
-          bottom: 20,
-          left: props.observation === "pressure" ? 48 : 40,
-        }}
+        margin={getMargins(props.observation)}
         markers={markers}
         pointSize={5}
         tooltip={(point) => <TooltipLine point={point.point} />}

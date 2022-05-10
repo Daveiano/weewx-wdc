@@ -11,10 +11,11 @@
           $obs.label[$partial_obs]
         </p>
         <div class="value">
+          <!--prettier-ignore-->
           #set $series_name = $partial_obs + 'Series' + str($diagram_index)
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($span($hour_delta=24), $partial_obs).series(aggregate_type='avg', aggregate_interval='900', time_series='start', time_unit='unix_epoch').round(2).json;
+            var $series_name = $getattr($span($hour_delta=$get_delta($partial_obs)), $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs), time_series='start', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
           </script>
 
           <!--
@@ -27,6 +28,7 @@
             data-value="$series_name"
             data-unit="$getattr($unit.label, $partial_obs)"
             data-obs="$get_diagram_type($partial_obs)"
+            data-diagram="$get_diagram($partial_obs)"
           ></div>
         </div>
       </div>

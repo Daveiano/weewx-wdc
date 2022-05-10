@@ -22,6 +22,7 @@
     "@nivo/core": "^0.79.0",
     "@nivo/line": "^0.79.1",
     "carbon-components": "10.25.0",
+    "moment": "^2.29.3",
     "prop-types": "^15.8.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0"
@@ -41,7 +42,7 @@
   "scripts": {
     "dev": "parcel watch --no-hmr",
     "build": "parcel build",
-    "deploy:local": "sudo cp -R ./skins/weewx-wdc /etc/weewx/skins && sudo cp ./bin/user/util.py /usr/share/weewx/user/util.py && sudo systemctl restart weewx && sudo /usr/share/weewx/wee_reports",
+    "deploy:local": "sudo cp -R ./skins/weewx-wdc /etc/weewx/skins && sudo cp -r ./bin/user/. /usr/share/weewx/user/ && sudo systemctl restart weewx && sudo /usr/share/weewx/wee_reports",
     "serve:local": "docker run -it --rm -d -p 8080:80 --name web -v /var/www/html/weewx:/usr/share/nginx/html nginx"
   }
 }

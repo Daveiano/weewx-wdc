@@ -15,7 +15,7 @@
           #set $series_name = $partial_obs + 'Series' + str($diagram_index)
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($span($hour_delta=$get_delta($partial_obs)), $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs), time_series='start', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
+            var $series_name = $getattr($span($hour_delta=$get_delta($partial_obs, $precision)), $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $precision), time_series='start', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
           </script>
 
           <!--
@@ -29,6 +29,7 @@
             data-unit="$getattr($unit.label, $partial_obs)"
             data-obs="$get_diagram_type($partial_obs)"
             data-diagram="$get_diagram($partial_obs)"
+            data-precision="$precision"
           ></div>
         </div>
       </div>

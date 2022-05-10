@@ -19,11 +19,19 @@
             #if $precision == 'day'
               $getattr($current, $partial_obs)
             #else
-              $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year), $partial_obs).avg
+              #if $get_show_only_sum($partial_obs)
+                $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year), $partial_obs).sum
+              #else
+                $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year), $partial_obs).avg
+              #end if
             #end if
             <!--prettier-ignore-->
-            #if $precision != 'day'
+            #if $precision != 'day' and not $get_show_only_sum($partial_obs)
             <span>$gettext("Avg")</span>
+            #end if
+            <!--prettier-ignore-->
+            #if $precision != 'day' and $get_show_only_sum($partial_obs)
+            <span>$gettext("Total")</span>
             #end if
           </span>
         </p>

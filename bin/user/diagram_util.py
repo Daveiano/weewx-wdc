@@ -1,4 +1,5 @@
 import datetime
+from calendar import monthrange, isleap
 from weewx.cheetahgenerator import SearchList
 from user.general_util import GeneralUtil
 
@@ -60,21 +61,41 @@ class DiagramUtil(SearchList):
 
         return 'avg'
 
-    def get_aggregate_interval(self, observation):
+    def get_aggregate_interval(self, observation, precision):
         """
         aggregate_interval for observations series.
         @see https://github.com/weewx/weewx/wiki/Tags-for-series#syntax
 
         Args:
             observation (string): The observation
+            precision (string): Day, week, month, year
 
         Returns:
             int: aggregate_interval
         """
-        if observation == 'ET' or observation == 'rain':
-            return 3600
+        if precision == 'day':
+            if observation == 'ET' or observation == 'rain':
+                return 3600  # 1 hour
 
-        return 900
+            return 900  # 15 minutes
+
+        if precision == 'week':
+            if observation == 'ET' or observation == 'rain':
+                return 3600 * 24  # 1 day
+
+            return 900 * 8  # 2 hours
+
+        if precision == 'month':
+            if observation == 'ET' or observation == 'rain':
+                return 3600 * 24  # 1 day
+
+            return 900 * 24  # 6 hours
+
+        if precision == 'year':
+            if observation == 'ET' or observation == 'rain':
+                return 3600 * 24  # 1 day
+
+            return 900 * 48  # 12 hours
 
     def get_rounding(self, observation):
         """
@@ -94,19 +115,34 @@ class DiagramUtil(SearchList):
 
         return 1
 
-    def get_delta(self, observation):
+    def get_delta(self, observation, precision):
         """
         Get delta for $span($hour_delta=$delta) call.
 
         Args:
             observation (string): The observation
+            precision (string): Day, week, month, year
 
         Returns:
             float: A delta
         """
+        now = datetime.datetime.now()
+
+        if precision == 'day':
+            hour_delta = 24
+
+        if precision == 'week':
+            hour_delta = 24 * 7
+
+        if precision == 'month':
+            hour_delta = 24 * monthrange(now.year, now.month)[1]
+
+        if precision == 'year':
+            days = 366 if isleap(now.year) else 365
+            hour_delta = 24 * days
+
         if observation == 'rain' or observation == 'ET':
             # @todo Use time of last record instead of now.minute
-            now = datetime.datetime.now()
-            return round(24 + (now.minute / 60), 2)
+            return round(hour_delta + (now.minute / 60), 2)
 
-        return 24
+        return hour_delta

@@ -1,4 +1,8 @@
+<!--prettier-ignore-->
 #encoding UTF-8
+#set $label_sum = 'Sum ' + $precision
+#set $label_min = 'Min ' + $precision
+#set $label_max = 'Max ' + $precision
 <div class="bx--col-sm-4 bx--col-md-4 bx--col-lg-4 bx--col-xlg-4 bx--col-max-3">
   <div class="bx--tile stat-tile">
     <div class="bx--row">
@@ -10,21 +14,51 @@
           #include $get_icon($partial_obs)
           #end if
 
-          <span>$getattr($current, $partial_obs)</span>
+          <span>
+            <!--prettier-ignore-->
+            #if $precision == 'day'
+              $getattr($current, $partial_obs)
+            #else
+              $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year), $partial_obs).avg
+            #end if
+            <!--prettier-ignore-->
+            #if $precision != 'day'
+            <span>$gettext("Avg")</span>
+            #end if
+          </span>
         </p>
       </div>
     </div>
+    <!--prettier-ignore-->
+    #if $get_show_only_sum($partial_obs)
+    <div class="bx--row">
+      <div class="bx--col">
+        <p class="stat-label">$gettext($label_sum)</p>
+        <p class="stat-value">
+          <!--prettier-ignore-->
+          $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year), $partial_obs).sum
+        </p>
+      </div>
+    </div>
+    #else
     <div class="bx--row">
       #if $get_show_min_stat($partial_obs)
       <div class="bx--col">
-        <p class="stat-label">$gettext("Min")</p>
-        <p class="stat-value">$getattr($day, $partial_obs).min</p>
+        <p class="stat-label">$gettext($label_min)</p>
+        <p class="stat-value">
+          <!--prettier-ignore-->
+          $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year), $partial_obs).min
+        </p>
       </div>
       #end if
       <div class="bx--col">
-        <p class="stat-label">$gettext("Max")</p>
-        <p class="stat-value">$getattr($day, $partial_obs).max</p>
+        <p class="stat-label">$gettext($label_max)</p>
+        <p class="stat-value">
+          <!--prettier-ignore-->
+          $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year), $partial_obs).max
+        </p>
       </div>
     </div>
+    #end if
   </div>
 </div>

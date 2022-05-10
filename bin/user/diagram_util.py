@@ -1,3 +1,4 @@
+import datetime
 from weewx.cheetahgenerator import SearchList
 from user.general_util import GeneralUtil
 
@@ -42,3 +43,70 @@ class DiagramUtil(SearchList):
             return 'bar'
 
         return 'line'
+
+    def get_aggregate_type(self, observation):
+        """
+        aggregate_type for observations series.
+        @see https://github.com/weewx/weewx/wiki/Tags-for-series#syntax
+
+        Args:
+            observation (string): The observation
+
+        Returns:
+            string: aggregate_type
+        """
+        if observation == 'ET' or observation == 'rain':
+            return 'sum'
+
+        return 'avg'
+
+    def get_aggregate_interval(self, observation):
+        """
+        aggregate_interval for observations series.
+        @see https://github.com/weewx/weewx/wiki/Tags-for-series#syntax
+
+        Args:
+            observation (string): The observation
+
+        Returns:
+            int: aggregate_interval
+        """
+        if observation == 'ET' or observation == 'rain':
+            return 3600
+
+        return 900
+
+    def get_rounding(self, observation):
+        """
+        Rounding settings for observations.
+
+        Args:
+            observation (string): The observation
+
+        Returns:
+            int: A rounding
+        """
+        if observation == 'UV' or observation == 'cloudbase':
+            return 0
+
+        if observation == 'ET':
+            return 2
+
+        return 1
+
+    def get_delta(self, observation):
+        """
+        Get delta for $span($hour_delta=$delta) call.
+
+        Args:
+            observation (string): The observation
+
+        Returns:
+            float: A delta
+        """
+        if observation == 'rain' or observation == 'ET':
+            # @todo Use time of last record instead of now.minute
+            now = datetime.datetime.now()
+            return round(24 + (now.minute / 60), 2)
+
+        return 24

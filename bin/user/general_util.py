@@ -1,4 +1,3 @@
-import datetime
 from weewx.cheetahgenerator import SearchList
 
 
@@ -133,69 +132,28 @@ class GeneralUtil(SearchList):
 
         return 'black'
 
-    def get_aggregate_type(self, observation):
+    def get_time_span_from_attr(self, attr, day, week, month, year):
         """
-        aggregate_type for observations series.
-        @see https://github.com/weewx/weewx/wiki/Tags-for-series#syntax
+        Get tag for use in templates.
 
         Args:
-            observation (string): The observation
+            attr (string): The time range
+            day: Daily TimeSpanBinder
+            week: Weekly TimeSpanBinder
+            month: Monthly TimeSpanBinder
+            year: Yeary TimeSpanBinder
 
         Returns:
-            string: aggregate_type
+            str: A color string
         """
-        if observation == 'ET' or observation == 'rain':
-            return 'sum'
+        if (attr == 'day'):
+            return day
 
-        return 'avg'
+        if (attr == 'week'):
+            return week
 
-    def get_aggregate_interval(self, observation):
-        """
-        aggregate_interval for observations series.
-        @see https://github.com/weewx/weewx/wiki/Tags-for-series#syntax
+        if (attr == 'month'):
+            return month
 
-        Args:
-            observation (string): The observation
-
-        Returns:
-            int: aggregate_interval
-        """
-        if observation == 'ET' or observation == 'rain':
-            return 3600
-
-        return 900
-
-    def get_rounding(self, observation):
-        """
-        Rounding settings for observations.
-
-        Args:
-            observation (string): The observation
-
-        Returns:
-            int: A rounding
-        """
-        if observation == 'UV' or observation == 'cloudbase':
-            return 0
-
-        if observation == 'ET':
-            return 2
-
-        return 1
-
-    def get_delta(self, observation):
-        """
-        Get delta for $span($hour_delta=$delta) call.
-
-        Args:
-            observation (string): The observation
-
-        Returns:
-            float: A delta
-        """
-        if observation == 'rain' or observation == 'ET':
-            # @todo Use time of last record instead of now.minute
-            now = datetime.datetime.now()
-            return round(24 + (now.minute / 60), 2)
-
-        return 24
+        if (attr == 'year'):
+            return year

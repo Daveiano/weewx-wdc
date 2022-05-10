@@ -1,7 +1,7 @@
 <!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
-#attr $precision = 'day'
+#attr $precision = 'week'
 
 <!DOCTYPE html>
 <html>
@@ -9,7 +9,7 @@
     #if $encoding == 'utf8'
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     #end if
-    <title>$station.location - $gettext("Current Weather Conditions")</title>
+    <title>$station.location - $gettext("Weekly Weather Conditions")</title>
     <link rel="stylesheet" href="dist/scss/index.css" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
@@ -29,8 +29,10 @@
         <div class="bx--grid bx--grid--full-width">
           <div class="bx--row">
             <header class="bx--col page-header">
-              <h1>$gettext("Current Weather Conditions")</h1>
-              <h2>$current.dateTime</h2>
+              <h1>$gettext("Weekly Weather Conditions")</h1>
+              <h2>
+                $week.start.format("%d. %b %Y") - $week.end.format("%d. %b %Y")
+              </h2>
             </header>
           </div>
           <div class="bx--row">

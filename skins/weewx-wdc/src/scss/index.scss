@@ -95,6 +95,9 @@ header.section-header {
       }
       span {
         @include carbon--type-style("productive-heading-05");
+        span {
+          @include carbon--type-style("label-01");
+        }
       }
     }
     .stat-label {

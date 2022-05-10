@@ -30,6 +30,7 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
       tickValues = "every 3 days";
       break;
     case "year":
+    case "alltime":
       format = "%d.%m";
       tickValues = "every 15 days";
       break;
@@ -65,7 +66,7 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
   }
 
   return (
-    <div style={{ height: "400px" }}>
+    <div className="diagram">
       <ResponsiveLine
         axisBottom={{
           format,

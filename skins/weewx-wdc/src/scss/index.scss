@@ -2,6 +2,7 @@
 $carbon--theme: $carbon--theme--g10;
 @include carbon--theme();
 
+@import "~@carbon/layout/scss/breakpoint";
 @import "~@carbon/layout/scss/convert";
 $carbon--grid-breakpoints: (
   sm: (
@@ -134,6 +135,13 @@ header.section-header {
 
 .diagram-tooltip {
   font-family: carbon--font-family("mono"), monospace;
+}
+
+.diagram {
+  height: 300px;
+  @include carbon--breakpoint-up(md) {
+    height: 350px;
+  }
 }
 
 #footer {

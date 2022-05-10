@@ -132,7 +132,7 @@ class GeneralUtil(SearchList):
 
         return 'black'
 
-    def get_time_span_from_attr(self, attr, day, week, month, year):
+    def get_time_span_from_attr(self, attr, day, week, month, year, alltime):
         """
         Get tag for use in templates.
 
@@ -157,3 +157,6 @@ class GeneralUtil(SearchList):
 
         if (attr == 'year'):
             return year
+
+        if (attr == 'alltime'):
+            return alltime

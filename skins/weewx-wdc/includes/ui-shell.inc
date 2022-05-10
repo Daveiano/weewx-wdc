@@ -51,7 +51,7 @@
       </svg>
       $gettext("Celestial")
     </bx-side-nav-link>
-    <bx-side-nav-link href="stats.html">
+    <bx-side-nav-link href="statistics.html">
       <svg
         slot="title-icon"
         width="16"
@@ -82,7 +82,7 @@
       $gettext("Statistics")
     </bx-side-nav-link>
     <bx-side-nav-divider></bx-side-nav-divider>
-    <bx-side-nav-menu title="Temperature">
+    <bx-side-nav-menu title="NOAA Reports">
       <bx-side-nav-menu-item href="#"> 1 </bx-side-nav-menu-item>
       <bx-side-nav-menu-item href="#"> 2 </bx-side-nav-menu-item>
       <bx-side-nav-menu-item href="#"> 3 </bx-side-nav-menu-item>

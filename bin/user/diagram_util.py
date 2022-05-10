@@ -68,7 +68,7 @@ class DiagramUtil(SearchList):
 
         Args:
             observation (string): The observation
-            precision (string): Day, week, month, year
+            precision (string): Day, week, month, year, alltime
 
         Returns:
             int: aggregate_interval
@@ -91,7 +91,7 @@ class DiagramUtil(SearchList):
 
             return 900 * 24  # 6 hours
 
-        if precision == 'year':
+        if precision == 'year' or precision == 'alltime':
             if observation == 'ET' or observation == 'rain':
                 return 3600 * 24  # 1 day
 
@@ -121,7 +121,7 @@ class DiagramUtil(SearchList):
 
         Args:
             observation (string): The observation
-            precision (string): Day, week, month, year
+            precision (string): Day, week, month, year, alltime
 
         Returns:
             float: A delta
@@ -137,7 +137,7 @@ class DiagramUtil(SearchList):
         if precision == 'month':
             hour_delta = 24 * monthrange(now.year, now.month)[1]
 
-        if precision == 'year':
+        if precision == 'year' or precision == 'alltime':
             days = 366 if isleap(now.year) else 365
             hour_delta = 24 * days
 

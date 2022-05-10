@@ -13,10 +13,10 @@ class StatsUtil(SearchList):
             bool: Show or hide min stat.
         """
         show_min_stat = [
-            "outTemp", "outHumidity", "barometer", "windSpeed",
-            "windGust", "windDir", "rainRate", "snowDepth",
-            "dewpoint", "windchill", "heatindex",
-            "appTemp", "cloudbase"
+            "outTemp", "outHumidity", "barometer",
+            "windDir", "snowDepth", "heatindex",
+            "dewpoint", "windchill", "cloudbase",
+            "appTemp"
         ]
 
         if 'Temp' in observation:
@@ -42,3 +42,19 @@ class StatsUtil(SearchList):
 
         if observation in show_only_sum:
             return True
+
+    def get_labels(self, prop, precision):
+        """
+        Returns a label.
+
+        Args:
+            prop (string): Min, Max, Sum
+            precision (string): Day, week, month, year, alltime
+
+        Returns:
+            string: A label.
+        """
+        if precision == 'alltime':
+            return prop
+
+        return prop + ' ' + precision

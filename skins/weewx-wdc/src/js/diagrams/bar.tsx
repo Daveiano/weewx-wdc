@@ -19,18 +19,19 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
       dateFormat = "DD.MM";
       break;
     case "year":
+    case "alltime":
       dateFormat = "DD.MM";
       break;
   }
 
   return (
-    <div style={{ height: "400px" }}>
+    <div className="diagram">
       <ResponsiveBar
         axisBottom={{
           format: (value) => moment.unix(value).format(dateFormat),
-          tickSize: 0,
+          tickSize: props.precision === "day" ? 2 : 0,
           tickPadding: 5,
-          tickRotation: 0,
+          tickRotation: props.precision === "day" ? -65 : 0,
         }}
         axisLeft={{
           legend: props.unit,
@@ -48,7 +49,12 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
         indexScale={{ type: "band", round: false }}
         isInteractive={true}
         labelSkipHeight={50}
-        margin={{ top: 20, right: 10, bottom: 20, left: 40 }}
+        margin={{
+          top: 20,
+          right: 10,
+          bottom: props.precision === "day" ? 40 : 20,
+          left: 40,
+        }}
         maxValue={
           Math.max(...props.data[0].data.map((item): number => item.y)) +
           getyScaleOffset(props.observation)

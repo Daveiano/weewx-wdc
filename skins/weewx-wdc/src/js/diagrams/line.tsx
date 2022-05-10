@@ -17,7 +17,23 @@ import { sliceTooltip } from "../components/tooltip-slice";
 export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
   props: DiagramBaseProps
 ): React.ReactElement => {
-  console.log(props);
+  let format = "%H:%M";
+  let tickValues = "every 3 hours";
+
+  switch (props.precision) {
+    case "week":
+      format = "%d.%m";
+      tickValues = "every 1 days";
+      break;
+    case "month":
+      format = "%d.%m";
+      tickValues = "every 3 days";
+      break;
+    case "year":
+      format = "%d.%m";
+      tickValues = "every 15 days";
+      break;
+  }
 
   let combinedData: any[] = [];
   if (props.data.length > 1) {
@@ -52,8 +68,8 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
     <div style={{ height: "400px" }}>
       <ResponsiveLine
         axisBottom={{
-          format: "%H:%M",
-          tickValues: "every 3 hours",
+          format,
+          tickValues,
           tickSize: 0,
           tickPadding: 5,
         }}

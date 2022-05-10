@@ -9,13 +9,25 @@ import { TooltipBar } from "../components/tooltip-bar";
 export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
   props: DiagramBaseProps
 ): React.ReactElement => {
-  console.log(props);
+  let dateFormat = "HH:mm";
+
+  switch (props.precision) {
+    case "week":
+      dateFormat = "DD.MM";
+      break;
+    case "month":
+      dateFormat = "DD.MM";
+      break;
+    case "year":
+      dateFormat = "DD.MM";
+      break;
+  }
 
   return (
     <div style={{ height: "400px" }}>
       <ResponsiveBar
         axisBottom={{
-          format: (value) => moment.unix(value).format("HH:mm"),
+          format: (value) => moment.unix(value).format(dateFormat),
           tickSize: 0,
           tickPadding: 5,
           tickRotation: 0,
@@ -47,7 +59,7 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
           <TooltipBar
             formattedValue={point.formattedValue}
             color={props.color[0]}
-            time={moment.unix(point.data.x).format("HH:mm")}
+            time={moment.unix(point.data.x).format(dateFormat)}
           />
         )}
         valueFormat={(value) => `${value} ${props.unit}`}

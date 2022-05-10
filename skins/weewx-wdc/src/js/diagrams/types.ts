@@ -5,6 +5,7 @@ type DiagramBaseProps = {
   unit?: string;
   data: Serie[];
   observation: string;
+  precision: "day" | "week" | "month" | "year";
 };
 
 export { DiagramBaseProps };

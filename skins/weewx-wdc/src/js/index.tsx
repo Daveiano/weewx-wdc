@@ -12,6 +12,7 @@ diagrams.forEach((diagram) => {
     diagram.dataset.value &&
     diagram.dataset.labels &&
     diagram.dataset.obs &&
+    diagram.dataset.precision &&
     diagram.dataset.color
   ) {
     let data: Serie[] = [];
@@ -56,6 +57,7 @@ diagrams.forEach((diagram) => {
             unit={diagram.dataset.unit}
             data={data}
             observation={diagram.dataset.obs}
+            precision={diagram.dataset.precision}
           />
         );
         break;
@@ -66,6 +68,7 @@ diagrams.forEach((diagram) => {
             unit={diagram.dataset.unit}
             data={data}
             observation={diagram.dataset.obs}
+            precision={diagram.dataset.precision}
           />
         );
     }

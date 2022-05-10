@@ -38,6 +38,8 @@ class BasicInstaller(ExtensionInstaller):
                   'skins/weewx-wdc/week.html.tmpl',
                   'skins/weewx-wdc/month.html.tmpl',
                   'skins/weewx-wdc/year.html.tmpl',
+                  'skins/weewx-wdc/statistics.html.tmpl',
+                  'skins/weewx-wdc/celestial.html.tmpl',
                   'skins/weewx-wdc/skin.conf',
                   'skins/weewx-wdc/lang/de.conf',
                   'skins/weewx-wdc/lang/en.conf',

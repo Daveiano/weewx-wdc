@@ -1,0 +1,44 @@
+name: Build & release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: 🔨 setup node
+        uses: actions/setup-node@v2
+        with:
+          always-auth: true
+          node-version: "14"
+
+      - name: 🔨 install yarn and dependecies
+        run: |
+          npm i -g yarn
+          yarn set version latest
+          yarn install --network-timeout 1000000
+
+      - name: 🚀 Build JS & SCSS
+        run: yarn run build
+
+      - name: Archive Release
+        uses: thedoctor0/zip-release@master
+        with:
+          type: "zip"
+          filename: "weewx-wdc-${{github.ref_name}}.zip"
+          exclusions: "*.git* /*node_modules/* .vscode* .eslintrc.json .prettierignore .prettierrc.json package.json tsconfig.json yarn.lock skins/weewx-wdc/src*"
+
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "weewx-wdc-${{github.ref_name}}.zip"
+          draft: true
+          prerelease: true
+          generateReleaseNotes: true
+          bodyFile: changelog.md
+          token: ${{ secrets.GITHUB_TOKEN }}

@@ -36,3 +36,21 @@ class ArchiveUtil(SearchList):
         date_time_obj = datetime. strptime(month, '%Y-%m')
 
         return date_time_obj.strftime('%B')
+
+    def fake_get_report_years(self, first):
+        """
+        Returns a fake $SummaryByYear tag.
+
+        Args:
+            first (datetime): Datetime of first observation.
+
+        Returns:
+            list: [2022, 2021].
+        """
+        first_year = first.format("%Y")
+        current_year = datetime.now().strftime("%Y")
+
+        if first_year == current_year:
+            return [current_year]
+
+        return list(range(first_year, current_year))

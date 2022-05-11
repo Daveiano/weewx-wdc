@@ -31,18 +31,18 @@
           #if $precision == 'month' and $use_parameter_month
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($month, $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $precision), time_series='start', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
+            var $series_name = $getattr($month, $combined_obs).series(aggregate_type=$get_aggregate_type($combined_obs), aggregate_interval=$get_aggregate_interval($combined_obs, $precision), time_series='start', time_unit='unix_epoch').round($get_rounding($combined_obs)).json;
           </script>
           <!--prettier-ignore-->
           #else if $precision == 'year' and $use_parameter_year
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($year, $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $precision), time_series='start', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
+            var $series_name = $getattr($year, $combined_obs).series(aggregate_type=$get_aggregate_type($combined_obs), aggregate_interval=$get_aggregate_interval($combined_obs, $precision), time_series='start', time_unit='unix_epoch').round($get_rounding($combined_obs)).json;
           </script>
           #else
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($span($hour_delta=$get_delta($partial_obs, $precision)), $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $precision), time_series='start', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
+            var $series_name = $getattr($span($hour_delta=$get_delta($combined_obs, $precision)), $combined_obs).series(aggregate_type=$get_aggregate_type($combined_obs), aggregate_interval=$get_aggregate_interval($combined_obs, $precision), time_series='start', time_unit='unix_epoch').round($get_rounding($combined_obs)).json;
           </script>
           <!--prettier-ignore-->
           #end if

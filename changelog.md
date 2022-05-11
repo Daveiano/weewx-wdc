@@ -9,3 +9,7 @@
 # 1.0.0-alpha2
 
 - Added celestial page
+
+# 1.0.0-alpha3
+
+- Added archive and NOAA Reports

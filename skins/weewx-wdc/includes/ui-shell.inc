@@ -87,6 +87,9 @@
     <bx-side-nav-menu title="$gettext('Archive & NOAA Reports')">
       <!--prettier-ignore-->
       #set $archive_months = $SummaryByMonth
+      #if len($SummaryByYear) == 0
+      #set $SummaryByYear = $fake_get_report_years($alltime.start)
+      #end if
       #for $year in $SummaryByYear
       #set $months_for_year = $filter_months(archive_months, $year)
       <!--prettier-ignore-->

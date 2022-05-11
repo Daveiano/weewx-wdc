@@ -3,6 +3,8 @@
 #encoding UTF-8
 #from datetime import datetime
 #set $now = datetime.now().strftime("%d. %b %Y %H:%M")
+#attr $use_parameter_month = False
+#attr $use_parameter_year = False
 
 <!DOCTYPE html>
 <html>
@@ -75,19 +77,7 @@
       </section>
     </main>
 
-    <div id="footer">
-      <div class="bx--grid bx--grid--full-width">
-        <div class="bx--row">
-          <div class="bx--col">
-            <p>
-              weewx: $station.uptime<br />
-              server: $station.os_uptime<br />
-              weewx $station.version with $station.hardware<br />
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+    #include "includes/footer.inc"
 
     <script src="dist/js/index.js"></script>
   </body>

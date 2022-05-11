@@ -1,9 +1,10 @@
 <!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
-#attr $precision = 'week'
+#attr $precision = 'year'
+#attr $use_parameter_year = True
+#set global $parameter_year = $year
 #attr $use_parameter_month = False
-#attr $use_parameter_year = False
 
 <!DOCTYPE html>
 <html>
@@ -11,7 +12,7 @@
     #if $encoding == 'utf8'
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     #end if
-    <title>$station.location - $gettext("Weekly Weather Conditions")</title>
+    <title>$station.location - $gettext("Yearly Weather Conditions")</title>
     <link rel="stylesheet" href="dist/scss/index.css" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
@@ -31,16 +32,22 @@
         <div class="bx--grid bx--grid--full-width">
           <div class="bx--row">
             <header class="bx--col page-header">
-              <h1>$gettext("Weekly Weather Conditions")</h1>
-              <h2>
-                $week.start.format("%d. %b %Y") - $week.end.format("%d. %b %Y")
-              </h2>
+              <h1>$gettext("Yearly Weather Conditions")</h1>
+              <h2>$year_name</h2>
+              <h3>
+                <a
+                  target="_blank"
+                  href="NOAA/NOAA-${year.start.format('%Y')}.txt"
+                >
+                  NOAA Report
+                </a>
+              </h3>
             </header>
           </div>
           <div class="bx--row">
             <!--prettier-ignore-->
             #for $skin_obs in $DisplayOptions.get('stat_tile_observations')
-              #if $getattr($current, $skin_obs).has_data
+              #if $getattr($year, $skin_obs).has_data
                 #set global $partial_obs = $skin_obs
                 #include "includes/stat-tile.inc"
               #end if
@@ -48,7 +55,7 @@
           </div>
           <div class="bx--row">
             <header class="bx--col section-header">
-              <h2>$gettext("Last 7 days")</h2>
+              <h2>$year_name</h2>
             </header>
           </div>
 
@@ -60,7 +67,7 @@
               #if $skin_obs in $combined.keys()
                 #set $combined_diagram = $combined[$skin_obs]
                 #for $combined_obs in $combined_diagram.obs.keys()
-                  #if $getattr($current, $combined_obs).has_data
+                  #if $getattr($year, $combined_obs).has_data
                     #set global $combined_diagram = $combined_diagram
                     #set global $diagram_index = $diagram_index
                     #include "includes/combined-diagram-tile.inc"
@@ -69,7 +76,7 @@
                   #end if
                 #end for
               #else
-                #if $getattr($current, $skin_obs).has_data
+                #if $getattr($year, $skin_obs).has_data
                   #set global $partial_obs = $skin_obs
                   #set global $diagram_index = $diagram_index
                   #include "includes/diagram-tile.inc"

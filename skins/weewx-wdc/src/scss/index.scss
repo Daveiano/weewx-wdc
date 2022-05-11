@@ -69,6 +69,10 @@ header.page-header {
   h2 {
     @include carbon--type-style("expressive-heading-03");
   }
+  h3 {
+    margin-top: $spacing-02;
+    @include carbon--type-style("expressive-heading-01");
+  }
 }
 
 header.section-header {

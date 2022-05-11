@@ -1,4 +1,6 @@
+<!--prettier-ignore-->
 #encoding UTF-8
+#errorCatcher Echo
 
 <script
   type="module"
@@ -82,10 +84,23 @@
       $gettext("Statistics")
     </bx-side-nav-link>
     <bx-side-nav-divider></bx-side-nav-divider>
-    <bx-side-nav-menu title="NOAA Reports">
-      <bx-side-nav-menu-item href="#"> 1 </bx-side-nav-menu-item>
-      <bx-side-nav-menu-item href="#"> 2 </bx-side-nav-menu-item>
-      <bx-side-nav-menu-item href="#"> 3 </bx-side-nav-menu-item>
+    <bx-side-nav-menu title="$gettext('Archive & NOAA Reports')">
+      <!--prettier-ignore-->
+      #set $archive_months = $SummaryByMonth
+      #for $year in $SummaryByYear
+      #set $months_for_year = $filter_months(archive_months, $year)
+      <!--prettier-ignore-->
+      <bx-side-nav-menu-item href="year-${year}.html">
+        <b>$year</b>
+      </bx-side-nav-menu-item>
+      <!--prettier-ignore-->
+      #for $month in $months_for_year
+      <bx-side-nav-menu-item href="month-${month}.html">
+        &nbsp;&nbsp;&nbsp;&nbsp;$month_string_format($month)
+      </bx-side-nav-menu-item>
+      <!--prettier-ignore-->
+      #end for
+      #end for
     </bx-side-nav-menu>
   </bx-side-nav-items>
 </bx-side-nav>

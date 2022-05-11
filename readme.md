@@ -9,6 +9,7 @@ Inspired by and build with the [Carbon Design System](https://carbondesignsystem
 - Combinable diagrams via skin.conf
 - Responsive
 - Day, week, month, year and all-time pages
+- Archive and NOAA Reports
 - Almanac
 - Translated for DE and EN
 
@@ -49,9 +50,8 @@ Starts a nginx docker container to serve the generated files.
 
 ### Todo
 
-- Add yearly archive accessible via Sidebar
-- Add NOAA reports accessible via Sidebar
-- Responsive
 - Add Carbon Data Tables
+- Responsive
+- Add Climatological stat tiles (for the archive?)
 
 ## Credits

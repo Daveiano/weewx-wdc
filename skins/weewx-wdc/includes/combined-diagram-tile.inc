@@ -22,14 +22,30 @@
 
           <!--prettier-ignore-->
           #for $combined_obs in $combined_diagram.obs.keys()
-          #set $series_name = $combined_obs + 'Series' + str($diagram_index)
-          #silent $series_names.append($series_name)
-          #silent $series_labels.append($obs.label[$combined_obs])
-          #if 'color' in $combined_diagram.obs[$combined_obs] then $series_colors.append($combined_diagram.obs[$combined_obs].color) else $series_colors.append($get_color($combined_obs))#
+            #set $series_name = $combined_obs + 'Series' + str($diagram_index)
+            #silent $series_names.append($series_name)
+            #silent $series_labels.append($obs.label[$combined_obs])
+            #if 'color' in $combined_diagram.obs[$combined_obs] then $series_colors.append($combined_diagram.obs[$combined_obs].color) else $series_colors.append($get_color($combined_obs))#
+
+          <!--prettier-ignore-->
+          #if $precision == 'month' and $use_parameter_month
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($span($hour_delta=$get_delta($partial_obs, $precision)), $combined_obs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $precision), time_series='start', time_unit='unix_epoch').round($get_rounding($combined_obs)).json;
+            var $series_name = $getattr($month, $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $precision), time_series='start', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
           </script>
+          <!--prettier-ignore-->
+          #else if $precision == 'year' and $use_parameter_year
+          <script>
+            /* prettier-ignore */
+            var $series_name = $getattr($year, $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $precision), time_series='start', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
+          </script>
+          #else
+          <script>
+            /* prettier-ignore */
+            var $series_name = $getattr($span($hour_delta=$get_delta($partial_obs, $precision)), $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $precision), time_series='start', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
+          </script>
+          <!--prettier-ignore-->
+          #end if
           #end for
 
           <div

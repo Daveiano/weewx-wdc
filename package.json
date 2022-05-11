@@ -1,6 +1,6 @@
 {
   "name": "weewx-wdc",
-  "version": "1.0.0-alpha2",
+  "version": "1.0.0-alpha3",
   "description": "Weather Data Center skin for weewx.",
   "author": "David Baetge <david.baetge@gmail.com>",
   "license": "MIT",

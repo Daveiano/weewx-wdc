@@ -32,7 +32,7 @@ jobs:
         with:
           type: "zip"
           filename: "weewx-wdc-${{github.ref_name}}.zip"
-          exclusions: "*.git* /*node_modules/* .vscode* .eslintrc.json .prettierignore .prettierrc.json package.json tsconfig.json yarn.lock skins/weewx-wdc/src*"
+          exclusions: "*.git* /*node_modules/* /*.vscode/* /*.parcel-cache/* /*.yarn/* .eslintrc.json .prettierignore .prettierrc.json package.json tsconfig.json yarn.lock .yarnrc /*skins/weewx-wdc/src/*"
 
       - uses: ncipollo/release-action@v1
         with:

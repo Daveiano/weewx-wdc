@@ -1,6 +1,8 @@
 <!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
+#from datetime import datetime
+#set $now = datetime.now().strftime("%d. %b %Y %H:%M")
 
 <!DOCTYPE html>
 <html>
@@ -8,7 +10,7 @@
     #if $encoding == 'utf8'
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     #end if
-    <title>$station.location - $gettext("Current Weather Conditions")</title>
+    <title>$station.location - $gettext("Almanac")</title>
     <link rel="stylesheet" href="dist/scss/index.css" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
@@ -28,11 +30,47 @@
         <div class="bx--grid bx--grid--full-width">
           <div class="bx--row">
             <header class="bx--col page-header">
-              <h1>$gettext("Current Weather Conditions")</h1>
-              <h2>$current.dateTime</h2>
+              <h1>$gettext("Almanac")</h1>
+              <h2>$now</h2>
             </header>
           </div>
-          <div class="bx--row"></div>
+          <!--prettier-ignore-->
+          #if $almanac.hasExtras
+          <div class="bx--row">
+            <!--prettier-ignore-->
+            #attr $labels_almanac = ["Sun", "Moon"]
+            #for $label in $labels_almanac
+            #set global $label_almanac = $label
+            #include "includes/almanac-tile.inc"
+            #end for
+          </div>
+          <div class="bx--row">
+            <!--prettier-ignore-->
+            #attr $labels_almanac2 = ["Venus", "Mars", "Jupiter", "Saturn"]
+            #for $label in $labels_almanac2
+            #set global $label_almanac = $label
+            #include "includes/almanac-tile.inc"
+            #end for
+          </div>
+          <div class="bx--row">
+            <!--prettier-ignore-->
+            #include "includes/almanac-sun-detail-tile.inc"
+            #include "includes/almanac-moon-detail-tile.inc"
+          </div>
+          #else
+          <div class="bx--row">
+            <!--prettier-ignore-->
+            #set global $label_almanac = $gettext("Sun")
+            #include "includes/almanac-tile-simple.inc"
+          </div>
+          <div class="bx--row">
+            <div class="bx--col">
+              <p class="pyephem">
+                Please install <em>pyephem</em> for detailed celestial timings.
+              </p>
+            </div>
+          </div>
+          #end if
         </div>
       </section>
     </main>

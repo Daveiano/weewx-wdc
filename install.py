@@ -11,7 +11,7 @@ def loader():
 class BasicInstaller(ExtensionInstaller):
     def __init__(self):
         super(BasicInstaller, self).__init__(
-            version="1.0.0-alpha1",
+            version="1.0.0-alpha2",
             name='weewx-wdc',
             description='Weather Data Center skin for weewx.',
             author="David Baetge",
@@ -32,6 +32,7 @@ class BasicInstaller(ExtensionInstaller):
                     'bin/user/diagram_util.py'
                     'bin/user/stats_util.py'
                     'bin/user/general_util.py'
+                    'bin/user/celestial_util.py'
                 ]),
                 ('skins/weewx-wdc',
                  ['skins/weewx-wdc/index.html.tmpl',
@@ -46,11 +47,15 @@ class BasicInstaller(ExtensionInstaller):
                   'skins/weewx-wdc/dist/scss/index.css',
                   'skins/weewx-wdc/dist/js/index.js',
                   'skins/weewx-wdc/favicon.ico',
+                  'skins/weewx-wdc/includes/almanac-tile.inc',
+                  'skins/weewx-wdc/includes/almanac-tile-simple.inc',
                   'skins/weewx-wdc/includes/combined-diagram-tile.inc',
                   'skins/weewx-wdc/includes/diagram-tile.inc',
                   'skins/weewx-wdc/includes/stat-tile.inc',
                   'skins/weewx-wdc/includes/ui-shell.inc',
                   'skins/weewx-wdc/includes/icons/barometer.svg',
+                  'skins/weewx-wdc/includes/pictograms/sun.svg',
+                  'skins/weewx-wdc/includes/pictograms/moon.svg',
                   'skins/weewx-wdc/includes/icons/cloud-base.svg',
                   'skins/weewx-wdc/includes/icons/dew-point.svg',
                   'skins/weewx-wdc/includes/icons/ev.svg',
@@ -66,6 +71,11 @@ class BasicInstaller(ExtensionInstaller):
                   'skins/weewx-wdc/includes/icons/wind-direction.svg',
                   'skins/weewx-wdc/includes/icons/wind-gust.svg',
                   'skins/weewx-wdc/includes/icons/wind-speed.svg',
+                  'skins/weewx-wdc/includes/icons/sunrise.svg',
+                  'skins/weewx-wdc/includes/icons/sunset.svg',
+                  'skins/weewx-wdc/includes/icons/moon.svg',
+                  'skins/weewx-wdc/includes/icons/moonrise.svg',
+                  'skins/weewx-wdc/includes/icons/moonset.svg',
                   ]),
             ]
         )

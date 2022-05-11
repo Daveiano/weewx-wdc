@@ -133,6 +133,46 @@ header.section-header {
   }
 }
 
+.almanac-tile {
+  margin-bottom: $spacing-06;
+  .label {
+    @include carbon--type-style("expressive-heading-04");
+    display: flex;
+    align-items: end;
+    margin-bottom: $spacing-04;
+    justify-content: space-between;
+    svg {
+      max-width: 128px;
+      display: block;
+    }
+    &.small {
+      @include carbon--type-style("label-01");
+      margin-bottom: 0;
+      justify-content: unset;
+      align-items: center;
+    }
+  }
+  .bx--col.value {
+    display: flex;
+    align-items: center;
+    svg {
+      margin-right: $spacing-04;
+    }
+  }
+  .value {
+    @include carbon--type-style("productive-heading-01");
+  }
+  &.detail {
+    .bx--row.stats {
+      margin-bottom: $spacing-04;
+    }
+  }
+}
+
+.pyephem {
+  margin-top: $spacing-10;
+}
+
 .diagram-tooltip {
   font-family: carbon--font-family("mono"), monospace;
 }

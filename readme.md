@@ -1,6 +1,22 @@
 # Weewx Weather Data Center skin
 
+Inspired by and build with the [Carbon Design System](https://carbondesignsystem.com/). This skin uses the same technologies as [Weather Data Center](https://github.com/Daveiano/weather-data-center), a cross-platform Desktop App to import and analyze weather data, I wrote.
+
+## Key Features
+
+- Clear and beatiful UI thanks to [IBM Carbon](https://carbondesignsystem.com/) and [nivo](https://nivo.rocks/)
+- Configurable Statistic Tiles and Diagram tiles
+- Combinable diagrams via skin.conf
+- Responsive
+- Day, week, month, year and all-time pages
+- Almanac
+- Translated for DE and EN
+
 ## Usage
+
+### Installation
+
+### Configuration
 
 ## Development
 
@@ -30,6 +46,8 @@ Only works if weewx is installed via package, see https://weewx.com/docs/setup.h
 Starts a nginx docker container to serve the generated files.
 
 `docker run -it --rm -d -p 8080:80 --name web -v /var/www/html/weewx:/usr/share/nginx/html nginx`
+
+## Credits
 
 ### Todo
 

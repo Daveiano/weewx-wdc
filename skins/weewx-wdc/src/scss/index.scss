@@ -187,4 +187,12 @@ header.section-header {
 #footer {
   padding: 2rem;
   margin-top: $spacing-09;
+  background-color: $background-inverse;
+  color: $text-inverse;
+  a {
+    color: $link-inverse;
+  }
+  .footnote {
+    margin-top: $spacing-06;
+  }
 }

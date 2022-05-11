@@ -42,7 +42,7 @@
             <p class="value">$("%.1f&deg;" % $almanac.sun.az)s</p>
           </div>
           <div class="bx--col">
-            <p class="label small">$gettext("Altitude")</p>
+            <p class="label small">$pgettext("Astronomical", "Altitude")</p>
             <p class="value">$("%.1f&deg;" % $almanac.sun.alt)</p>
           </div>
         </div>

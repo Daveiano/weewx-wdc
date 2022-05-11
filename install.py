@@ -53,6 +53,7 @@ class BasicInstaller(ExtensionInstaller):
                   'skins/weewx-wdc/includes/diagram-tile.inc',
                   'skins/weewx-wdc/includes/stat-tile.inc',
                   'skins/weewx-wdc/includes/ui-shell.inc',
+                  'skins/weewx-wdc/includes/footer.inc',
                   'skins/weewx-wdc/includes/icons/barometer.svg',
                   'skins/weewx-wdc/includes/pictograms/sun.svg',
                   'skins/weewx-wdc/includes/pictograms/moon.svg',

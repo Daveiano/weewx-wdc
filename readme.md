@@ -4,7 +4,7 @@ Inspired by and build with the [Carbon Design System](https://carbondesignsystem
 
 ## Key Features
 
-- Clear and beatiful UI thanks to [IBM Carbon](https://carbondesignsystem.com/) and [nivo](https://nivo.rocks/)
+- Clear and beautiful UI thanks to [IBM Carbon](https://carbondesignsystem.com/) and [nivo](https://nivo.rocks/)
 - Configurable Statistic Tiles and Diagram tiles
 - Combinable diagrams via skin.conf
 - Responsive
@@ -47,12 +47,11 @@ Starts a nginx docker container to serve the generated files.
 
 `docker run -it --rm -d -p 8080:80 --name web -v /var/www/html/weewx:/usr/share/nginx/html nginx`
 
-## Credits
-
 ### Todo
 
-- Footer
 - Add yearly archive accessible via Sidebar
 - Add NOAA reports accessible via Sidebar
 - Responsive
 - Add Carbon Data Tables
+
+## Credits

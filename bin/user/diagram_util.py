@@ -95,7 +95,7 @@ class DiagramUtil(SearchList):
             if observation == 'ET' or observation == 'rain':
                 return 3600 * 24  # 1 day
 
-            return 900 * 48  # 12 hours
+            return 3600 * 24  # 1 day
 
     def get_rounding(self, observation):
         """
@@ -115,7 +115,7 @@ class DiagramUtil(SearchList):
 
         return 1
 
-    def get_delta(self, precision):
+    def get_hour_delta(self, precision):
         """
         Get delta for $span($hour_delta=$delta) call.
 
@@ -127,17 +127,33 @@ class DiagramUtil(SearchList):
         """
         now = datetime.datetime.now()
 
-        if precision == 'day':
-            hour_delta = 24
+        hour_delta = 24
 
         if precision == 'week':
             hour_delta = 24 * 7
 
         if precision == 'month':
-            hour_delta = 24 * monthrange(now.year, now.month)[1]
+            hour_delta = 24 * 30  # monthrange(now.year, now.month)[1]
 
-        if precision == 'year' or precision == 'alltime':
+        if precision == 'year':
             days = 366 if isleap(now.year) else 365
             hour_delta = 24 * days
 
         return hour_delta
+
+    def get_week_delta(self, precision):
+        """
+        Get delta for $span($week_delta=$delta) call.
+
+        Args:
+            precision (string): Day, week, month, year, alltime
+
+        Returns:
+            float: A delta
+        """
+        week_delta = 0
+
+        if precision == 'alltime':
+            week_delta = 1000
+
+        return week_delta

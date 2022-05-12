@@ -51,7 +51,6 @@ Starts a nginx docker container to serve the generated files.
 
 ### Todo
 
-- Check pages (headings, data) if it makes sense
 - Responsive
 - Add Climatological stat tiles (for the archive?)
 

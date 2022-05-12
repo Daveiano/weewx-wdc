@@ -29,7 +29,7 @@
           #else
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($span($hour_delta=$get_delta($precision)), $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $precision), time_series='start', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
+            var $series_name = $getattr($span($hour_delta=$get_hour_delta($precision), $week_delta=$get_week_delta($precision)), $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $precision), time_series='start', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
           </script>
           #end if
 

@@ -1,23 +1,21 @@
+<!--prettier-ignore-->
 #encoding UTF-8
-
-<script
-  type="module"
-  src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/data-table.min.js"
-></script>
-<script
-  type="module"
-  src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/pagination.rtl.min.js"
-></script>
+#errorCatcher Echo
+#set $table_tile_observations = $DisplayOptions.get("table_tile_observations")
 
 <div class="bx--col">
   <div class="bx--tile data-table-tile">
     <div class="bx--row">
-      <header class="bx--col section-header">
-        <h2>Schöne Tabelle</h2>
-      </header>
-    </div>
-    <div class="bx--row">
-      <div class="bx--col"></div>
+      <div class="bx--col">
+        <script>
+          /*prettier-ignore*/
+          var tableHeaders = $get_table_headers($table_tile_observations, $unit.label, $obs.label, $span($hour_delta=$get_delta($precision)));
+          /*prettier-ignore*/
+          var tableRows = $get_table_rows($table_tile_observations, $span($hour_delta=$get_delta($precision)), $precision);
+          var tableTitle = '$gettext("All data")';
+        </script>
+        <div class="table"></div>
+      </div>
     </div>
   </div>
 </div>

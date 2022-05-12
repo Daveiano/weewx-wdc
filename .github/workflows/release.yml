@@ -27,7 +27,7 @@ jobs:
       - name: 🚀 Build JS & SCSS
         run: yarn run build
 
-      - name: Archive Release
+      - name: Archive Release (zip)
         uses: thedoctor0/zip-release@master
         with:
           type: "zip"

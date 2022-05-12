@@ -13,3 +13,7 @@
 # 1.0.0-alpha3
 
 - Added archive and NOAA Reports
+
+# 1.0.0-beta1
+
+- Added Carbon Data Tables

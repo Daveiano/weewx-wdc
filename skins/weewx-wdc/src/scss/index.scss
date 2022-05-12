@@ -200,3 +200,16 @@ header.section-header {
     margin-top: $spacing-06;
   }
 }
+
+/*@todo Remove if data-tables is sperate package*/
+.data-table-tile {
+  padding: 0;
+}
+.bx--pagination {
+  .bx--pagination__left {
+    padding-left: 0;
+  }
+}
+.bx--data-table--short .bx--table-header-label {
+  white-space: nowrap;
+}

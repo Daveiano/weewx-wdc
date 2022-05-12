@@ -115,12 +115,11 @@ class DiagramUtil(SearchList):
 
         return 1
 
-    def get_delta(self, observation, precision):
+    def get_delta(self, precision):
         """
         Get delta for $span($hour_delta=$delta) call.
 
         Args:
-            observation (string): The observation
             precision (string): Day, week, month, year, alltime
 
         Returns:
@@ -140,9 +139,5 @@ class DiagramUtil(SearchList):
         if precision == 'year' or precision == 'alltime':
             days = 366 if isleap(now.year) else 365
             hour_delta = 24 * days
-
-        if observation == 'rain' or observation == 'ET':
-            # @todo Use time of last record instead of now.minute
-            return round(hour_delta + (now.minute / 60), 2)
 
         return hour_delta

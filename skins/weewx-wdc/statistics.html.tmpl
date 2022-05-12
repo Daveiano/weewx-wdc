@@ -41,7 +41,7 @@
           <div class="bx--row">
             <!--prettier-ignore-->
             #for $skin_obs in $DisplayOptions.get('stat_tile_observations')
-              #if $getattr($current, $skin_obs).has_data
+              #if $getattr($alltime, $skin_obs).has_data
                 #set global $partial_obs = $skin_obs
                 #include "includes/stat-tile.inc"
               #end if
@@ -61,7 +61,7 @@
               #if $skin_obs in $combined.keys()
                 #set $combined_diagram = $combined[$skin_obs]
                 #for $combined_obs in $combined_diagram.obs.keys()
-                  #if $getattr($current, $combined_obs).has_data
+                  #if $getattr($alltime, $combined_obs).has_data
                     #set global $combined_diagram = $combined_diagram
                     #set global $diagram_index = $diagram_index
                     #include "includes/combined-diagram-tile.inc"
@@ -70,7 +70,7 @@
                   #end if
                 #end for
               #else
-                #if $getattr($current, $skin_obs).has_data
+                #if $getattr($alltime, $skin_obs).has_data
                   #set global $partial_obs = $skin_obs
                   #set global $diagram_index = $diagram_index
                   #include "includes/diagram-tile.inc"
@@ -78,6 +78,11 @@
                 #end if
               #end if
             #end for
+          </div>
+
+          <div class="bx--row">
+            <!-- prettier-ignore -->
+            #include "includes/data-table-tile.inc"
           </div>
         </div>
       </section>

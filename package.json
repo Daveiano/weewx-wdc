@@ -1,6 +1,6 @@
 {
   "name": "weewx-wdc",
-  "version": "1.0.0-alpha3",
+  "version": "1.0.0-beta1",
   "description": "Weather Data Center skin for weewx.",
   "author": "David Baetge <david.baetge@gmail.com>",
   "license": "MIT",
@@ -16,19 +16,25 @@
   },
   "dependencies": {
     "@carbon/colors": "10.34.0",
+    "@carbon/icons-react": "10.22.0",
     "@carbon/themes": "10.40.0",
     "@carbon/type": "10.39.0",
     "@nivo/bar": "^0.79.1",
     "@nivo/core": "^0.79.0",
     "@nivo/line": "^0.79.1",
     "carbon-components": "10.25.0",
+    "carbon-components-react": "7.50.0",
+    "carbon-icons": "7.0.7",
     "moment": "^2.29.3",
     "prop-types": "^15.8.1",
     "react": "^18.1.0",
-    "react-dom": "^18.1.0"
+    "react-dom": "^18.1.0",
+    "use-debounce": "^8.0.1"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "2.5.0",
+    "@types/carbon-components-react": "^7.46.1",
+    "@types/carbon__icons-react": "^10.24.0",
     "@types/react": "^18.0.8",
     "@types/react-dom": "^18.0.3",
     "@typescript-eslint/eslint-plugin": "^5.22.0",

@@ -1,8 +1,10 @@
-import { Serie } from "@nivo/line";
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { BarDiagram } from "./diagrams/bar";
+import { Serie } from "@nivo/line";
 
+import { TABLE_SORT_DIRECTION } from "./data-table/misc";
+import TableBase from "./data-table/table-base";
+import { BarDiagram } from "./diagrams/bar";
 import { LineDiagram } from "./diagrams/line";
 
 const diagrams = document.querySelectorAll("div.diagram");
@@ -74,3 +76,28 @@ diagrams.forEach((diagram) => {
     }
   }
 });
+
+const table = document.querySelector("div.table");
+if (table) {
+  const tableHeaders = window.tableHeaders;
+  const tableRows = window.tableRows;
+  const tableTitle = window.tableTitle;
+
+  const root = createRoot(table);
+
+  root.render(
+    <TableBase
+      columns={tableHeaders}
+      rows={tableRows}
+      start={0}
+      pageSize={10}
+      pageSizes={[10, 25, 50, 100, 200, 500]}
+      sortInfo={{
+        columnId: "timeParsed",
+        direction: TABLE_SORT_DIRECTION.ASC,
+      }}
+      size="short"
+      title={tableTitle}
+    />
+  );
+}

@@ -12,6 +12,7 @@ Inspired by and build with the [Carbon Design System](https://carbondesignsystem
 - Archive and NOAA Reports
 - Almanac
 - Translated for DE and EN
+- Tabular representation with Carbon Data Tables
 
 ## Usage
 
@@ -50,7 +51,7 @@ Starts a nginx docker container to serve the generated files.
 
 ### Todo
 
-- Add Carbon Data Tables
+- Check pages (headings, data) if it makes sense
 - Responsive
 - Add Climatological stat tiles (for the archive?)
 

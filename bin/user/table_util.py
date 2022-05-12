@@ -69,7 +69,8 @@ class TableUtil(SearchList):
                     cs_time = datetime.fromtimestamp(start.raw)
                     # The current series item by time.
                     cs_item = list(filter(
-                        lambda x: (x['timeParsed'] == cs_time.isoformat()), carbon_values
+                        lambda x: (x['timeParsed'] == cs_time.isoformat()),
+                        carbon_values
                     ))
 
                     if len(cs_item) == 0:
@@ -82,5 +83,10 @@ class TableUtil(SearchList):
                         cs_item_index = carbon_values.index(cs_item)
                         cs_item[observation] = data.raw
                         carbon_values[cs_item_index] = cs_item
+
+        # Sort per time
+        carbon_values.sort(
+            key=lambda item: datetime.fromisoformat(item['timeParsed'])
+        )
 
         return carbon_values

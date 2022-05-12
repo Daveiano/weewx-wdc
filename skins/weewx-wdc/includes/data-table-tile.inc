@@ -3,6 +3,8 @@
 #errorCatcher Echo
 #set $table_tile_observations = $DisplayOptions.get("table_tile_observations")
 
+$precision
+
 <div class="bx--col">
   <div class="bx--tile data-table-tile">
     <div class="bx--row">

@@ -18,7 +18,7 @@ class ArchiveUtil(SearchList):
         months_filtered = []
 
         for month in months:
-            if year in month:
+            if str(year) in month:
                 months_filtered.append(month)
 
         return months_filtered
@@ -47,10 +47,14 @@ class ArchiveUtil(SearchList):
         Returns:
             list: [2022, 2021].
         """
-        first_year = first.format("%Y")
-        current_year = datetime.now().strftime("%Y")
+        first_year = int(first.format("%Y"))
+        current_year = int(datetime.now().strftime("%Y"))
 
         if first_year == current_year:
             return [current_year]
 
-        return list(range(first_year, current_year))
+        if first_year + 1 == current_year:
+            return [first_year, current_year]
+
+        else:
+            return list(range(first_year, current_year))

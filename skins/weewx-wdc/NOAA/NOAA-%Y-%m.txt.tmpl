@@ -1,4 +1,10 @@
 #errorCatcher Echo
+## +-------------------------------------------------------------------------+
+## |    NOAA-%Y-%m.txt.tmpl   Template for "NOAA month summary" text file    |
+## +-------------------------------------------------------------------------+
+## | Original version by Tom Keffer in the weewx Standard skin               |
+## | See: https://github.com/weewx/weewx/tree/master/skins/Standard/NOAA     |
+## +-------------------------------------------------------------------------+
 #set $YM="%Y %m"
 #set $D=" %d"
 #set $M=" %b"
@@ -17,7 +23,7 @@
                    MONTHLY CLIMATOLOGICAL SUMMARY for $month_name $year_name
 
 
-NAME: $station.location                  
+NAME: $station.location
 ELEV: $station.altitude    LAT: $station.latitude[0]-$station.latitude[1] $station.latitude[2]    LONG: $station.longitude[0]-$station.longitude[1] $station.longitude[2]
 
 

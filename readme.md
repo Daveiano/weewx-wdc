@@ -25,8 +25,9 @@ Inspired by and build with the [Carbon Design System](https://carbondesignsystem
 ### Installation
 
 1. [Download](https://github.com/Daveiano/weewx-wdc/releases) the latest version
-2. Install the extension: wee_extension --install=path/to/weewx-wdc-version-string.zip
-3. Restart weewx: weewx restart
+2. Create a new folder and unzip to that folder
+3. Install the extension: wee_extension --install=path/to/weewx-wdc
+4. Restart weewx: weewx restart
 
 For help, please have a look at the [official weewx documentation](https://weewx.com/docs/utilities.htm#wee_extension_utility).
 
@@ -141,6 +142,17 @@ For a combined diagram of Temperature and Dew point:
 
 `# 4` Optionally define a color.
 
+### Localization
+
+The skin currently has an english and a german translation, you can change the language in weewx.conf:
+
+```
+[[WdcReport]]
+    skin = weewx-wdc
+    enable = true
+    lang = de
+```
+
 ## Development
 
 The skin uses the Cheetah templating engine provided by weewx in combination with carbon web components
@@ -176,4 +188,8 @@ Starts a nginx docker container to serve the generated files.
 
 ## Credits
 
--
+Thanks to [ngulden](https://github.com/ngulden) for the [niculskin](https://github.com/ngulden/niculskin) and
+[neoground](https://github.com/neoground) for the [neowx-material skin](https://github.com/neoground/neowx-material). Both are amazing skins and gave me a basic understanding of creating a weewx skin.
+
+The config, NOAA Reports and some templating ideas and concepts are based on the orignal Standard and Seasons
+weewx skins by Tom Keffer and the weewx contributors.

@@ -17,7 +17,7 @@ class GeneralUtil(SearchList):
             observation (string): The observation
 
         Returns:
-            str: A color string
+            str: An icon include path
         """
         icon_path = "includes/icons/"
 
@@ -144,7 +144,7 @@ class GeneralUtil(SearchList):
             year: Yeary TimeSpanBinder
 
         Returns:
-            str: A color string
+            obj: TimeSpanBinder
         """
         if (attr == 'day'):
             return day

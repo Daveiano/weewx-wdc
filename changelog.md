@@ -23,3 +23,7 @@
 - Updated headings and translations
 - Bugfixes: Diagram Axis Labels, series generation
 - Overall diagram fine-tuning
+
+# 1.0.0-beta3
+
+- Removed HTML_ROOT setting in install.py

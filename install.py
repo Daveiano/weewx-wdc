@@ -11,7 +11,7 @@ def loader():
 class BasicInstaller(ExtensionInstaller):
     def __init__(self):
         super(BasicInstaller, self).__init__(
-            version="1.0.0-beta2",
+            version="1.0.0-beta3",
             name='weewx-wdc',
             description='Weather Data Center skin for weewx.',
             author="David Baetge",
@@ -21,7 +21,6 @@ class BasicInstaller(ExtensionInstaller):
                     'WdcReport': {
                         'skin': 'weewx-wdc',
                         'enable': 'true',
-                        'HTML_ROOT': '/var/www/html/weewx/wdc',
                         'lang': 'en',
                         # 'unit_system': 'US'
                     }

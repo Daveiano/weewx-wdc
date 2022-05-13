@@ -14,6 +14,8 @@ Inspired by and build with the [Carbon Design System](https://carbondesignsystem
 - Translated for DE and EN
 - Tabular representation with Carbon Data Tables
 
+## [Demo](https://www.weewx-hbt.de)
+
 ## Screenshot
 
 ![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc.png)
@@ -173,3 +175,5 @@ Starts a nginx docker container to serve the generated files.
 - Add Climatological stat tiles (for the archive?) for eg. Rain Days, Hot days, Tropical Nights, etc.
 
 ## Credits
+
+-

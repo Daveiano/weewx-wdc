@@ -17,3 +17,9 @@
 # 1.0.0-beta1
 
 - Added Carbon Data Tables
+
+# 1.0.0-beta2
+
+- Updated headings and translations
+- Bugfixes: Diagram Axis Labels, series generation
+- Overall diagram fine-tuning

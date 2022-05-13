@@ -59,6 +59,9 @@ class DiagramUtil(SearchList):
         if observation == 'ET' or observation == 'rain':
             return 'sum'
 
+        if observation == 'UV' or observation == 'windGust':
+            return 'max'
+
         return 'avg'
 
     def get_aggregate_interval(self, observation, precision):

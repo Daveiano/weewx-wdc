@@ -213,3 +213,11 @@ header.section-header {
 .bx--data-table--short .bx--table-header-label {
   white-space: nowrap;
 }
+
+@include carbon--breakpoint-down(md) {
+  section.main.bx--content,
+  #footer {
+    padding-left: $spacing-09;
+    padding-right: $spacing-03;
+  }
+}

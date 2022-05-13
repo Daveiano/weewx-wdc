@@ -30,9 +30,12 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
       tickValues = "every 3 days";
       break;
     case "year":
-    case "alltime":
       format = "%d.%m";
       tickValues = "every 1 months";
+      break;
+    case "alltime":
+      format = "%d.%m";
+      tickValues = "every 6 months";
       break;
   }
 

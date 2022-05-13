@@ -27,3 +27,7 @@
 # 1.0.0-beta3
 
 - Removed HTML_ROOT setting in install.py
+
+# 1.0.0-beta4
+
+- Added missing includes to install.py.

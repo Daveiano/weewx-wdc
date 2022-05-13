@@ -105,7 +105,7 @@ export const getMargins = (obs: string): Box => {
   };
 
   if (obs === "pressure" || obs == "cloudbase") {
-    margin.left = 48;
+    margin.left = 50;
   }
 
   if (obs === "radiation") {
@@ -119,7 +119,7 @@ export const getAxisLeftLegendOffset = (obs: string): number => {
   switch (obs) {
     case "pressure":
     case "cloudbase":
-      return -43;
+      return -45;
     case "radiation":
       return -40;
     default:

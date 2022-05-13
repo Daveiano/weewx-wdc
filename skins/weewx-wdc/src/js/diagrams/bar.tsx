@@ -31,11 +31,11 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
           format: (value) => moment.unix(value).format(dateFormat),
           tickSize: props.precision === "day" ? 2 : 0,
           tickPadding: 5,
-          tickRotation: props.precision === "day" ? -65 : 0,
+          tickRotation: -65,
         }}
         axisLeft={{
           legend: props.unit,
-          legendOffset: -35,
+          legendOffset: -50,
           legendPosition: "middle",
           tickSize: 0,
           tickPadding: 10,
@@ -52,8 +52,8 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
         margin={{
           top: 20,
           right: 10,
-          bottom: props.precision === "day" ? 40 : 20,
-          left: 40,
+          bottom: 40,
+          left: 55,
         }}
         maxValue={
           Math.max(...props.data[0].data.map((item): number => item.y)) +

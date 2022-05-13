@@ -75,7 +75,7 @@ class DiagramUtil(SearchList):
         """
         if precision == 'day':
             if observation == 'ET' or observation == 'rain':
-                return 3600  # 1 hour
+                return 7200  # 2 hours
 
             return 900  # 15 minutes
 
@@ -93,9 +93,9 @@ class DiagramUtil(SearchList):
 
         if precision == 'year' or precision == 'alltime':
             if observation == 'ET' or observation == 'rain':
-                return 3600 * 24  # 1 day
+                return 3600 * 336  # 7 days
 
-            return 3600 * 24  # 1 day
+            return 3600 * 48  # 2 days
 
     def get_rounding(self, observation):
         """

@@ -88,7 +88,7 @@ export const getCurve = (obs: string) => {
   switch (obs) {
     case "windDir":
     case "radiation":
-      return "basis";
+      return "basis"; // basis
     case "UV":
       return "step";
     default:

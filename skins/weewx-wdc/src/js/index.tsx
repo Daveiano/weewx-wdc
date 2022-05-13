@@ -32,10 +32,12 @@ diagrams.forEach((diagram) => {
           ...data,
           {
             id: labels[index],
-            data: window[serie].map((item: number[]) => ({
-              x: item[0],
-              y: item[1],
-            })),
+            data: window[serie]
+              .map((item: number[]) => ({
+                x: item[0],
+                y: item[1],
+              }))
+              .sort((a, b) => a.x - b.x),
           },
         ];
       });
@@ -43,10 +45,12 @@ diagrams.forEach((diagram) => {
       data = [
         {
           id: diagram.dataset.obs,
-          data: window[diagram.dataset.value].map((item: number[]) => ({
-            x: item[0],
-            y: item[1],
-          })),
+          data: window[diagram.dataset.value]
+            .map((item: number[]) => ({
+              x: item[0],
+              y: item[1],
+            }))
+            .sort((a, b) => a.x - b.x),
         },
       ];
     }

@@ -4,14 +4,19 @@
   "description": "Weather Data Center skin for weewx.",
   "author": "David Baetge <david.baetge@gmail.com>",
   "license": "MIT",
-  "source": [
-    "./skins/weewx-wdc/src/js/index.tsx",
-    "./skins/weewx-wdc/src/scss/index.scss"
-  ],
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "targets": {
-    "default": {
+    "JS": {
+      "source": "./skins/weewx-wdc/src/js/index.tsx",
       "distDir": "./skins/weewx-wdc/dist"
+    },
+    "CSS": {
+      "source": "./skins/weewx-wdc/src/scss/index.scss",
+      "distDir": "./skins/weewx-wdc/dist"
+    },
+    "service-worker": {
+      "source": "./skins/weewx-wdc/src/js/service-worker.js",
+      "distDir": "./skins/weewx-wdc"
     }
   },
   "dependencies": {
@@ -22,6 +27,7 @@
     "@nivo/bar": "^0.79.1",
     "@nivo/core": "^0.79.0",
     "@nivo/line": "^0.79.1",
+    "@parcel/service-worker": "^2.5.0",
     "carbon-components": "10.25.0",
     "carbon-components-react": "7.50.0",
     "carbon-icons": "7.0.7",
@@ -29,7 +35,11 @@
     "prop-types": "^15.8.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
-    "use-debounce": "^8.0.1"
+    "use-debounce": "^8.0.1",
+    "workbox-cacheable-response": "^6.5.3",
+    "workbox-expiration": "^6.5.3",
+    "workbox-routing": "^6.5.3",
+    "workbox-strategies": "^6.5.3"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "2.5.0",

@@ -1,5 +1,5 @@
 {
-  "theme_color": "#000000",
+  "theme_color": "#161616",
   "background_color": "#1F40AF",
   "display": "standalone",
   "scope": "/",
@@ -30,11 +30,6 @@
     }
   ],
   "shortcuts": [
-    {
-      "name": "Today",
-      "url": "/",
-      "description": "Current weather conditions"
-    },
     {
       "name": "Week",
       "url": "/week.html",

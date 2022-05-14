@@ -12,3 +12,5 @@ node_modules
 
 # Project specific.
 skins/weewx-wdc/dist
+skins/weewx-wdc/service-worker.js
+skins/weewx-wdc/service-worker.js.map

@@ -6,21 +6,10 @@
 #attr $use_parameter_year = False
 
 <!DOCTYPE html>
-<html>
+<html lang="$lang">
   <head>
-    #if $encoding == 'utf8'
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    #end if
     <title>$station.location - $gettext("Weekly Weather Conditions")</title>
-    <link rel="stylesheet" href="dist/scss/index.css" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.6.0/webcomponents-loader.min.js"></script>
-    <script>
-      window.WebComponents = window.WebComponents || {};
-      window.WebComponents.root =
-        "node_modules/@webcomponents/webcomponentsjs/";
-    </script>
+    #include "includes/html-head.inc"
   </head>
 
   <body>

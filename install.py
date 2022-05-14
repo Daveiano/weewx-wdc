@@ -52,6 +52,7 @@ class BasicInstaller(ExtensionInstaller):
                   'skins/weewx-wdc/dist/scss/index.css',
                   'skins/weewx-wdc/dist/js/index.js',
                   'skins/weewx-wdc/favicon.ico',
+                  'skins/weewx-wdc/includes/html-head.inc',
                   'skins/weewx-wdc/includes/almanac-tile.inc',
                   'skins/weewx-wdc/includes/almanac-tile-simple.inc',
                   'skins/weewx-wdc/includes/almanac-moon-detail-tile.inc',

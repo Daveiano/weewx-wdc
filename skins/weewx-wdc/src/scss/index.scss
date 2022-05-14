@@ -57,6 +57,10 @@ bx-header ~ bx-side-nav {
   height: calc(100% - 3rem);
 }
 
+bx-side-nav-items {
+  overflow: scroll;
+}
+
 .bx--content {
   margin-top: $spacing-09;
 }
@@ -182,7 +186,7 @@ header.section-header {
 }
 
 .diagram {
-  height: 300px;
+  height: 220px;
   @include carbon--breakpoint-up(md) {
     height: 350px;
   }

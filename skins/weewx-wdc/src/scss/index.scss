@@ -57,6 +57,16 @@ bx-header ~ bx-side-nav {
   height: calc(100% - 3rem);
 }
 
+@include carbon--breakpoint-down(lg) {
+  bx-header-name {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 75%;
+    white-space: nowrap;
+    display: block;
+  }
+}
+
 bx-side-nav-items {
   //overflow: scroll;
 }

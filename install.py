@@ -46,6 +46,11 @@ class BasicInstaller(ExtensionInstaller):
                   'skins/weewx-wdc/year-%Y.html.tmpl',
                   'skins/weewx-wdc/statistics.html.tmpl',
                   'skins/weewx-wdc/celestial.html.tmpl',
+                  'skins/weewx-wdc/manifest.json',
+                  'skins/weewx-wdc/icon-192x192.png'
+                  'skins/weewx-wdc/icon-256x256.png'
+                  'skins/weewx-wdc/icon-384x384.png'
+                  'skins/weewx-wdc/icon-512x512.png'
                   'skins/weewx-wdc/skin.conf',
                   'skins/weewx-wdc/lang/de.conf',
                   'skins/weewx-wdc/lang/en.conf',

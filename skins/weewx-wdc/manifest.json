@@ -1,0 +1,64 @@
+{
+  "theme_color": "#000000",
+  "background_color": "#1F40AF",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/",
+  "name": "weewx WDC",
+  "short_name": "weewx WDC",
+  "description": "weewx Station site with WDC Skin",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-256x256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Today",
+      "url": "/",
+      "description": "Current weather conditions"
+    },
+    {
+      "name": "Week",
+      "url": "/week.html",
+      "description": "Weekly weather conditions"
+    },
+    {
+      "name": "Month",
+      "url": "/month.html",
+      "description": "Monthly weather conditions"
+    },
+    {
+      "name": "Year",
+      "url": "/year.html",
+      "description": "Yearly weather conditions"
+    },
+    {
+      "name": "All time",
+      "url": "/statistics.html",
+      "description": "All time stats"
+    },
+    {
+      "name": "Celestial",
+      "url": "/celestial.html",
+      "description": "Almanac"
+    }
+  ]
+}

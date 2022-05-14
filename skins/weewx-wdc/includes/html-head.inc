@@ -13,3 +13,4 @@
   name="description"
   content='Weewx $station.location - $gettext("Station Description")'
 />
+<link rel="manifest" href="manifest.json" />

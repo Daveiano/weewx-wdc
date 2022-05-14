@@ -225,3 +225,9 @@ header.section-header {
     padding-right: $spacing-03;
   }
 }
+
+.show-small {
+  @include carbon--breakpoint-up(lg) {
+    display: none;
+  }
+}

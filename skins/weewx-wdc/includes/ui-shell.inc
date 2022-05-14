@@ -24,6 +24,19 @@
 </bx-header>
 <bx-side-nav aria-label="Side navigation" collapse-mode="rail">
   <bx-side-nav-items>
+    <bx-side-nav-link class="show-small" href="index.html"
+      >$gettext("Today")</bx-side-nav-link
+    >
+    <bx-side-nav-link class="show-small" href="week.html"
+      >$gettext("Week")</bx-side-nav-link
+    >
+    <bx-side-nav-link class="show-small" href="month.html"
+      >$gettext("Month")</bx-side-nav-link
+    >
+    <bx-side-nav-link class="show-small" href="year.html"
+      >$gettext("Year")</bx-side-nav-link
+    >
+    <bx-side-nav-divider class="show-small"></bx-side-nav-divider>
     <bx-side-nav-link href="celestial.html">
       <svg
         slot="title-icon"

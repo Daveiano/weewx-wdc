@@ -31,3 +31,9 @@
 # 1.0.0-beta4
 
 - Added missing includes to install.py.
+
+# 1.0.0-beta5
+
+- Fixed JS build
+- Updated UI Shell
+- Updated some diagram aggragate types

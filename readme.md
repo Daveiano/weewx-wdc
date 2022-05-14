@@ -185,6 +185,7 @@ Starts a nginx docker container to serve the generated files.
 ### Ideas for further development
 
 - Add Climatological stat tiles (for the archive?) for eg. Rain Days, Hot days, Tropical Nights, etc.
+- PWA
 
 ## Credits
 

@@ -21,17 +21,23 @@
             #else
               #if $get_show_only_sum($partial_obs)
                 $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $partial_obs).sum
+              #else if $get_show_only_max($partial_obs)
+                $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $partial_obs).max
               #else
                 $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $partial_obs).avg
               #end if
             #end if
             <!--prettier-ignore-->
-            #if $precision != 'day' and not $get_show_only_sum($partial_obs)
+            #if $precision != 'day' and not $get_show_only_sum($partial_obs) and not $get_show_only_max($partial_obs)
             <span>$gettext("Avg")</span>
             #end if
             <!--prettier-ignore-->
             #if $precision != 'day' and $get_show_only_sum($partial_obs)
             <span>$gettext("Total")</span>
+            #end if
+            <!--prettier-ignore-->
+            #if $precision != 'day' and $get_show_only_max($partial_obs)
+            <span>$gettext("Max")</span>
             #end if
           </span>
         </p>

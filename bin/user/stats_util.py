@@ -43,6 +43,21 @@ class StatsUtil(SearchList):
         if observation in show_only_sum:
             return True
 
+    def get_show_only_max(self, observation):
+        """
+        Returns if the max stats should be shown.
+
+        Args:
+            observation (string): The observation
+
+        Returns:
+            bool: Show or hide max stat.
+        """
+        show_only_max = ["rainRate"]
+
+        if observation in show_only_max:
+            return True
+
     def get_labels(self, prop, precision):
         """
         Returns a label.

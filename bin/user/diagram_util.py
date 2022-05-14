@@ -59,7 +59,9 @@ class DiagramUtil(SearchList):
         if observation == 'ET' or observation == 'rain':
             return 'sum'
 
-        if observation == 'UV' or observation == 'windGust':
+        if (observation == 'UV' or
+                observation == 'windGust' or
+                observation == 'rainRate'):
             return 'max'
 
         return 'avg'

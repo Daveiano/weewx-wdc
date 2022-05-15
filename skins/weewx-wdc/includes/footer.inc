@@ -4,7 +4,7 @@
 <div id="footer">
   <div class="bx--grid bx--grid--full-width">
     <div class="bx--row">
-      <div class="bx--col">
+      <div class="bx--col-sm-12 bx--col-lg-6">
         <p>
           $gettext("Weewx uptime"): $station.uptime<br />
           $gettext("Server uptime"): $station.os_uptime<br />
@@ -12,7 +12,7 @@
           $gettext("Skin"): $SKIN_NAME $SKIN_VERSION
         </p>
       </div>
-      <div class="bx--col">
+      <div class="bx--col-sm-12 bx--col-lg-6">
         <p>
           $pgettext("Geographical", "Altitude"): $station.altitude<br />
           $gettext("Latitude"): $station.latitude[0]&deg; $station.latitude[1]'

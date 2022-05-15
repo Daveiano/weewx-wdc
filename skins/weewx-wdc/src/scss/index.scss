@@ -67,10 +67,6 @@ bx-header ~ bx-side-nav {
   }
 }
 
-bx-side-nav-items {
-  //overflow: scroll;
-}
-
 .bx--content {
   margin-top: $spacing-09;
 }
@@ -231,8 +227,15 @@ header.section-header {
 @include carbon--breakpoint-down(md) {
   section.main.bx--content,
   #footer {
-    padding-left: $spacing-09;
-    padding-right: $spacing-03;
+    //padding-left: $spacing-09;
+    //padding-right: $spacing-03;
+  }
+}
+
+@include carbon--breakpoint-up(lg) {
+  section.main.bx--content,
+  #footer {
+    padding-left: 16rem;
   }
 }
 

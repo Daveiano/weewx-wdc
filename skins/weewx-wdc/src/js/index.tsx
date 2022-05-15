@@ -89,6 +89,8 @@ if (table) {
 
   const root = createRoot(table);
 
+  console.log("TEST");
+
   root.render(
     <TableBase
       columns={tableHeaders}

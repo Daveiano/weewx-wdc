@@ -298,7 +298,11 @@ const TableBase: React.FC<TableBaseProps> = (
                           )}
                         </>
                       ) : (
-                        <>{row[columnId]}</>
+                        <>
+                          {typeof row[columnId] !== "undefined"
+                            ? row[columnId]
+                            : "-"}
+                        </>
                       )}
                     </TableCell>
                   ))}

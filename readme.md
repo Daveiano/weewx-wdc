@@ -1,5 +1,23 @@
 # Weewx Weather Data Center skin
 
+- [Weewx Weather Data Center skin](#weewx-weather-data-center-skin)
+  - [Key Features](#key-features)
+  - [Demo](#demo)
+  - [Screenshot](#screenshot)
+  - [Usage](#usage)
+    - [Installation](#installation)
+    - [Configuration](#configuration)
+    - [Localization](#localization)
+  - [Development](#development)
+    - [Scripts](#scripts)
+      - [`yarn run dev`](#yarn-run-dev)
+      - [`yarn run build`](#yarn-run-build)
+      - [`yarn run deploy:local`](#yarn-run-deploylocal)
+      - [`yarn run serve:local`](#yarn-run-servelocal)
+    - [Ideas for further development](#ideas-for-further-development)
+  - [Free Software](#free-software)
+  - [Credits](#credits)
+
 Inspired by and build with the [Carbon Design System](https://carbondesignsystem.com/). This skin uses the same technologies as [Weather Data Center](https://github.com/Daveiano/weather-data-center), a cross-platform Desktop App to import and analyze weather data, I wrote.
 
 ## Key Features
@@ -186,6 +204,10 @@ Starts a nginx docker container to serve the generated files.
 
 - Add Climatological stat tiles (for the archive?) for eg. Rain Days, Hot days, Tropical Nights, etc.
 - PWA
+
+## Free Software
+
+This skin uses only free software. You can read more about [Carbon IBM](https://github.com/carbon-design-system/carbon) (licensed under the Apache-2.0 license) here: https://carbondesignsystem.com/contributing/overview/#introduction. [nivo](https://github.com/plouc/nivo) is licensed under the MIT license.
 
 ## Credits
 

@@ -4,6 +4,29 @@ from datetime import datetime
 
 
 class TableUtil(SearchList):
+    def get_table_aggregate_interval(self, observation, precision):
+        """
+        aggregate_interval for observations series for tables.
+
+        Args:
+            observation (string): The observation
+            precision (string): Day, week, month, year, alltime
+
+        Returns:
+            int: aggregate_interval
+        """
+        if precision == 'day':
+            return 900 * 8  # 2 hours
+
+        if precision == 'week':
+            return 900 * 24  # 6 hours
+
+        if precision == 'month':
+            return 900 * 48  # 12 hours
+
+        if precision == 'year' or precision == 'alltime':
+            return 3600 * 24  # 1 day
+
     def get_table_headers(self, obs, unit_labels, obs_labels, period):
         """
         Returns tableheaders for use in carbon data table.
@@ -57,7 +80,7 @@ class TableUtil(SearchList):
             if getattr(period, observation).has_data:
                 series = getattr(period, observation).series(
                     aggregate_type=diagramUtil.get_aggregate_type(observation),
-                    aggregate_interval=diagramUtil.get_aggregate_interval(
+                    aggregate_interval=self.get_table_aggregate_interval(
                         observation,
                         precision
                     ),

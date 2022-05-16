@@ -3,7 +3,7 @@
 #set $label_sum = $get_labels('Sum', $precision)
 #set $label_min = $get_labels('Min', $precision)
 #set $label_max = $get_labels('Max', $precision)
-<div class="bx--col-sm-4 bx--col-md-4 bx--col-lg-4 bx--col-xlg-4 bx--col-max-3">
+<div class="bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-4 bx--col-max-2">
   <div class="bx--tile stat-tile">
     <div class="bx--row">
       <div class="bx--col">
@@ -57,7 +57,7 @@
     #else
     <div class="bx--row">
       #if $get_show_min_stat($partial_obs)
-      <div class="bx--col">
+      <div class="bx--col bx--col-max-12">
         <p class="stat-label">
           <!--prettier-ignore-->
           $gettext($label_min)
@@ -71,7 +71,7 @@
         </p>
       </div>
       #end if
-      <div class="bx--col">
+      <div class="bx--col bx--col-max-12">
         <p class="stat-label">
           <!--prettier-ignore-->
           $gettext($label_max)

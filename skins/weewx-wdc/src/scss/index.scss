@@ -28,7 +28,7 @@ $carbon--grid-breakpoints: (
   max: (
     columns: 16,
     margin: carbon--rem(24px),
-    width: carbon--rem(1850px),
+    width: carbon--rem(2050px),
   ),
 );
 @import "~carbon-components/scss/globals/scss/styles.scss";
@@ -69,6 +69,10 @@ bx-header ~ bx-side-nav {
 
 .bx--content {
   margin-top: $spacing-09;
+  @include carbon--breakpoint-down(lg) {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 header.page-header {
@@ -236,6 +240,7 @@ header.section-header {
   section.main.bx--content,
   #footer {
     padding-left: 16rem;
+    padding-right: 1rem;
   }
 }
 
@@ -243,4 +248,9 @@ header.section-header {
   @include carbon--breakpoint-up(lg) {
     display: none;
   }
+}
+
+.sidebar-heading {
+  pointer-events: none;
+  cursor: default;
 }

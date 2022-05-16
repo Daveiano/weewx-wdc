@@ -97,26 +97,34 @@
       $gettext("Statistics")
     </bx-side-nav-link>
     <bx-side-nav-divider></bx-side-nav-divider>
-    <bx-side-nav-menu title="$gettext('Archive & NOAA Reports')">
-      <!--prettier-ignore-->
-      #set $archive_months = $SummaryByMonth
-      #if len($SummaryByYear) == 0
-      #set $SummaryByYear = $fake_get_report_years($alltime.start)
-      #end if
+    <bx-side-nav-link class="sidebar-heading"
+      >$gettext('Archive & NOAA Reports')</bx-side-nav-link
+    >
+    <!--prettier-ignore-->
+    #set $archive_months = $SummaryByMonth
+    #if len($SummaryByYear) == 0
+    #set $SummaryByYear = $fake_get_report_years($alltime.start)
+    #end if
+    <bx-side-nav-menu title="$gettext('Years')">
       #for $year in $SummaryByYear
-      #set $months_for_year = $filter_months(archive_months, $year)
-      <!--prettier-ignore-->
       <bx-side-nav-menu-item href="year-${year}.html">
         <b>$year</b>
       </bx-side-nav-menu-item>
+      #end for
+    </bx-side-nav-menu>
+    <!--prettier-ignore-->
+    #for $year in $SummaryByYear
+    #set $months_for_year = $filter_months(archive_months, $year)
+    <!--prettier-ignore-->
+    <bx-side-nav-menu title="${year}">
       <!--prettier-ignore-->
       #for $month in $months_for_year
       <bx-side-nav-menu-item href="month-${month}.html">
-        &nbsp;&nbsp;&nbsp;&nbsp;$month_string_format($month)
+        $month_string_format($month)
       </bx-side-nav-menu-item>
-      <!--prettier-ignore-->
-      #end for
       #end for
     </bx-side-nav-menu>
+    <!--prettier-ignore-->
+    #end for
   </bx-side-nav-items>
 </bx-side-nav>

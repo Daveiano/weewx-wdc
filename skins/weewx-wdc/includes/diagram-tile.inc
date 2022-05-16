@@ -1,5 +1,7 @@
 #encoding UTF-8
-<div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-6 bx--col-max-4">
+<div
+  class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-4"
+>
   <div class="bx--tile diagram-tile">
     <div class="bx--row">
       <div class="bx--col">

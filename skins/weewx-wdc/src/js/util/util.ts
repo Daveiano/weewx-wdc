@@ -17,6 +17,7 @@ export const areaBaselineValue0: string[] = [
   "radiation",
   "UV",
   "cloudbase",
+  "wind",
 ];
 
 export const getyScaleOffset = (obs: string): number => {
@@ -39,7 +40,7 @@ export const getyScaleOffset = (obs: string): number => {
   }
 
   if (obs === "rainRate") {
-    offset = 0.5;
+    offset = 0.25;
   }
 
   if (obs === "ET") {
@@ -71,7 +72,14 @@ export const getyScale = (obs: string, data: any[]): ScaleSpec => {
     staticMin = "auto";
   }
 
-  if (obs === "cloudbase" || obs === "UV" || obs === "rainRate") {
+  if (
+    obs === "cloudbase" ||
+    obs === "UV" ||
+    obs === "rainRate" ||
+    obs === "windSpeed" ||
+    obs === "gustSpeed" ||
+    obs === "wind"
+  ) {
     staticMin = 0;
   }
 
@@ -95,6 +103,9 @@ export const getCurve = (obs: string) => {
       return "basis"; // basis
     case "UV":
       return "step";
+    case "rainRate":
+    case "wind":
+      return "linear";
     default:
       return "natural";
   }

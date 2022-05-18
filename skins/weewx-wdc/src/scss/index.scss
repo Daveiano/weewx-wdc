@@ -112,6 +112,9 @@ header.section-header {
   h2 {
     @include carbon--type-style("expressive-heading-06");
   }
+  h3 {
+    @include carbon--type-style("expressive-heading-03");
+  }
 }
 
 .obs-stat-tile {

@@ -104,7 +104,7 @@ class TableUtil(SearchList):
                     else:
                         cs_item = cs_item[0]
                         cs_item_index = carbon_values.index(cs_item)
-                        cs_item[observation] = data.raw
+                        cs_item[observation] = data.raw if data.raw is not None else "-"
                         carbon_values[cs_item_index] = cs_item
 
         # Sort per time

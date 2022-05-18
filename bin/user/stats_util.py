@@ -73,3 +73,24 @@ class StatsUtil(SearchList):
             return prop
 
         return prop + ' ' + precision
+
+    def get_rain_days(self, period):
+        """
+        Return number of rain days in period (rain > 0).
+
+        Args:
+            period (obj): Period to use, eg. $year, month, $span
+
+        Returns:
+            int: Number of rain days.
+        """
+        rain_series = period.rain.series(
+            aggregate_type="sum",
+            aggregate_interval="day",
+            time_series='start',
+            time_unit='unix_epoch'
+        )
+
+        rain_days = filter(lambda x: x.raw > 0.0, list(rain_series.data))
+
+        return len(list(rain_days))

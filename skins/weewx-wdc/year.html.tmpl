@@ -1,6 +1,7 @@
 <!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
+#from datetime import datetime, timedelta
 #attr $precision = 'year'
 #attr $use_parameter_month = False
 #attr $use_parameter_year = False
@@ -38,6 +39,12 @@
           <div class="bx--row">
             <header class="bx--col section-header">
               <h2>$gettext("Last 365 days")</h2>
+              <!--prettier-ignore-->
+              #set $start_date_header = datetime.fromtimestamp($current.dateTime.raw) - timedelta(days=365)
+              <h3>
+                <!--prettier-ignore-->
+                $start_date_header.strftime("%d. %b %Y") - $current.dateTime.format("%d. %b %Y")
+              </h3>
             </header>
           </div>
 

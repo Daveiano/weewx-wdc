@@ -3,6 +3,7 @@
 #set $label_sum = $get_labels('Sum', $precision)
 #set $label_min = $get_labels('Min', $precision)
 #set $label_max = $get_labels('Max', $precision)
+#set $label_avg = $get_labels('Avg', $precision)
 
 <script
   type="module"
@@ -50,7 +51,7 @@
       </div>
     </div>
     <!--prettier-ignore-->
-    #if $get_show_sum($partial_obs)
+    #if $precision == 'day' and $get_show_sum($partial_obs)
     <div class="bx--row">
       <div class="bx--col">
         <p class="stat-label">$gettext($label_sum)</p>
@@ -60,6 +61,30 @@
         </p>
       </div>
     </div>
+    <!--prettier-ignore-->
+    #else if $precision != 'day' and $get_show_sum($partial_obs)
+      #if $partial_obs == 'rain'
+    <div class="bx--row">
+      <div class="bx--col">
+        <p class="stat-label">$gettext("Rain days")</p>
+        <p class="stat-value">
+          <!--prettier-ignore-->
+          $get_rain_days($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime))
+        </p>
+      </div>
+    </div>
+    #else
+    <div class="bx--row">
+      <div class="bx--col">
+        <p class="stat-label">$gettext($label_avg)</p>
+        <p class="stat-value">
+          <!--prettier-ignore-->
+          $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $partial_obs).avg
+        </p>
+      </div>
+    </div>
+    <!--prettier-ignore-->
+    #end if
     #else
     <div class="bx--row">
       #if $get_show_min($partial_obs)

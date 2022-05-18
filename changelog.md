@@ -37,3 +37,10 @@
 - Fixed JS build
 - Updated UI Shell
 - Updated some diagram aggragate types
+
+# 1.0.0-beta6
+
+- Responsive Updates for Ui-Shell, Stat Tiles and diagrams
+- GH-2
+- Added basic PWA manifest and service-worker
+- Data Table aggregation updated

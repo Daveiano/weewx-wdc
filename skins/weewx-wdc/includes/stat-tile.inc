@@ -3,6 +3,12 @@
 #set $label_sum = $get_labels('Sum', $precision)
 #set $label_min = $get_labels('Min', $precision)
 #set $label_max = $get_labels('Max', $precision)
+
+<script
+  type="module"
+  src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/tooltip.min.js"
+></script>
+
 <div class="bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-3 bx--col-max-2">
   <div class="bx--tile stat-tile">
     <div class="bx--row">
@@ -60,9 +66,17 @@
       <div class="bx--col">
         <p class="stat-label">
           <!--prettier-ignore-->
-          $gettext($label_min)
           #if $precision == 'year' or $precision == 'alltime'
-            $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $partial_obs).mintime.format("%d.%m.%Y %H:%M")
+          <bx-tooltip-definition
+            alignment="center"
+            body-text="$getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $partial_obs).mintime.format('%d.%m.%Y %H:%M')"
+            direction="top"
+          >
+            $gettext($label_min)
+          </bx-tooltip-definition>
+          <!--prettier-ignore-->
+          #else
+            $gettext($label_min)
           #end if
         </p>
         <p class="stat-value">
@@ -74,9 +88,17 @@
       <div class="bx--col">
         <p class="stat-label">
           <!--prettier-ignore-->
-          $gettext($label_max)
           #if $precision == 'year' or $precision == 'alltime'
-            $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $partial_obs).maxtime.format("%d.%m.%Y %H:%M")
+          <bx-tooltip-definition
+            alignment="center"
+            body-text="$getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $partial_obs).maxtime.format('%d.%m.%Y %H:%M')"
+            direction="top"
+          >
+            $gettext($label_max)
+          </bx-tooltip-definition>
+          <!--prettier-ignore-->
+          #else
+            $gettext($label_max)
           #end if
         </p>
         <p class="stat-value">

@@ -140,6 +140,10 @@ header.section-header {
 
 .stat-tile {
   margin-bottom: $spacing-05;
+  height: calc(100% - #{$spacing-05});
+  bx-tooltip-definition {
+    padding-bottom: $spacing-01;
+  }
   > .bx--row {
     align-items: center;
     .label {

@@ -1,6 +1,6 @@
 {
   "name": "weewx-wdc",
-  "version": "1.0.0-beta5",
+  "version": "1.0.0-beta6",
   "description": "Weather Data Center skin for weewx.",
   "author": "David Baetge <david.baetge@gmail.com>",
   "license": "MIT",
@@ -60,6 +60,7 @@
     "dev": "parcel watch --no-hmr",
     "build": "parcel build --no-scope-hoist",
     "deploy:local": "sudo cp -R ./skins/weewx-wdc /etc/weewx/skins && sudo cp -r ./bin/user/. /usr/share/weewx/user/ && sudo systemctl restart weewx && sudo /usr/share/weewx/wee_reports",
-    "serve:local": "docker run -it --rm -d -p 8080:80 --name web -v /var/www/html/weewx:/usr/share/nginx/html nginx"
+    "serve:local": "docker run -it --rm -d -p 8080:80 --name web -v /var/www/html/weewx:/usr/share/nginx/html nginx",
+    "deploy:pi": "sudo rsync -vua ./bin/ pi@weewx:/home/pi/bin && sudo rsync -vua ./skins/ pi@weewx:/home/pi/skins"
   }
 }

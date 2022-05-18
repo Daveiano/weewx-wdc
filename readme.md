@@ -36,7 +36,7 @@ Inspired by and build with the [Carbon Design System](https://carbondesignsystem
 
 ## Screenshot
 
-![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc.png)
+![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-01.png)
 
 ## Usage
 

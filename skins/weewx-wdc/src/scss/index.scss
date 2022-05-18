@@ -28,7 +28,7 @@ $carbon--grid-breakpoints: (
   max: (
     columns: 16,
     margin: carbon--rem(24px),
-    width: carbon--rem(2050px),
+    width: carbon--rem(1920px),
   ),
 );
 @import "~carbon-components/scss/globals/scss/styles.scss";
@@ -75,6 +75,23 @@ bx-header ~ bx-side-nav {
   }
 }
 
+bx-structured-list-cell {
+  padding: 0.5rem 0.5rem 0.5rem;
+}
+
+.bx--col,
+.bx--col-sm-4,
+.bx--col-md-4,
+.bx--col-lg-6 {
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+}
+
+.bx--row {
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+}
+
 header.page-header {
   margin-bottom: $spacing-07;
   h1 {
@@ -97,8 +114,32 @@ header.section-header {
   }
 }
 
+.obs-stat-tile {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: $spacing-06;
+  column-gap: $spacing-02;
+  .obs-stat {
+    .value {
+      display: flex;
+      align-items: center;
+      svg {
+        max-width: 32px;
+        display: inline-block;
+        margin-right: $spacing-02;
+      }
+    }
+    .stat-label {
+      @include carbon--type-style("label-01");
+    }
+    .stat-value {
+      @include carbon--type-style("productive-heading-01");
+    }
+  }
+}
+
 .stat-tile {
-  margin-bottom: $spacing-06;
+  margin-bottom: $spacing-05;
   > .bx--row {
     align-items: center;
     .label {
@@ -112,8 +153,14 @@ header.section-header {
         display: inline-block;
         margin-right: $spacing-02;
       }
-      span {
+      > span {
         @include carbon--type-style("productive-heading-05");
+        @include carbon--breakpoint-up(md) {
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          max-width: 100%;
+          overflow: hidden;
+        }
         span {
           @include carbon--type-style("label-01");
         }
@@ -132,7 +179,7 @@ header.section-header {
 }
 
 .diagram-tile {
-  margin-bottom: $spacing-06;
+  margin-bottom: $spacing-05;
   .label {
     @include carbon--type-style("expressive-heading-02");
     display: flex;
@@ -152,7 +199,7 @@ header.section-header {
 }
 
 .almanac-tile {
-  margin-bottom: $spacing-06;
+  margin-bottom: $spacing-05;
   .label {
     @include carbon--type-style("expressive-heading-04");
     display: flex;
@@ -198,6 +245,15 @@ header.section-header {
 .diagram {
   height: 220px;
   @include carbon--breakpoint-up(md) {
+    height: 350px;
+  }
+  @include carbon--breakpoint-up(lg) {
+    height: 350px;
+  }
+  @include carbon--breakpoint-up(xlg) {
+    height: 300px;
+  }
+  @include carbon--breakpoint-up(max) {
     height: 350px;
   }
 }

@@ -38,6 +38,10 @@ export const getyScaleOffset = (obs: string): number => {
     offset = 1;
   }
 
+  if (obs === "rainRate") {
+    offset = 0.5;
+  }
+
   if (obs === "ET") {
     offset = 0.02;
   }

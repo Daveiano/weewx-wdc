@@ -2,7 +2,7 @@ from weewx.cheetahgenerator import SearchList
 
 
 class StatsUtil(SearchList):
-    def get_show_min_stat(self, observation):
+    def get_show_min(self, observation):
         """
         Returns if the min stats should be shown.
 
@@ -28,7 +28,7 @@ class StatsUtil(SearchList):
         if observation in show_min_stat:
             return True
 
-    def get_show_only_sum(self, observation):
+    def get_show_sum(self, observation):
         """
         Returns if the min stats should be shown.
 
@@ -38,12 +38,12 @@ class StatsUtil(SearchList):
         Returns:
             bool: Show or hide min stat.
         """
-        show_only_sum = ["rain", "ET"]
+        show_sum = ["rain", "ET"]
 
-        if observation in show_only_sum:
+        if observation in show_sum:
             return True
 
-    def get_show_only_max(self, observation):
+    def get_show_max(self, observation):
         """
         Returns if the max stats should be shown.
 
@@ -53,9 +53,9 @@ class StatsUtil(SearchList):
         Returns:
             bool: Show or hide max stat.
         """
-        show_only_max = ["rainRate"]
+        show_max = ["rainRate"]
 
-        if observation in show_only_max:
+        if observation in show_max:
             return True
 
     def get_labels(self, prop, precision):

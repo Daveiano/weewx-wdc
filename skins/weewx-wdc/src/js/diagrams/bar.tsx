@@ -71,6 +71,7 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
             time={moment
               .unix((point as { data: { x: number } }).data.x)
               .format(dateFormat)}
+            endTime={moment.unix(point.data.end).format(dateFormat)}
           />
         )}
         valueFormat={(value) => `${value} ${props.unit}`}

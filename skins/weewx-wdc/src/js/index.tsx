@@ -36,7 +36,8 @@ diagrams.forEach((diagram) => {
             data: (window as any)[serie]
               .map((item: number[]) => ({
                 x: item[0],
-                y: item[1],
+                y: item[2],
+                end: item[1],
               }))
               .sort((a: Series, b: Series) => a.x - b.x),
           },
@@ -49,7 +50,8 @@ diagrams.forEach((diagram) => {
           data: (window as any)[diagram.dataset.value]
             .map((item: number[]) => ({
               x: item[0],
-              y: item[1],
+              y: item[2],
+              end: item[1],
             }))
             .sort((a: Series, b: Series) => a.x - b.x),
         },

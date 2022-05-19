@@ -1,15 +1,31 @@
+self.__WB_DISABLE_DEV_LOGS = false;
+
 import { manifest, version } from "@parcel/service-worker";
 
-import { registerRoute } from "workbox-routing";
+import {
+  registerRoute,
+  setDefaultHandler,
+  setCatchHandler,
+} from "workbox-routing";
 import {
   NetworkFirst,
   StaleWhileRevalidate,
   CacheFirst,
 } from "workbox-strategies";
+import { warmStrategyCache } from "workbox-recipes";
 
-console.log("Hello SW!");
 console.log(manifest);
 console.log(version);
+
+// Fallback assets to cache
+const FALLBACK_HTML_URL = "/offline.html";
+const FALLBACK_STRATEGY = new CacheFirst();
+
+// Warm the runtime cache with a list of asset URLs
+warmStrategyCache({
+  urls: [FALLBACK_HTML_URL],
+  strategy: FALLBACK_STRATEGY,
+});
 
 // Used for filtering matches based on status code, header, or both
 import { CacheableResponsePlugin } from "workbox-cacheable-response";
@@ -24,6 +40,7 @@ registerRoute(
   new NetworkFirst({
     // Put all cached files in a cache named 'pages'
     cacheName: "pages",
+    //networkTimeoutSeconds: 5,
     plugins: [
       // Ensure that only requests that result in a 200 status are cached
       new CacheableResponsePlugin({
@@ -74,3 +91,20 @@ registerRoute(
     ],
   })
 );
+
+// This "catch" handler is triggered when any of the other routes fail to
+// generate a response.
+setCatchHandler(async ({ event }) => {
+  // The warmStrategyCache recipe is used to add the fallback assets ahead of
+  // time to the runtime cache, and are served in the event of an error below.
+  // Use `event`, `request`, and `url` to figure out how to respond, or
+  // use request.destination to match requests for specific resource types.
+  switch (event.request.destination) {
+    case "document":
+      return FALLBACK_STRATEGY.handle({ event, request: FALLBACK_HTML_URL });
+
+    default:
+      // If we don't have a fallback, return an error response.
+      return Response.error();
+  }
+});

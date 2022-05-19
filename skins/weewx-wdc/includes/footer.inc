@@ -22,6 +22,20 @@
         </p>
       </div>
     </div>
+    <!--prettier-ignore-->
+    #if 'github_link' in $Extras and $to_bool($Extras.github_link)
+    <div class="bx--row">
+      <div class="bx--col">
+        <a
+          class="icon-link"
+          href="https://github.com/Daveiano/weewx-wdc"
+          target="_blank"
+        >
+          #include "includes/icons/github.svg"
+        </a>
+      </div>
+    </div>
+    #end if
     <div class="bx--row">
       <div class="bx--col">
         <!--prettier-ignore-->

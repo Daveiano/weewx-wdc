@@ -1,5 +1,5 @@
 # installer for the 'wdc' (weather data center) skin
-# Copyright 2022 David Baetge
+# 2022 David Baetge
 
 from weecfg.extension import ExtensionInstaller
 
@@ -92,6 +92,7 @@ class BasicInstaller(ExtensionInstaller):
                   'skins/weewx-wdc/includes/icons/moon.svg',
                   'skins/weewx-wdc/includes/icons/moonrise.svg',
                   'skins/weewx-wdc/includes/icons/moonset.svg',
+                  'skins/weewx-wdc/includes/icons/github.svg'
                   ]),
             ]
         )

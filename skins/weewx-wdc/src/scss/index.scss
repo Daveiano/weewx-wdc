@@ -276,6 +276,17 @@ header.section-header {
   .footnote {
     margin-top: $spacing-06;
   }
+  .icon-link {
+    display: block;
+    margin: $spacing-06 0 0 0;
+    svg {
+      height: auto;
+      max-width: 32px;
+      path {
+        fill: $text-inverse;
+      }
+    }
+  }
 }
 
 /*@todo Remove if data-tables is sperate package*/

@@ -128,3 +128,22 @@
     #end for
   </bx-side-nav-items>
 </bx-side-nav>
+
+<script>
+  const bxSideNavLinks = document.querySelectorAll(
+    "bx-side-nav-link, bx-side-nav-menu-item"
+  );
+
+  bxSideNavLinks.forEach((element) => {
+    const isFront =
+      element.getAttribute("href") === "index.html" &&
+      window.location.pathname === "/";
+
+    if (
+      isFront ||
+      "/" + element.getAttribute("href") === window.location.pathname
+    ) {
+      element.setAttribute("active", true);
+    }
+  });
+</script>

@@ -1,5 +1,6 @@
 import { ScaleSpec } from "@nivo/scales";
 import { Box } from "@nivo/core";
+import { Series } from "../diagrams/types";
 
 export const enableArea: string[] = [
   "humidity",
@@ -54,7 +55,7 @@ export const getyScaleOffset = (obs: string): number => {
   return offset;
 };
 
-export const getyScale = (obs: string, data: any[]): ScaleSpec => {
+export const getyScale = (obs: string, data: Series[]): ScaleSpec => {
   let staticMin: "auto" | number | undefined = undefined;
   let staticMax: "auto" | number | undefined = undefined;
 

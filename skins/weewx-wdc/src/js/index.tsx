@@ -6,6 +6,7 @@ import { TABLE_SORT_DIRECTION } from "./data-table/misc";
 import TableBase from "./data-table/table-base";
 import { BarDiagram } from "./diagrams/bar";
 import { LineDiagram } from "./diagrams/line";
+import { precision, Series } from "./diagrams/types";
 
 const diagrams = document.querySelectorAll("div.diagram");
 diagrams.forEach((diagram) => {
@@ -32,12 +33,12 @@ diagrams.forEach((diagram) => {
           ...data,
           {
             id: labels[index],
-            data: window[serie]
+            data: (window as any)[serie]
               .map((item: number[]) => ({
                 x: item[0],
                 y: item[1],
               }))
-              .sort((a, b) => a.x - b.x),
+              .sort((a: Series, b: Series) => a.x - b.x),
           },
         ];
       });
@@ -45,12 +46,12 @@ diagrams.forEach((diagram) => {
       data = [
         {
           id: diagram.dataset.obs,
-          data: window[diagram.dataset.value]
+          data: (window as any)[diagram.dataset.value]
             .map((item: number[]) => ({
               x: item[0],
               y: item[1],
             }))
-            .sort((a, b) => a.x - b.x),
+            .sort((a: Series, b: Series) => a.x - b.x),
         },
       ];
     }
@@ -63,7 +64,7 @@ diagrams.forEach((diagram) => {
             unit={diagram.dataset.unit}
             data={data}
             observation={diagram.dataset.obs}
-            precision={diagram.dataset.precision}
+            precision={diagram.dataset.precision as precision}
           />
         );
         break;
@@ -74,7 +75,7 @@ diagrams.forEach((diagram) => {
             unit={diagram.dataset.unit}
             data={data}
             observation={diagram.dataset.obs}
-            precision={diagram.dataset.precision}
+            precision={diagram.dataset.precision as precision}
           />
         );
     }
@@ -83,9 +84,9 @@ diagrams.forEach((diagram) => {
 
 const table = document.querySelector("div.table");
 if (table) {
-  const tableHeaders = window.tableHeaders;
-  const tableRows = window.tableRows;
-  const tableTitle = window.tableTitle;
+  const tableHeaders = (window as any).tableHeaders;
+  const tableRows = (window as any).tableRows;
+  const tableTitle = (window as any).tableTitle;
 
   const root = createRoot(table);
 

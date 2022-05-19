@@ -99,7 +99,8 @@ class TableUtil(SearchList):
                     if len(cs_item) == 0:
                         carbon_values.append({
                             "timeParsed": cs_time.isoformat(),
-                            observation: data.raw
+                            observation: data.raw,
+                            'id': start.raw
                         })
                     else:
                         cs_item = cs_item[0]

@@ -29,7 +29,12 @@ import {
 import Pagination from "./components/pagination";
 import { TABLE_SORT_DIRECTION } from "./misc";
 
-export type dataItemDataTable = { selected: boolean };
+export type dataItemDataTable = {
+  [key: string]: any;
+  selected: boolean;
+  timeParsed: string;
+  id: number;
+};
 
 interface TableBaseProps {
   collator: Intl.Collator;
@@ -278,7 +283,7 @@ const TableBase: React.FC<TableBaseProps> = (
                     <TableSelectRow
                       id={`${elementId}--select-${rowId}`}
                       checked={Boolean(selected)}
-                      name={selectionName}
+                      name={selectionName !== undefined ? selectionName : ""}
                       ariaLabel="Select row"
                       onSelect={handleChangeSelection}
                     />

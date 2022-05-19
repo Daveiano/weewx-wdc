@@ -56,8 +56,11 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
           left: 55,
         }}
         maxValue={
-          Math.max(...props.data[0].data.map((item): number => item.y)) +
-          getyScaleOffset(props.observation)
+          Math.max(
+            ...props.data[0].data.map(
+              (item): number => (item as { y: number }).y
+            )
+          ) + getyScaleOffset(props.observation)
         }
         minValue={0}
         keys={["y"]}
@@ -65,7 +68,9 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
           <TooltipBar
             formattedValue={point.formattedValue}
             color={props.color[0]}
-            time={moment.unix(point.data.x).format(dateFormat)}
+            time={moment
+              .unix((point as { data: { x: number } }).data.x)
+              .format(dateFormat)}
           />
         )}
         valueFormat={(value) => `${value} ${props.unit}`}

@@ -1,5 +1,5 @@
 import React from "react";
-import type { Point, SliceTooltipProps } from "@nivo/line";
+import type { Point } from "@nivo/line";
 
 interface TooltipPropsLine {
   point: Point;

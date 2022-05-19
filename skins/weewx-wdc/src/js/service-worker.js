@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 self.__WB_DISABLE_DEV_LOGS = false;
 
 import { manifest, version } from "@parcel/service-worker";

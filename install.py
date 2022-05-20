@@ -1,7 +1,7 @@
-# installer for the 'wdc' (weather data center) skin
-# 2022 David Baetge
-
 from weecfg.extension import ExtensionInstaller
+
+# Copyright 2022 David Bätge
+# Distributed under the terms of the GNU Public License (GPLv3)
 
 
 def loader():
@@ -11,7 +11,7 @@ def loader():
 class BasicInstaller(ExtensionInstaller):
     def __init__(self):
         super(BasicInstaller, self).__init__(
-            version="1.0.0-beta6",
+            version="1.0.0",
             name='weewx-wdc',
             description='Weather Data Center skin for weewx.',
             author="David Baetge",

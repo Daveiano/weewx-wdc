@@ -1,5 +1,8 @@
 from weewx.cheetahgenerator import SearchList
 
+# Copyright 2022 David Bätge
+# Distributed under the terms of the GNU Public License (GPLv3)
+
 
 class StatsUtil(SearchList):
     def get_show_min(self, observation):
@@ -30,13 +33,13 @@ class StatsUtil(SearchList):
 
     def get_show_sum(self, observation):
         """
-        Returns if the min stats should be shown.
+        Returns if the sum stats should be shown.
 
         Args:
             observation (string): The observation
 
         Returns:
-            bool: Show or hide min stat.
+            bool: Show or hide sum stat.
         """
         show_sum = ["rain", "ET"]
 
@@ -60,7 +63,7 @@ class StatsUtil(SearchList):
 
     def get_labels(self, prop, precision):
         """
-        Returns a label.
+        Returns a label like "Todays Max" or "Monthly average.
 
         Args:
             prop (string): Min, Max, Sum

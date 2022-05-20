@@ -38,7 +38,7 @@ jobs:
         with:
           artifacts: "weewx-wdc-${{github.ref_name}}.zip"
           draft: true
-          prerelease: true
+          prerelease: false
           generateReleaseNotes: true
           bodyFile: changelog.md
           token: ${{ secrets.GITHUB_TOKEN }}

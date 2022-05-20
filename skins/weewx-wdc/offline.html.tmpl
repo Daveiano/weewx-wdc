@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>You are offline</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <meta
+      name="description"
+      content='Weewx $station.location - $gettext("Station Description")'
+    />
+    <style>
+      body,
+      html {
+        background-color: #f4f4f4;
+      }
+      body {
+        font-family: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        font-size: 16px;
+        color: black;
+      }
+      main {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      svg {
+        max-width: 25vw;
+        height: auto;
+        max-height: 25vh;
+      }
+      h1,
+      p {
+        margin: 0;
+        padding: 0 1rem;
+        text-align: center;
+      }
+      h1 {
+        font-weight: 600;
+        font-size: 32px;
+        line-height: 40px;
+        letter-spacing: 0px;
+        margin: 20px 0 10px 0;
+      }
+      p {
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 24px;
+        letter-spacing: 0px;
+      }
+      button {
+        margin-top: 15px;
+        max-width: 20rem;
+        min-height: 3rem;
+        outline: none;
+        border-radius: 0;
+        padding: 10px 16px;
+        color: #0f62fe;
+        background-color: transparent;
+        font-size: 16px;
+        border: none;
+        line-height: 1em;
+        cursor: pointer;
+        background-color: #e8e8e8;
+      }
+      button:hover {
+        color: #0043ce;
+        background-color: #8d8d8d80;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      #include "includes/icons/wdc.svg"
+      <h1>You are offline</h1>
+      <p>It seems that you lost your internet connection.</p>
+      <button onClick="window.location.reload();">Retry</button>
+    </main>
+  </body>
+</html>

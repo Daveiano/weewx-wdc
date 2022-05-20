@@ -1,6 +1,8 @@
-from xml.etree.ElementInclude import include
 from datetime import datetime
 from weewx.cheetahgenerator import SearchList
+
+# Copyright 2022 David Bätge
+# Distributed under the terms of the GNU Public License (GPLv3)
 
 
 class ArchiveUtil(SearchList):
@@ -33,11 +35,11 @@ class ArchiveUtil(SearchList):
         Returns:
             str: Formatted month string.
         """
-        date_time_obj = datetime. strptime(month, '%Y-%m')
+        date_time_obj = datetime.strptime(month, '%Y-%m')
 
         return date_time_obj.strftime('%B')
 
-    def fake_get_report_years(self, first):
+    def fake_get_report_years(self, first, last):
         """
         Returns a fake $SummaryByYear tag.
 
@@ -48,13 +50,13 @@ class ArchiveUtil(SearchList):
             list: [2022, 2021].
         """
         first_year = int(first.format("%Y"))
-        current_year = int(datetime.now().strftime("%Y"))
+        last_year = int(last.format("%Y"))
 
-        if first_year == current_year:
-            return [current_year]
+        if first_year == last_year:
+            return [last_year]
 
-        if first_year + 1 == current_year:
-            return [first_year, current_year]
+        if first_year + 1 == last_year:
+            return [first_year, last_year]
 
         else:
-            return list(range(first_year, current_year))
+            return list(range(first_year, last_year))

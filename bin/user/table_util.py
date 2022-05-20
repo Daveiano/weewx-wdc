@@ -2,6 +2,9 @@ from weewx.cheetahgenerator import SearchList
 from user.diagram_util import DiagramUtil
 from datetime import datetime
 
+# Copyright 2022 David Bätge
+# Distributed under the terms of the GNU Public License (GPLv3)
+
 
 class TableUtil(SearchList):
     def get_table_aggregate_interval(self, observation, precision):

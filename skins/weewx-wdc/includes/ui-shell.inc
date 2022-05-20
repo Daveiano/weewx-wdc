@@ -12,7 +12,10 @@
     button-label-active="Close menu"
     button-label-inactive="Open menu"
   ></bx-header-menu-button>
-  <bx-header-name href="index.html" prefix="Weewx">
+  <bx-header-name href="index.html" prefix="">
+    <!--prettier-ignore-->
+    #include "includes/icons/wdc.svg"
+    <span part="prefix" class="bx--header__name--prefix">WeeWX</span>
     $station.location
   </bx-header-name>
   <bx-header-nav menu-bar-label="Weewx $station.location - $current.dateTime">
@@ -103,7 +106,7 @@
     <!--prettier-ignore-->
     #set $archive_months = $SummaryByMonth
     #if len($SummaryByYear) == 0
-    #set $SummaryByYear = $fake_get_report_years($alltime.start)
+    #set $SummaryByYear = $fake_get_report_years($alltime.start, $alltime.end)
     #end if
     <bx-side-nav-menu title="$gettext('Years')">
       #for $year in $SummaryByYear

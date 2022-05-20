@@ -1,5 +1,8 @@
 from weewx.cheetahgenerator import SearchList
 
+# Copyright 2022 David Bätge
+# Distributed under the terms of the GNU Public License (GPLv3)
+
 
 class GeneralUtil(SearchList):
     temp_obs = [

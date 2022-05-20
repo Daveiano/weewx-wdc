@@ -1,7 +1,10 @@
-import datetime
-from calendar import monthrange, isleap
 from weewx.cheetahgenerator import SearchList
+import datetime
+from calendar import isleap
 from user.general_util import GeneralUtil
+
+# Copyright 2022 David Bätge
+# Distributed under the terms of the GNU Public License (GPLv3)
 
 
 class DiagramUtil(SearchList):
@@ -16,7 +19,8 @@ class DiagramUtil(SearchList):
         Returns:
             str: A diagram type string
         """
-        if observation in GeneralUtil.temp_obs or 'temp' in observation.lower():
+        if (observation in GeneralUtil.temp_obs or
+                'temp' in observation.lower()):
             return 'temp'
 
         if 'humidity' in observation.lower():
@@ -25,7 +29,7 @@ class DiagramUtil(SearchList):
         if observation == 'windSpeed' or observation == 'windGust':
             return 'wind'
 
-        if observation == 'barometer':
+        if observation == 'barometer' or observation == 'pressure':
             return 'pressure'
 
         return observation
@@ -82,7 +86,7 @@ class DiagramUtil(SearchList):
             if observation == 'ET' or observation == 'rain':
                 return 7200  # 2 hours
 
-            return 900  # 15 minutes
+            return 1800  # 30 minutes
 
         if precision == 'week':
             if observation == 'ET' or observation == 'rain':
@@ -159,6 +163,6 @@ class DiagramUtil(SearchList):
         week_delta = 0
 
         if precision == 'alltime':
-            week_delta = 1000
+            week_delta = 1000  # TODO: This will stop to work after 19 years.
 
         return week_delta

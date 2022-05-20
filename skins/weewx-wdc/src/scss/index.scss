@@ -57,13 +57,28 @@ bx-header ~ bx-side-nav {
   height: calc(100% - 3rem);
 }
 
-@include carbon--breakpoint-down(lg) {
-  bx-header-name {
+.bx--header__name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: block;
+  white-space: nowrap;
+}
+
+bx-header-name {
+  svg {
+    height: auto;
+    max-width: 32px;
+    margin-right: $spacing-03;
+  }
+  span.bx--header__name--prefix {
+    padding-right: $spacing-02;
+  }
+  @include carbon--breakpoint-down(lg) {
     text-overflow: ellipsis;
     overflow: hidden;
-    width: 75%;
+    max-width: calc(100vw - 72px);
     white-space: nowrap;
-    display: block;
+    display: flex;
   }
 }
 

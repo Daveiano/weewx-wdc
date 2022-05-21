@@ -44,3 +44,11 @@
 - GH-2
 - Added basic PWA manifest and service-worker
 - Data Table aggregation updated
+
+# 1.0.0
+
+- Bugfixes
+- Added rain days for stat tile
+- Updated service-worker for PWA
+- Responsive updates
+- Added icon

@@ -64,3 +64,8 @@
 # 1.0.3
 
 - Bugfix: Added wdc.svg.
+
+# Next
+
+- Added test_install.sh
+- Added "Climatological Days" Tile to stats and year pages

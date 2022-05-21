@@ -33,6 +33,15 @@
               </h3>
             </header>
           </div>
+          <!--prettier-ignore-->
+          #if len($DisplayOptions.get('diagram_tile_combined_obervations', [])) > 0
+          <div class="bx--row">
+            <div class="bx--col">
+              <!--prettier-ignore-->
+              #include "includes/climatological-days.inc"
+            </div>
+          </div>
+          #end if
           <div class="bx--row">
             <!--prettier-ignore-->
             #for $skin_obs in $DisplayOptions.get('stat_tile_observations')

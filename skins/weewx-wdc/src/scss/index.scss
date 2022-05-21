@@ -51,6 +51,10 @@ $carbon--grid-breakpoints: (
 @include carbon--font-face-sans();
 @include carbon--font-face-serif();
 
+bx-header:not(:defined) {
+  display: none;
+}
+
 // Side nav width is $spacing-09.
 bx-header ~ bx-side-nav {
   margin-top: 3rem;
@@ -152,6 +156,29 @@ header.section-header {
     }
     .stat-value {
       @include carbon--type-style("productive-heading-01");
+    }
+  }
+}
+
+.climatological-tile {
+  margin-bottom: $spacing-05;
+  bx-tooltip-body {
+    top: 25px !important;
+  }
+  bx-structured-list-cell {
+    span {
+      display: none;
+      sub {
+        font-size: 0.75em;
+      }
+    }
+    @include carbon--breakpoint-up(md) {
+      span {
+        display: inline;
+      }
+      bx-tooltip {
+        display: none;
+      }
     }
   }
 }

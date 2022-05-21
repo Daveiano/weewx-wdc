@@ -68,6 +68,7 @@ class BasicInstaller(ExtensionInstaller):
                   'skins/weewx-wdc/includes/data-table-tile.inc',
                   'skins/weewx-wdc/includes/diagram-tile.inc',
                   'skins/weewx-wdc/includes/stat-tile.inc',
+                  'skins/weewx-wdc/includes/climatological-days.inc',
                   'skins/weewx-wdc/includes/ui-shell.inc',
                   'skins/weewx-wdc/includes/footer.inc',
                   'skins/weewx-wdc/includes/icons/barometer.svg',

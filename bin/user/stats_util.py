@@ -77,23 +77,154 @@ class StatsUtil(SearchList):
 
         return prop + ' ' + precision
 
-    def get_rain_days(self, period):
+    def get_climatological_day(self, day, period, unit_type, unit_labels):
         """
-        Return number of rain days in period (rain > 0).
+        Return number of days in period for day parameter.
 
         Args:
+            day (string): Eg. rainDays, hotDays.
             period (obj): Period to use, eg. $year, month, $span
+            unit_type (dict): degree_F or degree_C
 
         Returns:
-            int: Number of rain days.
+            int: Number of days.
         """
-        rain_series = period.rain.series(
-            aggregate_type="sum",
-            aggregate_interval="day",
-            time_series='start',
-            time_unit='unix_epoch'
-        )
+        if day == 'iceDays':
+            day_series = period.outTemp.series(
+                aggregate_type="max",
+                aggregate_interval="day",
+                time_series='start',
+                time_unit='unix_epoch'
+            )
 
-        rain_days = filter(lambda x: x.raw > 0.0, list(rain_series.data))
+            days = filter(lambda x: x.raw < 0.0, list(day_series.data))
 
-        return len(list(rain_days))
+            return len(list(days))
+
+        if day == 'frostDays':
+            day_series = period.outTemp.series(
+                aggregate_type="min",
+                aggregate_interval="day",
+                time_series='start',
+                time_unit='unix_epoch'
+            )
+
+            days = filter(lambda x: x.raw < 0.0, list(day_series.data))
+
+            return len(list(days))
+
+        if day == 'stormDays':
+            day_series = period.windGust.series(
+                aggregate_type="max",
+                aggregate_interval="day",
+                time_series='start',
+                time_unit='unix_epoch'
+            )
+
+            if getattr(unit_labels, 'windGust') == ' km/h':
+                value = 62.0
+            if getattr(unit_labels, 'windGust') == ' mph':
+                value = 38.5
+            if getattr(unit_labels, 'windGust') == ' m/s':
+                value = 17.2
+
+            days = filter(lambda x: x.raw >= value, list(day_series.data))
+
+            return len(list(days))
+
+        if day == 'rainDays':
+            day_series = period.rain.series(
+                aggregate_type="sum",
+                aggregate_interval="day",
+                time_series='start',
+                time_unit='unix_epoch'
+            )
+
+            days = filter(lambda x: x.raw > 0.0, list(day_series.data))
+
+            return len(list(days))
+
+        if (day == 'hotDays' or
+                day == 'summerDays' or
+                day == 'desertDays' or
+                day == 'tropicalNights'):
+
+            if day == 'tropicalNights':
+                value = 20.0 if getattr(unit_type, 'outTemp') == 'degree_C' else 68.0
+                aggregate_type = 'min'
+            if day == 'summerDays':
+                value = 25.0 if getattr(unit_type, 'outTemp') == 'degree_C' else 77.0
+                aggregate_type = 'max'
+            if day == 'hotDays':
+                value = 30.0 if getattr(unit_type, 'outTemp') == 'degree_C' else 86.0
+                aggregate_type = 'max'
+            if day == 'desertDays':
+                value = 35.0 if getattr(unit_type, 'outTemp') == 'degree_C' else 95.0
+                aggregate_type = 'max'
+
+            day_series = period.outTemp.series(
+                aggregate_type=aggregate_type,
+                aggregate_interval="day",
+                time_series='start',
+                time_unit='unix_epoch'
+            )
+
+            days = filter(lambda x: x.raw >= value, list(day_series.data))
+
+            return len(list(days))
+
+    def get_climatological_day_description(self, day, unit_labels,
+                                           obs_labels, unit_type):
+        """
+        Return description of day.
+
+        Args:
+            day (string): Eg. rainDays, hotDays.
+            unit_labels (dict): weewx $unit
+            obs_labels (obj): weewx $obs.labels
+            unit_type (dict): degree_F or degree_C
+
+        Returns:
+            string: Day description.
+        """
+        if day == 'iceDays':
+            value = '0' if getattr(unit_type, 'outTemp') == 'degree_C' else '32'
+
+            return obs_labels['outTemp'] + '<sub>max</sub> < ' + value + getattr(unit_labels, 'outTemp')
+
+        if day == 'frostDays':
+            value = '0' if getattr(unit_type, 'outTemp') == 'degree_C' else '32'
+
+            return obs_labels['outTemp'] + '<sub>min</sub> < ' + value + getattr(unit_labels, 'outTemp')
+
+        if day == 'stormDays':
+            if getattr(unit_labels, 'windGust') == ' km/h':
+                value = '62'
+            if getattr(unit_labels, 'windGust') == ' mph':
+                value = '38.5'
+            if getattr(unit_labels, 'windGust') == ' m/s':
+                value = '17.2'
+
+            return obs_labels['windGust'] + ' > ' + value + getattr(unit_labels, 'windGust')
+
+        if day == 'rainDays':
+            return obs_labels['rain'] + ' > 0' + getattr(unit_labels, 'rain')
+
+        if (day == 'hotDays' or
+                day == 'summerDays' or
+                day == 'desertDays' or
+                day == 'tropicalNights'):
+            if day == 'tropicalNights':
+                value = '20' if getattr(unit_type, 'outTemp') == 'degree_C' else '68'
+                aggregate_type = 'min'
+            if day == 'summerDays':
+                value = '25' if getattr(unit_type, 'outTemp') == 'degree_C' else '77'
+                aggregate_type = 'max'
+            if day == 'hotDays':
+                value = '30' if getattr(unit_type, 'outTemp') == 'degree_C' else '86'
+                aggregate_type = 'max'
+            if day == 'desertDays':
+                value = '35' if getattr(unit_type, 'outTemp') == 'degree_C' else '95'
+                aggregate_type = 'max'
+
+            return obs_labels['outTemp'] + '<sub>' + aggregate_type + '</sub> ≥ ' + value + getattr(unit_labels, 'outTemp')

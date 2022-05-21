@@ -52,3 +52,7 @@
 - Updated service-worker for PWA
 - Responsive updates
 - Added icon
+
+# 1.0.1
+
+- Bugfix: Add offline.html.tmpl to install.py

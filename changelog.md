@@ -60,3 +60,7 @@
 # 1.0.2
 
 - Bugfix: Fixed syntax errors in install.py.
+
+# 1.0.3
+
+- Bugfix: Added wdc.svg.

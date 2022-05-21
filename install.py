@@ -11,7 +11,7 @@ def loader():
 class BasicInstaller(ExtensionInstaller):
     def __init__(self):
         super(BasicInstaller, self).__init__(
-            version="1.0.1",
+            version="1.0.2",
             name='weewx-wdc',
             description='Weather Data Center skin for weewx.',
             author="David Baetge",
@@ -48,10 +48,10 @@ class BasicInstaller(ExtensionInstaller):
                   'skins/weewx-wdc/celestial.html.tmpl',
                   'skins/weewx-wdc/offline.html.tmpl',
                   'skins/weewx-wdc/manifest.json',
-                  'skins/weewx-wdc/icon-192x192.png'
-                  'skins/weewx-wdc/icon-256x256.png'
-                  'skins/weewx-wdc/icon-384x384.png'
-                  'skins/weewx-wdc/icon-512x512.png'
+                  'skins/weewx-wdc/icon-192x192.png',
+                  'skins/weewx-wdc/icon-256x256.png',
+                  'skins/weewx-wdc/icon-384x384.png',
+                  'skins/weewx-wdc/icon-512x512.png',
                   'skins/weewx-wdc/skin.conf',
                   'skins/weewx-wdc/lang/de.conf',
                   'skins/weewx-wdc/lang/en.conf',

@@ -56,3 +56,7 @@
 # 1.0.1
 
 - Bugfix: Add offline.html.tmpl to install.py
+
+# 1.0.2
+
+- Bugfix: Fixed syntax errors in install.py.

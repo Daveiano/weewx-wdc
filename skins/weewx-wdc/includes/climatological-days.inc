@@ -19,6 +19,8 @@
 
 <bx-tabs trigger-content="Select an item" value="table" type="container">
   <bx-tab id="tab-table" target="panel-table" value="table">Table</bx-tab>
+  <!--prettier-ignore-->
+  #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), 'rain').has_data
   <bx-tab
     id="tab-diagram-rain"
     target="panel-diagram-rain"
@@ -26,6 +28,9 @@
   >
     $gettext('rainDays')
   </bx-tab>
+  #end if
+  <!--prettier-ignore-->
+  #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), 'outTemp').has_data
   <bx-tab
     id="tab-diagram-temp-avg"
     target="panel-diagram-temp-avg"
@@ -33,6 +38,7 @@
   >
     $gettext('Avg.') $obs.label.outTemp
   </bx-tab>
+  #end if
 </bx-tabs>
 
 <div class="bx-ce-demo-devenv--tab-panels">
@@ -86,6 +92,8 @@
       </bx-structured-list-body>
     </bx-structured-list>
   </div>
+  <!--prettier-ignore-->
+  #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), 'rain').has_data
   <div
     id="panel-diagram-rain"
     role="tabpanel"
@@ -105,6 +113,9 @@
       data-heading="$gettext('rainDays')"
     ></div>
   </div>
+  #end if
+  <!--prettier-ignore-->
+  #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), 'outTemp').has_data
   <div
     id="panel-diagram-temp-avg"
     role="tabpanel"
@@ -124,4 +135,5 @@
       data-heading="${obs.label.outTemp} $gettext('Avg.')"
     ></div>
   </div>
+  #end if
 </div>

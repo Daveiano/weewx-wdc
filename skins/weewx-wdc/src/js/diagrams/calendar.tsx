@@ -46,7 +46,7 @@ export const CalendarDiagram: FunctionComponent<CalendarDiagramBaseProps> = (
       <div
         className="calendar-diagram"
         // @todo Add responsive style.
-        style={{ height: `${(yearDiff + 1) * (small ? 20 : 12)}vw` }}
+        style={{ height: `${(yearDiff + 1) * (small ? 25 : 14)}vw` }}
       >
         <ResponsiveCalendar
           from={props.data[0].day}
@@ -57,9 +57,9 @@ export const CalendarDiagram: FunctionComponent<CalendarDiagramBaseProps> = (
           colorScale={color()}
           margin={{
             top: 20,
-            right: small ? 20 : 100,
+            right: small ? 0 : 100,
             bottom: small ? 40 : 20,
-            left: 25,
+            left: small ? 0 : 25,
           }}
           dayBorderColor="#ffffff"
           monthSpacing={2}
@@ -73,7 +73,7 @@ export const CalendarDiagram: FunctionComponent<CalendarDiagramBaseProps> = (
               day={data.day}
               value={data.value}
               unit={props.unit}
-              color={props.color[0]}
+              color={data.color}
             />
           )}
           legends={[

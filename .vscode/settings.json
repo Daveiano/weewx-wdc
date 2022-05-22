@@ -7,5 +7,7 @@
     "*.html.tmpl": "html",
     "*.svg": "html"
   },
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "eslint.alwaysShowStatus": true,
+  "eslint.packageManager": "yarn"
 }

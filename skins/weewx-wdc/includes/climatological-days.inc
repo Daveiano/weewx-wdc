@@ -19,9 +19,20 @@
 
 <bx-tabs trigger-content="Select an item" value="table" type="container">
   <bx-tab id="tab-table" target="panel-table" value="table">Table</bx-tab>
-  <bx-tab id="tab-diagram" target="panel-diagram" value="diagram"
-    >Diagram</bx-tab
+  <bx-tab
+    id="tab-diagram-rain"
+    target="panel-diagram-rain"
+    value="diagram-rain"
   >
+    $gettext('rainDays')
+  </bx-tab>
+  <bx-tab
+    id="tab-diagram-temp-avg"
+    target="panel-diagram-temp-avg"
+    value="diagram-temp-avg"
+  >
+    $gettext('Avg.') $obs.label.outTemp
+  </bx-tab>
 </bx-tabs>
 
 <div class="bx-ce-demo-devenv--tab-panels">
@@ -75,10 +86,15 @@
       </bx-structured-list-body>
     </bx-structured-list>
   </div>
-  <div id="panel-diagram" role="tabpanel" aria-labelledby="tab-diagram" hidden>
+  <div
+    id="panel-diagram-rain"
+    role="tabpanel"
+    aria-labelledby="tab-diagram-rain"
+    hidden
+  >
     <script>
       /* prettier-ignore */
-      var calendarDataRain = $get_calendar_data('rain', $get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime));
+      var calendarDataRain = $get_calendar_data('rain', 'sum', $get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime));
     </script>
     <div
       class="calendar-diagram"
@@ -87,6 +103,25 @@
       data-unit="$unit.label.rain"
       data-color="$get_calendar_color('rain')"
       data-heading="$gettext('rainDays')"
+    ></div>
+  </div>
+  <div
+    id="panel-diagram-temp-avg"
+    role="tabpanel"
+    aria-labelledby="tab-diagram-temp-avg"
+    hidden
+  >
+    <script>
+      /* prettier-ignore */
+      var calendarDataTempAvg = $get_calendar_data('outTemp', 'avg', $get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime));
+    </script>
+    <div
+      class="calendar-diagram"
+      data-value="calendarDataTempAvg"
+      data-obs="outTemp"
+      data-unit="$unit.label.outTemp"
+      data-color="$get_calendar_color('outTemp')"
+      data-heading="${obs.label.outTemp} $gettext('Avg.')"
     ></div>
   </div>
 </div>

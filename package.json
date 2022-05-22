@@ -30,6 +30,7 @@
     "@nivo/core": "^0.79.0",
     "@nivo/line": "^0.79.1",
     "@parcel/service-worker": "^2.5.0",
+    "@react-hook/media-query": "^1.1.1",
     "carbon-components": "10.25.0",
     "carbon-components-react": "7.50.0",
     "carbon-icons": "7.0.7",

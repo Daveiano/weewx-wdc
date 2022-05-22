@@ -241,14 +241,24 @@ class StatsUtil(SearchList):
             string: Color string.
         """
         if obs == 'rain':
-            return ['#b8e7fe', '#71d0fe', '#0198E1', '#004c70']
+            return ['#032c6a', '#02509d', '#1a72b7',
+                    '#4093c7', '#6bb0d7', '#9fcae3'][::-1]
 
-    def get_calendar_data(self, obs, period):
+        if obs == 'outTemp':
+            # Warming stripes colors
+            # @see https://en.wikipedia.org/wiki/Warming_stripes
+            return ['#032c6a', '#02509d', '#1a72b7', '#4093c7', '#6bb0d7',
+                    '#9fcae3', '#c6dcee', '#dfedf6', '#ffe1d2', '#fcbda3',
+                    '#fc9373', '#fa6a48', '#ee3829', '#cd1116', '#a6060d',
+                    '#660105']
+
+    def get_calendar_data(self, obs, aggrgate_type, period):
         """
         Returns array of calendar data for use in diagram.
 
         Args:
             observation (string): The observation
+            aggrgate_type (string): Min, max, avg.
             period (obj): Period to use, eg. $year, month, $span
 
         Returns:
@@ -258,7 +268,7 @@ class StatsUtil(SearchList):
 
         if obs == 'rain':
             day_series = period.rain.series(
-                aggregate_type="sum",
+                aggregate_type=aggrgate_type,
                 aggregate_interval="day",
                 time_series='start',
                 time_unit='unix_epoch'
@@ -274,3 +284,22 @@ class StatsUtil(SearchList):
                 })
 
             return rainDays
+
+        if obs == 'outTemp':
+            day_series = period.outTemp.series(
+                aggregate_type=aggrgate_type,
+                aggregate_interval="day",
+                time_series='start',
+                time_unit='unix_epoch'
+            ).round(diagramUtil.get_rounding('rain'))
+
+            days = list(zip(day_series.start, day_series.data))
+            tempDays = []
+
+            for day in days:
+                tempDays.append({
+                    'value': day[1].raw,
+                    'day': day[0].format("%Y-%m-%d")
+                })
+
+            return tempDays

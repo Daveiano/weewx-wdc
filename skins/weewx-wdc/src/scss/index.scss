@@ -160,10 +160,29 @@ header.section-header {
   }
 }
 
-.climatological-tile {
+bx-tabs {
+  @include carbon--theme($carbon--theme--g10, true);
+}
+.bx-ce-demo-devenv--tab-panels {
+  flex: 1;
+  padding: 1rem 1rem 0rem 1rem;
+  align-self: stretch;
+  background-color: white;
   margin-bottom: $spacing-05;
+  > div {
+    padding-bottom: 1rem;
+  }
+}
+.climatological-tile {
   bx-tooltip-body {
     top: 25px !important;
+  }
+  bx-structured-list-header-cell {
+    span.hide-mobile {
+      @include carbon--breakpoint-down(md) {
+        display: none;
+      }
+    }
   }
   bx-structured-list-cell {
     span {
@@ -229,20 +248,24 @@ header.section-header {
 
 .diagram-tile {
   margin-bottom: $spacing-05;
-  .label {
-    @include carbon--type-style("expressive-heading-02");
-    display: flex;
-    align-items: center;
-    svg {
-      margin-right: $spacing-02;
-    }
-  }
   &.combined {
     .label {
       span {
         display: flex;
         align-items: center;
       }
+    }
+  }
+}
+
+.diagram-tile,
+.calendar-diagram {
+  .label {
+    @include carbon--type-style("expressive-heading-02");
+    display: flex;
+    align-items: center;
+    svg {
+      margin-right: $spacing-02;
     }
   }
 }
@@ -287,7 +310,9 @@ header.section-header {
   margin-top: $spacing-10;
 }
 
-.diagram-tooltip {
+.diagram-tooltip,
+.diagram text,
+.calendar-diagram text {
   font-family: carbon--font-family("mono"), monospace;
 }
 
@@ -305,6 +330,9 @@ header.section-header {
   @include carbon--breakpoint-up(max) {
     height: 350px;
   }
+}
+
+.calendar-diagram {
 }
 
 #footer {

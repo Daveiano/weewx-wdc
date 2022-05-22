@@ -7,6 +7,31 @@ import TableBase from "./data-table/table-base";
 import { BarDiagram } from "./diagrams/bar";
 import { LineDiagram } from "./diagrams/line";
 import { precision, Series } from "./diagrams/types";
+import { CalendarDiagram } from "./diagrams/calendar";
+
+const calendarDiagrams = document.querySelectorAll("div.calendar-diagram");
+calendarDiagrams.forEach((diagram) => {
+  if (
+    diagram instanceof HTMLElement &&
+    diagram.dataset.value &&
+    diagram.dataset.obs &&
+    diagram.dataset.color &&
+    diagram.dataset.heading &&
+    diagram.dataset.unit
+  ) {
+    const root = createRoot(diagram);
+
+    root.render(
+      <CalendarDiagram
+        data={(window as any)[diagram.dataset.value]}
+        unit={diagram.dataset.unit}
+        color={JSON.parse((diagram.dataset.color as string).replace(/'/g, '"'))}
+        observation={diagram.dataset.obs}
+        heading={diagram.dataset.heading}
+      />
+    );
+  }
+});
 
 const diagrams = document.querySelectorAll("div.diagram");
 diagrams.forEach((diagram) => {

@@ -1,4 +1,5 @@
 from weewx.cheetahgenerator import SearchList
+from user.diagram_util import DiagramUtil
 
 # Copyright 2022 David Bätge
 # Distributed under the terms of the GNU Public License (GPLv3)
@@ -228,3 +229,48 @@ class StatsUtil(SearchList):
                 aggregate_type = 'max'
 
             return obs_labels['outTemp'] + '<sub>' + aggregate_type + '</sub> ≥ ' + value + getattr(unit_labels, 'outTemp')
+
+    def get_calendar_color(awlf, obs):
+        """
+        Returns a color for use in diagram.
+
+        Args:
+            observation (string): The observation
+
+        Returns:
+            string: Color string.
+        """
+        if obs == 'rain':
+            return ['#b8e7fe', '#71d0fe', '#0198E1', '#004c70']
+
+    def get_calendar_data(self, obs, period):
+        """
+        Returns array of calendar data for use in diagram.
+
+        Args:
+            observation (string): The observation
+            period (obj): Period to use, eg. $year, month, $span
+
+        Returns:
+            list: Calendar data.
+        """
+        diagramUtil = DiagramUtil(SearchList)
+
+        if obs == 'rain':
+            day_series = period.rain.series(
+                aggregate_type="sum",
+                aggregate_interval="day",
+                time_series='start',
+                time_unit='unix_epoch'
+            ).round(diagramUtil.get_rounding('rain'))
+
+            days = filter(lambda x: x[1].raw > 0.0, list(zip(day_series.start, day_series.data)))
+            rainDays = []
+
+            for day in days:
+                rainDays.append({
+                    'value': day[1].raw,
+                    'day': day[0].format("%Y-%m-%d")
+                })
+
+            return rainDays

@@ -70,3 +70,4 @@
 - Added test_install.sh
 - Added "Climatological Days" Tile to stats and year pages
 - Added rain days and average temperature calendar diagram
+- Updated Chart axis labels and aggregate intervals

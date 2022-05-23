@@ -1,5 +1,5 @@
 from weewx.cheetahgenerator import SearchList
-import datetime
+from datetime import datetime
 from calendar import isleap
 from user.general_util import GeneralUtil
 
@@ -70,7 +70,7 @@ class DiagramUtil(SearchList):
 
         return 'avg'
 
-    def get_aggregate_interval(self, observation, precision):
+    def get_aggregate_interval(self, observation, precision, *args, **kwargs):
         """
         aggregate_interval for observations series.
         @see https://github.com/weewx/weewx/wiki/Tags-for-series#syntax
@@ -82,6 +82,9 @@ class DiagramUtil(SearchList):
         Returns:
             int: aggregate_interval
         """
+        alltime_start = kwargs.get('alltime_start', None)
+        alltime_end = kwargs.get('alltime_end', None)
+
         if precision == 'day':
             if observation == 'ET' or observation == 'rain':
                 return 7200  # 2 hours
@@ -96,15 +99,32 @@ class DiagramUtil(SearchList):
 
         if precision == 'month':
             if observation == 'ET' or observation == 'rain':
-                return 3600 * 24  # 1 day
+                return 3600 * 48  # 2 days
 
             return 900 * 24  # 6 hours
 
-        if precision == 'year' or precision == 'alltime':
+        if precision == 'year':
             if observation == 'ET' or observation == 'rain':
-                return 3600 * 336  # 7 days
+                return 3600 * 432  # 8 days
 
             return 3600 * 48  # 2 days
+
+        if precision == 'alltime':
+            if (alltime_start is not None and
+                    alltime_end is not None):
+
+                d1 = datetime.strptime(alltime_start, '%d.%m.%Y')
+                d2 = datetime.strptime(alltime_end, '%d.%m.%Y')
+                delta = d2 - d1
+                if observation == 'ET' or observation == 'rain':
+                    return 3600 * (delta.days / 20) * 24  # Max of 20 bars
+
+                return 3600 * (delta.days / 100) * 24  # Max of 100 points
+            else:
+                if observation == 'ET' or observation == 'rain':
+                    return 3600 * 432  # 8 days
+
+                return 3600 * 96  # 4 days
 
     def get_rounding(self, observation):
         """
@@ -134,7 +154,7 @@ class DiagramUtil(SearchList):
         Returns:
             float: A delta
         """
-        now = datetime.datetime.now()
+        now = datetime.now()
 
         hour_delta = 24
 

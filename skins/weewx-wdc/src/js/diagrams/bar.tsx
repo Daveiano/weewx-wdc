@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { ResponsiveBar } from "@nivo/bar";
 import moment from "moment";
+import { useMediaQuery } from "@react-hook/media-query";
 
 import { DiagramBaseProps } from "./types";
 import { getyScaleOffset } from "../util/util";
@@ -9,6 +10,7 @@ import { TooltipBar } from "../components/tooltip-bar";
 export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
   props: DiagramBaseProps
 ): React.ReactElement => {
+  const small = useMediaQuery("(max-width: 672px)");
   let dateFormat = "HH:mm";
 
   switch (props.precision) {
@@ -76,6 +78,9 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
         )}
         valueFormat={(value) => `${value} ${props.unit}`}
         valueScale={{ type: "linear" }}
+        theme={{
+          fontSize: small ? 9 : 11,
+        }}
       />
     </div>
   );

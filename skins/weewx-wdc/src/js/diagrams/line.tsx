@@ -11,12 +11,19 @@ import {
   areaBaselineValue0,
   getMargins,
   getAxisLeftLegendOffset,
+  getTimeDifferenceInMonths,
 } from "../util/util";
 import { sliceTooltip } from "../components/tooltip-slice";
+import { useMediaQuery } from "@react-hook/media-query";
 
 export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
   props: DiagramBaseProps
 ): React.ReactElement => {
+  const small = useMediaQuery("(max-width: 672px)");
+  const timeDifferenceInMonths = getTimeDifferenceInMonths(props.data[0].data);
+
+  console.log(timeDifferenceInMonths);
+
   let format = "%H:%M";
   let tickValues = "every 3 hours";
 
@@ -27,15 +34,21 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
       break;
     case "month":
       format = "%d.%m";
-      tickValues = "every 3 days";
+      tickValues = small ? "every 5 days" : "every 3 days";
       break;
     case "year":
       format = "%d.%m";
-      tickValues = "every 1 months";
+      tickValues = small ? "every 2 months" : "every 1 months";
       break;
     case "alltime":
-      format = "%d.%m.%y";
-      tickValues = "every 6 months";
+      if (timeDifferenceInMonths > 60) {
+        format = "%d.%m.%y";
+        tickValues = small ? "every 2 years" : "every 1 years";
+      } else {
+        format = "%d.%m.%y";
+        tickValues = small ? "every 6 months" : "every 6 months";
+      }
+
       break;
   }
 

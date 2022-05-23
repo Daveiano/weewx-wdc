@@ -2,18 +2,24 @@
 
 - [Weewx Weather Data Center skin](#weewx-weather-data-center-skin)
   - [Key Features](#key-features)
-  - [Demo](#demo)
-  - [Screenshot](#screenshot)
+  - [<a href="https://www.weewx-hbt.de" rel="nofollow">Demo</a>](#demo)
+  - [Screenshots](#screenshots)
+    - [Stat tiles](#stat-tiles)
+    - [Diagram Tiles](#diagram-tiles)
+    - [Table Tile](#table-tile)
+    - [Climatological days](#climatological-days)
+    - [Avg Temperature Calendar](#avg-temperature-calendar)
+    - [Full Page](#full-page)
   - [Usage](#usage)
     - [Installation](#installation)
     - [Configuration](#configuration)
     - [Localization](#localization)
   - [Development](#development)
     - [Scripts](#scripts)
-      - [`yarn run dev`](#yarn-run-dev)
-      - [`yarn run build`](#yarn-run-build)
-      - [`yarn run deploy:local`](#yarn-run-deploylocal)
-      - [`yarn run serve:local`](#yarn-run-servelocal)
+      - [yarn run dev](#yarn-run-dev)
+      - [yarn run build](#yarn-run-build)
+      - [yarn run deploy:local](#yarn-run-deploylocal)
+      - [yarn run serve:local](#yarn-run-servelocal)
     - [Ideas for further development](#ideas-for-further-development)
   - [Free Software](#free-software)
   - [Credits](#credits)
@@ -34,7 +40,29 @@ Inspired by and build with the [Carbon Design System](https://carbondesignsystem
 
 ## [Demo](https://www.weewx-hbt.de)
 
-## Screenshot
+## Screenshots
+
+### Stat tiles
+
+![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-stat-tiles.png)
+
+### Diagram Tiles
+
+![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-diagram-tiles.png)
+
+### Table Tile
+
+![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/wewx-wdc-table-tile.png)
+
+### Climatological days
+
+![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-climatological-days.png)
+
+### Avg Temperature Calendar
+
+![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-avg-tmp-calendar.png)
+
+### Full Page
 
 ![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-01.png)
 

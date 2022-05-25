@@ -24,6 +24,7 @@
               <h2>$current.dateTime</h2>
             </header>
           </div>
+
           <div class="bx--row">
             <!--prettier-ignore-->
             #for $skin_obs in $DisplayOptions.get('stat_tile_observations')
@@ -41,6 +42,9 @@
               #end if
             #end for
           </div>
+
+          #include "includes/forecast.inc"
+
           <div class="bx--row">
             <header class="bx--col section-header">
               <h2>$gettext("Last 24 hours")</h2>

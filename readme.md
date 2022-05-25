@@ -37,6 +37,9 @@ Inspired by and build with the [Carbon Design System](https://carbondesignsystem
 - Almanac
 - Translated for DE and EN
 - Tabular representation with Carbon Data Tables
+- Climatological days
+- Calendar charts for rain days and average day temperature
+- Support for [weewx-forecast](https://github.com/chaunceygardiner/weewx-forecast)
 
 ## [Demo](https://www.weewx-hbt.de)
 
@@ -87,6 +90,13 @@ SKIN_NAME = Weather Data Center
 SKIN_VERSION = 1.0.0-beta2
 
 [Extras]
+    # Show a link to the GitHub respository of this skin. Set to False to hide.
+    github_link = True
+
+    # This radar image would be available as $Extras.radar_img
+    radar_img = https://www.dwd.de/DWD/wetter/radar/radfilm_sac_akt.gif
+    # This URL will be used as the image hyperlink:
+    radar_url =	https://www.dwd.de/DE/leistungen/radarbild_film/radarbild_film.html
 
 
 [DisplayOptions]
@@ -164,6 +174,14 @@ SKIN_VERSION = 1.0.0-beta2
     generator_list = weewx.cheetahgenerator.CheetahGenerator, weewx.reportengine.CopyGenerator
 ```
 
+#### Extras
+
+`github_link` Set to `False` to disable.
+
+`radar_img` and `radar_url` Same as in the default Seasons Skin
+
+#### DisplayOptions
+
 `climatological_days` E.g. Rain days (days with precipitation) or Summer days (Temp > 25°C). Leave empty to disable. When activated a rain days calendar chart and an averge temperature calendar chart is shown alongside.
 
 `table_tile_observations` Defines which observations should be shown in the data table component.
@@ -190,6 +208,21 @@ For a combined diagram of Temperature and Dew point:
 `# 3` Under the key `obs` specify the observations to combine.
 
 `# 4` Optionally define a color.
+
+### Support for weewx-forecast
+
+Add `user.forecast.ForecastVariables` to '[CheetahGenerator].search_list_extensions' in skin.conf.
+
+It should look like this
+
+```
+...
+[CheetahGenerator]
+    encoding = html_entities
+    search_list_extensions = user.general_util.GeneralUtil, user.stats_util.StatsUtil, user.diagram_util.DiagramUtil, user.celestial_util.CelestialUtil, user.archive_util.ArchiveUtil, user.table_util.TableUtil, user.forecast.ForecastVariables
+
+...
+```
 
 ### Localization
 

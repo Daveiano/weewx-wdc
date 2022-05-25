@@ -270,6 +270,15 @@ bx-tabs {
   }
 }
 
+.tile-radar-forecast {
+  img {
+    max-width: 100%;
+    display: block;
+    height: auto;
+    margin: 0 auto;
+  }
+}
+
 .almanac-tile {
   margin-bottom: $spacing-05;
   .label {

@@ -111,7 +111,7 @@
 <!--prettier-ignore-->
 #if len($periods) > 0
 
-<h3>$forecast_source</h3>
+<h3>$gettext($forecast_source)</h3>
 
 <bx-structured-list>
   <bx-structured-list-head>
@@ -158,7 +158,9 @@
 
       #set $lastday = $thisday
       #set $summary = $forecast.weather_summary($forecast_source, $period.event_ts.raw, periods=$periods)
-      <bx-structured-list-cell>$summary.clouds</bx-structured-list-cell>
+      <bx-structured-list-cell>
+        #include "includes/icons/forecast/" + $summary.clouds + ".svg"
+      </bx-structured-list-cell>
       <!--prettier-ignore-->
       #end if 
       #end for
@@ -430,7 +432,7 @@
 <!--prettier-ignore-->
 #set $wloc = $summary.location
 <!--prettier-ignore-->
-<div>
+<div class="issued">
   $gettext("Forecast")
   #if $wloc is not None and $wloc != ''
     for $wloc

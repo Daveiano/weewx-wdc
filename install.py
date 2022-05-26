@@ -97,7 +97,14 @@ class BasicInstaller(ExtensionInstaller):
                   'skins/weewx-wdc/includes/icons/moonrise.svg',
                   'skins/weewx-wdc/includes/icons/moonset.svg',
                   'skins/weewx-wdc/includes/icons/github.svg',
-                  'skins/weewx-wdc/includes/icons/wdc.svg'
+                  'skins/weewx-wdc/includes/icons/wdc.svg',
+                  'skins/weewx-wdc/includes/icons/forecast/B1.svg',
+                  'skins/weewx-wdc/includes/icons/forecast/B2.svg',
+                  'skins/weewx-wdc/includes/icons/forecast/BK.svg',
+                  'skins/weewx-wdc/includes/icons/forecast/CL.svg',
+                  'skins/weewx-wdc/includes/icons/forecast/FW.svg',
+                  'skins/weewx-wdc/includes/icons/forecast/OV.svg',
+                  'skins/weewx-wdc/includes/icons/forecast/SC.svg',
                   ]),
             ]
         )

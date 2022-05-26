@@ -271,8 +271,9 @@ bx-tabs {
 }
 
 .tile-radar-forecast {
+  height: 100%;
   img {
-    max-width: 100%;
+    width: 100%;
     display: block;
     height: auto;
     margin: 0 auto;
@@ -281,8 +282,28 @@ bx-tabs {
 
 .forecast-tile {
   .forecast {
-    table {
-      width: 100%;
+    h3 {
+      @include carbon--type-style("expressive-heading-04");
+    }
+    > p {
+      @include carbon--type-style("body-02");
+    }
+    .issued {
+      @include carbon--type-style("helper-text-01");
+    }
+    bx-structured-list {
+      margin-bottom: -4rem;
+      display: block;
+      bx-structured-list-row {
+        bx-structured-list-cell {
+          sub {
+            @include carbon--type-style("helper-text-01");
+          }
+        }
+      }
+    }
+    & ~ .forecast {
+      margin-top: $spacing-06;
     }
   }
 }

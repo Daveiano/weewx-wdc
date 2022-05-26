@@ -271,9 +271,6 @@ bx-tabs {
 }
 
 .tile-radar-forecast {
-  @include carbon--breakpoint-down(xlg) {
-    margin-bottom: $spacing-06;
-  }
   img {
     width: 100%;
     display: block;
@@ -283,6 +280,9 @@ bx-tabs {
 }
 
 .forecast-tile {
+  @include carbon--breakpoint-down(xlg) {
+    margin-bottom: $spacing-06;
+  }
   .forecast {
     h3 {
       @include carbon--type-style("expressive-heading-03");

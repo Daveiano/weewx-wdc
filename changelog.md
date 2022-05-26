@@ -76,3 +76,5 @@
 
 - Added radar image
 - Support for weewx-forecast (zambretti and table template)
+
+# Next

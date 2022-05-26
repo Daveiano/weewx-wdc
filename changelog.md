@@ -73,3 +73,6 @@
 - Updated Chart axis labels and aggregate intervals
 
 # Next
+
+- Added radar image
+- Support for weewx-forecast (zambretti and table template)

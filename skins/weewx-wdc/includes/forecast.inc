@@ -27,7 +27,9 @@
   <div class="bx--col">
     <div class="bx--row">
       #if 'radar_img' in $Extras
-      <div class="bx--col bx--col-lg-12 bx--col-xlg-6 bx--col-max-4">
+      <div
+        class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6"
+      >
         <div class="bx--tile tile-radar-forecast">
           <!--prettier-ignore-->
           #if 'radar_url' in $Extras
@@ -43,10 +45,12 @@
       #end if
       <!--prettier-ignore-->
       #if $varExists('forecast')
-      <div class="bx--col bx--col-lg-12 bx--col-xlg-6 bx--col-max-4">
-        <div class="bx--tile">
+      <div
+        class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6"
+      >
+        <div class="bx--tile forecast-tile">
           #if $varExists('forecast.zambretti')
-          <div>
+          <div class="forecast">
             <h3>Zambretti</h3>
             <p>
               <!--prettier-ignore-->
@@ -57,6 +61,10 @@
             </p>
           </div>
           #end if
+          <div class="forecast">
+            <!--prettier-ignore-->
+            #include "includes/forecast-table.inc"
+          </div>
         </div>
       </div>
       #end if

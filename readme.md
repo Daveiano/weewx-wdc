@@ -98,6 +98,25 @@ SKIN_VERSION = 1.0.0-beta2
     # This URL will be used as the image hyperlink:
     radar_url =	https://www.dwd.de/DE/leistungen/radarbild_film/radarbild_film.html
 
+    [[forecast_table_settings]]
+        source = WU
+        num_periods = 72
+        num_days = 3
+        show_legend = 1
+        show_hourly = 1
+        show_day = 1
+        show_date = 1
+        show_outlook = 1
+        show_temp = 1
+        show_dewpoint = 0
+        show_humidity = 0
+        show_wind = 1
+        show_tides = 0
+        show_sun = 1
+        show_moon = 1
+        show_pop = 1
+        show_precip = 1
+        show_obvis = 0
 
 [DisplayOptions]
     climatological_days = rainDays, summerDays, hotDays, desertDays, tropicalNights, stormDays, iceDays, frostDays
@@ -211,7 +230,7 @@ For a combined diagram of Temperature and Dew point:
 
 ### Support for weewx-forecast
 
-Add `user.forecast.ForecastVariables` to '[CheetahGenerator].search_list_extensions' in skin.conf.
+Add `user.forecast.ForecastVariables` to `[CheetahGenerator].search_list_extensions` in skin.conf.
 
 It should look like this
 
@@ -220,9 +239,11 @@ It should look like this
 [CheetahGenerator]
     encoding = html_entities
     search_list_extensions = user.general_util.GeneralUtil, user.stats_util.StatsUtil, user.diagram_util.DiagramUtil, user.celestial_util.CelestialUtil, user.archive_util.ArchiveUtil, user.table_util.TableUtil, user.forecast.ForecastVariables
-
 ...
 ```
+
+weewx-wdc includes predefined and tested values for the forecast table template, located in skin.conf in `forecast_table_settings`.
+Please set `source` to your used forecast source. For help on configuring weewx-forecast, see https://github.com/chaunceygardiner/weewx-forecast.
 
 ### Localization
 

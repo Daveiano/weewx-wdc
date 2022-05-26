@@ -271,7 +271,9 @@ bx-tabs {
 }
 
 .tile-radar-forecast {
-  height: 100%;
+  @include carbon--breakpoint-down(xlg) {
+    margin-bottom: $spacing-06;
+  }
   img {
     width: 100%;
     display: block;
@@ -283,10 +285,10 @@ bx-tabs {
 .forecast-tile {
   .forecast {
     h3 {
-      @include carbon--type-style("expressive-heading-04");
+      @include carbon--type-style("expressive-heading-03");
     }
     > p {
-      @include carbon--type-style("body-02");
+      @include carbon--type-style("body-01");
     }
     .issued {
       @include carbon--type-style("helper-text-01");
@@ -294,16 +296,52 @@ bx-tabs {
     bx-structured-list {
       margin-bottom: -4rem;
       display: block;
+      bx-structured-list-body {
+        bx-structured-list-cell[class*="index"] {
+          font-family: carbon--font-family("mono"), monospace;
+        }
+      }
       bx-structured-list-row {
         bx-structured-list-cell {
           sub {
             @include carbon--type-style("helper-text-01");
+          }
+          .temphi {
+            color: #d5202a;
+          }
+          .templo {
+            color: #0053ae;
+          }
+          svg {
+            display: block;
+            width: 32px;
+            height: 32px;
+          }
+        }
+        &.rain {
+          svg {
+            margin-top: $spacing-02;
+            margin-bottom: $spacing-02;
           }
         }
       }
     }
     & ~ .forecast {
       margin-top: $spacing-06;
+    }
+    @include carbon--breakpoint-down(md) {
+      bx-structured-list-cell.index-7,
+      bx-structured-list-header-cell.index-7 {
+        display: none;
+      }
+      bx-structured-list-cell.index-5,
+      bx-structured-list-header-cell.index-5 {
+        display: none;
+      }
+      bx-structured-list-cell.index-3,
+      bx-structured-list-header-cell.index-3 {
+        display: none;
+      }
     }
   }
 }

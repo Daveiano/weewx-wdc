@@ -105,6 +105,8 @@ class BasicInstaller(ExtensionInstaller):
                   'skins/weewx-wdc/includes/icons/forecast/FW.svg',
                   'skins/weewx-wdc/includes/icons/forecast/OV.svg',
                   'skins/weewx-wdc/includes/icons/forecast/SC.svg',
+                  'skins/weewx-wdc/includes/icons/forecast/rain.svg',
+                  'skins/weewx-wdc/includes/icons/forecast/snow.svg',
                   ]),
             ]
         )

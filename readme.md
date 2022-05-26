@@ -9,10 +9,14 @@
     - [Table Tile](#table-tile)
     - [Climatological days](#climatological-days)
     - [Avg Temperature Calendar](#avg-temperature-calendar)
+    - [Forecast &amp; Radar](#forecast--radar)
     - [Full Page](#full-page)
   - [Usage](#usage)
     - [Installation](#installation)
     - [Configuration](#configuration)
+      - [Extras](#extras)
+      - [DisplayOptions](#displayoptions)
+    - [Support for weewx-forecast](#support-for-weewx-forecast)
     - [Localization](#localization)
   - [Development](#development)
     - [Scripts](#scripts)
@@ -25,6 +29,9 @@
   - [Credits](#credits)
 
 Inspired by and build with the [Carbon Design System](https://carbondesignsystem.com/). This skin uses the same technologies as [Weather Data Center](https://github.com/Daveiano/weather-data-center), a cross-platform Desktop App to import and analyze weather data, I wrote.
+
+If you need help installing the theme, please have a look at https://github.com/Daveiano/weewx-interceptor-docker, a configured Dockerfile
+which I use as a base for my local PI installation.
 
 ## Key Features
 
@@ -65,6 +72,10 @@ Inspired by and build with the [Carbon Design System](https://carbondesignsystem
 
 ![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-avg-tmp-calendar.png)
 
+### Forecast & Radar
+
+![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-radar-forecast.png)
+
 ### Full Page
 
 ![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-01.png)
@@ -101,7 +112,7 @@ SKIN_VERSION = 1.0.0-beta2
     [[forecast_table_settings]]
         source = WU
         num_periods = 72
-        num_days = 3
+        num_days = 5
         show_legend = 1
         show_hourly = 1
         show_day = 1
@@ -242,7 +253,7 @@ It should look like this
 ...
 ```
 
-weewx-wdc includes predefined and tested values for the forecast table template, located in skin.conf in `forecast_table_settings`.
+weewx-wdc includes predefined and tested configuration values for the forecast table template, located in skin.conf in `forecast_table_settings`.
 Please set `source` to your used forecast source. For help on configuring weewx-forecast, see https://github.com/chaunceygardiner/weewx-forecast.
 
 ### Localization

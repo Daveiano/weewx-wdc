@@ -11,14 +11,14 @@
   <header class="bx--col section-header">
     <h2>
       <!--prettier-ignore-->
-      #if 'radar_img' in $Extras
-        $gettext("Recent radar")
+      #if $varExists('forecast')
+        $gettext("Forecast")
       #end if
       #if $varExists('forecast') and 'radar_img' in $Extras
        & 
       #end if
-      #if $varExists('forecast')
-        $gettext("Forecast")
+      #if 'radar_img' in $Extras
+        $gettext("Recent radar")
       #end if
     </h2>
   </header>
@@ -26,27 +26,10 @@
 <div class="bx--row">
   <div class="bx--col">
     <div class="bx--row">
-      #if 'radar_img' in $Extras
-      <div
-        class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6"
-      >
-        <div class="bx--tile tile-radar-forecast">
-          <!--prettier-ignore-->
-          #if 'radar_url' in $Extras
-          <a href="$Extras.radar_url">
-            #end if
-            <img src="$Extras.radar_img" alt="Radar" />
-            #if 'radar_url' in $Extras
-          </a>
-          <!--prettier-ignore-->
-          #end if
-        </div>
-      </div>
-      #end if
       <!--prettier-ignore-->
       #if $varExists('forecast')
       <div
-        class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6"
+        class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-8"
       >
         <div class="bx--tile forecast-tile">
           #if $varExists('forecast.zambretti')
@@ -65,6 +48,24 @@
             <!--prettier-ignore-->
             #include "includes/forecast-table.inc"
           </div>
+        </div>
+      </div>
+      #end if
+      <!--prettier-ignore-->
+      #if 'radar_img' in $Extras
+      <div
+        class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-4"
+      >
+        <div class="bx--tile tile-radar-forecast">
+          <!--prettier-ignore-->
+          #if 'radar_url' in $Extras
+          <a href="$Extras.radar_url">
+            #end if
+            <img src="$Extras.radar_img" alt="Radar" />
+            #if 'radar_url' in $Extras
+          </a>
+          <!--prettier-ignore-->
+          #end if
         </div>
       </div>
       #end if

@@ -30,7 +30,7 @@
 
 Inspired by and build with the [Carbon Design System](https://carbondesignsystem.com/). This skin uses the same technologies as [Weather Data Center](https://github.com/Daveiano/weather-data-center), a cross-platform Desktop App to import and analyze weather data, I wrote.
 
-If you need help installing the theme, please have a look at https://github.com/Daveiano/weewx-interceptor-docker, a configured Dockerfile
+If you need help installing the skin, please have a look at https://github.com/Daveiano/weewx-interceptor-docker, a configured Dockerfile
 which I use as a base for my local PI installation.
 
 ## Key Features
@@ -241,7 +241,7 @@ For a combined diagram of Temperature and Dew point:
 
 ### Support for weewx-forecast
 
-Add `user.forecast.ForecastVariables` to `[CheetahGenerator].search_list_extensions` in skin.conf.
+Add `user.forecast.ForecastVariables` to `[CheetahGenerator].search_list_extensions` in weewx-wdc skin.conf.
 
 It should look like this
 

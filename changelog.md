@@ -72,7 +72,7 @@
 - Added rain days and average temperature calendar diagram
 - Updated Chart axis labels and aggregate intervals
 
-# Next
+# 1.2.0
 
 - Added radar image
 - Support for weewx-forecast (zambretti and table template)

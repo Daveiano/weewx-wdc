@@ -329,18 +329,17 @@ bx-tabs {
     & ~ .forecast {
       margin-top: $spacing-06;
     }
-    @include carbon--breakpoint-down(md) {
-      bx-structured-list-cell.index-7,
-      bx-structured-list-header-cell.index-7 {
-        display: none;
-      }
-      bx-structured-list-cell.index-5,
-      bx-structured-list-header-cell.index-5 {
-        display: none;
-      }
-      bx-structured-list-cell.index-3,
-      bx-structured-list-header-cell.index-3 {
-        display: none;
+    bx-structured-list-row,
+    bx-structured-list-header-row {
+      @include carbon--breakpoint-down(md) {
+        bx-structured-list-cell,
+        bx-structured-list-header-cell {
+          display: none;
+        }
+        bx-structured-list-cell:nth-of-type(-n + 3),
+        bx-structured-list-header-cell:nth-of-type(-n + 3) {
+          display: table-cell;
+        }
       }
     }
   }

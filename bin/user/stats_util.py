@@ -98,7 +98,7 @@ class StatsUtil(SearchList):
                 time_unit='unix_epoch'
             )
 
-            days = filter(lambda x: x.raw < 0.0, list(day_series.data))
+            days = filter(lambda x: x.raw is not None and x.raw < 0.0, list(day_series.data))
 
             return len(list(days))
 
@@ -110,7 +110,7 @@ class StatsUtil(SearchList):
                 time_unit='unix_epoch'
             )
 
-            days = filter(lambda x: x.raw < 0.0, list(day_series.data))
+            days = filter(lambda x: x.raw is not None and x.raw < 0.0, list(day_series.data))
 
             return len(list(days))
 
@@ -129,7 +129,7 @@ class StatsUtil(SearchList):
             if getattr(unit_labels, 'windGust') == ' m/s':
                 value = 17.2
 
-            days = filter(lambda x: x.raw >= value, list(day_series.data))
+            days = filter(lambda x: x.raw is not None and x.raw >= value, list(day_series.data))
 
             return len(list(days))
 
@@ -141,7 +141,7 @@ class StatsUtil(SearchList):
                 time_unit='unix_epoch'
             )
 
-            days = filter(lambda x: x.raw > 0.0, list(day_series.data))
+            days = filter(lambda x: x.raw is not None and x.raw > 0.0, list(day_series.data))
 
             return len(list(days))
 
@@ -170,7 +170,7 @@ class StatsUtil(SearchList):
                 time_unit='unix_epoch'
             )
 
-            days = filter(lambda x: x.raw >= value, list(day_series.data))
+            days = filter(lambda x: x.raw is not None and x.raw >= value, list(day_series.data))
 
             return len(list(days))
 

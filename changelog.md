@@ -78,3 +78,5 @@
 - Support for weewx-forecast (zambretti and table template)
 
 # Next
+
+- Small responsive updates

@@ -33,6 +33,8 @@ Inspired by and build with the [Carbon Design System](https://carbondesignsystem
 If you need help installing the skin, please have a look at https://github.com/Daveiano/weewx-interceptor-docker, a configured Dockerfile
 which I use as a base for my local PI installation.
 
+If you like the look and feel of the skin please consider having a look into the original [Weather Data Center](https://daveiano.github.io/weather-data-center/)
+
 ## Key Features
 
 - Clear and beautiful UI thanks to [IBM Carbon](https://carbondesignsystem.com/) and [nivo](https://nivo.rocks/)
@@ -83,6 +85,11 @@ which I use as a base for my local PI installation.
 ## Usage
 
 ### Installation
+
+**Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v1.2.0/weewx-wdc-v1.2.0.zip.
+Don't download the repository directly and don't use the GitHub generated zip and tar.gz archives that come alongside the release. Always use the zip archive named **weewx-wdc-vX.X.X.zip**
+
+Background: The files in the src/ directory are the source files (TypeScript, SCSS). When creating a release, these source files get transformed and optimized, and the output location of these transformed files is the location which matches the location in the install.py script. The weewx-wdc-vX.X.X.zip should contain all these transformed files (like service-worker.js), but if you download the current state of the repo, these files are not included and this will throw multiple `FileNotFoundError` errors while installing.
 
 1. [Download](https://github.com/Daveiano/weewx-wdc/releases) the latest version
 2. Create a new folder and unzip to that folder

@@ -133,6 +133,7 @@
       #set $wts = $period.issued_ts
       #set $lastday = $thisday
       #set $summary = $forecast.weather_summary($forecast_source, $period.event_ts.raw, periods=$periods)
+      #set $test = $get_day_icon($summary)
       <bx-structured-list-header-cell class="index-$x">
         #if $show_day
         <span class="day">$summary.event_ts.format('%a')</span>
@@ -441,6 +442,7 @@
       #end for
     </bx-structured-list-row>
     #end if
+    <!--@todo Add obs-->
   </bx-structured-list-body>
 </bx-structured-list>
 

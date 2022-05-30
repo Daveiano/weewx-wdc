@@ -103,7 +103,7 @@ class DiagramUtil(SearchList):
 
             return 900 * 24  # 6 hours
 
-        if precision == 'year' or precision == 'alltime':
+        if precision == 'year':
             if observation == 'ET' or observation == 'rain':
                 return 3600 * 432  # 8 days
 

@@ -314,12 +314,14 @@ bx-tabs {
           }
           svg {
             display: block;
-            width: 32px;
-            height: 32px;
+            width: 42px;
+            height: 42px;
           }
         }
         &.rain {
           svg {
+            width: 32px;
+            height: 32px;
             margin-top: $spacing-02;
             margin-bottom: $spacing-02;
           }

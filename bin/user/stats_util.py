@@ -297,9 +297,10 @@ class StatsUtil(SearchList):
             tempDays = []
 
             for day in days:
-                tempDays.append({
-                    'value': day[1].raw,
-                    'day': day[0].format("%Y-%m-%d")
-                })
+                if day[1].raw is not None:
+                    tempDays.append({
+                        'value': day[1].raw,
+                        'day': day[0].format("%Y-%m-%d")
+                    })
 
             return tempDays

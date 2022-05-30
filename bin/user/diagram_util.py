@@ -103,7 +103,7 @@ class DiagramUtil(SearchList):
 
             return 900 * 24  # 6 hours
 
-        if precision == 'year':
+        if precision == 'year' or precision == 'alltime':
             if observation == 'ET' or observation == 'rain':
                 return 3600 * 432  # 8 days
 
@@ -116,6 +116,14 @@ class DiagramUtil(SearchList):
                 d1 = datetime.strptime(alltime_start, '%d.%m.%Y')
                 d2 = datetime.strptime(alltime_end, '%d.%m.%Y')
                 delta = d2 - d1
+
+                if delta.days == 0:
+                    # Edge case: code from year.
+                    if observation == 'ET' or observation == 'rain':
+                        return 3600 * 432  # 8 days
+
+                    return 3600 * 48  # 2 days
+
                 if observation == 'ET' or observation == 'rain':
                     return 3600 * (delta.days / 20) * 24  # Max of 20 bars
 

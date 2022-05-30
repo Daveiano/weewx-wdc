@@ -121,7 +121,7 @@ SKIN_VERSION = 1.0.0-beta2
         num_periods = 72
         num_days = 5
         show_legend = 1
-        show_hourly = 1
+        show_hourly = 0
         show_day = 1
         show_date = 1
         show_outlook = 1
@@ -262,6 +262,8 @@ It should look like this
 
 weewx-wdc includes predefined and tested configuration values for the forecast table template, located in skin.conf in `forecast_table_settings`.
 Please set `source` to your used forecast source. For help on configuring weewx-forecast, see https://github.com/chaunceygardiner/weewx-forecast.
+
+`show_hourly` is not yet supported.
 
 ### Localization
 

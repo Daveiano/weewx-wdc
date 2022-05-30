@@ -108,11 +108,6 @@
   src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/structured-list.min.js"
 ></script>
 
-<script
-  type="module"
-  src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/tooltip.min.js"
-></script>
-
 <!--prettier-ignore-->
 #if len($periods) > 0
 
@@ -133,7 +128,6 @@
       #set $wts = $period.issued_ts
       #set $lastday = $thisday
       #set $summary = $forecast.weather_summary($forecast_source, $period.event_ts.raw, periods=$periods)
-      #set $test = $get_day_icon($summary)
       <bx-structured-list-header-cell class="index-$x">
         #if $show_day
         <span class="day">$summary.event_ts.format('%a')</span>
@@ -145,7 +139,7 @@
         #end if
       </bx-structured-list-header-cell>
       <!--prettier-ignore-->
-      #end if 
+      #end if
       #end for
     </bx-structured-list-header-row>
     #end if
@@ -165,10 +159,10 @@
       #set $lastday = $thisday
       #set $summary = $forecast.weather_summary($forecast_source, $period.event_ts.raw, periods=$periods)
       <bx-structured-list-cell class="index-$x">
-        #include "includes/icons/forecast/" + $summary.clouds + ".svg"
+        #include "includes/icons/forecast/" + $get_day_icon($summary)
       </bx-structured-list-cell>
       <!--prettier-ignore-->
-      #end if 
+      #end if
       #end for
     </bx-structured-list-row>
     #end if
@@ -196,7 +190,7 @@
         <span class="templo"> $summary.tempMin.nolabel('%.0f') </span>
       </bx-structured-list-cell>
       <!--prettier-ignore-->
-      #end if 
+      #end if
       #end for
     </bx-structured-list-row>
     #end if
@@ -224,7 +218,7 @@
         <span class="templo"> $summary.dewpointMin.nolabel('%.0f') </span>
       </bx-structured-list-cell>
       <!--prettier-ignore-->
-      #end if 
+      #end if
       #end for
     </bx-structured-list-row>
     #end if
@@ -252,13 +246,13 @@
         <span class="templo"> $summary.humidityMin.nolabel('%.0f') </span>
       </bx-structured-list-cell>
       <!--prettier-ignore-->
-      #end if 
+      #end if
       #end for
     </bx-structured-list-row>
     #end if
 
     <!--prettier-ignore-->
-    #if $show_wind and $summary.humidityMax is not None
+    #if $show_wind and $summary.windSpeedMax is not None
     <bx-structured-list-row>
       #if $show_legend
       <bx-structured-list-cell>
@@ -277,15 +271,15 @@
       <bx-structured-list-cell class="index-$x">
         <!--prettier-ignore-->
         #if $summary.windSpeedMin == $summary.windSpeedMax or $summary.windSpeedMin.raw == $summary.windSpeedMax.raw
-          $summary.windSpeedMin.nolabel('%.0f',' ') 
+          $summary.windSpeedMin.nolabel('%.0f',' ')
         #else
-          $summary.windSpeedMin.nolabel('%.0f','') - $summary.windSpeedMax.nolabel('%.0f',' ') 
+          $summary.windSpeedMin.nolabel('%.0f','') - $summary.windSpeedMax.nolabel('%.0f',' ')
         #end if
         <span class="windgust">$summary.windGust.nolabel('%.0f',' ')</span>
         $summary.windChar
       </bx-structured-list-cell>
       <!--prettier-ignore-->
-      #end if 
+      #end if
       #end for
     </bx-structured-list-row>
     #end if
@@ -310,7 +304,7 @@
       <bx-structured-list-cell class="index-$x">
         <table cellspacing="0" cellpadding="0" width="100%">
           <!--prettier-ignore-->
-          #for $tide in $tides 
+          #for $tide in $tides
           #if $summary.event_ts.raw <= $tide.event_ts.raw < $summary.event_ts.raw + $summary.duration
           <tr>
             <td style="font-size: 100%">$tide.event_ts.format('%H:%M')</td>
@@ -320,12 +314,12 @@
             </td>
           </tr>
           <!--prettier-ignore-->
-          #end if 
+          #end if
         #end for
         </table>
       </bx-structured-list-cell>
       <!--prettier-ignore-->
-      #end if 
+      #end if
       #end for
     </bx-structured-list-row>
     #end if
@@ -353,13 +347,13 @@
         #if $alm.hasExtras
           $alm.sun.rise.format('%H:%M')<br />
           $alm.sun.set.format('%H:%M')
-        #else 
+        #else
           $alm.sunrise<br />
-          $alm.sunset 
+          $alm.sunset
         #end if
       </bx-structured-list-cell>
       <!--prettier-ignore-->
-      #end if 
+      #end if
       #end for
     </bx-structured-list-row>
     #end if
@@ -392,7 +386,7 @@
         $alm.moon_fullness% $gettext("full")
       </bx-structured-list-cell>
       <!--prettier-ignore-->
-      #end if 
+      #end if
       #end for
     </bx-structured-list-row>
     #end if
@@ -402,14 +396,7 @@
     <bx-structured-list-row class="rain">
       #if $show_legend
       <bx-structured-list-cell>
-        <bx-tooltip-definition
-          alignment="center"
-          body-text="$gettext('Probability of precipitation')"
-          direction="bottom"
-        >
-          $obs.label.rain
-        </bx-tooltip-definition>
-        in $unit.label.rain
+        $gettext('Probability of precipitation')
       </bx-structured-list-cell>
       #end if
 
@@ -423,25 +410,50 @@
       <!--prettier-ignore-->
       <bx-structured-list-cell class="index-$x">
         <!--prettier-ignore-->
-        #if $summary.pop.raw > 0 
-          $summary.pop.format('%.0f','') 
-        #end if
-        <br />
-        #if $summary.qpf.raw > 0
-          #include 'includes/icons/forecast/rain.svg'  
-          $summary.qpf.nolabel('%.2f','')
-        #end if
-        <br />
-        #if $summary.qsf.raw > 0 
-          #include 'includes/icons/forecast/snow.svg'    
-          $summary.qsf.nolabel('%.2f','') 
+        #if $summary.pop.raw > 0
+          $summary.pop.format('%.0f','')
         #end if
       </bx-structured-list-cell>
       <!--prettier-ignore-->
-      #end if 
+      #end if
       #end for
     </bx-structured-list-row>
     #end if
+
+    <!--prettier-ignore-->
+    #if $show_precip
+    <bx-structured-list-row class="rain">
+      #if $show_legend
+      <bx-structured-list-cell>
+        $obs.label.rain in $unit.label.rain
+      </bx-structured-list-cell>
+      #end if
+
+      <!--prettier-ignore-->
+      #for $x, $period in enumerate($periods)
+      #set $thisday = $period.event_ts.format('%d')
+      #if $lastday != $thisday
+
+      #set $lastday = $thisday
+      #set $summary = $forecast.weather_summary($forecast_source, $period.event_ts.raw, periods=$periods)
+      <!--prettier-ignore-->
+      <bx-structured-list-cell class="index-$x">
+        #if $summary.qpf.raw > 0
+          #include 'includes/icons/forecast/rain.svg'
+          $summary.qpf.nolabel('%.2f','')
+        #end if
+        <br />
+        #if $summary.qsf.raw > 0
+          #include 'includes/icons/forecast/snow.svg'
+          $summary.qsf.nolabel('%.2f','')
+        #end if
+      </bx-structured-list-cell>
+      <!--prettier-ignore-->
+      #end if
+      #end for
+    </bx-structured-list-row>
+    #end if
+
     <!--@todo Add obs-->
   </bx-structured-list-body>
 </bx-structured-list>

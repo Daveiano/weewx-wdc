@@ -80,3 +80,4 @@
 # Next
 
 - Small responsive updates
+- Bugfix: Report takes forever on fresh install without data

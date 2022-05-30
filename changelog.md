@@ -77,9 +77,12 @@
 - Added radar image
 - Support for weewx-forecast (zambretti and table template)
 
-# Next
+# 1.2.1
 
 - Small responsive updates
 - Bugfix: Report takes forever on fresh install without data
 - Bugfix: Avg Temperature diagram when values missing.
+- Bugfix: ERROR weewx.cheetahgenerator: Reason: '>=' not supported between instances of 'NoneType' and 'float' [GH-10]
 - Update forecast display [GH-10]
+
+# Next

@@ -82,7 +82,11 @@
 - Small responsive updates
 - Bugfix: Report takes forever on fresh install without data
 - Bugfix: Avg Temperature diagram when values missing.
-- Bugfix: ERROR weewx.cheetahgenerator: Reason: '>=' not supported between instances of 'NoneType' and 'float' [GH-10]
+- Bugfix: ERROR weewx.cheetahgenerator: Reason: '>=' not supported between instances of 'NoneType' and 'float' [GH-9]
 - Update forecast display [GH-10]
+
+# 1.2.2
+
+- Bugfix: Added forecast_util.py in install.py, see https://github.com/Daveiano/weewx-interceptor-docker/issues/1
 
 # Next

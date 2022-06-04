@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { Serie } from "@nivo/line";
 
 import { TABLE_SORT_DIRECTION } from "./data-table/misc";
-import TableBase from "./data-table/table-base";
+import TableBase from "carbon-data-table-state-manager";
 import { BarDiagram } from "./diagrams/bar";
 import { LineDiagram } from "./diagrams/line";
 import { precision, Series } from "./diagrams/types";
@@ -119,6 +119,7 @@ if (table) {
 
   root.render(
     <TableBase
+      collator={new Intl.Collator()}
       columns={tableHeaders}
       rows={tableRows}
       start={0}

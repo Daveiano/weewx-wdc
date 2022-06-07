@@ -47,7 +47,7 @@ class TableUtil(SearchList):
 
         carbon_headers.append({
             "title": "Time",
-            "id": "timeParsed",
+            "id": "time",
             "sortCycle": "tri-states-from-ascending",
         })
 
@@ -95,13 +95,13 @@ class TableUtil(SearchList):
                     cs_time = datetime.fromtimestamp(start.raw)
                     # The current series item by time.
                     cs_item = list(filter(
-                        lambda x: (x['timeParsed'] == cs_time.isoformat()),
+                        lambda x: (x['time'] == cs_time.isoformat()),
                         carbon_values
                     ))
 
                     if len(cs_item) == 0:
                         carbon_values.append({
-                            "timeParsed": cs_time.isoformat(),
+                            "time": cs_time.isoformat(),
                             observation: data.raw,
                             'id': start.raw
                         })
@@ -113,7 +113,7 @@ class TableUtil(SearchList):
 
         # Sort per time
         carbon_values.sort(
-            key=lambda item: datetime.fromisoformat(item['timeParsed'])
+            key=lambda item: datetime.fromisoformat(item['time'])
         )
 
         return carbon_values

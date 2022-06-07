@@ -2,8 +2,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { Serie } from "@nivo/line";
 
-import { TABLE_SORT_DIRECTION } from "./data-table/misc";
-import TableBase from "carbon-data-table-state-manager";
+import { CarbonDataTableStateManager } from "carbon-data-table-state-manager";
 import { BarDiagram } from "./diagrams/bar";
 import { LineDiagram } from "./diagrams/line";
 import { precision, Series } from "./diagrams/types";
@@ -118,19 +117,19 @@ if (table) {
   const root = createRoot(table);
 
   root.render(
-    <TableBase
-      collator={new Intl.Collator()}
+    <CarbonDataTableStateManager
       columns={tableHeaders}
       rows={tableRows}
       start={0}
       pageSize={10}
       pageSizes={[10, 25, 50, 100, 200, 500]}
       sortInfo={{
-        columnId: "timeParsed",
-        direction: TABLE_SORT_DIRECTION.ASC,
+        columnId: "time",
+        direction: "DESC",
       }}
       size="short"
       title={tableTitle}
+      dateFormat="YYYY/MM/DD HH:mm"
     />
   );
 }

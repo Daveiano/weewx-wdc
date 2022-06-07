@@ -1501,13 +1501,12 @@ carbon-components@10.25.0:
     lodash.debounce "^4.0.8"
     warning "^3.0.0"
 
-carbon-data-table-state-manager@^0.0.1-alpha.1.0:
-  version "0.0.1-alpha.1.0"
-  resolved "https://registry.yarnpkg.com/carbon-data-table-state-manager/-/carbon-data-table-state-manager-0.0.1-alpha.1.0.tgz#b008c362f2daa06b08c164a2de287d454d033c9e"
-  integrity sha512-LcdisJn9Q/2klBk5J+qpijbB7KT50mp75VcQ8RNbc8lD0lQbr20WvgFClp+GQduxa78qtwpKZb6NzPgiltVSgQ==
+carbon-data-table-state-manager@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/carbon-data-table-state-manager/-/carbon-data-table-state-manager-1.0.2.tgz#685c4a6a590663f22e9b7b0de461fb1c8769e6d8"
+  integrity sha512-DXJH2KFYL8RB9J3wAyHCmmcDVRazyWzdPIWs7rDiiMPnauj5zD3io2lJTjloaC8uhlFQMx5VtGpzoKEmI1j4ew==
   dependencies:
     dayjs "^1.11.2"
-    prop-types "^15.7.0"
     use-debounce "^7.0.1"
 
 carbon-icons@7.0.7:
@@ -2983,7 +2982,7 @@ process@^0.11.10:
   resolved "https://registry.yarnpkg.com/process/-/process-0.11.10.tgz#7332300e840161bda3e69a1d1d91a7d4bc16f182"
   integrity sha1-czIwDoQBYb2j5podHZGn1LwW8YI=
 
-prop-types@^15.7.0, prop-types@^15.7.2, prop-types@^15.8.1:
+prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==

@@ -1,4 +1,5 @@
 from weewx.cheetahgenerator import SearchList
+from weewx.units import UnitInfoHelper, ObsInfoHelper
 from user.diagram_util import DiagramUtil
 
 # Copyright 2022 David Bätge
@@ -6,6 +7,11 @@ from user.diagram_util import DiagramUtil
 
 
 class StatsUtil(SearchList):
+    def __init__(self, generator):
+        SearchList.__init__(self, generator)
+        self.unit = UnitInfoHelper(generator.formatter, generator.converter)
+        self.obs = ObsInfoHelper(generator.skin_dict)
+
     def get_show_min(self, observation):
         """
         Returns if the min stats should be shown.
@@ -78,7 +84,7 @@ class StatsUtil(SearchList):
 
         return prop + ' ' + precision
 
-    def get_climatological_day(self, day, period, unit_type, unit_labels):
+    def get_climatological_day(self, day, period, unit_type):
         """
         Return number of days in period for day parameter.
 
@@ -122,11 +128,11 @@ class StatsUtil(SearchList):
                 time_unit='unix_epoch'
             )
 
-            if getattr(unit_labels, 'windGust') == ' km/h':
+            if getattr(self.unit.label, 'windGust') == ' km/h':
                 value = 62.0
-            if getattr(unit_labels, 'windGust') == ' mph':
+            if getattr(self.unit.label, 'windGust') == ' mph':
                 value = 38.5
-            if getattr(unit_labels, 'windGust') == ' m/s':
+            if getattr(self.unit.label, 'windGust') == ' m/s':
                 value = 17.2
 
             days = filter(lambda x: x.raw is not None and x.raw >= value, list(day_series.data))
@@ -174,8 +180,7 @@ class StatsUtil(SearchList):
 
             return len(list(days))
 
-    def get_climatological_day_description(self, day, unit_labels,
-                                           obs_labels, unit_type):
+    def get_climatological_day_description(self, day, unit_type):
         """
         Return description of day.
 
@@ -191,25 +196,25 @@ class StatsUtil(SearchList):
         if day == 'iceDays':
             value = '0' if getattr(unit_type, 'outTemp') == 'degree_C' else '32'
 
-            return obs_labels['outTemp'] + '<sub>max</sub> < ' + value + getattr(unit_labels, 'outTemp')
+            return self.obs.label['outTemp'] + '<sub>max</sub> < ' + value + getattr(self.unit.label, 'outTemp')
 
         if day == 'frostDays':
             value = '0' if getattr(unit_type, 'outTemp') == 'degree_C' else '32'
 
-            return obs_labels['outTemp'] + '<sub>min</sub> < ' + value + getattr(unit_labels, 'outTemp')
+            return self.obs.label['outTemp'] + '<sub>min</sub> < ' + value + getattr(self.unit.label, 'outTemp')
 
         if day == 'stormDays':
-            if getattr(unit_labels, 'windGust') == ' km/h':
+            if getattr(self.unit.label, 'windGust') == ' km/h':
                 value = '62'
-            if getattr(unit_labels, 'windGust') == ' mph':
+            if getattr(self.unit.label, 'windGust') == ' mph':
                 value = '38.5'
-            if getattr(unit_labels, 'windGust') == ' m/s':
+            if getattr(self.unit.label, 'windGust') == ' m/s':
                 value = '17.2'
 
-            return obs_labels['windGust'] + ' > ' + value + getattr(unit_labels, 'windGust')
+            return self.obs.label['windGust'] + ' > ' + value + getattr(self.unit.label, 'windGust')
 
         if day == 'rainDays':
-            return obs_labels['rain'] + ' > 0' + getattr(unit_labels, 'rain')
+            return self.obs.label['rain'] + ' > 0' + getattr(self.unit.label, 'rain')
 
         if (day == 'hotDays' or
                 day == 'summerDays' or
@@ -228,9 +233,9 @@ class StatsUtil(SearchList):
                 value = '35' if getattr(unit_type, 'outTemp') == 'degree_C' else '95'
                 aggregate_type = 'max'
 
-            return obs_labels['outTemp'] + '<sub>' + aggregate_type + '</sub> ≥ ' + value + getattr(unit_labels, 'outTemp')
+            return self.obs.label['outTemp'] + '<sub>' + aggregate_type + '</sub> ≥ ' + value + getattr(self.unit.label, 'outTemp')
 
-    def get_calendar_color(awlf, obs):
+    def get_calendar_color(self, obs):
         """
         Returns a color for use in diagram.
 

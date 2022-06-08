@@ -69,7 +69,7 @@
         <p class="stat-label">$gettext("Rain days")</p>
         <p class="stat-value">
           <!--prettier-ignore-->
-          $get_climatological_day('rainDays', $get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $unit.unit_type, $unit.label)
+          $get_climatological_day('rainDays', $get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $unit.unit_type)
         </p>
       </div>
     </div>

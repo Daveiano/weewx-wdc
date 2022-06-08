@@ -1,12 +1,19 @@
 from weewx.cheetahgenerator import SearchList
+from weewx.units import UnitInfoHelper, ObsInfoHelper
 from user.diagram_util import DiagramUtil
 from datetime import datetime
+from pprint import pprint
 
 # Copyright 2022 David Bätge
 # Distributed under the terms of the GNU Public License (GPLv3)
 
 
 class TableUtil(SearchList):
+    def __init__(self, generator):
+        SearchList.__init__(self, generator)
+        self.unit = UnitInfoHelper(generator.formatter, generator.converter)
+        self.obs = ObsInfoHelper(generator.skin_dict)
+
     def get_table_aggregate_interval(self, observation, precision):
         """
         aggregate_interval for observations series for tables.
@@ -18,6 +25,7 @@ class TableUtil(SearchList):
         Returns:
             int: aggregate_interval
         """
+        #return 3600 * 72  # 1 day
         if precision == 'day':
             return 900 * 8  # 2 hours
 
@@ -30,14 +38,12 @@ class TableUtil(SearchList):
         if precision == 'year' or precision == 'alltime':
             return 3600 * 24  # 1 day
 
-    def get_table_headers(self, obs, unit_labels, obs_labels, period):
+    def get_table_headers(self, obs, period):
         """
         Returns tableheaders for use in carbon data table.
 
         Args:
             obs (list): $DisplayOptions.get("table_tile_..")
-            unit_labels (dict): weewx $unit.labels
-            obs_labels (obj): weewx $obs.labels
             period (obj): Period to use, eg. $year, month, $span
 
         Returns:
@@ -54,8 +60,8 @@ class TableUtil(SearchList):
         for header in obs:
             if getattr(period, header).has_data:
                 carbon_header = {
-                    "title": obs_labels[header],
-                    "small": "in " + getattr(unit_labels, header),
+                    "title": self.obs.label[header],
+                    "small": "in " + getattr(self.unit.label, header),
                     "id": header,
                     "sortCycle": "tri-states-from-ascending",
                 }

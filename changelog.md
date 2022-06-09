@@ -90,3 +90,7 @@
 - Bugfix: Added forecast_util.py in install.py, see https://github.com/Daveiano/weewx-interceptor-docker/issues/1
 
 # Next
+
+- Updated rain rounding in diagrams
+- Make Data Tables easy to deactivate, see readme
+- Generate month and year pages less frequently

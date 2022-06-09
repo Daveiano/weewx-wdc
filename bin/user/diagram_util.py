@@ -147,7 +147,7 @@ class DiagramUtil(SearchList):
         if observation == 'UV' or observation == 'cloudbase':
             return 0
 
-        if observation == 'ET':
+        if observation == 'ET' or observation == 'rain':
             return 2
 
         return 1

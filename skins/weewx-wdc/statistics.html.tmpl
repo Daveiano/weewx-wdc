@@ -78,10 +78,13 @@
             #end for
           </div>
 
+          <!-- prettier-ignore -->
+          #if 'table_tile_observations' in $DisplayOptions and len($DisplayOptions.get('table_tile_observations', [])) > 0
           <div class="bx--row">
             <!-- prettier-ignore -->
             #include "includes/data-table-tile.inc"
           </div>
+          #end if
         </div>
       </section>
     </main>

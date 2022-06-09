@@ -86,6 +86,8 @@ If you like the look and feel of the skin please consider having a look into the
 
 ### Installation
 
+**Requires weewx >= 4.5**
+
 **Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v1.2.0/weewx-wdc-v1.2.0.zip.
 Don't download the repository directly and don't use the GitHub generated zip and tar.gz archives that come alongside the release. Always use the zip archive named **weewx-wdc-vX.X.X.zip**
 
@@ -222,6 +224,8 @@ SKIN_VERSION = 1.0.0-beta2
 `climatological_days` E.g. Rain days (days with precipitation) or Summer days (Temp > 25°C). Leave empty to disable. When activated a rain days calendar chart and an averge temperature calendar chart is shown alongside.
 
 `table_tile_observations` Defines which observations should be shown in the data table component.
+Simply comment this out or leave empty to hide the tables at all pages:
+`#table_tile_observations = outTemp, outHumidity, barometer, ...`
 
 `stat_tile_observations` Define which observations should be shown in the stat tiles (at the top of each page).
 

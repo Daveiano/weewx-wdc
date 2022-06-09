@@ -13,6 +13,7 @@ class TableUtil(SearchList):
         SearchList.__init__(self, generator)
         self.unit = UnitInfoHelper(generator.formatter, generator.converter)
         self.obs = ObsInfoHelper(generator.skin_dict)
+        self.diagram_util = DiagramUtil(SearchList)
 
     def get_table_aggregate_interval(self, observation, precision):
         """
@@ -25,7 +26,6 @@ class TableUtil(SearchList):
         Returns:
             int: aggregate_interval
         """
-        #return 3600 * 72  # 1 day
         if precision == 'day':
             return 900 * 8  # 2 hours
 
@@ -83,19 +83,18 @@ class TableUtil(SearchList):
         """
         carbon_values = []
 
-        diagramUtil = DiagramUtil(SearchList)
-
+        # TODO: Get values directly from DB?
         for observation in obs:
             if getattr(period, observation).has_data:
                 series = getattr(period, observation).series(
-                    aggregate_type=diagramUtil.get_aggregate_type(observation),
+                    aggregate_type=self.diagram_util.get_aggregate_type(observation),
                     aggregate_interval=self.get_table_aggregate_interval(
                         observation,
                         precision
                     ),
                     time_series='start',
                     time_unit='unix_epoch'
-                ).round(diagramUtil.get_rounding(observation))
+                ).round(self.diagram_util.get_rounding(observation))
 
                 for start, data in zip(series.start, series.data):
                     cs_time = datetime.fromtimestamp(start.raw)

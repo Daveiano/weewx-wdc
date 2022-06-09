@@ -75,10 +75,12 @@
             #end for
           </div>
 
+          #if 'table_tile_observations' in $DisplayOptions
           <div class="bx--row">
             <!-- prettier-ignore -->
             #include "includes/data-table-tile.inc"
           </div>
+          #end if
         </div>
       </section>
     </main>

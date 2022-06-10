@@ -256,6 +256,36 @@ bx-tabs {
       }
     }
   }
+  .diagram {
+    position: relative;
+    .maximize {
+      transition: opacity 250ms ease;
+      opacity: 0;
+      cursor: pointer;
+      position: absolute;
+      right: 0;
+      top: -#{$spacing-06};
+      @include carbon--breakpoint-down(lg) {
+        opacity: 1;
+      }
+    }
+    .fullscreen {
+      display: none;
+      &.fullscreen-enabled {
+        display: block;
+        padding: $spacing-08 !important;
+        background: white;
+        @include carbon--breakpoint-down(lg) {
+          padding: $spacing-04 !important;
+        }
+      }
+    }
+  }
+  &:hover {
+    .maximize {
+      opacity: 1;
+    }
+  }
 }
 
 .diagram-tile,

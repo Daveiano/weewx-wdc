@@ -246,6 +246,45 @@ bx-tabs {
   }
 }
 
+@mixin fullscreen {
+  .maximize {
+    transition: all 250ms ease;
+    opacity: 0;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    top: -#{$spacing-07};
+    padding: $spacing-02;
+    box-sizing: content-box;
+    &:hover {
+      background: $background-active;
+    }
+    @include carbon--breakpoint-down(lg) {
+      opacity: 1;
+    }
+  }
+  .fullscreen {
+    display: none;
+    &.fullscreen-enabled {
+      display: block;
+      padding: $spacing-08 !important;
+      background: white;
+      .maximize {
+        position: absolute;
+        top: $spacing-04;
+        right: $spacing-08;
+        z-index: 10;
+        @include carbon--breakpoint-down(lg) {
+          right: $spacing-04;
+        }
+      }
+      @include carbon--breakpoint-down(lg) {
+        padding: $spacing-04 !important;
+      }
+    }
+  }
+}
+
 .diagram-tile {
   margin-bottom: $spacing-05;
   &.combined {
@@ -258,28 +297,7 @@ bx-tabs {
   }
   .diagram {
     position: relative;
-    .maximize {
-      transition: opacity 250ms ease;
-      opacity: 0;
-      cursor: pointer;
-      position: absolute;
-      right: 0;
-      top: -#{$spacing-06};
-      @include carbon--breakpoint-down(lg) {
-        opacity: 1;
-      }
-    }
-    .fullscreen {
-      display: none;
-      &.fullscreen-enabled {
-        display: block;
-        padding: $spacing-08 !important;
-        background: white;
-        @include carbon--breakpoint-down(lg) {
-          padding: $spacing-04 !important;
-        }
-      }
-    }
+    @include fullscreen();
   }
   &:hover {
     .maximize {
@@ -296,6 +314,19 @@ bx-tabs {
     align-items: center;
     svg {
       margin-right: $spacing-02;
+    }
+  }
+}
+
+.calendar-diagram-clim-wrap {
+  position: relative;
+  @include fullscreen();
+  .maximize {
+    top: 0;
+  }
+  &:hover {
+    .maximize {
+      opacity: 1;
     }
   }
 }

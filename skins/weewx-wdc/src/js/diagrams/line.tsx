@@ -143,11 +143,15 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
     />
   );
 
+  // @todo Fullscreen close button.
   return (
     <>
       <Maximize onClick={handle.enter} />
       <div className="diagram">{lineDiagram}</div>
-      <FullScreen handle={handle}>{lineDiagram}</FullScreen>
+      <FullScreen handle={handle}>
+        <Maximize onClick={handle.exit} />
+        {lineDiagram}
+      </FullScreen>
     </>
   );
 };

@@ -105,7 +105,7 @@
       var calendarDataRain = $get_calendar_data('rain', 'sum', $get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime));
     </script>
     <div
-      class="calendar-diagram"
+      class="calendar-diagram-clim-wrap"
       data-value="calendarDataRain"
       data-obs="rain"
       data-unit="$unit.label.rain"
@@ -127,7 +127,7 @@
       var calendarDataTempAvg = $get_calendar_data('outTemp', 'avg', $get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime));
     </script>
     <div
-      class="calendar-diagram"
+      class="calendar-diagram-clim-wrap"
       data-value="calendarDataTempAvg"
       data-obs="outTemp"
       data-unit="$unit.label.outTemp"

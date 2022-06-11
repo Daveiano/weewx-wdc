@@ -8,7 +8,9 @@ import { LineDiagram } from "./diagrams/line";
 import { precision, Series } from "./diagrams/types";
 import { CalendarDiagram } from "./diagrams/calendar";
 
-const calendarDiagrams = document.querySelectorAll("div.calendar-diagram");
+const calendarDiagrams = document.querySelectorAll(
+  "div.calendar-diagram-clim-wrap"
+);
 calendarDiagrams.forEach((diagram) => {
   if (
     diagram instanceof HTMLElement &&

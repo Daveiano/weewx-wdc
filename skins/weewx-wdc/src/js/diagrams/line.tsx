@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { ResponsiveLine } from "@nivo/line";
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 import { DiagramBaseProps } from "./types";
 import { TooltipLine } from "../components/tooltip-line";
@@ -15,14 +16,14 @@ import {
 } from "../util/util";
 import { sliceTooltip } from "../components/tooltip-slice";
 import { useMediaQuery } from "@react-hook/media-query";
+import { Maximize } from "../assets/maximize";
 
 export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
   props: DiagramBaseProps
 ): React.ReactElement => {
   const small = useMediaQuery("(max-width: 672px)");
   const timeDifferenceInMonths = getTimeDifferenceInMonths(props.data[0].data);
-
-  console.log(timeDifferenceInMonths);
+  const handle = useFullScreenHandle();
 
   let format = "%H:%M";
   let tickValues = "every 3 hours";
@@ -81,66 +82,76 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
     ];
   }
 
+  const lineDiagram = (
+    <ResponsiveLine
+      axisBottom={{
+        format,
+        tickValues,
+        tickSize: 0,
+        tickPadding: 5,
+      }}
+      axisLeft={{
+        legend: props.unit,
+        legendOffset: getAxisLeftLegendOffset(props.observation),
+        legendPosition: "middle",
+        tickSize: 0,
+        tickPadding: 10,
+      }}
+      colors={props.color}
+      curve={getCurve(props.observation)}
+      data={props.data}
+      enableArea={enableArea.includes(props.observation)}
+      areaOpacity={props.observation === "wind" ? 0.5 : 0.07}
+      areaBaselineValue={
+        areaBaselineValue0.includes(props.observation)
+          ? 0
+          : Math.min(...combinedData.map((item) => item.y)) -
+            getyScaleOffset(props.observation)
+      }
+      enableCrosshair={true}
+      enablePoints={true}
+      enableSlices={props.data.length > 1 ? "x" : false}
+      sliceTooltip={(slice) => sliceTooltip(slice)}
+      isInteractive={true}
+      legends={
+        props.data.length > 1
+          ? [
+              {
+                anchor: "top-right",
+                direction: "row",
+                itemWidth: 120,
+                itemHeight: 20,
+                itemsSpacing: 10,
+              },
+            ]
+          : undefined
+      }
+      lineWidth={2}
+      margin={getMargins(props.observation)}
+      markers={markers}
+      pointSize={5}
+      tooltip={(point) => <TooltipLine point={point.point} />}
+      useMesh={true}
+      xScale={{
+        precision: "minute",
+        type: "time",
+        format: "%s",
+      }}
+      yScale={getyScale(props.observation, combinedData)}
+      xFormat="time:%Y/%m/%d %H:%M"
+      yFormat={(value) => `${value} ${props.unit}`}
+    />
+  );
+
+  // @todo Fullscreen close button.
   return (
-    <div className="diagram">
-      <ResponsiveLine
-        axisBottom={{
-          format,
-          tickValues,
-          tickSize: 0,
-          tickPadding: 5,
-        }}
-        axisLeft={{
-          legend: props.unit,
-          legendOffset: getAxisLeftLegendOffset(props.observation),
-          legendPosition: "middle",
-          tickSize: 0,
-          tickPadding: 10,
-        }}
-        colors={props.color}
-        curve={getCurve(props.observation)}
-        data={props.data}
-        enableArea={enableArea.includes(props.observation)}
-        areaOpacity={props.observation === "wind" ? 0.5 : 0.07}
-        areaBaselineValue={
-          areaBaselineValue0.includes(props.observation)
-            ? 0
-            : Math.min(...combinedData.map((item) => item.y)) -
-              getyScaleOffset(props.observation)
-        }
-        enableCrosshair={true}
-        enablePoints={true}
-        enableSlices={props.data.length > 1 ? "x" : false}
-        sliceTooltip={(slice) => sliceTooltip(slice)}
-        isInteractive={true}
-        legends={
-          props.data.length > 1
-            ? [
-                {
-                  anchor: "top-right",
-                  direction: "row",
-                  itemWidth: 120,
-                  itemHeight: 20,
-                  itemsSpacing: 10,
-                },
-              ]
-            : undefined
-        }
-        lineWidth={2}
-        margin={getMargins(props.observation)}
-        markers={markers}
-        pointSize={5}
-        tooltip={(point) => <TooltipLine point={point.point} />}
-        useMesh={true}
-        xScale={{
-          precision: "minute",
-          type: "time",
-          format: "%s",
-        }}
-        yScale={getyScale(props.observation, combinedData)}
-        xFormat="time:%Y/%m/%d %H:%M"
-        yFormat={(value) => `${value} ${props.unit}`}
-      />
-    </div>
+    <>
+      <Maximize onClick={handle.enter} />
+      <div className="diagram">{lineDiagram}</div>
+      <FullScreen handle={handle}>
+        <Maximize onClick={handle.exit} />
+        {lineDiagram}
+      </FullScreen>
+    </>
   );
 };

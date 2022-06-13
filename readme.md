@@ -16,6 +16,7 @@
     - [Configuration](#configuration)
       - [Extras](#extras)
       - [DisplayOptions](#displayoptions)
+    - [Performance](#performance)
     - [Support for weewx-forecast](#support-for-weewx-forecast)
     - [Localization](#localization)
   - [Development](#development)
@@ -173,16 +174,20 @@ SKIN_VERSION = 1.0.0-beta2
         [[[NOAA_month]]]
             encoding = normalized_ascii
             template = NOAA/NOAA-%Y-%m.txt.tmpl
+            #stale_age = 3600 # Every hour
         [[[summary_month]]]
             template = month-%Y-%m.html.tmpl
+            #stale_age = 3600 # Every hour
 
     [[SummaryByYear]]
         # Reports that summarize "by year"
         [[[NOAA_year]]]
             encoding = normalized_ascii
             template = NOAA/NOAA-%Y.txt.tmpl
+            #stale_age = 3600 # Every hour
         [[[summary_year]]]
             template = year-%Y.html.tmpl
+            #stale_age = 3600 # Every hour
 
     # Reports that show statistics "to date", such as day-to-date,
     # week-to-date, month-to-date, etc.
@@ -198,9 +203,11 @@ SKIN_VERSION = 1.0.0-beta2
 
         [[[year]]]
             template = year.html.tmpl
+            #stale_age = 3600 # Every hour
 
         [[[statistics]]]
             template = statistics.html.tmpl
+            #stale_age = 43200 # Twice a day
 
         [[[celestial]]]
             template = celestial.html.tmpl
@@ -249,6 +256,19 @@ For a combined diagram of Temperature and Dew point:
 `# 3` Under the key `obs` specify the observations to combine.
 
 `# 4` Optionally define a color.
+
+### Performance
+
+You should expect long generation times when using this theme (~50s for all templates on a Raspberry Pi 4B). If you are getting into
+trouble because of this you can comment out the `stale_age` options in skin.conf at the templates section, eg. for the statistics page:
+
+```
+[[[statistics]]]
+    template = statistics.html.tmpl
+    stale_age = 43200 # Twice a day (12h)
+```
+
+This will generate the statistics.html page only twice a day. `stale_age` is in seconds, see https://weewx.com/docs/customizing.htm#CheetahGenerator. You can experiment with the `stale_age` options to find a good balance between being 'up-to-date' and reasonableness.
 
 ### Support for weewx-forecast
 

@@ -9,5 +9,8 @@
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "eslint.alwaysShowStatus": true,
-  "eslint.packageManager": "yarn"
+  "eslint.packageManager": "yarn",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+  }
 }

@@ -111,6 +111,47 @@ bx-structured-list-cell {
   margin-right: -0.5rem;
 }
 
+main.user-page {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-bottom: $spacing-02;
+  }
+  p,
+  ol,
+  ul {
+    max-width: 60rem;
+    margin-bottom: $spacing-05;
+    b {
+      font-weight: bold;
+    }
+    bx-code-snippet {
+      margin-bottom: 0 !important;
+    }
+  }
+  .bx-ce-demo-devenv--tab-panels,
+  bx-tabs {
+    max-width: 40rem;
+  }
+  bx-code-snippet {
+    @include carbon--theme($carbon--theme--g10, true);
+    margin-bottom: $spacing-05;
+  }
+  dds-image-with-caption {
+    max-width: 60rem;
+  }
+  ol {
+    list-style: auto;
+    padding-left: $spacing-05;
+    li > * {
+      margin-bottom: 0;
+    }
+  }
+}
+
 header.page-header {
   margin-bottom: $spacing-07;
   h1 {

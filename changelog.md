@@ -94,3 +94,5 @@
 - Updated rain rounding in diagrams
 - Make Data Tables easy to deactivate, see readme
 - Generate month and year pages less frequently
+- Added about page
+- Added tutorial on how to change about page (user generated content)

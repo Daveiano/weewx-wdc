@@ -1,15 +1,16 @@
 from weewx.cheetahgenerator import SearchList
+from pprint import pprint
 
 # Copyright 2022 David Bätge
 # Distributed under the terms of the GNU Public License (GPLv3)
 
 
 class GeneralUtil(SearchList):
-    temp_obs = [
-        'outTemp', 'inTemp',
-        'dewpoint', 'windchill',
-        'heatindex', 'appTemp'
-    ]
+    def __init__(self, generator):
+        SearchList.__init__(self, generator)
+        self.skin_dict = generator.skin_dict
+
+    temp_obs = ["outTemp", "inTemp", "dewpoint", "windchill", "heatindex", "appTemp"]
 
     def get_icon(self, observation):
         """
@@ -24,59 +25,59 @@ class GeneralUtil(SearchList):
         """
         icon_path = "includes/icons/"
 
-        if observation == 'outTemp' or observation == 'inTemp':
-            return icon_path + 'temp.svg'
+        if observation == "outTemp" or observation == "inTemp":
+            return icon_path + "temp.svg"
 
-        elif observation == 'outHumidity' or observation == 'inHumidity':
-            return icon_path + 'humidity.svg'
+        elif observation == "outHumidity" or observation == "inHumidity":
+            return icon_path + "humidity.svg"
 
-        elif observation == 'barometer':
-            return icon_path + 'barometer.svg'
+        elif observation == "barometer":
+            return icon_path + "barometer.svg"
 
-        elif observation == 'windSpeed':
-            return icon_path + 'wind-speed.svg'
+        elif observation == "windSpeed":
+            return icon_path + "wind-speed.svg"
 
-        elif observation == 'windGust':
-            return icon_path + 'wind-gust.svg'
+        elif observation == "windGust":
+            return icon_path + "wind-gust.svg"
 
-        elif observation == 'windDir':
-            return icon_path + 'wind-direction.svg'
+        elif observation == "windDir":
+            return icon_path + "wind-direction.svg"
 
-        elif observation == 'rain':
-            return icon_path + 'rain.svg'
+        elif observation == "rain":
+            return icon_path + "rain.svg"
 
-        elif observation == 'rainRate':
-            return icon_path + 'rain-rate.svg'
+        elif observation == "rainRate":
+            return icon_path + "rain-rate.svg"
 
-        elif observation == 'dewpoint':
-            return icon_path + 'dew-point.svg'
+        elif observation == "dewpoint":
+            return icon_path + "dew-point.svg"
 
-        elif observation == 'windchill':
-            return icon_path + 'wind-chill.svg'
+        elif observation == "windchill":
+            return icon_path + "wind-chill.svg"
 
-        elif observation == 'heatindex':
-            return icon_path + 'heat.svg'
+        elif observation == "heatindex":
+            return icon_path + "heat.svg"
 
-        elif observation == 'UV':
-            return icon_path + 'uv.svg'
+        elif observation == "UV":
+            return icon_path + "uv.svg"
 
-        elif observation == 'ET':
-            return icon_path + 'ev.svg'
+        elif observation == "ET":
+            return icon_path + "ev.svg"
 
-        elif observation == 'radiation':
-            return icon_path + 'solar.svg'
+        elif observation == "radiation":
+            return icon_path + "solar.svg"
 
-        elif observation == 'appTemp':
-            return icon_path + 'feel-temp.svg'
+        elif observation == "appTemp":
+            return icon_path + "feel-temp.svg"
 
-        elif observation == 'cloudbase':
-            return icon_path + 'cloud-base.svg'
+        elif observation == "cloudbase":
+            return icon_path + "cloud-base.svg"
 
-        elif 'Temp' in observation:
-            return icon_path + 'temp.svg'
+        elif "Temp" in observation:
+            return icon_path + "temp.svg"
 
-        elif 'Humid' in observation:
-            return icon_path + 'humidity.svg'
+        elif "Humid" in observation:
+            return icon_path + "humidity.svg"
 
     def get_color(self, observation):
         """
@@ -88,52 +89,52 @@ class GeneralUtil(SearchList):
         Returns:
             str: A color string
         """
-        if 'humidity' in observation.lower():
-            return '#0099CC'
+        if "humidity" in observation.lower():
+            return "#0099CC"
 
-        if observation == 'barometer':
-            return '#666666'
+        if observation == "barometer":
+            return "#666666"
 
-        if observation == 'dewpoint':
-            return '#5F9EA0'
+        if observation == "dewpoint":
+            return "#5F9EA0"
 
-        if observation == 'appTemp':
-            return '#C41E3A'
+        if observation == "appTemp":
+            return "#C41E3A"
 
-        if observation == 'windchill':
-            return '#0099CC'
+        if observation == "windchill":
+            return "#0099CC"
 
-        if observation == 'heatindex':
-            return '#610000'
+        if observation == "heatindex":
+            return "#610000"
 
-        if observation == 'windSpeed':
-            return '#ffc000'
+        if observation == "windSpeed":
+            return "#ffc000"
 
-        if observation == 'windGust':
-            return '#666666'
+        if observation == "windGust":
+            return "#666666"
 
-        if observation == 'radiation':
-            return '#ff8c00'
+        if observation == "radiation":
+            return "#ff8c00"
 
-        if observation == 'UV':
-            return '#e61919'
+        if observation == "UV":
+            return "#e61919"
 
-        if observation == 'cloudbase':
-            return '#92b6f0'
+        if observation == "cloudbase":
+            return "#92b6f0"
 
-        if observation == 'ET':
-            return '#E97451'
+        if observation == "ET":
+            return "#E97451"
 
-        if observation == 'rain':
-            return '#0198E1'
+        if observation == "rain":
+            return "#0198E1"
 
-        if observation == 'rainRate':
-            return '#0a6794'
+        if observation == "rainRate":
+            return "#0a6794"
 
-        if observation in self.temp_obs or 'temp' in observation.lower():
-            return '#8B0000'
+        if observation in self.temp_obs or "temp" in observation.lower():
+            return "#8B0000"
 
-        return 'black'
+        return "black"
 
     def get_time_span_from_attr(self, attr, day, week, month, year, alltime):
         """
@@ -149,17 +150,39 @@ class GeneralUtil(SearchList):
         Returns:
             obj: TimeSpanBinder
         """
-        if (attr == 'day'):
+        if attr == "day":
             return day
 
-        if (attr == 'week'):
+        if attr == "week":
             return week
 
-        if (attr == 'month'):
+        if attr == "month":
             return month
 
-        if (attr == 'year'):
+        if attr == "year":
             return year
 
-        if (attr == 'alltime'):
+        if attr == "alltime":
             return alltime
+
+    def get_static_pages(self):
+        """
+        Get static pages.
+
+        Returns:
+            list: Static pages array
+        """
+        static_templates = self.skin_dict["CheetahGenerator"]["Static"]
+        static_pages = []
+
+        for static_page in static_templates:
+            static_pages.append(
+                {
+                    "title": static_templates[static_page]["title"],
+                    "link": static_templates[static_page]["template"].replace(
+                        ".tmpl", ""
+                    ),
+                }
+            )
+
+        return static_pages

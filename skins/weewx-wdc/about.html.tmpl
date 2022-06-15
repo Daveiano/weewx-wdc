@@ -1,0 +1,409 @@
+<!--prettier-ignore-->
+#errorCatcher Echo
+#encoding UTF-8
+
+<!DOCTYPE html>
+<html lang="$lang">
+  <head>
+    #include "includes/html-head.inc"
+    <title>$station.location - $gettext("About")</title>
+    <script
+      type="module"
+      src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/notification.min.js"
+    ></script>
+    <script
+      type="module"
+      src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/code-snippet.min.js"
+    ></script>
+    <script
+      type="module"
+      src="https://1.www.s81c.com/common/carbon-for-ibm-dotcom/version/v1.19.0/image-with-caption.min.js"
+    ></script>
+    <script
+      type="module"
+      src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/tabs.min.js"
+    ></script>
+  </head>
+
+  <body>
+    #include "includes/ui-shell.inc"
+
+    <!--@see https://github.com/carbon-design-system/carbon/blob/v10/packages/type/scss/modules/_styles.scss#L628-->
+    <main class="user-page">
+      <section class="main bx--content">
+        <div class="bx--grid bx--grid--full-width">
+          <div class="bx--row">
+            <header class="bx--col page-header">
+              <h1>$gettext("About")</h1>
+              <h2>weewx-wdc Skin for WeeWX</h2>
+            </header>
+          </div>
+
+          <div class="bx--row">
+            <div class="bx--col">
+              <bx-inline-notification
+                kind="info"
+                hide-close-button
+                title="For more info please visit"
+                low-contrast
+              >
+                <a
+                  slot="subtitle"
+                  target="_blank"
+                  href="https://github.com/Daveiano/weewx-wdc"
+                  >https://github.com/Daveiano/weewx-wdc</a
+                >
+              </bx-inline-notification>
+
+              <p class="bx--type-body-long-02">
+                Inspired by and build with the
+                <a href="https://carbondesignsystem.com/" target="_blank"
+                  >Carbon Design System</a
+                >. This skin uses the same technologies as
+                <a
+                  href="https://daveiano.github.io/weather-data-center/"
+                  target="_blank"
+                  >Weather Data Center</a
+                >, a cross-platform Desktop App to import and analyze weather
+                data. If you need help installing the skin, please have a look
+                at
+                <a href="https://github.com/Daveiano/weewx-interceptor-docker"
+                  >https://github.com/Daveiano/weewx-interceptor-docker</a
+                >, a configured Dockerfile which I use as a base for my local PI
+                installation.
+              </p>
+
+              <div class="bx--row">
+                <div class="bx--col-sm-4 bx--col-md-4 bx--col-lg-6">
+                  <dds-image-with-caption
+                    default-src="https://public-images-social.s3.eu-west-1.amazonaws.com/IMG_4554.jpg"
+                    heading="My backyard DNT WeatherScreen PRO gathering data for WeeWX..."
+                    lightbox="false"
+                  >
+                    <dds-image-item
+                      media="(min-wiidth:320px)"
+                      href="https://public-images-social.s3.eu-west-1.amazonaws.com/IMG_4554.jpg"
+                    >
+                    </dds-image-item>
+                  </dds-image-with-caption>
+                </div>
+                <div class="bx--col-sm-4 bx--col-md-4 bx--col-lg-6">
+                  <dds-image-with-caption
+                    default-src="https://public-images-social.s3.eu-west-1.amazonaws.com/IMG_4557.jpg"
+                    heading="...during better weather"
+                    lightbox="false"
+                  >
+                    <dds-image-item
+                      media="(min-wiidth:320px)"
+                      href="https://public-images-social.s3.eu-west-1.amazonaws.com/IMG_4557.jpg"
+                    >
+                    </dds-image-item>
+                  </dds-image-with-caption>
+                </div>
+              </div>
+
+              <h3 class="bx--type-productive-heading-04">Quick guide</h3>
+              <h4 class="bx--type-productive-heading-03">Installation</h4>
+              <h5 class="bx--type-productive-heading-02">
+                Requires weewx >= 4.5
+              </h5>
+              <p class="bx--type-body-long-02">
+                <b>Please note:</b> For installation, please use the generated
+                zip archive from a release, eg.
+                https://github.com/Daveiano/weewx-wdc/releases/download/v1.2.0/weewx-wdc-v1.2.2.zip.
+                Don't download the repository directly and don't use the GitHub
+                generated zip and tar.gz archives that come alongside the
+                release. Always use the zip archive named
+                <b>weewx-wdc-vX.X.X.zip</b>
+              </p>
+              <p class="bx--type-helper-text-01">
+                Background: The files in the src/ directory are the source files
+                (TypeScript, SCSS). When creating a release, these source files
+                get transformed and optimized, and the output location of these
+                transformed files is the location which matches the location in
+                the install.py script. The weewx-wdc-vX.X.X.zip should contain
+                all these transformed files (like service-worker.js), but if you
+                download the current state of the repo, these files are not
+                included and this will throw multiple
+                <code>FileNotFoundError</code> errors while installing.
+              </p>
+              <ol class="bx--type-body-long-02">
+                <li>
+                  <a
+                    href="https://github.com/Daveiano/weewx-wdc/releases"
+                    target="_blank"
+                    >Download</a
+                  >
+                  the latest version
+                </li>
+                <li>
+                  Create a new folder:
+                  <bx-code-snippet type="inline"
+                    >mkdir /tmp/weewx-wdc/</bx-code-snippet
+                  >
+                </li>
+                <li>
+                  Unzip to that folder:
+                  <!--prettier-ignore-->
+                  <bx-code-snippet type="inline"
+                    >unzip weewx-wdc-v1.2.2.zip -d /tmp/weewx-wdc/</bx-code-snippet
+                  >
+                </li>
+                <li>
+                  Install the extension:
+                  <bx-code-snippet type="inline"
+                    >wee_extension --install=path/to/folder</bx-code-snippet
+                  >
+                </li>
+                <li>
+                  Restart weewx:
+                  <bx-code-snippet type="inline">weewx restart</bx-code-snippet>
+                </li>
+              </ol>
+              <h4 class="bx--type-productive-heading-03">Configuration</h4>
+              <h5 class="bx--type-productive-heading-02">Localization</h5>
+              <p class="bx--type-body-long-02">
+                The skin currently has an english and a german translation, you
+                can change the language in weewx.conf:
+              </p>
+              <!--prettier-ignore-->
+              <bx-code-snippet type="multi">[[WdcReport]]
+    skin = weewx-wdc
+    enable = true
+    lang = de</bx-code-snippet>
+              <h5 class="bx--type-productive-heading-02">DisplayOptions</h5>
+              <p class="bx--type-body-long-02">
+                <bx-code-snippet type="inline"
+                  >climatological_days</bx-code-snippet
+                >
+                E.g. Rain days (days with precipitation) or Summer days (Temp >
+                25°C). Leave empty to disable. When activated a rain days
+                calendar chart and an averge temperature calendar chart is shown
+                alongside.
+              </p>
+              <p class="bx--type-body-long-02">
+                <bx-code-snippet type="inline"
+                  >table_tile_observations</bx-code-snippet
+                >
+                Defines which observations should be shown in the data table
+                component. Simply comment this out or leave empty to hide the
+                tables at all pages:
+                <!--prettier-ignore-->
+                <bx-code-snippet type="inline"
+                  >#table_tile_observations = outTemp, outHumidity, barometer, ...</bx-code-snippet>
+              </p>
+              <p class="bx--type-body-long-02">
+                <bx-code-snippet type="inline"
+                  >stat_tile_observations</bx-code-snippet
+                >
+                Define which observations should be shown in the stat tiles (at
+                the top of each page).
+              </p>
+              <p class="bx--type-body-long-02">
+                <bx-code-snippet type="inline"
+                  >diagram_tile_observations</bx-code-snippet
+                >
+                Define which observations to show as diagrams. This can include
+                definitions for combined diagrams. Combined diagrams (like
+                Temperature and Dew point or Windchill and Heat index) need to
+                be defined in the `<bx-code-snippet type="inline"
+                  >[[diagram_tile_combined_obervations]]</bx-code-snippet
+                >
+                section like this:
+              </p>
+              <p class="bx--type-body-long-02">
+                For a combined diagram of Temperature and Dew point:
+              </p>
+              <!--prettier-ignore-->
+              <bx-code-snippet type="multi">[[[tempdew]]]                           # 1
+    label = 'Temperature / Dewpoint'    # 2
+    [[[[obs]]]]                         # 3
+        [[[[[outTemp]]]]]
+        [[[[[dewpoint]]]]]
+            color = '#610000'           # 4</bx-code-snippet>
+              <p class="bx--type-body-long-02">
+                <bx-code-snippet type="inline"># 1</bx-code-snippet> Name of the
+                combined diagram, needs to be the same as used in
+                <bx-code-snippet type="inline"
+                  >diagram_tile_observations</bx-code-snippet
+                >.<br />
+                <bx-code-snippet type="inline"># 2</bx-code-snippet> Label of
+                the diagram.<br />
+                <bx-code-snippet type="inline"># 3</bx-code-snippet> Under the
+                key <bx-code-snippet type="inline">obs</bx-code-snippet> specify
+                the observations to combine.<br />
+                <bx-code-snippet type="inline"># 4</bx-code-snippet>
+                Optionally define a color.
+              </p>
+              <h4 class="bx--type-productive-heading-03">
+                How to change this page
+              </h4>
+              <p class="bx--type-body-long-02">
+                You can use the code of the
+                <bx-code-snippet type="inline">about.html.tmpl</bx-code-snippet>
+                file (this file generates the page you are currently looking at)
+                as a starting point. If you have some basic understanding of
+                HTML, you should be fine.
+              </p>
+              <p>
+                You can use the IBM Carbon design system, for example for
+                creating
+                <a
+                  target="_blank"
+                  href="https://github.com/carbon-design-system/carbon/tree/v10/packages/grid#usage"
+                  >Grids</a
+                >.
+              </p>
+              <h5 class="bx--type-productive-heading-02">
+                Carbon Type Classes
+              </h5>
+
+              <p class="bx--type-body-long-02">
+                You can use
+                <a
+                  target="_blank"
+                  href="https://github.com/carbon-design-system/carbon/tree/v10/packages/type#type-classes"
+                  >Carbon Type Classes</a
+                >
+                when writing you own html. For example:
+              </p>
+
+              <bx-tabs trigger-content="Select an item" value="code">
+                <bx-tab id="tab-code" target="panel-code" value="code"
+                  >Code</bx-tab
+                >
+                <bx-tab id="tab-html" target="panel-html" value="html"
+                  >Rendered HTML</bx-tab
+                >
+              </bx-tabs>
+              <div class="bx-ce-demo-devenv--tab-panels">
+                <div
+                  id="panel-code"
+                  role="tabpanel"
+                  aria-labelledby="tab-code"
+                  hidden
+                >
+                  <!--prettier-ignore-->
+                  <bx-code-snippet type="multi">&lt;h4 class=&quot;bx--type-productive-heading-03&quot;&gt;<br/>  Heading<br/>&lt;/h4&gt;<br/>&lt;h5 class=&quot;bx--type-productive-heading-02&quot;&gt;<br/>  Subheading<br/>&lt;/h5&gt;<br/>&lt;p class=&quot;bx--type-body-long-02&quot;&gt;<br/>  Paragraph text<br/>&lt;/p&gt;<br/>&lt;p class=&quot;bx--type-helper-text-01&quot;&gt;<br/>  Some helper text<br/>&lt;/p&gt;
+                  </bx-code-snippet>
+                </div>
+                <div
+                  id="panel-html"
+                  role="tabpanel"
+                  aria-labelledby="tab-html"
+                  hidden
+                >
+                  <h4 class="bx--type-productive-heading-03">Heading</h4>
+                  <h5 class="bx--type-productive-heading-02">Subheading</h5>
+                  <p class="bx--type-body-long-02">Paragraph text</p>
+                  <p class="bx--type-helper-text-01">Some helper text</p>
+                </div>
+              </div>
+              <p>
+                For all type tokens, see here:
+                <a
+                  href="https://github.com/carbon-design-system/carbon/blob/v10/packages/type/scss/modules/_styles.scss#L628--"
+                  target="_blank"
+                  >https://github.com/carbon-design-system/carbon/blob/v10/packages/type/scss/modules/_styles.scss#L628--</a
+                >
+              </p>
+
+              <h5 class="bx--type-productive-heading-02">
+                Carbon Web Components
+              </h5>
+              <p class="bx--type-body-long-02">
+                All the different components that are on this page (<a
+                  href="https://web-components.carbondesignsystem.com/?path=/story/components-tabs--default"
+                  target="_blank"
+                  >Tabs</a
+                >,
+                <a
+                  href="https://www.ibm.com/standards/carbon/web-components/?path=/story/components-image-with-caption--default"
+                  target="_blank"
+                  >Image</a
+                >,
+                <a
+                  href="https://web-components.carbondesignsystem.com/?path=/story/components-code-snippet--multi-line"
+                  target="_blank"
+                  >Code snippet</a
+                >) are implemented via web components, an easy way to reuse HTML
+                Elements with encapsulated styling and custom behavior.
+              </p>
+              <p class="bx--type-body-long-02">
+                See the full reference for
+                <a
+                  target="_blank"
+                  href="https://web-components.carbondesignsystem.com/?path=/story/introduction-welcome--page"
+                  >carbon-web-components</a
+                >
+                and
+                <a
+                  target="_blank"
+                  href="https://www.ibm.com/standards/carbon/web-components/?path=/docs/overview-getting-started--page"
+                  >ibmdotcom-web-components</a
+                >
+              </p>
+              <h3 class="bx--type-productive-heading-04">
+                Enabling and adding pages
+              </h3>
+              <p class="bx--type-body-long-02">
+                By default, this page is disabled in the skin.conf, simply
+                uncomment if you want to enable it:
+              </p>
+              <!--prettier-ignore-->
+              <bx-code-snippet type="multi"># Static pages, add as many as you want.
+[[Static]]
+    [[[about]]]
+        template = about.html.tmpl
+        title = About</bx-code-snippet>
+
+              <p class="bx--type-body-long-02">
+                You can add an unlimited amount of pages:
+              </p>
+              <!--prettier-ignore-->
+              <bx-code-snippet type="multi"># Static pages, add as many as you want.
+[[Static]]
+    [[[about]]]
+        template = about.html.tmpl
+        title = About
+    [[[another_page]]]
+        template = another-page.html.tmpl
+        title = Another page</bx-code-snippet>
+              <p>
+                But keep in mind that you will need to create the corresponding
+                .html.tmpl files for the pages.
+              </p>
+              <h3 class="bx--type-productive-heading-04">Help and Support</h3>
+              <p class="bx--type-body-long-02">
+                Create a bug ticket or a request for a new feature:
+                <a
+                  target="_blank"
+                  href="https://github.com/Daveiano/weewx-wdc/issues"
+                  >GitHub issues</a
+                >
+              </p>
+              <p class="bx--type-body-long-02">
+                Start a discussion:
+                <a
+                  target="_blank"
+                  href="https://github.com/Daveiano/weewx-wdc/discussions"
+                  >GitHub discussions</a
+                >
+              </p>
+              <p class="bx--type-body-long-02">
+                General WeeWX Support:
+                <a target="_blank" href="https://groups.google.com/g/weewx-user"
+                  >Google Groups</a
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    #include "includes/footer.inc"
+
+    <script src="dist/js/index.js"></script>
+  </body>
+</html>

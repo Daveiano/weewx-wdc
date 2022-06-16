@@ -260,16 +260,18 @@ For a combined diagram of Temperature and Dew point:
 
 ### Performance
 
-You should expect long generation times when using this theme (~50s for all templates on a Raspberry Pi 4B). If you are getting into
-trouble because of this you can comment out the `stale_age` options in skin.conf at the templates section, eg. for the statistics page:
+You should expect long generation times when using this theme (~25s for all templates on a Raspberry Pi 4B with 15 months of data). If you are getting into
+trouble because of this you can comment out the `stale_age` options in skin.conf at the templates section, eg. for the years page:
 
 ```
-[[[statistics]]]
-    template = statistics.html.tmpl
-    stale_age = 43200 # Twice a day (12h)
+[[[year]]]
+    template = year.html.tmpl
+    stale_age = 3600 # Every hour
 ```
 
-This will generate the statistics.html page only twice a day. `stale_age` is in seconds, see https://weewx.com/docs/customizing.htm#CheetahGenerator. You can experiment with the `stale_age` options to find a good balance between being 'up-to-date' and reasonableness.
+This will generate the year.html page only once a gour. `stale_age` is in seconds, see https://weewx.com/docs/customizing.htm#CheetahGenerator. You can experiment with the `stale_age` options to find a good balance between being 'up-to-date' and reasonableness.
+
+`statistics.html` stale age is 43200 (twice a day) by default.
 
 ### Support for weewx-forecast
 

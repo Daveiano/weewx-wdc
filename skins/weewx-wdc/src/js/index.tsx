@@ -115,6 +115,8 @@ if (table) {
   const tableHeaders = (window as any).tableHeaders;
   const tableRows = (window as any).tableRows;
   const tableTitle = (window as any).tableTitle;
+  // @todo Could be in a global config obj.
+  const precision = (window as any).precision;
 
   const root = createRoot(table);
 
@@ -123,15 +125,20 @@ if (table) {
       columns={tableHeaders}
       rows={tableRows}
       start={0}
-      pageSize={10}
-      pageSizes={[10, 25, 50, 100, 200, 500]}
+      pageSize={precision === "alltime" || precision == "year" ? 20 : 10}
+      pageSizes={[10, 20, 50, 100, 200, 500]}
       sortInfo={{
         columnId: "time",
         direction: "DESC",
       }}
       size="short"
       title={tableTitle}
-      dateFormat="YYYY/MM/DD HH:mm"
+      // @todo Change per precision.
+      dateFormat={
+        precision === "alltime" || precision == "year"
+          ? "YYYY/MM/DD"
+          : "YYYY/MM/DD HH:mm"
+      }
     />
   );
 }

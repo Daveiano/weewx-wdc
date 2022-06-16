@@ -44,7 +44,7 @@
           #else
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($span($hour_delta=$get_hour_delta($precision), $week_delta=$get_week_delta($precision)), $combined_obs).series(aggregate_type=$get_aggregate_type($combined_obs), aggregate_interval=$get_aggregate_interval($combined_obs, $precision, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($combined_obs)).json;
+            var $series_name = $getattr($span($hour_delta=$get_hour_delta($precision), $week_delta=$get_week_delta($precision), $boundary=$get_diagram_boundary($precision)), $combined_obs).series(aggregate_type=$get_aggregate_type($combined_obs), aggregate_interval=$get_aggregate_interval($combined_obs, $precision, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($combined_obs)).json;
           </script>
           <!--prettier-ignore-->
           #end if

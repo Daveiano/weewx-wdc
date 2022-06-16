@@ -11,5 +11,8 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "eslint.alwaysShowStatus": true,
   "eslint.packageManager": "yarn",
-  "python.formatting.provider": "black"
+  "python.formatting.provider": "black",
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
+  }
 }

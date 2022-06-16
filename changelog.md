@@ -93,4 +93,5 @@
 
 - Updated rain rounding in diagrams
 - Make Data Tables easy to deactivate, see readme
-- Generate month and year pages less frequently
+- Generate statistics page less frequently per default (stale age) [GH-14]
+- Performance update: reduced generation time by 50% [GH-14]

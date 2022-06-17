@@ -19,6 +19,7 @@
     - [Performance](#performance)
     - [Support for weewx-forecast](#support-for-weewx-forecast)
     - [Localization](#localization)
+    - [About page (user generated content)](#about-page-user-generated-content)
   - [Development](#development)
     - [Scripts](#scripts)
       - [yarn run dev](#yarn-run-dev)
@@ -301,6 +302,12 @@ The skin currently has an english and a german translation, you can change the l
     enable = true
     lang = de
 ```
+
+### About page (user generated content)
+
+The skin includes an optional [About page](https://www.weewx-hbt.de/about.html). It is disabled by default in the skin.conf and meant
+to be customized by the user. One could for example add an "About my station" page. More info on how to enable and
+editing the page can be found [here](https://www.weewx-hbt.de/about.html).
 
 ## Development
 

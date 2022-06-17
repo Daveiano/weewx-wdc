@@ -23,16 +23,22 @@ class StatsUtil(SearchList):
             bool: Show or hide min stat.
         """
         show_min_stat = [
-            "outTemp", "outHumidity", "barometer",
-            "windDir", "snowDepth", "heatindex",
-            "dewpoint", "windchill", "cloudbase",
-            "appTemp"
+            "outTemp",
+            "outHumidity",
+            "barometer",
+            "windDir",
+            "snowDepth",
+            "heatindex",
+            "dewpoint",
+            "windchill",
+            "cloudbase",
+            "appTemp",
         ]
 
-        if 'Temp' in observation:
+        if "Temp" in observation:
             return True
 
-        elif 'Humid' in observation:
+        elif "Humid" in observation:
             return True
 
         if observation in show_min_stat:
@@ -79,10 +85,10 @@ class StatsUtil(SearchList):
         Returns:
             string: A label.
         """
-        if precision == 'alltime':
+        if precision == "alltime":
             return prop
 
-        return prop + ' ' + precision
+        return prop + " " + precision
 
     def get_climatological_day(self, day, period, unit_type):
         """
@@ -96,87 +102,99 @@ class StatsUtil(SearchList):
         Returns:
             int: Number of days.
         """
-        if day == 'iceDays':
+        if day == "iceDays":
             day_series = period.outTemp.series(
                 aggregate_type="max",
                 aggregate_interval="day",
-                time_series='start',
-                time_unit='unix_epoch'
+                time_series="start",
+                time_unit="unix_epoch",
             )
 
-            days = filter(lambda x: x.raw is not None and x.raw < 0.0, list(day_series.data))
+            days = filter(
+                lambda x: x.raw is not None and x.raw < 0.0, list(day_series.data)
+            )
 
             return len(list(days))
 
-        if day == 'frostDays':
+        if day == "frostDays":
             day_series = period.outTemp.series(
                 aggregate_type="min",
                 aggregate_interval="day",
-                time_series='start',
-                time_unit='unix_epoch'
+                time_series="start",
+                time_unit="unix_epoch",
             )
 
-            days = filter(lambda x: x.raw is not None and x.raw < 0.0, list(day_series.data))
+            days = filter(
+                lambda x: x.raw is not None and x.raw < 0.0, list(day_series.data)
+            )
 
             return len(list(days))
 
-        if day == 'stormDays':
+        if day == "stormDays":
             day_series = period.windGust.series(
                 aggregate_type="max",
                 aggregate_interval="day",
-                time_series='start',
-                time_unit='unix_epoch'
+                time_series="start",
+                time_unit="unix_epoch",
             )
 
-            if getattr(self.unit.label, 'windGust') == ' km/h':
+            if getattr(self.unit.label, "windGust") == " km/h":
                 value = 62.0
-            if getattr(self.unit.label, 'windGust') == ' mph':
+            if getattr(self.unit.label, "windGust") == " mph":
                 value = 38.5
-            if getattr(self.unit.label, 'windGust') == ' m/s':
+            if getattr(self.unit.label, "windGust") == " m/s":
                 value = 17.2
 
-            days = filter(lambda x: x.raw is not None and x.raw >= value, list(day_series.data))
+            days = filter(
+                lambda x: x.raw is not None and x.raw >= value, list(day_series.data)
+            )
 
             return len(list(days))
 
-        if day == 'rainDays':
+        if day == "rainDays":
             day_series = period.rain.series(
                 aggregate_type="sum",
                 aggregate_interval="day",
-                time_series='start',
-                time_unit='unix_epoch'
+                time_series="start",
+                time_unit="unix_epoch",
             )
 
-            days = filter(lambda x: x.raw is not None and x.raw > 0.0, list(day_series.data))
+            days = filter(
+                lambda x: x.raw is not None and x.raw > 0.0, list(day_series.data)
+            )
 
             return len(list(days))
 
-        if (day == 'hotDays' or
-                day == 'summerDays' or
-                day == 'desertDays' or
-                day == 'tropicalNights'):
+        if (
+            day == "hotDays"
+            or day == "summerDays"
+            or day == "desertDays"
+            or day == "tropicalNights"
+        ):
 
-            if day == 'tropicalNights':
-                value = 20.0 if getattr(unit_type, 'outTemp') == 'degree_C' else 68.0
-                aggregate_type = 'min'
-            if day == 'summerDays':
-                value = 25.0 if getattr(unit_type, 'outTemp') == 'degree_C' else 77.0
-                aggregate_type = 'max'
-            if day == 'hotDays':
-                value = 30.0 if getattr(unit_type, 'outTemp') == 'degree_C' else 86.0
-                aggregate_type = 'max'
-            if day == 'desertDays':
-                value = 35.0 if getattr(unit_type, 'outTemp') == 'degree_C' else 95.0
-                aggregate_type = 'max'
+            if day == "tropicalNights":
+                value = 20.0 if getattr(unit_type, "outTemp") == "degree_C" else 68.0
+                aggregate_type = "min"
+            if day == "summerDays":
+                value = 25.0 if getattr(unit_type, "outTemp") == "degree_C" else 77.0
+                aggregate_type = "max"
+            if day == "hotDays":
+                value = 30.0 if getattr(unit_type, "outTemp") == "degree_C" else 86.0
+                aggregate_type = "max"
+            if day == "desertDays":
+                value = 35.0 if getattr(unit_type, "outTemp") == "degree_C" else 95.0
+                aggregate_type = "max"
 
             day_series = period.outTemp.series(
                 aggregate_type=aggregate_type,
                 aggregate_interval="day",
-                time_series='start',
-                time_unit='unix_epoch'
+                time_series="start",
+                time_unit="unix_epoch",
             )
 
-            days = filter(lambda x: x.raw is not None and x.raw >= value, list(day_series.data))
+            days = filter(
+                lambda x: x.raw is not None and x.raw >= value, list(day_series.data)
+            )
 
             return len(list(days))
 
@@ -193,47 +211,71 @@ class StatsUtil(SearchList):
         Returns:
             string: Day description.
         """
-        if day == 'iceDays':
-            value = '0' if getattr(unit_type, 'outTemp') == 'degree_C' else '32'
+        if day == "iceDays":
+            value = "0" if getattr(unit_type, "outTemp") == "degree_C" else "32"
 
-            return self.obs.label['outTemp'] + '<sub>max</sub> < ' + value + getattr(self.unit.label, 'outTemp')
+            return (
+                self.obs.label["outTemp"]
+                + "<sub>max</sub> < "
+                + value
+                + getattr(self.unit.label, "outTemp")
+            )
 
-        if day == 'frostDays':
-            value = '0' if getattr(unit_type, 'outTemp') == 'degree_C' else '32'
+        if day == "frostDays":
+            value = "0" if getattr(unit_type, "outTemp") == "degree_C" else "32"
 
-            return self.obs.label['outTemp'] + '<sub>min</sub> < ' + value + getattr(self.unit.label, 'outTemp')
+            return (
+                self.obs.label["outTemp"]
+                + "<sub>min</sub> < "
+                + value
+                + getattr(self.unit.label, "outTemp")
+            )
 
-        if day == 'stormDays':
-            if getattr(self.unit.label, 'windGust') == ' km/h':
-                value = '62'
-            if getattr(self.unit.label, 'windGust') == ' mph':
-                value = '38.5'
-            if getattr(self.unit.label, 'windGust') == ' m/s':
-                value = '17.2'
+        if day == "stormDays":
+            if getattr(self.unit.label, "windGust") == " km/h":
+                value = "62"
+            if getattr(self.unit.label, "windGust") == " mph":
+                value = "38.5"
+            if getattr(self.unit.label, "windGust") == " m/s":
+                value = "17.2"
 
-            return self.obs.label['windGust'] + ' > ' + value + getattr(self.unit.label, 'windGust')
+            return (
+                self.obs.label["windGust"]
+                + " > "
+                + value
+                + getattr(self.unit.label, "windGust")
+            )
 
-        if day == 'rainDays':
-            return self.obs.label['rain'] + ' > 0' + getattr(self.unit.label, 'rain')
+        if day == "rainDays":
+            return self.obs.label["rain"] + " > 0" + getattr(self.unit.label, "rain")
 
-        if (day == 'hotDays' or
-                day == 'summerDays' or
-                day == 'desertDays' or
-                day == 'tropicalNights'):
-            if day == 'tropicalNights':
-                value = '20' if getattr(unit_type, 'outTemp') == 'degree_C' else '68'
-                aggregate_type = 'min'
-            if day == 'summerDays':
-                value = '25' if getattr(unit_type, 'outTemp') == 'degree_C' else '77'
-                aggregate_type = 'max'
-            if day == 'hotDays':
-                value = '30' if getattr(unit_type, 'outTemp') == 'degree_C' else '86'
-                aggregate_type = 'max'
-            if day == 'desertDays':
-                value = '35' if getattr(unit_type, 'outTemp') == 'degree_C' else '95'
-                aggregate_type = 'max'
+        if (
+            day == "hotDays"
+            or day == "summerDays"
+            or day == "desertDays"
+            or day == "tropicalNights"
+        ):
+            if day == "tropicalNights":
+                value = "20" if getattr(unit_type, "outTemp") == "degree_C" else "68"
+                aggregate_type = "min"
+            if day == "summerDays":
+                value = "25" if getattr(unit_type, "outTemp") == "degree_C" else "77"
+                aggregate_type = "max"
+            if day == "hotDays":
+                value = "30" if getattr(unit_type, "outTemp") == "degree_C" else "86"
+                aggregate_type = "max"
+            if day == "desertDays":
+                value = "35" if getattr(unit_type, "outTemp") == "degree_C" else "95"
+                aggregate_type = "max"
 
-            return self.obs.label['outTemp'] + '<sub>' + aggregate_type + '</sub> ≥ ' + value + getattr(self.unit.label, 'outTemp')
+            return (
+                self.obs.label["outTemp"]
+                + "<sub>"
+                + aggregate_type
+                + "</sub> ≥ "
+                + value
+                + getattr(self.unit.label, "outTemp")
+            )
 
     def get_calendar_color(self, obs):
         """
@@ -245,17 +287,32 @@ class StatsUtil(SearchList):
         Returns:
             string: Color string.
         """
-        if obs == 'rain':
-            return ['#032c6a', '#02509d', '#1a72b7',
-                    '#4093c7', '#6bb0d7', '#9fcae3'][::-1]
+        if obs == "rain":
+            return ["#032c6a", "#02509d", "#1a72b7", "#4093c7", "#6bb0d7", "#9fcae3"][
+                ::-1
+            ]
 
-        if obs == 'outTemp':
+        if obs == "outTemp":
             # Warming stripes colors
             # @see https://en.wikipedia.org/wiki/Warming_stripes
-            return ['#032c6a', '#02509d', '#1a72b7', '#4093c7', '#6bb0d7',
-                    '#9fcae3', '#c6dcee', '#dfedf6', '#ffe1d2', '#fcbda3',
-                    '#fc9373', '#fa6a48', '#ee3829', '#cd1116', '#a6060d',
-                    '#660105']
+            return [
+                "#032c6a",
+                "#02509d",
+                "#1a72b7",
+                "#4093c7",
+                "#6bb0d7",
+                "#9fcae3",
+                "#c6dcee",
+                "#dfedf6",
+                "#ffe1d2",
+                "#fcbda3",
+                "#fc9373",
+                "#fa6a48",
+                "#ee3829",
+                "#cd1116",
+                "#a6060d",
+                "#660105",
+            ]
 
     def get_calendar_data(self, obs, aggrgate_type, period):
         """
@@ -271,41 +328,39 @@ class StatsUtil(SearchList):
         """
         diagramUtil = DiagramUtil(SearchList)
 
-        if obs == 'rain':
+        if obs == "rain":
             day_series = period.rain.series(
                 aggregate_type=aggrgate_type,
                 aggregate_interval="day",
-                time_series='start',
-                time_unit='unix_epoch'
-            ).round(diagramUtil.get_rounding('rain'))
+                time_series="start",
+                time_unit="unix_epoch",
+            ).round(diagramUtil.get_rounding("rain"))
 
-            days = filter(lambda x: x[1].raw > 0.0, list(zip(day_series.start, day_series.data)))
+            days = filter(
+                lambda x: x[1].raw > 0.0, list(zip(day_series.start, day_series.data))
+            )
             rainDays = []
 
             for day in days:
-                rainDays.append({
-                    'value': day[1].raw,
-                    'day': day[0].format("%Y-%m-%d")
-                })
+                rainDays.append({"value": day[1].raw, "day": day[0].format("%Y-%m-%d")})
 
             return rainDays
 
-        if obs == 'outTemp':
+        if obs == "outTemp":
             day_series = period.outTemp.series(
                 aggregate_type=aggrgate_type,
                 aggregate_interval="day",
-                time_series='start',
-                time_unit='unix_epoch'
-            ).round(diagramUtil.get_rounding('rain'))
+                time_series="start",
+                time_unit="unix_epoch",
+            ).round(diagramUtil.get_rounding("outTemp"))
 
             days = list(zip(day_series.start, day_series.data))
             tempDays = []
 
             for day in days:
                 if day[1].raw is not None:
-                    tempDays.append({
-                        'value': day[1].raw,
-                        'day': day[0].format("%Y-%m-%d")
-                    })
+                    tempDays.append(
+                        {"value": day[1].raw, "day": day[0].format("%Y-%m-%d")}
+                    )
 
             return tempDays

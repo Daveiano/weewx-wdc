@@ -177,30 +177,6 @@ header.section-header {
   }
 }
 
-.obs-stat-tile {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  row-gap: $spacing-06;
-  column-gap: $spacing-02;
-  .obs-stat {
-    .value {
-      display: flex;
-      align-items: center;
-      svg {
-        max-width: 32px;
-        display: inline-block;
-        margin-right: $spacing-02;
-      }
-    }
-    .stat-label {
-      @include carbon--type-style("label-01");
-    }
-    .stat-value {
-      @include carbon--type-style("productive-heading-01");
-    }
-  }
-}
-
 bx-tabs {
   @include carbon--theme($carbon--theme--g10, true);
 }
@@ -515,7 +491,7 @@ bx-tabs {
 }
 
 #footer {
-  padding: 2rem 0;
+  padding: 2rem;
   margin-top: $spacing-09;
   background-color: $background-inverse;
   color: $text-inverse;
@@ -538,7 +514,6 @@ bx-tabs {
   }
 }
 
-/*@todo Remove if data-tables is sperate package*/
 .data-table-tile {
   padding: 0;
 }
@@ -546,19 +521,20 @@ bx-tabs {
   white-space: nowrap;
 }
 
-@include carbon--breakpoint-down(md) {
+@include carbon--breakpoint-down(lg) {
   section.main.bx--content,
   #footer {
-    //padding-left: $spacing-09;
-    //padding-right: $spacing-03;
+    padding-left: $spacing-09;
+    padding-right: $spacing-03;
   }
 }
-
-@include carbon--breakpoint-up(lg) {
-  section.main.bx--content,
-  #footer {
-    padding-left: 16rem;
-    padding-right: 1rem;
+body.sidebar-responsive {
+  @include carbon--breakpoint-up(lg) {
+    section.main.bx--content,
+    #footer {
+      padding-left: 16rem;
+      padding-right: 1rem;
+    }
   }
 }
 

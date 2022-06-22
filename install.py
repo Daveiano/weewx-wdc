@@ -79,6 +79,8 @@ class BasicInstaller(ExtensionInstaller):
                         "skins/weewx-wdc/includes/climatological-days.inc",
                         "skins/weewx-wdc/includes/ui-shell.inc",
                         "skins/weewx-wdc/includes/footer.inc",
+                        "skins/weewx-wdc/includes/body-classic.inc",
+                        "skins/weewx-wdc/includes/body-alternative.inc",
                         "skins/weewx-wdc/includes/forecast.inc",
                         "skins/weewx-wdc/includes/forecast-table.inc",
                         "skins/weewx-wdc/includes/icons/barometer.svg",

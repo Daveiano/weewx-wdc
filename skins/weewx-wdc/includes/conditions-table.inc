@@ -14,41 +14,41 @@
 #set $label_max = $get_labels('Max', $precision)
 
 <div class="bx--tile obs-stat-tile">
-  <bx-structured-list>
-    <bx-structured-list-head>
-      <bx-structured-list-header-row>
-        <bx-structured-list-header-cell></bx-structured-list-header-cell>
-        <bx-structured-list-header-cell>
-          <!--prettier-ignore-->
-          #if $precision != 'day' and not $get_show_sum($skin_obs) and not $get_show_max($skin_obs)
+  <div class="bx--row">
+    <div class="bx--col">
+      <h3>$gettext("Todays Min/Max")</h3>
+      <bx-structured-list>
+        <bx-structured-list-head>
+          <bx-structured-list-header-row>
+            <bx-structured-list-header-cell></bx-structured-list-header-cell>
+            <bx-structured-list-header-cell>
+              <!--prettier-ignore-->
+              #if $precision != 'day' and not $get_show_sum($skin_obs) and not $get_show_max($skin_obs)
             $gettext("Avg")
           #end if
-          <!--prettier-ignore-->
-          #if $precision != 'day' and $get_show_sum($skin_obs)
+              <!--prettier-ignore-->
+              #if $precision != 'day' and $get_show_sum($skin_obs)
             $gettext("Total")
           #end if
-          <!--prettier-ignore-->
-          #if $precision != 'day' and $get_show_max($skin_obs)
+              <!--prettier-ignore-->
+              #if $precision != 'day' and $get_show_max($skin_obs)
             $gettext("Max")
           #end if
-          <!--prettier-ignore-->
-          #if $precision == 'day'
+              <!--prettier-ignore-->
+              #if $precision == 'day'
             $gettext("Current")
           #end if
-        </bx-structured-list-header-cell>
-        <bx-structured-list-header-cell
-          >$gettext($label_min)</bx-structured-list-header-cell
-        >
-        <bx-structured-list-header-cell
-          >$gettext($label_max)</bx-structured-list-header-cell
-        >
-        <bx-structured-list-header-cell
-          >$gettext($label_sum)</bx-structured-list-header-cell
-        >
-      </bx-structured-list-header-row>
-    </bx-structured-list-head>
-    <!--prettier-ignore-->
-    <bx-structured-list-body>
+            </bx-structured-list-header-cell>
+            <bx-structured-list-header-cell
+              >$gettext($label_min)</bx-structured-list-header-cell
+            >
+            <bx-structured-list-header-cell
+              >$gettext($label_max)</bx-structured-list-header-cell
+            >
+          </bx-structured-list-header-row>
+        </bx-structured-list-head>
+        <!--prettier-ignore-->
+        <bx-structured-list-body>
       #for $skin_obs in $DisplayOptions.get('stat_tile_observations')
         ## Show windDir, see https://github.com/Daveiano/weewx-wdc/issues/2
         #set $windData = ($skin_obs == 'windDir' or $skin_obs == 'windSpeed') and $current.windSpeed.has_data
@@ -89,15 +89,46 @@
                   am $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).maxtime.format("%d.%m.%Y %H:%M")
               #end if
             </bx-structured-list-cell>
-            <bx-structured-list-cell>
-              #if $get_show_sum($skin_obs)
-                <!--prettier-ignore-->
-                $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).sum
-              #end if
-            </bx-structured-list-cell>
           </bx-structured-list-row>
         #end if
         #end for
     </bx-structured-list-body>
-  </bx-structured-list>
+      </bx-structured-list>
+    </div>
+  </div>
+
+  <div class="bx--row">
+    <div class="bx--col">
+      <h3>$gettext("Todays Totals")</h3>
+      <bx-structured-list>
+        <bx-structured-list-head>
+          <bx-structured-list-header-row>
+            <bx-structured-list-header-cell></bx-structured-list-header-cell>
+
+            <bx-structured-list-header-cell
+              >$gettext($label_sum)</bx-structured-list-header-cell
+            >
+          </bx-structured-list-header-row>
+        </bx-structured-list-head>
+        <!--prettier-ignore-->
+        <bx-structured-list-body>
+          #for $skin_obs in $DisplayOptions.get('stat_tile_observations')
+            ## Show windDir, see https://github.com/Daveiano/weewx-wdc/issues/2
+            #set $windData = ($skin_obs == 'windDir' or $skin_obs == 'windSpeed') and $current.windSpeed.has_data
+            #set $otherData = ($skin_obs != 'windDir' and $skin_obs != 'windSpeed') and $getattr($current, $skin_obs).has_data
+
+            #if ($windData or $otherData) and $get_show_sum($skin_obs)
+              <bx-structured-list-row>
+                <bx-structured-list-cell>$obs.label[$skin_obs]</bx-structured-list-cell>
+                <bx-structured-list-cell>
+                  <!--prettier-ignore-->
+                  $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).sum
+                </bx-structured-list-cell>
+              </bx-structured-list-row>
+            #end if
+            #end for
+        </bx-structured-list-body>
+      </bx-structured-list>
+    </div>
+  </div>
 </div>

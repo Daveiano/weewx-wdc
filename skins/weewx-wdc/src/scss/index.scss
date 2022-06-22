@@ -219,6 +219,10 @@ bx-tabs {
   }
 }
 
+.obs-stat-tile {
+  margin-bottom: $spacing-05;
+}
+
 .stat-tile {
   margin-bottom: $spacing-05;
   height: calc(100% - #{$spacing-05});
@@ -487,7 +491,26 @@ bx-tabs {
   }
 }
 
-.calendar-diagram {
+body.theme-classic {
+  .layout-col,
+  .bx--tile.forecast-tile {
+    margin-bottom: $spacing-05;
+  }
+  .diagram {
+    height: 220px;
+    @include carbon--breakpoint-up(md) {
+      height: 350px;
+    }
+    @include carbon--breakpoint-up(lg) {
+      height: 350px;
+    }
+    @include carbon--breakpoint-up(xlg) {
+      height: 225px;
+    }
+    @include carbon--breakpoint-up(max) {
+      height: 200px;
+    }
+  }
 }
 
 #footer {

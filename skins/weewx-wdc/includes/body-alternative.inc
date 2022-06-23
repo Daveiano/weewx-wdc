@@ -25,7 +25,34 @@
 
 <div class="bx--row">
   <header class="bx--col section-header">
+    <!--prettier-ignore-->
+    #if $precision == 'day'
     <h2>$gettext("Last 24 hours")</h2>
+    #else if $precision == 'week'
+    <h2>$gettext("Last 7 days")</h2>
+    <!--prettier-ignore-->
+    #set $start_date_header = datetime.fromtimestamp($current.dateTime.raw) - timedelta(days=7)
+    <h3>
+      <!--prettier-ignore-->
+      $start_date_header.strftime("%d. %b %Y") - $current.dateTime.format("%d. %b %Y")
+    </h3>
+    #else if $precision == 'month'
+    <h2>$gettext("Last 30 days")</h2>
+    <!--prettier-ignore-->
+    #set $start_date_header = datetime.fromtimestamp($current.dateTime.raw) - timedelta(days=30)
+    <h3>
+      <!--prettier-ignore-->
+      $start_date_header.strftime("%d. %b %Y") - $current.dateTime.format("%d. %b %Y")
+    </h3>
+    #else if $precision == 'year'
+    <h2>$gettext("Last 365 days")</h2>
+    <!--prettier-ignore-->
+    #set $start_date_header = datetime.fromtimestamp($current.dateTime.raw) - timedelta(days=365)
+    <h3>
+      <!--prettier-ignore-->
+      $start_date_header.strftime("%d. %b %Y") - $current.dateTime.format("%d. %b %Y")
+    </h3>
+    #end if
   </header>
 </div>
 

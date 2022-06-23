@@ -17,7 +17,7 @@
 <div class="bx--tile obs-stat-tile">
   <div class="bx--row">
     <div class="bx--col">
-      <h3>$gettext("Todays Min/Max")</h3>
+      <!-- <h3>$gettext("Todays Min/Max")</h3> -->
       <bx-structured-list>
         <bx-structured-list-head>
           <bx-structured-list-header-row>
@@ -47,7 +47,7 @@
         #set $windData = ($skin_obs == 'windDir' or $skin_obs == 'windSpeed') and $current.windSpeed.has_data
         #set $otherData = ($skin_obs != 'windDir' and $skin_obs != 'windSpeed') and $getattr($current, $skin_obs).has_data
 
-        #if $windData or $otherData
+        #if $windData or $otherData and not $get_show_sum($skin_obs)
           <bx-structured-list-row>
             <bx-structured-list-cell>$obs.label[$skin_obs]</bx-structured-list-cell>
             <bx-structured-list-cell>
@@ -70,7 +70,7 @@
 
               <!--prettier-ignore-->
               #if $precision == 'year' or $precision == 'alltime'
-                am $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).mintime.format("%d.%m.%Y %H:%M")
+                <span class="date">am $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).mintime.format("%d.%m.%Y %H:%M")</span>
               #end if
             </bx-structured-list-cell>
             <bx-structured-list-cell>
@@ -79,7 +79,7 @@
 
               <!--prettier-ignore-->
               #if $precision == 'year' or $precision == 'alltime'
-                  am $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).maxtime.format("%d.%m.%Y %H:%M")
+              <span class="date">am $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).maxtime.format("%d.%m.%Y %H:%M")</span>
               #end if
             </bx-structured-list-cell>
           </bx-structured-list-row>

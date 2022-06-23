@@ -224,6 +224,14 @@ bx-tabs {
   h3 {
     @include carbon--type-style("expressive-heading-02");
   }
+  bx-structured-list {
+    bx-structured-list-cell {
+      span.date {
+        display: block;
+        @include carbon--type-style("label-01");
+      }
+    }
+  }
 }
 
 .stat-tile {

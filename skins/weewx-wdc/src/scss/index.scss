@@ -221,6 +221,9 @@ bx-tabs {
 
 .obs-stat-tile {
   margin-bottom: $spacing-05;
+  h3 {
+    @include carbon--type-style("expressive-heading-02");
+  }
 }
 
 .stat-tile {
@@ -492,6 +495,11 @@ bx-tabs {
 }
 
 body.theme-classic {
+  div.bx--grid.bx--grid--full-width {
+    @include carbon--breakpoint-up(lg) {
+      padding-right: 0;
+    }
+  }
   .layout-col,
   .bx--tile.forecast-tile {
     margin-bottom: $spacing-05;
@@ -499,16 +507,23 @@ body.theme-classic {
   .diagram {
     height: 220px;
     @include carbon--breakpoint-up(md) {
-      height: 350px;
+      height: 300px;
     }
     @include carbon--breakpoint-up(lg) {
-      height: 350px;
+      height: 250px;
     }
     @include carbon--breakpoint-up(xlg) {
       height: 225px;
     }
     @include carbon--breakpoint-up(max) {
-      height: 200px;
+      height: 225px;
+    }
+  }
+  .section-header {
+    margin-top: $spacing-03;
+    margin-bottom: $spacing-05;
+    h2 {
+      @include carbon--type-style("expressive-heading-04");
     }
   }
 }

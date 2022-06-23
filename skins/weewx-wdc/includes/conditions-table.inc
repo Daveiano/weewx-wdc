@@ -1,7 +1,6 @@
-<!--@todo Remove template.-->
 <!--prettier-ignore-->
-#encoding UTF-8
 #errorCatcher Echo
+#encoding UTF-8
 
 <script
   type="module"
@@ -12,6 +11,8 @@
 #set $label_sum = $get_labels('Sum', $precision)
 #set $label_min = $get_labels('Min', $precision)
 #set $label_max = $get_labels('Max', $precision)
+#set $label_avg = $get_labels('Avg', $precision)
+#set $label_totals = $get_labels('Total', $precision)
 
 <div class="bx--tile obs-stat-tile">
   <div class="bx--row">
@@ -23,21 +24,13 @@
             <bx-structured-list-header-cell></bx-structured-list-header-cell>
             <bx-structured-list-header-cell>
               <!--prettier-ignore-->
-              #if $precision != 'day' and not $get_show_sum($skin_obs) and not $get_show_max($skin_obs)
-            $gettext("Avg")
-          #end if
-              <!--prettier-ignore-->
-              #if $precision != 'day' and $get_show_sum($skin_obs)
-            $gettext("Total")
-          #end if
-              <!--prettier-ignore-->
-              #if $precision != 'day' and $get_show_max($skin_obs)
-            $gettext("Max")
-          #end if
+              #if $precision != 'day'
+                $gettext($label_avg)
+              #end if
               <!--prettier-ignore-->
               #if $precision == 'day'
-            $gettext("Current")
-          #end if
+                $gettext("Current")
+              #end if
             </bx-structured-list-header-cell>
             <bx-structured-list-header-cell
               >$gettext($label_min)</bx-structured-list-header-cell
@@ -99,15 +92,12 @@
 
   <div class="bx--row">
     <div class="bx--col">
-      <h3>$gettext("Todays Totals")</h3>
+      <h3>$gettext($label_totals)</h3>
       <bx-structured-list>
         <bx-structured-list-head>
           <bx-structured-list-header-row>
             <bx-structured-list-header-cell></bx-structured-list-header-cell>
-
-            <bx-structured-list-header-cell
-              >$gettext($label_sum)</bx-structured-list-header-cell
-            >
+            <bx-structured-list-header-cell></bx-structured-list-header-cell>
           </bx-structured-list-header-row>
         </bx-structured-list-head>
         <!--prettier-ignore-->

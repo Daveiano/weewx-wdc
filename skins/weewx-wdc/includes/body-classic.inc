@@ -4,7 +4,7 @@
 
 <!--prettier-ignore-->
 <div class="bx--row">
-  <div class="bx--col-sm-4 bx--col-md-6 bx--col-lg-12 bx--col-xlg-6 bx--col-max-4 layout-col">
+  <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-4 bx--col-max-4 layout-col">
     #include 'includes/conditions-table.inc'
 
     <!--prettier-ignore-->
@@ -12,7 +12,7 @@
   </div>
 
 
-  <div class="bx--col-sm-4 bx--col-md-6 bx--col-lg-12 bx--col-xlg-6 bx--col-max-8 layout-col">
+  <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-8 bx--col-max-8 layout-col">
     <div class="bx--row">
     <!-- prettier-ignore -->
     #set $diagram_index = 0

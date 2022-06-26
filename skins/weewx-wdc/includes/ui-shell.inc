@@ -25,10 +25,7 @@
     <bx-header-nav-item href="year.html">$gettext("Year")</bx-header-nav-item>
   </bx-header-nav>
 </bx-header>
-<bx-side-nav
-  aria-label="Side navigation"
-  collapse-mode="$DisplayOptions.get('sidenav_mode', 'responsive')"
->
+<bx-side-nav aria-label="Side navigation" collapse-mode="responsive">
   <bx-side-nav-items>
     <bx-side-nav-link class="show-small" href="index.html"
       >$gettext("Today")</bx-side-nav-link
@@ -182,3 +179,23 @@
     }
   });
 </script>
+
+<!--prettier-ignore-->
+#if $DisplayOptions.get('layout') == 'classic'
+<script>
+  const switchSideNavCollapseMode = function () {
+    if (window.matchMedia("(min-width: 672px)").matches) {
+      document
+        .querySelector("bx-side-nav")
+        .setAttribute("collapse-mode", "rail");
+    } else {
+      document
+        .querySelector("bx-side-nav")
+        .setAttribute("collapse-mode", "responsive");
+    }
+  };
+
+  switchSideNavCollapseMode();
+  window.addEventListener("resize", switchSideNavCollapseMode);
+</script>
+#end if

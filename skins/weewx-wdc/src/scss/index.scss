@@ -225,10 +225,22 @@ bx-tabs {
     @include carbon--type-style("expressive-heading-02");
   }
   bx-structured-list {
-    bx-structured-list-cell {
-      span.date {
-        display: block;
-        @include carbon--type-style("label-01");
+    bx-structured-list-row {
+      bx-structured-list-cell {
+        span.date {
+          display: block;
+          @include carbon--type-style("label-01");
+        }
+        &:nth-child(1) {
+          @include carbon--breakpoint-down(md) {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+    @include carbon--breakpoint-down(md) {
+      bx-structured-list-head bx-structured-list-header-cell {
+        font-size: 12px;
       }
     }
   }
@@ -502,40 +514,6 @@ bx-tabs {
   }
 }
 
-body.theme-classic {
-  div.bx--grid.bx--grid--full-width {
-    @include carbon--breakpoint-up(lg) {
-      padding-right: 0;
-    }
-  }
-  .layout-col,
-  .bx--tile.forecast-tile {
-    margin-bottom: $spacing-05;
-  }
-  .diagram {
-    height: 220px;
-    @include carbon--breakpoint-up(md) {
-      height: 300px;
-    }
-    @include carbon--breakpoint-up(lg) {
-      height: 250px;
-    }
-    @include carbon--breakpoint-up(xlg) {
-      height: 225px;
-    }
-    @include carbon--breakpoint-up(max) {
-      height: 225px;
-    }
-  }
-  .section-header {
-    margin-top: $spacing-03;
-    margin-bottom: $spacing-05;
-    h2 {
-      @include carbon--type-style("expressive-heading-04");
-    }
-  }
-}
-
 #footer {
   padding: 2rem;
   margin-top: $spacing-09;
@@ -574,13 +552,12 @@ body.theme-classic {
     padding-right: $spacing-03;
   }
 }
-body.sidebar-responsive {
-  @include carbon--breakpoint-up(lg) {
-    section.main.bx--content,
-    #footer {
-      padding-left: 16rem;
-      padding-right: 1rem;
-    }
+
+@include carbon--breakpoint-up(lg) {
+  section.main.bx--content,
+  #footer {
+    padding-left: 16rem;
+    padding-right: 1rem;
   }
 }
 
@@ -593,4 +570,53 @@ body.sidebar-responsive {
 .sidebar-heading {
   pointer-events: none;
   cursor: default;
+}
+
+body.theme-classic {
+  div.bx--grid.bx--grid--full-width {
+    @include carbon--breakpoint-up(lg) {
+      padding-right: 0;
+    }
+  }
+  .layout-col,
+  .bx--tile.forecast-tile {
+    margin-bottom: $spacing-05;
+  }
+  .diagram {
+    height: 220px;
+    @include carbon--breakpoint-up(md) {
+      height: 300px;
+    }
+    @include carbon--breakpoint-up(lg) {
+      height: 250px;
+    }
+    @include carbon--breakpoint-up(xlg) {
+      height: 225px;
+    }
+    @include carbon--breakpoint-up(max) {
+      height: 225px;
+    }
+  }
+  .section-header {
+    margin-top: $spacing-03;
+    margin-bottom: $spacing-05;
+    h2 {
+      @include carbon--type-style("expressive-heading-04");
+    }
+  }
+  .main.bx--content {
+    padding-left: 0;
+    padding-right: 0;
+
+    @include carbon--breakpoint-up(md) {
+      padding-left: 2rem;
+      padding-right: 0rem;
+      margin-right: -1rem;
+    }
+    @include carbon--breakpoint-up(lg) {
+      padding-left: 2rem;
+      padding-right: 1rem;
+      margin-right: 0;
+    }
+  }
 }

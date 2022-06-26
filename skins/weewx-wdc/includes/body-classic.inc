@@ -8,7 +8,9 @@
     #include 'includes/conditions-table.inc'
 
     <!--prettier-ignore-->
+    #if $precision == "day"
     #include "includes/forecast.inc"
+    #end if
   </div>
 
 

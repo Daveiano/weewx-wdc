@@ -21,7 +21,9 @@
 </div>
 
 <!--prettier-ignore-->
+#if $precision == "day"
 #include "includes/forecast.inc"
+#end if
 
 <div class="bx--row">
   <header class="bx--col section-header">

@@ -51,6 +51,11 @@ $carbon--grid-breakpoints: (
 @include carbon--font-face-sans();
 @include carbon--font-face-serif();
 
+body,
+html {
+  overflow-x: hidden;
+}
+
 bx-header:not(:defined) {
   display: none;
 }
@@ -604,7 +609,8 @@ body.theme-classic {
       @include carbon--type-style("expressive-heading-04");
     }
   }
-  .main.bx--content {
+  .main.bx--content,
+  #footer {
     padding-left: 0;
     padding-right: 0;
 

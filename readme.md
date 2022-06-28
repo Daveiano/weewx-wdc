@@ -51,6 +51,7 @@ If you like the look and feel of the skin please consider having a look into the
 - Climatological days
 - Calendar charts for rain days and average day temperature
 - Support for [weewx-forecast](https://github.com/chaunceygardiner/weewx-forecast)
+- Classic and alternative layout
 
 ## [Demo](https://www.weewx-hbt.de)
 

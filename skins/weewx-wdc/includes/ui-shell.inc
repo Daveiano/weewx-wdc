@@ -181,7 +181,7 @@
 </script>
 
 <!--prettier-ignore-->
-#if $DisplayOptions.get('layout') == 'classic'
+#if $DisplayOptions.get('layout', 'alternative') == 'classic'
 <script>
   const switchSideNavCollapseMode = function () {
     if (window.matchMedia("(min-width: 672px)").matches) {

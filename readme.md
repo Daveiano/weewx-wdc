@@ -82,7 +82,26 @@ If you like the look and feel of the skin please consider having a look into the
 
 ### Full Page
 
-![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-01.png)
+<table>
+    <thead>
+        <tr>
+            <th>Classic</th>
+            <th>Alternative</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td valign="top">
+
+![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-classic-01.png)</td>
+
+<td valign="top">
+
+![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-01.png)</td>
+
+</tr>
+</tbody>
+</table>
 
 ## Usage
 
@@ -109,16 +128,16 @@ The default skin.conf looks like this:
 ```
 # configuration file for the weewx-wdc skin
 SKIN_NAME = Weather Data Center
-SKIN_VERSION = 1.0.0-beta2
+SKIN_VERSION = 1.2.2
 
 [Extras]
     # Show a link to the GitHub respository of this skin. Set to False to hide.
     github_link = True
 
     # This radar image would be available as $Extras.radar_img
-    radar_img = https://www.dwd.de/DWD/wetter/radar/radfilm_sac_akt.gif
+    #radar_img = https://www.dwd.de/DWD/wetter/radar/radfilm_sac_akt.gif
     # This URL will be used as the image hyperlink:
-    radar_url =	https://www.dwd.de/DE/leistungen/radarbild_film/radarbild_film.html
+    #radar_url =	https://www.dwd.de/DE/leistungen/radarbild_film/radarbild_film.html
 
     [[forecast_table_settings]]
         source = WU
@@ -141,6 +160,7 @@ SKIN_VERSION = 1.0.0-beta2
         show_obvis = 0
 
 [DisplayOptions]
+    layout = 'alternative'
     climatological_days = rainDays, summerDays, hotDays, desertDays, tropicalNights, stormDays, iceDays, frostDays
     table_tile_observations = outTemp, outHumidity, barometer, windSpeed, windGust, windDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
     stat_tile_observations = outTemp, outHumidity, barometer, windSpeed, windGust, windDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
@@ -168,7 +188,7 @@ SKIN_VERSION = 1.0.0-beta2
 
 [CheetahGenerator]
     encoding = html_entities
-    search_list_extensions = user.general_util.GeneralUtil, user.stats_util.StatsUtil, user.diagram_util.DiagramUtil, user.celestial_util.CelestialUtil, user.archive_util.ArchiveUtil, user.table_util.TableUtil
+    search_list_extensions = user.general_util.GeneralUtil, user.stats_util.StatsUtil, user.diagram_util.DiagramUtil, user.celestial_util.CelestialUtil, user.archive_util.ArchiveUtil, user.table_util.TableUtil, user.forecast_util.ForecastUtil
 
     [[SummaryByMonth]]
         # Reports that summarize "by month"
@@ -208,13 +228,19 @@ SKIN_VERSION = 1.0.0-beta2
 
         [[[statistics]]]
             template = statistics.html.tmpl
-            #stale_age = 43200 # Twice a day
+            stale_age = 43200 # Twice a day
 
         [[[celestial]]]
             template = celestial.html.tmpl
 
+    # Static pages, add as many as you want.
+    [[Static]]
+        #[[[about]]]
+            #template = about.html.tmpl
+            #title = About
+
 [CopyGenerator]
-    copy_once = dist/js/index.js, dist/scss/index.css, favicon.ico
+    copy_once = dist/js/index.js, dist/scss/index.css, favicon.ico, manifest.json, icon-192x192.png, icon-256x256.png, icon-384x384.png, icon-512x512.png, service-worker.js
     # copy_always =
 
 [Generators]
@@ -228,6 +254,8 @@ SKIN_VERSION = 1.0.0-beta2
 `radar_img` and `radar_url` Same as in the default Seasons Skin
 
 #### DisplayOptions
+
+`layout` Switch between `classic` or `alternative`. See [Screenshots](#full-page) for comparison. [weewx-hbt.de](https://weewx-hbt.de) uses the alternative layout. The classic layout can be seen here: https://weewx-hbt.de/classic
 
 `climatological_days` E.g. Rain days (days with precipitation) or Summer days (Temp > 25°C). Leave empty to disable. When activated a rain days calendar chart and an averge temperature calendar chart is shown alongside.
 

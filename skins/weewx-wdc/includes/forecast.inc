@@ -29,7 +29,7 @@
       <!--prettier-ignore-->
       #if $varExists('forecast')
       #set forecast_tile_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-8"
-      #if $DisplayOptions.get('layout') == 'classic'
+      #if $DisplayOptions.get('layout', 'alternative') == 'classic'
         #set forecast_tile_classes = "bx--col-sm-4 bx--col-md-12 bx--col-lg-12 bx--col-xlg-12 bx--col-max-12"
       #end if
       <div class="$forecast_tile_classes">
@@ -56,7 +56,7 @@
       <!--prettier-ignore-->
       #if 'radar_img' in $Extras
       #set radar_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-4"
-      #if $DisplayOptions.get('layout') == 'classic'
+      #if $DisplayOptions.get('layout', 'alternative') == 'classic'
         #set radar_classes = "bx--col-sm-4 bx--col-md-12 bx--col-lg-12 bx--col-xlg-12 bx--col-max-12"
       #end if
       <div class="$radar_classes">

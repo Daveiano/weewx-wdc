@@ -29,7 +29,7 @@
           </div>
 
           <!--prettier-ignore-->
-          #if $DisplayOptions.get('layout') == 'alternative'
+          #if $DisplayOptions.get('layout', 'alternative') == 'alternative'
             #include 'includes/body-alternative.inc'
           #else
             #include 'includes/body-classic.inc'

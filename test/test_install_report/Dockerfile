@@ -30,12 +30,12 @@ WORKDIR /tmp
 RUN wget -nv -O "weewx-${WEEWX_VERSION}.tar.gz" "https://github.com/weewx/weewx/archive/refs/tags/v${WEEWX_VERSION}.tar.gz" &&\
     wget -nv -O "weewx-interceptor.zip" "https://github.com/matthewwall/weewx-interceptor/archive/master.zip" &&\
     wget -nv -O "weewx-forecast.zip" "https://github.com/chaunceygardiner/weewx-forecast/archive/refs/heads/master.zip" &&\
-    tar xvfz "weewx-${WEEWX_VERSION}.tar.gz"
+    tar xfz "weewx-${WEEWX_VERSION}.tar.gz"
 
 COPY src/weewx-wdc.zip /tmp/weewx-wdc.zip
 
 RUN mkdir /tmp/weewx-wdc/ &&\
-    unzip /tmp/weewx-wdc.zip -d /tmp/weewx-wdc/
+    unzip -q /tmp/weewx-wdc.zip -d /tmp/weewx-wdc/
 
 WORKDIR /tmp/weewx-${WEEWX_VERSION}
 

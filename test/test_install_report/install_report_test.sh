@@ -51,6 +51,9 @@ testWeeReportRun() {
     assertContains "$output" "Generating for all time"
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"
     assertContains "$output" "INFO weewx.reportengine: Copied 9 files to /home/weewx/public_html"
+
+    assertNotContains "$output" "failed with exception"
+    assertNotContains "$output" "Ignoring template"
 }
 
 #oneTimeTearDown() {

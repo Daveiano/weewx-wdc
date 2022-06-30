@@ -1,3 +1,5 @@
+[![Tests](https://github.com/Daveiano/weewx-wdc/actions/workflows/test.yml/badge.svg)](https://github.com/Daveiano/weewx-wdc/actions/workflows/test.yml)
+
 # Weewx Weather Data Center skin
 
 - [Weewx Weather Data Center skin](#weewx-weather-data-center-skin)
@@ -91,7 +93,7 @@ If you like the look and feel of the skin please consider having a look into the
 
 **Requires weewx >= 4.5**
 
-**Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v1.2.0/weewx-wdc-v1.2.0.zip.
+**Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v1.3.0/weewx-wdc-v1.3.0.zip.
 Don't download the repository directly and don't use the GitHub generated zip and tar.gz archives that come alongside the release. Always use the zip archive named **weewx-wdc-vX.X.X.zip**
 
 Background: The files in the src/ directory are the source files (TypeScript, SCSS). When creating a release, these source files get transformed and optimized, and the output location of these transformed files is the location which matches the location in the install.py script. The weewx-wdc-vX.X.X.zip should contain all these transformed files (like service-worker.js), but if you download the current state of the repo, these files are not included and this will throw multiple `FileNotFoundError` errors while installing.
@@ -270,9 +272,9 @@ trouble because of this you can comment out the `stale_age` options in skin.conf
     stale_age = 3600 # Every hour
 ```
 
-This will generate the year.html page only once a gour. `stale_age` is in seconds, see https://weewx.com/docs/customizing.htm#CheetahGenerator. You can experiment with the `stale_age` options to find a good balance between being 'up-to-date' and reasonableness.
+This will generate the year.html page only once a hour. `stale_age` is in seconds, see https://weewx.com/docs/customizing.htm#CheetahGenerator. You can experiment with the `stale_age` options to find a good balance between being 'up-to-date' and reasonableness.
 
-`statistics.html` stale age is 43200 (twice a day) by default.
+`statistics.html` stale age is 43200 (twice a day) by default because it's the most performance-expensive template to generate.
 
 ### Support for weewx-forecast
 

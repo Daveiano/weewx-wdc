@@ -30,13 +30,8 @@ class BasicInstaller(ExtensionInstaller):
                 (
                     "bin/user",
                     [
-                        "bin/user/archive_util.py",
-                        "bin/user/celestial_util.py",
-                        "bin/user/diagram_util.py",
-                        "bin/user/forecast_util.py",
-                        "bin/user/general_util.py",
-                        "bin/user/stats_util.py",
-                        "bin/user/table_util.py",
+                        "bin/user/weewx_wdc.py",
+                        "bin/user/weewx_wdc_forecast_util.py",
                     ],
                 ),
                 (

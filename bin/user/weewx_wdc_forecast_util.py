@@ -2,8 +2,6 @@ from weewx.cheetahgenerator import SearchList
 from user.forecast import ForecastVariables
 import datetime
 
-# from pprint import pprint
-
 # Copyright 2022 David Bätge
 # Distributed under the terms of the GNU Public License (GPLv3)
 

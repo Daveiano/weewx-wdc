@@ -6,7 +6,7 @@ import datetime
 # Distributed under the terms of the GNU Public License (GPLv3)
 
 
-class ForecastUtil(SearchList):
+class WdcForecastUtil(SearchList):
     def __init__(self, generator):
         self.forecast = ForecastVariables(generator)
         self.forecast_source = generator.skin_dict.get("Extras")[

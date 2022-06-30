@@ -31,7 +31,7 @@ class BasicInstaller(ExtensionInstaller):
                     "bin/user",
                     [
                         "bin/user/weewx_wdc.py",
-                        "bin/user/weewx_wdc_forecast_util.py",
+                        "bin/user/weewx_wdc_forecast.py",
                     ],
                 ),
                 (

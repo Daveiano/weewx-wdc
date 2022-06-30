@@ -102,3 +102,7 @@
 - Fullscreen display for diagrams [GH-6]
 
 # Next
+
+# 2.0.0
+
+- Breaking change: Refactored Search list extensions into two modules (weewx_wdc and weewx_wdc_forecast), see updated skin.conf.

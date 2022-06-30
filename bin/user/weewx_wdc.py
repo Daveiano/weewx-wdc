@@ -9,7 +9,7 @@ from calendar import isleap
 temp_obs = ["outTemp", "inTemp", "dewpoint", "windchill", "heatindex", "appTemp"]
 
 
-class GeneralUtil(SearchList):
+class WdcGeneralUtil(SearchList):
     def __init__(self, generator):
         SearchList.__init__(self, generator)
         self.skin_dict = generator.skin_dict
@@ -190,7 +190,7 @@ class GeneralUtil(SearchList):
         return static_pages
 
 
-class ArchiveUtil(SearchList):
+class WdcArchiveUtil(SearchList):
     def filter_months(self, months, year):
         """
         Returns a filtred list of months
@@ -247,7 +247,7 @@ class ArchiveUtil(SearchList):
             return list(range(first_year, last_year))
 
 
-class CelestialUtil(SearchList):
+class WdcCelestialUtil(SearchList):
     def get_celestial_icon(self, observation, prop):
         """
         Returns an include path for an icon based on the observation
@@ -280,7 +280,7 @@ class CelestialUtil(SearchList):
                 return "includes/icons/moon.svg"
 
 
-class DiagramUtil(SearchList):
+class WdcDiagramUtil(SearchList):
     def get_diagram_type(self, observation):
         """
         Set e.g. "temp" for all diagrams which should be rendered as temp
@@ -491,12 +491,12 @@ class DiagramUtil(SearchList):
         return week_delta
 
 
-class StatsUtil(SearchList):
+class WdcStatsUtil(SearchList):
     def __init__(self, generator):
         SearchList.__init__(self, generator)
         self.unit = UnitInfoHelper(generator.formatter, generator.converter)
         self.obs = ObsInfoHelper(generator.skin_dict)
-        self.diagram_util = DiagramUtil(SearchList)
+        self.diagram_util = WdcDiagramUtil(SearchList)
 
     def get_show_min(self, observation):
         """
@@ -850,12 +850,12 @@ class StatsUtil(SearchList):
             return tempDays
 
 
-class TableUtil(SearchList):
+class WdcTableUtil(SearchList):
     def __init__(self, generator):
         SearchList.__init__(self, generator)
         self.unit = UnitInfoHelper(generator.formatter, generator.converter)
         self.obs = ObsInfoHelper(generator.skin_dict)
-        self.diagram_util = DiagramUtil(SearchList)
+        self.diagram_util = WdcDiagramUtil(SearchList)
 
     def get_table_aggregate_interval(self, observation, precision):
         """

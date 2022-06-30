@@ -89,7 +89,7 @@
 
 - Bugfix: Added forecast_util.py in install.py, see https://github.com/Daveiano/weewx-interceptor-docker/issues/1
 
-# Next
+# 1.3.0
 
 - Updated rain rounding in diagrams
 - Make Data Tables easy to deactivate, see readme
@@ -100,3 +100,5 @@
 - Added tutorial on how to change about page (user generated content) [GH-15]
 - Added thunderstorm logic and icon to forecast table
 - Fullscreen display for diagrams [GH-6]
+
+# Next

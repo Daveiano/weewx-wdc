@@ -89,13 +89,21 @@
 
 - Bugfix: Added forecast_util.py in install.py, see https://github.com/Daveiano/weewx-interceptor-docker/issues/1
 
-# Next
+# 1.3.0
 
 - Updated rain rounding in diagrams
 - Make Data Tables easy to deactivate, see readme
 - Generate month and year pages less frequently
-- Added about page
-- Added tutorial on how to change about page (user generated content)
 - Generate statistics page less frequently per default (stale age) [GH-14]
 - Performance update: reduced generation time by 50% [GH-14]
+- Added about page [GH-15]
+- Added tutorial on how to change about page (user generated content) [GH-15]
+- Added thunderstorm logic and icon to forecast table
+- Fullscreen display for diagrams [GH-6]
+
+# Next
+
+# 2.0.0
+
+- Breaking change: Refactored Search list extensions into two modules (weewx_wdc and weewx_wdc_forecast), see updated skin.conf.
 - Added classic layout [GH-12]

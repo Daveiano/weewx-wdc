@@ -1,0 +1,7 @@
+Haselbachtal, Saxony, Germany
+250, meter
+51.209
+14.085
+n
+metric
+3

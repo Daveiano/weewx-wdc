@@ -1,3 +1,5 @@
+[![Tests](https://github.com/Daveiano/weewx-wdc/actions/workflows/test.yml/badge.svg)](https://github.com/Daveiano/weewx-wdc/actions/workflows/test.yml)
+
 # Weewx Weather Data Center skin
 
 - [Weewx Weather Data Center skin](#weewx-weather-data-center-skin)
@@ -51,6 +53,7 @@ If you like the look and feel of the skin please consider having a look into the
 - Climatological days
 - Calendar charts for rain days and average day temperature
 - Support for [weewx-forecast](https://github.com/chaunceygardiner/weewx-forecast)
+- User-generated "About page"
 - Classic and alternative layout
 
 ## [Demo](https://www.weewx-hbt.de)
@@ -110,7 +113,8 @@ If you like the look and feel of the skin please consider having a look into the
 
 **Requires weewx >= 4.5**
 
-**Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v1.2.0/weewx-wdc-v1.2.2.zip.
+
+**Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v1.3.0/weewx-wdc-v1.3.0.zip.
 Don't download the repository directly and don't use the GitHub generated zip and tar.gz archives that come alongside the release. Always use the zip archive named **weewx-wdc-vX.X.X.zip**
 
 Background: The files in the src/ directory are the source files (TypeScript, SCSS). When creating a release, these source files get transformed and optimized, and the output location of these transformed files is the location which matches the location in the install.py script. The weewx-wdc-vX.X.X.zip should contain all these transformed files (like service-worker.js), but if you download the current state of the repo, these files are not included and this will throw multiple `FileNotFoundError` errors while installing.
@@ -129,7 +133,7 @@ The default skin.conf looks like this:
 ```
 # configuration file for the weewx-wdc skin
 SKIN_NAME = Weather Data Center
-SKIN_VERSION = 1.2.2
+SKIN_VERSION = 1.3.0
 
 [Extras]
     # Show a link to the GitHub respository of this skin. Set to False to hide.
@@ -189,8 +193,7 @@ SKIN_VERSION = 1.2.2
 
 [CheetahGenerator]
     encoding = html_entities
-    search_list_extensions = user.general_util.GeneralUtil, user.stats_util.StatsUtil, user.diagram_util.DiagramUtil, user.celestial_util.CelestialUtil, user.archive_util.ArchiveUtil, user.table_util.TableUtil, user.forecast_util.ForecastUtil
-
+    search_list_extensions = user.weewx_wdc.WdcGeneralUtil, user.weewx_wdc.WdcStatsUtil, user.weewx_wdc.WdcDiagramUtil, user.weewx_wdc.WdcCelestialUtil, user.weewx_wdc.WdcArchiveUtil, user.weewx_wdc.WdcTableUtil, user.weewx_wdc_forecast.WdcForecastUtil
     [[SummaryByMonth]]
         # Reports that summarize "by month"
         [[[NOAA_month]]]
@@ -298,9 +301,9 @@ trouble because of this you can comment out the `stale_age` options in skin.conf
     stale_age = 3600 # Every hour
 ```
 
-This will generate the year.html page only once a gour. `stale_age` is in seconds, see https://weewx.com/docs/customizing.htm#CheetahGenerator. You can experiment with the `stale_age` options to find a good balance between being 'up-to-date' and reasonableness.
+This will generate the year.html page only once a hour. `stale_age` is in seconds, see https://weewx.com/docs/customizing.htm#CheetahGenerator. You can experiment with the `stale_age` options to find a good balance between being 'up-to-date' and reasonableness.
 
-`statistics.html` stale age is 43200 (twice a day) by default.
+`statistics.html` stale age is 43200 (twice a day) by default because it's the most performance-expensive template to generate.
 
 ### Support for weewx-forecast
 
@@ -312,7 +315,7 @@ It should look like this
 ...
 [CheetahGenerator]
     encoding = html_entities
-    search_list_extensions = user.general_util.GeneralUtil, user.stats_util.StatsUtil, user.diagram_util.DiagramUtil, user.celestial_util.CelestialUtil, user.archive_util.ArchiveUtil, user.table_util.TableUtil, user.forecast_util.ForecastUtil, user.forecast.ForecastVariables
+    search_list_extensions = user.weewx_wdc.WdcGeneralUtil, user.weewx_wdc.WdcStatsUtil, user.weewx_wdc.WdcDiagramUtil, user.weewx_wdc.WdcCelestialUtil, user.weewx_wdc.WdcArchiveUtil, user.weewx_wdc.WdcTableUtil, user.weewx_wdc_forecast.WdcForecastUtil, user.forecast.ForecastVariables
 ...
 ```
 

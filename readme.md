@@ -112,16 +112,16 @@ The default skin.conf looks like this:
 ```
 # configuration file for the weewx-wdc skin
 SKIN_NAME = Weather Data Center
-SKIN_VERSION = 1.0.0-beta2
+SKIN_VERSION = 1.3.0
 
 [Extras]
     # Show a link to the GitHub respository of this skin. Set to False to hide.
     github_link = True
 
     # This radar image would be available as $Extras.radar_img
-    radar_img = https://www.dwd.de/DWD/wetter/radar/radfilm_sac_akt.gif
+    #radar_img = https://www.dwd.de/DWD/wetter/radar/radfilm_sac_akt.gif
     # This URL will be used as the image hyperlink:
-    radar_url =	https://www.dwd.de/DE/leistungen/radarbild_film/radarbild_film.html
+    #radar_url =	https://www.dwd.de/DE/leistungen/radarbild_film/radarbild_film.html
 
     [[forecast_table_settings]]
         source = WU
@@ -171,7 +171,7 @@ SKIN_VERSION = 1.0.0-beta2
 
 [CheetahGenerator]
     encoding = html_entities
-    search_list_extensions = user.general_util.GeneralUtil, user.stats_util.StatsUtil, user.diagram_util.DiagramUtil, user.celestial_util.CelestialUtil, user.archive_util.ArchiveUtil, user.table_util.TableUtil
+    search_list_extensions = user.general_util.GeneralUtil, user.stats_util.StatsUtil, user.diagram_util.DiagramUtil, user.celestial_util.CelestialUtil, user.archive_util.ArchiveUtil, user.table_util.TableUtil, user.forecast_util.ForecastUtil
 
     [[SummaryByMonth]]
         # Reports that summarize "by month"
@@ -211,13 +211,19 @@ SKIN_VERSION = 1.0.0-beta2
 
         [[[statistics]]]
             template = statistics.html.tmpl
-            #stale_age = 43200 # Twice a day
+            stale_age = 43200 # Twice a day
 
         [[[celestial]]]
             template = celestial.html.tmpl
 
+    # Static pages, add as many as you want.
+    [[Static]]
+        #[[[about]]]
+            #template = about.html.tmpl
+            #title = About
+
 [CopyGenerator]
-    copy_once = dist/js/index.js, dist/scss/index.css, favicon.ico
+    copy_once = dist/js/index.js, dist/scss/index.css, favicon.ico, manifest.json, icon-192x192.png, icon-256x256.png, icon-384x384.png, icon-512x512.png, service-worker.js
     # copy_always =
 
 [Generators]

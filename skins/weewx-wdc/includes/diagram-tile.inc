@@ -1,7 +1,12 @@
+<!--prettier-ignore-->
+#errorCatcher Echo
 #encoding UTF-8
-<div
-  class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-4"
->
+#set diagram_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-4"
+#if $DisplayOptions.get('layout', 'alternative') == 'classic'
+  #set diagram_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6"
+#end if
+
+<div class="$diagram_classes">
   <div class="bx--tile diagram-tile">
     <div class="bx--row">
       <div class="bx--col">

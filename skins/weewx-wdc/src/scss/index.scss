@@ -51,6 +51,11 @@ $carbon--grid-breakpoints: (
 @include carbon--font-face-sans();
 @include carbon--font-face-serif();
 
+body,
+html {
+  overflow-x: hidden;
+}
+
 bx-header:not(:defined) {
   display: none;
 }
@@ -177,30 +182,6 @@ header.section-header {
   }
 }
 
-.obs-stat-tile {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  row-gap: $spacing-06;
-  column-gap: $spacing-02;
-  .obs-stat {
-    .value {
-      display: flex;
-      align-items: center;
-      svg {
-        max-width: 32px;
-        display: inline-block;
-        margin-right: $spacing-02;
-      }
-    }
-    .stat-label {
-      @include carbon--type-style("label-01");
-    }
-    .stat-value {
-      @include carbon--type-style("productive-heading-01");
-    }
-  }
-}
-
 bx-tabs {
   @include carbon--theme($carbon--theme--g10, true);
 }
@@ -238,6 +219,33 @@ bx-tabs {
       }
       bx-tooltip {
         display: none;
+      }
+    }
+  }
+}
+
+.obs-stat-tile {
+  margin-bottom: $spacing-05;
+  h3 {
+    @include carbon--type-style("expressive-heading-02");
+  }
+  bx-structured-list {
+    bx-structured-list-row {
+      bx-structured-list-cell {
+        span.date {
+          display: block;
+          @include carbon--type-style("label-01");
+        }
+        &:nth-child(1) {
+          @include carbon--breakpoint-down(md) {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+    @include carbon--breakpoint-down(md) {
+      bx-structured-list-head bx-structured-list-header-cell {
+        font-size: 12px;
       }
     }
   }
@@ -511,11 +519,8 @@ bx-tabs {
   }
 }
 
-.calendar-diagram {
-}
-
 #footer {
-  padding: 2rem 0;
+  padding: 2rem;
   margin-top: $spacing-09;
   background-color: $background-inverse;
   color: $text-inverse;
@@ -538,7 +543,6 @@ bx-tabs {
   }
 }
 
-/*@todo Remove if data-tables is sperate package*/
 .data-table-tile {
   padding: 0;
 }
@@ -546,11 +550,11 @@ bx-tabs {
   white-space: nowrap;
 }
 
-@include carbon--breakpoint-down(md) {
+@include carbon--breakpoint-down(lg) {
   section.main.bx--content,
   #footer {
-    //padding-left: $spacing-09;
-    //padding-right: $spacing-03;
+    padding-left: $spacing-09;
+    padding-right: $spacing-03;
   }
 }
 
@@ -571,4 +575,54 @@ bx-tabs {
 .sidebar-heading {
   pointer-events: none;
   cursor: default;
+}
+
+body.theme-classic {
+  div.bx--grid.bx--grid--full-width {
+    @include carbon--breakpoint-up(lg) {
+      padding-right: 0;
+    }
+  }
+  .layout-col,
+  .bx--tile.forecast-tile {
+    margin-bottom: $spacing-05;
+  }
+  .diagram {
+    height: 220px;
+    @include carbon--breakpoint-up(md) {
+      height: 300px;
+    }
+    @include carbon--breakpoint-up(lg) {
+      height: 250px;
+    }
+    @include carbon--breakpoint-up(xlg) {
+      height: 225px;
+    }
+    @include carbon--breakpoint-up(max) {
+      height: 225px;
+    }
+  }
+  .section-header {
+    margin-top: $spacing-03;
+    margin-bottom: $spacing-05;
+    h2 {
+      @include carbon--type-style("expressive-heading-04");
+    }
+  }
+  .main.bx--content,
+  #footer {
+    padding-left: 0;
+    padding-right: 0;
+
+    @include carbon--breakpoint-up(md) {
+      padding-left: 2rem;
+      padding-right: 0rem;
+      margin-right: -1rem;
+    }
+    @include carbon--breakpoint-up(lg) {
+      padding-left: 2rem;
+      padding-right: 1rem;
+      margin-right: 0;
+    }
+  }
 }

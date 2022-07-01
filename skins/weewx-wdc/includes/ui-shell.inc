@@ -179,3 +179,23 @@
     }
   });
 </script>
+
+<!--prettier-ignore-->
+#if $DisplayOptions.get('layout', 'alternative') == 'classic'
+<script>
+  const switchSideNavCollapseMode = function () {
+    if (window.matchMedia("(min-width: 672px)").matches) {
+      document
+        .querySelector("bx-side-nav")
+        .setAttribute("collapse-mode", "rail");
+    } else {
+      document
+        .querySelector("bx-side-nav")
+        .setAttribute("collapse-mode", "responsive");
+    }
+  };
+
+  switchSideNavCollapseMode();
+  window.addEventListener("resize", switchSideNavCollapseMode);
+</script>
+#end if

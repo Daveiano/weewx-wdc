@@ -106,3 +106,4 @@
 # 2.0.0
 
 - Breaking change: Refactored Search list extensions into two modules (weewx_wdc and weewx_wdc_forecast), see updated skin.conf.
+- Added classic layout [GH-12]

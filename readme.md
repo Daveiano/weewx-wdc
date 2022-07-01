@@ -54,6 +54,7 @@ If you like the look and feel of the skin please consider having a look into the
 - Calendar charts for rain days and average day temperature
 - Support for [weewx-forecast](https://github.com/chaunceygardiner/weewx-forecast)
 - User-generated "About page"
+- Classic and alternative layout
 
 ## [Demo](https://www.weewx-hbt.de)
 
@@ -85,13 +86,33 @@ If you like the look and feel of the skin please consider having a look into the
 
 ### Full Page
 
-![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-01.png)
+<table>
+    <thead>
+        <tr>
+            <th>Classic</th>
+            <th>Alternative</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td valign="top">
+
+![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-classic-01.png)</td>
+
+<td valign="top">
+
+![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-01.png)</td>
+
+</tr>
+</tbody>
+</table>
 
 ## Usage
 
 ### Installation
 
 **Requires weewx >= 4.5**
+
 
 **Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v1.3.0/weewx-wdc-v1.3.0.zip.
 Don't download the repository directly and don't use the GitHub generated zip and tar.gz archives that come alongside the release. Always use the zip archive named **weewx-wdc-vX.X.X.zip**
@@ -144,6 +165,7 @@ SKIN_VERSION = 1.3.0
         show_obvis = 0
 
 [DisplayOptions]
+    layout = 'alternative'
     climatological_days = rainDays, summerDays, hotDays, desertDays, tropicalNights, stormDays, iceDays, frostDays
     table_tile_observations = outTemp, outHumidity, barometer, windSpeed, windGust, windDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
     stat_tile_observations = outTemp, outHumidity, barometer, windSpeed, windGust, windDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
@@ -172,7 +194,6 @@ SKIN_VERSION = 1.3.0
 [CheetahGenerator]
     encoding = html_entities
     search_list_extensions = user.weewx_wdc.WdcGeneralUtil, user.weewx_wdc.WdcStatsUtil, user.weewx_wdc.WdcDiagramUtil, user.weewx_wdc.WdcCelestialUtil, user.weewx_wdc.WdcArchiveUtil, user.weewx_wdc.WdcTableUtil, user.weewx_wdc_forecast.WdcForecastUtil
-
     [[SummaryByMonth]]
         # Reports that summarize "by month"
         [[[NOAA_month]]]
@@ -237,6 +258,8 @@ SKIN_VERSION = 1.3.0
 `radar_img` and `radar_url` Same as in the default Seasons Skin
 
 #### DisplayOptions
+
+`layout` Switch between `classic` or `alternative`. See [Screenshots](#full-page) for comparison. [weewx-hbt.de](https://weewx-hbt.de) uses the alternative layout. The classic layout can be seen here: https://weewx-hbt.de/classic
 
 `climatological_days` E.g. Rain days (days with precipitation) or Summer days (Temp > 25°C). Leave empty to disable. When activated a rain days calendar chart and an averge temperature calendar chart is shown alongside.
 

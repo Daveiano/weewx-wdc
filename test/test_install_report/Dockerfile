@@ -11,7 +11,8 @@ EXPOSE 9877
 
 COPY src/install-input.txt /tmp/
 COPY src/start.sh /start.sh
-RUN chmod +x /start.sh
+COPY src/start-classic.sh /start-classic.sh
+RUN chmod +x /start.sh && chmod +x /start-classic.sh
 
 # @see https://blog.nuvotex.de/running-syslog-in-a-container/
 RUN apt-get update &&\

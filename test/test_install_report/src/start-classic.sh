@@ -8,6 +8,7 @@ rm -f /run/rsyslogd.pid
 service rsyslog start
 
 # start weewx
-echo 'Starting weewx reports (alternative layout)'
+echo 'Starting weewx reports (classic layout)'
+sed -i -z -e "s/layout = 'alternative'/layout = 'classic'/g" "${WEEWX_HOME}"/skins/weewx-wdc/skin.conf
 "${WEEWX_HOME}"/bin/wee_reports
 cat /var/log/syslog | grep weewx

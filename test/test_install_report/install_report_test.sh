@@ -4,6 +4,9 @@
 DIR=$(dirname -- "$( readlink -f -- "$0"; )");
 
 oneTimeSetUp() {
+    if ! [ -d "$DIR"/shunitexit ] ; then
+        mkdir "$DIR"/shunitexit
+    fi
     if ! [ -d "$DIR"/artifacts ] ; then
         echo Creating artifacts directory...
         sleep 2
@@ -39,14 +42,13 @@ testInstall() {
     assertEquals "Successfully tagged weewx:latest" "$lineLast"
 }
 
-testWeeReportRun() {
-    docker run --name weewx weewx > "$DIR"/artifacts/testWeeReportRun.txt 2>&1
-    docker stop weewx >> "$DIR"/artifacts/testWeeReportRun.txt 2>&1
-    docker rm weewx >> "$DIR"/artifacts/testWeeReportRun.txt 2>&1
+testWeeReportRunAlternative() {
+    docker run --name weewx weewx > "$DIR"/artifacts/testWeeReportRunAlternative.txt 2>&1
+    docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
 
-    output=$(cat "$DIR"/artifacts/testWeeReportRun.txt)
+    output=$(cat "$DIR"/artifacts/testWeeReportRunAlternative.txt)
 
-    assertContains "$output" "Starting weewx reports"
+    assertContains "$output" "Starting weewx reports (alternative layout)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating for all time"
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"
@@ -56,9 +58,27 @@ testWeeReportRun() {
     assertNotContains "$output" "Ignoring template"
 }
 
-#oneTimeTearDown() {
-#    rm -rf "$DIR"/artifacts
-#}
+testWeeReportRunClassic() {
+    docker run --entrypoint "/start-classic.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunClassic.txt 2>&1
+
+    output=$(cat "$DIR"/artifacts/testWeeReportRunClassic.txt)
+
+    assertContains "$output" "Starting weewx reports (classic layout)"
+    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Generating for all time"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 9 files to /home/weewx/public_html"
+
+    assertNotContains "$output" "failed with exception"
+    assertNotContains "$output" "Ignoring template"
+}
+
+oneTimeTearDown() {
+    if [ -d "$DIR"/shunitexit ] ; then
+      rm -rf "$DIR"/shunitexit
+      docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
+    fi
+}
 
 # Load and run shUnit2.
 #. shunit2

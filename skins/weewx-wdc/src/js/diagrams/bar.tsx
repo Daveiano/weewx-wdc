@@ -52,7 +52,7 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
       indexBy="x"
       indexScale={{ type: "band", round: false }}
       isInteractive={true}
-      labelSkipHeight={50}
+      labelSkipHeight={35}
       margin={{
         top: 20,
         right: 10,

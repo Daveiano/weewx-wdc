@@ -28,7 +28,6 @@
   }
 </script>
 
-<!--@todo add condition if is set-->
 #if "heights" in $diagrams_config
 <!--prettier-ignore-->
 <style>

@@ -113,7 +113,6 @@ If you like the look and feel of the skin please consider having a look into the
 
 **Requires weewx >= 4.5**
 
-
 **Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v1.3.0/weewx-wdc-v1.3.0.zip.
 Don't download the repository directly and don't use the GitHub generated zip and tar.gz archives that come alongside the release. Always use the zip archive named **weewx-wdc-vX.X.X.zip**
 
@@ -170,7 +169,7 @@ SKIN_VERSION = 1.3.0
     table_tile_observations = outTemp, outHumidity, barometer, windSpeed, windGust, windDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
     stat_tile_observations = outTemp, outHumidity, barometer, windSpeed, windGust, windDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
     diagram_tile_observations = tempdew, outHumidity, barometer, windchill_heatindex, wind, windDir, rain, rainRate, snowDepth, UV, ET, radiation, cloudbase, appTemp
-    [[diagram_tile_combined_obervations]]
+    [[diagram_tile_combined_observations]]
         [[[tempdew]]]
             label = 'Temperature / Dewpoint'
             [[[[obs]]]]
@@ -269,7 +268,8 @@ Simply comment this out or leave empty to hide the tables at all pages:
 
 `stat_tile_observations` Define which observations should be shown in the stat tiles (at the top of each page).
 
-`diagram_tile_observations` Define which observations to show as diagrams. This can include definitions for combined diagrams. Combined diagrams (like Temperature and Dew point or Windchill and Heat index) need to be defined in the `[[diagram_tile_combined_obervations]]` section like this:
+@todo: UPDATE
+`diagram_tile_observations` Define which observations to show as diagrams. This can include definitions for combined diagrams. Combined diagrams (like Temperature and Dew point or Windchill and Heat index) need to be defined in the `[[diagram_tile_combined_observations]]` section like this:
 
 For a combined diagram of Temperature and Dew point:
 

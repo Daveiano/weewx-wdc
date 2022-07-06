@@ -29,6 +29,9 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
       break;
   }
 
+  console.log(props.nivoProps);
+  console.log({ enableLabel: false, isInteractive: true });
+
   const barDiagram = (
     <ResponsiveBar
       axisBottom={{
@@ -81,6 +84,7 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
       theme={{
         fontSize: small ? 9 : 11,
       }}
+      {...props.nivoProps}
     />
   );
 

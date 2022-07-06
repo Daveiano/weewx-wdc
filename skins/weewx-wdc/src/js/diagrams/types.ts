@@ -16,6 +16,14 @@ type DiagramBaseProps = {
   data: Serie[];
   observation: string;
   precision: precision;
+  nivoProps: {
+    lineWidth?: number;
+    pointSize?: number;
+    isInteractive?: boolean;
+    enablePoints?: boolean;
+    enableLabel?: boolean;
+    enableCrosshair?: boolean;
+  };
 };
 
 interface Series {

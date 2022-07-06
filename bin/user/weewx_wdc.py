@@ -14,6 +14,14 @@ class WdcGeneralUtil(SearchList):
     def __init__(self, generator):
         SearchList.__init__(self, generator)
         self.skin_dict = generator.skin_dict
+        try:
+            time_format_dict = self.skin_dict["Units"]["TimeFormats"]
+        except KeyError:
+            time_format_dict = {}
+        self.time_format = time_format_dict
+
+    def get_time_format_dict(self):
+        return self.time_format
 
     def get_icon(self, observation):
         """

@@ -28,40 +28,35 @@
 #end if
 
 <div class="bx--row">
+  <!--prettier-ignore-->
   <header class="bx--col section-header">
-    <!--prettier-ignore-->
     #if $precision == 'day'
-    <h2>$gettext("Last 24 hours")</h2>
+      <h2>$gettext("Last 24 hours")</h2>
     #else if $precision == 'week'
-    <h2>$gettext("Last 7 days")</h2>
-    <!--prettier-ignore-->
-    #set $start_date_header = datetime.fromtimestamp($current.dateTime.raw) - timedelta(days=7)
-    <h3>
-      <!--prettier-ignore-->
-      $start_date_header.strftime("%d. %b %Y") - $current.dateTime.format("%d. %b %Y")
-    </h3>
+      <h2>$gettext("Last 7 days")</h2>
+      #set $start_date_header = datetime.fromtimestamp($current.dateTime.raw) - timedelta(days=7)
+      <h3>
+        <!--prettier-ignore-->
+        $start_date_header.strftime($get_time_format_dict['week']) - $current.dateTime.format($get_time_format_dict['week'])
+      </h3>
     #else if $precision == 'month' and not $use_parameter_month
-    <h2>$gettext("Last 30 days")</h2>
-    <!--prettier-ignore-->
-    #set $start_date_header = datetime.fromtimestamp($current.dateTime.raw) - timedelta(days=30)
-    <h3>
-      <!--prettier-ignore-->
-      $start_date_header.strftime("%d. %b %Y") - $current.dateTime.format("%d. %b %Y")
-    </h3>
+      <h2>$gettext("Last 30 days")</h2>
+      #set $start_date_header = datetime.fromtimestamp($current.dateTime.raw) - timedelta(days=30)
+      <h3>
+        $start_date_header.strftime($get_time_format_dict['month']) - $current.dateTime.format($get_time_format_dict['month'])
+      </h3>
     #else if $precision == 'month' and $use_parameter_month
-    <h2>$month_name $year_name</h2>
+      <h2>$month_name $year_name</h2>
     #else if $precision == 'year' and not $use_parameter_year
-    <h2>$gettext("Last 365 days")</h2>
-    <!--prettier-ignore-->
-    #set $start_date_header = datetime.fromtimestamp($current.dateTime.raw) - timedelta(days=365)
-    <h3>
-      <!--prettier-ignore-->
-      $start_date_header.strftime("%d. %b %Y") - $current.dateTime.format("%d. %b %Y")
-    </h3>
+      <h2>$gettext("Last 365 days")</h2>
+      #set $start_date_header = datetime.fromtimestamp($current.dateTime.raw) - timedelta(days=365)
+      <h3>
+        $start_date_header.strftime($get_time_format_dict['year']) - $current.dateTime.format($get_time_format_dict['year'])
+      </h3>
     #else if $precision == 'year' and $use_parameter_year
-    <h2>$year_name</h2>
+      <h2>$year_name</h2>
     #else if $precision == 'alltime'
-    <h2>$gettext("All Time")</h2>
+      <h2>$gettext("All Time")</h2>
     #end if
   </header>
 </div>

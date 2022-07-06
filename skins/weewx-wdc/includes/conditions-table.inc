@@ -70,7 +70,7 @@
 
               <!--prettier-ignore-->
               #if $precision == 'year' or $precision == 'alltime'
-                <span class="date">am $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).mintime.format("%d.%m.%Y %H:%M")</span>
+                <span class="date">am $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).mintime.format($get_time_format_dict['stats'])</span>
               #end if
             </bx-structured-list-cell>
             <bx-structured-list-cell>
@@ -79,7 +79,7 @@
 
               <!--prettier-ignore-->
               #if $precision == 'year' or $precision == 'alltime'
-              <span class="date">am $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).maxtime.format("%d.%m.%Y %H:%M")</span>
+              <span class="date">am $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).maxtime.format($get_time_format_dict['stats'])</span>
               #end if
             </bx-structured-list-cell>
           </bx-structured-list-row>

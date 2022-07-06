@@ -107,3 +107,4 @@
 
 - Breaking change: Refactored Search list extensions into two modules (weewx_wdc and weewx_wdc_forecast), see updated skin.conf.
 - Added classic layout [GH-12]
+- More customisation via skin.conf: diagram height, digram aggregate_type, Time formats, some basic diagram options like line width or point size [GH-17]

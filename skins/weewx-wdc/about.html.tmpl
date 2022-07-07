@@ -110,7 +110,7 @@
               <p class="bx--type-body-long-02">
                 <b>Please note:</b> For installation, please use the generated
                 zip archive from a release, eg.
-                https://github.com/Daveiano/weewx-wdc/releases/download/v1.2.0/weewx-wdc-v1.2.2.zip.
+                https://github.com/Daveiano/weewx-wdc/releases/download/v1.3.0/weewx-wdc-v1.3.0.zip.
                 Don't download the repository directly and don't use the GitHub
                 generated zip and tar.gz archives that come alongside the
                 release. Always use the zip archive named
@@ -173,6 +173,21 @@
     lang = de</bx-code-snippet>
               <h5 class="bx--type-productive-heading-02">DisplayOptions</h5>
               <p class="bx--type-body-long-02">
+                <bx-code-snippet type="inline">layout</bx-code-snippet>
+                Switch between classic or alternative. See
+                <a
+                  href="https://github.com/Daveiano/weewx-wdc#full-page"
+                  target="_blank"
+                  >Screenshots</a
+                >
+                for comparison.
+                <a href="https://www.weewx-hbt.de/" target="_blank"
+                  >https://www.weewx-hbt.de/</a
+                >
+                uses the alternative layout. The classic layout can be seen
+                here: https://weewx-hbt.de/classic
+              </p>
+              <p class="bx--type-body-long-02">
                 <bx-code-snippet type="inline"
                   >climatological_days</bx-code-snippet
                 >
@@ -219,8 +234,12 @@
     label = 'Temperature / Dewpoint'    # 2
     [[[[obs]]]]                         # 3
         [[[[[outTemp]]]]]
+            observation = "outTemp"     # 4
+            aggregate_type = "avg"
         [[[[[dewpoint]]]]]
-            color = '#610000'           # 4</bx-code-snippet>
+            observation = "dewpoint"    # 4
+            aggregate_type = "avg"      # 5
+            color = '#610000'           # 6</bx-code-snippet>
               <p class="bx--type-body-long-02">
                 <bx-code-snippet type="inline"># 1</bx-code-snippet> Name of the
                 combined diagram, needs to be the same as used in
@@ -231,10 +250,76 @@
                 the diagram.<br />
                 <bx-code-snippet type="inline"># 3</bx-code-snippet> Under the
                 key <bx-code-snippet type="inline">obs</bx-code-snippet> specify
-                the observations to combine.<br />
+                the observations to combine (The keys here are random and only
+                used internally).<br />
                 <bx-code-snippet type="inline"># 4</bx-code-snippet>
-                Optionally define a color.
+                Set the observation to show.<br />
+                <bx-code-snippet type="inline"># 5</bx-code-snippet>
+                Optionally, define the aggregate type (min, max, avg, sum)<br />
+                <bx-code-snippet type="inline"># 6</bx-code-snippet>
+                Optionally, define a color.
               </p>
+              <h6 class="bx--type-productive-heading-01">[[diagrams]]</h6>
+              <p class="bx--type-body-long-02">
+                Besides the combined_observations, you can configure the look of
+                the diagrams in the skin in the diagrams section.
+                <br />
+                For general behaviour changes, use the options under [[line]]
+                and [[bar]]:
+              </p>
+              <bx-code-snippet type="multi"
+                >[[[line]]] lineWidth = 2 pointSize = 5 isInteractive = True
+                enablePoints = True enableCrosshair = True curve = "natural"
+                [[[bar]]] enableLabel = False isInteractive = True
+              </bx-code-snippet>
+              <p class="bx--type-body-long-02">
+                <bx-code-snippet type="inline">lineWidth</bx-code-snippet> The
+                line width (line diagrams)<br />
+
+                <bx-code-snippet type="inline">pointSize</bx-code-snippet> The
+                point size (line diagrams)<br />
+
+                <bx-code-snippet type="inline">isInteractive</bx-code-snippet>
+                Enable/disable interactive tooltips (line and bar)<br />
+
+                <bx-code-snippet type="inline">enablePoints</bx-code-snippet>
+                Show points at all (line diagrams)<br />
+
+                <bx-code-snippet type="inline">enableCrosshair</bx-code-snippet>
+                Show the crosshair on mouse over (line and bar)<br />
+
+                <bx-code-snippet type="inline">enableLabel</bx-code-snippet>
+                Show the value as label on the bars (bar)<br />
+
+                <bx-code-snippet type="inline">curve</bx-code-snippet> Curve
+                interpolation. One of basis, cardinal, catmullRom, linear,
+                monotoneX, monotoneY, natural, step, stepAfter, stepBefore (line
+                diagram)<br />
+              </p>
+              <p class="bx--type-body-long-02">
+                You can configure every diagram under the given observation key
+                like:
+              </p>
+              <bx-code-snippet type="multi"
+                >[[diagrams]] [[[windDir]]] curve = "basis" [[[radiation]]]
+                curve = "basis" color = "black" [[[UV]]] curve = "step"
+                lineWidth = 1 [[[rainRate]]] curve = "linear" enablePoints =
+                False [[[windSpeed]]] curve = "linear" [[[windGust]]] curve =
+                "linear" isInteractive = False
+              </bx-code-snippet>
+              <h6 class="bx--type-productive-heading-01">[[[heights]]]</h6>
+              <p class="bx--type-body-long-02">
+                Configure the height of the diagram tiles seperate for each
+                layout, classic and alternative per screen size.
+                <br />
+                Breakpoints are:
+              </p>
+              <ul>
+                <li>md: > 672px</li>
+                <li>lg > 1056px</li>
+                <li>xlg > 1312px</li>
+                <li>max > 1920px</li>
+              </ul>
               <h4 class="bx--type-productive-heading-03">
                 How to change this page
               </h4>

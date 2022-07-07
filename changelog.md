@@ -102,3 +102,5 @@
 - Fullscreen display for diagrams [GH-6]
 
 # Next
+
+- Typo fixes for de

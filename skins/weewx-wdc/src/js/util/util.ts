@@ -7,7 +7,6 @@ export const enableArea: string[] = [
   "humidity",
   "pressure",
   "wind",
-  "windDir",
   "radiation",
   "UV",
   "cloudbase",

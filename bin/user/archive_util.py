@@ -35,9 +35,9 @@ class ArchiveUtil(SearchList):
         Returns:
             str: Formatted month string.
         """
-        date_time_obj = datetime.strptime(month, '%Y-%m')
+        date_time_obj = datetime.strptime(month, "%Y-%m")
 
-        return date_time_obj.strftime('%B')
+        return date_time_obj.strftime("%B")
 
     def fake_get_report_years(self, first, last):
         """
@@ -49,8 +49,8 @@ class ArchiveUtil(SearchList):
         Returns:
             list: [2022, 2021].
         """
-        first_year = int(first.format("%Y"))
-        last_year = int(last.format("%Y"))
+        first_year = int(first)
+        last_year = int(last)
 
         if first_year == last_year:
             return [last_year]

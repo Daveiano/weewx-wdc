@@ -135,7 +135,7 @@
     <!--prettier-ignore-->
     #set $archive_months = $SummaryByMonth
     #if len($SummaryByYear) == 0
-    #set $SummaryByYear = $fake_get_report_years($alltime.start, $alltime.end)
+    #set $SummaryByYear = $fake_get_report_years($alltime.start.format("%Y"), $latest.dateTime.format("%Y"))
     #end if
     <bx-side-nav-menu title="$gettext('Years')">
       #for $year in $SummaryByYear

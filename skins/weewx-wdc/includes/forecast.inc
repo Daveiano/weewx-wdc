@@ -1,8 +1,11 @@
 <!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
+#set $forecast_source = $Extras.forecast_table_settings.source
+#set $forecast_zambretti_active = True if $varExists('forecast.zambretti') and $to_bool($Extras['forecast_zambretti']['enable']) else False
+#set $forecat_table_active = True if len($forecast.weather_periods($forecast_source)) > 0 else False
 
-#if $varExists('forecast') or 'radar_img' in $Extras
+#if ($varExists('forecast') and ($forecast_zambretti_active or $forecat_table_active)) or 'radar_img' in $Extras
 <!--prettier-ignore-->
 #set $only_radar = True if not $varExists('forecast') and 'radar_img' in $Extras else False
 #set $only_forecast = True if $varExists('forecast') and not 'radar_img' in $Extras else False
@@ -34,7 +37,8 @@
       #end if
       <div class="$forecast_tile_classes">
         <div class="bx--tile forecast-tile">
-          #if $varExists('forecast.zambretti')
+          <!--prettier-ignore-->
+          #if $varExists('forecast.zambretti') and $to_bool($Extras['forecast_zambretti']['enable'])
           <div class="forecast">
             <h3>Zambretti</h3>
             <p>

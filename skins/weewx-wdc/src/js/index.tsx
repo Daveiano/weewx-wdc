@@ -40,16 +40,21 @@ diagrams.forEach((diagram) => {
     diagram instanceof HTMLElement &&
     diagram.dataset.value &&
     diagram.dataset.labels &&
+    diagram.dataset.aggregateType &&
     diagram.dataset.obs &&
     diagram.dataset.precision &&
     diagram.dataset.color
   ) {
     let data: Serie[] = [];
+    let nivoProps: { [index: string]: string | boolean } = {};
     const combined = diagram.classList.contains("combined");
     const root = createRoot(diagram);
 
     if (combined) {
       const labels = JSON.parse(diagram.dataset.labels.replace(/'/g, '"'));
+      const aggregate_types = JSON.parse(
+        diagram.dataset.aggregateType.replace(/'/g, '"')
+      );
       const series: string[] = JSON.parse(
         diagram.dataset.value.replace(/'/g, '"')
       );
@@ -58,7 +63,10 @@ diagrams.forEach((diagram) => {
         data = [
           ...data,
           {
-            id: labels[index],
+            id: `${labels[index]} ${
+              aggregate_types[index][0].toUpperCase() +
+              aggregate_types[index].slice(1)
+            }`,
             data: (window as any)[serie]
               .map((item: number[]) => ({
                 x: item[0],
@@ -84,6 +92,17 @@ diagrams.forEach((diagram) => {
       ];
     }
 
+    if (diagram.dataset.nivoProps) {
+      nivoProps = JSON.parse(diagram.dataset.nivoProps.replace(/'/g, '"'));
+
+      for (const item in nivoProps) {
+        console.log(item, nivoProps[item]);
+        if (nivoProps[item] === "True" || nivoProps[item] === "False") {
+          nivoProps[item] = nivoProps[item] === "True";
+        }
+      }
+    }
+
     switch (diagram.dataset.diagram) {
       case "bar":
         root.render(
@@ -93,6 +112,7 @@ diagrams.forEach((diagram) => {
             data={data}
             observation={diagram.dataset.obs}
             precision={diagram.dataset.precision as precision}
+            nivoProps={nivoProps}
           />
         );
         break;
@@ -104,6 +124,7 @@ diagrams.forEach((diagram) => {
             data={data}
             observation={diagram.dataset.obs}
             precision={diagram.dataset.precision as precision}
+            nivoProps={nivoProps}
           />
         );
     }

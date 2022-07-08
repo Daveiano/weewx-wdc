@@ -118,10 +118,11 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
           ? [
               {
                 anchor: "top-right",
-                direction: "row",
-                itemWidth: 120,
-                itemHeight: 20,
-                itemsSpacing: 10,
+                direction: "column",
+                itemWidth: 160,
+                itemHeight: 19,
+                itemsSpacing: 2,
+                itemDirection: "right-to-left",
               },
             ]
           : undefined
@@ -140,10 +141,10 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
       yScale={getyScale(props.observation, combinedData)}
       xFormat="time:%Y/%m/%d %H:%M"
       yFormat={(value) => `${value} ${props.unit}`}
+      {...props.nivoProps}
     />
   );
 
-  // @todo Fullscreen close button.
   return (
     <>
       <Maximize onClick={handle.enter} />

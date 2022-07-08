@@ -2,6 +2,7 @@ from weewx.cheetahgenerator import SearchList
 from weewx.units import UnitInfoHelper, ObsInfoHelper
 from datetime import datetime
 from calendar import isleap
+from pprint import pprint
 
 # Copyright 2022 David Bätge
 # Distributed under the terms of the GNU Public License (GPLv3)
@@ -13,6 +14,14 @@ class WdcGeneralUtil(SearchList):
     def __init__(self, generator):
         SearchList.__init__(self, generator)
         self.skin_dict = generator.skin_dict
+        try:
+            time_format_dict = self.skin_dict["Units"]["TimeFormats"]
+        except KeyError:
+            time_format_dict = {}
+        self.time_format = time_format_dict
+
+    def get_time_format_dict(self):
+        return self.time_format
 
     def get_icon(self, observation):
         """
@@ -91,6 +100,11 @@ class WdcGeneralUtil(SearchList):
         Returns:
             str: A color string
         """
+        diagrams_config = self.skin_dict["DisplayOptions"]["diagrams"]
+
+        if observation in diagrams_config and "color" in diagrams_config[observation]:
+            return diagrams_config[observation]["color"]
+
         if "humidity" in observation.lower():
             return "#0099CC"
 
@@ -281,6 +295,10 @@ class WdcCelestialUtil(SearchList):
 
 
 class WdcDiagramUtil(SearchList):
+    def __init__(self, generator):
+        SearchList.__init__(self, generator)
+        self.skin_dict = generator.skin_dict
+
     def get_diagram_type(self, observation):
         """
         Set e.g. "temp" for all diagrams which should be rendered as temp
@@ -321,7 +339,7 @@ class WdcDiagramUtil(SearchList):
 
         return "line"
 
-    def get_aggregate_type(self, observation):
+    def get_aggregate_type(self, observation, *args, **kwargs):
         """
         aggregate_type for observations series.
         @see https://github.com/weewx/weewx/wiki/Tags-for-series#syntax
@@ -332,6 +350,21 @@ class WdcDiagramUtil(SearchList):
         Returns:
             string: aggregate_type
         """
+        use_defaults = kwargs.get("use_defaults", False)
+        combined = kwargs.get("combined", None)
+        diagrams_config = self.skin_dict["DisplayOptions"]["diagrams"]
+
+        if combined is not None and "aggregate_type" in combined:
+            return combined["aggregate_type"]
+
+        if (
+            not use_defaults
+            and observation in diagrams_config
+            and "aggregate_type" in diagrams_config[observation]
+            and combined is None
+        ):
+            return diagrams_config[observation]["aggregate_type"]
+
         if observation == "ET" or observation == "rain":
             return "sum"
 
@@ -490,13 +523,36 @@ class WdcDiagramUtil(SearchList):
 
         return week_delta
 
+    def get_nivo_props(self, obs):
+        """
+        Get nivo props from skin.conf.
+
+        Args:
+            obs (string): Observation
+
+        Returns:
+            dict: Nivo props.
+        """
+        diagrams_config = self.skin_dict["DisplayOptions"]["diagrams"]
+        diagram_base_props = diagrams_config[self.get_diagram(obs)]
+
+        if obs in diagrams_config:
+            return {**diagram_base_props, **diagrams_config[obs]}
+        elif obs in diagrams_config["combined_observations"]:
+            return {
+                **diagram_base_props,
+                **diagrams_config["combined_observations"][obs],
+            }
+        else:
+            return diagram_base_props
+
 
 class WdcStatsUtil(SearchList):
     def __init__(self, generator):
         SearchList.__init__(self, generator)
         self.unit = UnitInfoHelper(generator.formatter, generator.converter)
         self.obs = ObsInfoHelper(generator.skin_dict)
-        self.diagram_util = WdcDiagramUtil(SearchList)
+        self.diagram_util = WdcDiagramUtil(generator)
 
     def get_show_min(self, observation):
         """
@@ -855,7 +911,7 @@ class WdcTableUtil(SearchList):
         SearchList.__init__(self, generator)
         self.unit = UnitInfoHelper(generator.formatter, generator.converter)
         self.obs = ObsInfoHelper(generator.skin_dict)
-        self.diagram_util = WdcDiagramUtil(SearchList)
+        self.diagram_util = WdcDiagramUtil(generator)
 
     def get_table_aggregate_interval(self, observation, precision):
         """
@@ -956,7 +1012,7 @@ class WdcTableUtil(SearchList):
                     getattr(period, observation)
                     .series(
                         aggregate_type=self.diagram_util.get_aggregate_type(
-                            observation
+                            observation, use_defaults=True
                         ),
                         aggregate_interval=self.get_table_aggregate_interval(
                             observation, precision

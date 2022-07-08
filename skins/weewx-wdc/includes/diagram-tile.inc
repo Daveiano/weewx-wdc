@@ -49,6 +49,8 @@
             data-obs="$get_diagram_type($partial_obs)"
             data-diagram="$get_diagram($partial_obs)"
             data-precision="$precision"
+            data-aggregate-type="['$get_aggregate_type($partial_obs)']"
+            data-nivo-props="$get_nivo_props($partial_obs)"
           ></div>
         </div>
       </div>

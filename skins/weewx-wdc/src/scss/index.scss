@@ -136,6 +136,9 @@ main.user-page {
     bx-code-snippet {
       margin-bottom: 0 !important;
     }
+    li {
+      line-height: 1.25rem;
+    }
   }
   .bx-ce-demo-devenv--tab-panels,
   bx-tabs {
@@ -506,16 +509,16 @@ bx-tabs {
 .diagram {
   height: 220px;
   @include carbon--breakpoint-up(md) {
-    height: 350px;
+    height: 325px;
   }
   @include carbon--breakpoint-up(lg) {
-    height: 350px;
+    height: 325px;
   }
   @include carbon--breakpoint-up(xlg) {
-    height: 300px;
+    height: 250px;
   }
   @include carbon--breakpoint-up(max) {
-    height: 350px;
+    height: 250px;
   }
 }
 

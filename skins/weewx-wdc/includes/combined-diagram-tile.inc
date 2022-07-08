@@ -75,7 +75,7 @@
             data-diagram="$get_diagram($combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation)"
             data-precision="$precision"
             data-aggregate-type="$series_aggregate_type"
-            data-nivo-props="$get_nivo_props($combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation)"
+            data-nivo-props="$get_nivo_props($comb_obs)"
           ></div>
         </div>
       </div>

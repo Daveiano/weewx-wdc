@@ -30,6 +30,7 @@
         #set $combined_diagram = $combined[$skin_obs]
         #for $combined_obs in $combined_diagram.obs.keys()
         #if $getattr($current, $combined_diagram.obs[$combined_obs].observation).has_data
+            #set global $comb_obs = $skin_obs
             #set global $combined_diagram = $combined_diagram
             #set global $diagram_index = $diagram_index
             #include "includes/combined-diagram-tile.inc"

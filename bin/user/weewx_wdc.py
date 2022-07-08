@@ -538,6 +538,11 @@ class WdcDiagramUtil(SearchList):
 
         if obs in diagrams_config:
             return {**diagram_base_props, **diagrams_config[obs]}
+        elif obs in diagrams_config["combined_observations"]:
+            return {
+                **diagram_base_props,
+                **diagrams_config["combined_observations"][obs],
+            }
         else:
             return diagram_base_props
 

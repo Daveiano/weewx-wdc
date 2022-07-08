@@ -178,7 +178,8 @@ SKIN_VERSION = 2.0.0
     [[diagrams]]
         [[[combined_observations]]]
             [[[[temp_min_max_avg]]]]
-                label = "TEST"
+                label = "Temperature Min/Max/Avg"
+                pointSize = 3
                 [[[[[obs]]]]]
                     [[[[[[outTemp_min]]]]]]
                         observation = "outTemp"
@@ -336,6 +337,8 @@ SKIN_VERSION = 2.0.0
 
 `radar_img` and `radar_url` Same as in the default Seasons Skin
 
+`forecast_zambretti` Enable/Disable Zambretti forecast.
+
 #### DisplayOptions
 
 `layout` Switch between `classic` or `alternative`. See [Screenshots](#full-page) for comparison. [weewx-hbt.de](https://weewx-hbt.de) uses the alternative layout. The classic layout can be seen here: https://weewx-hbt.de/classic
@@ -355,6 +358,7 @@ For a combined diagram of Temperature and Dew point:
 ```
 [[[tempdew]]]                           # 1
     label = 'Temperature / Dewpoint'    # 2
+    pointSize = 3
     [[[[obs]]]]                         # 3
         [[[[[outTemp]]]]]
             observation = "outTemp"     # 4

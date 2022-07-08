@@ -169,6 +169,8 @@ SKIN_VERSION = 1.3.0
                 [[[[[windSpeed]]]]]
                 [[[[[windGust]]]]]
 
+    stat_tile_winddir_ordinal = True
+
 [CheetahGenerator]
     encoding = html_entities
     search_list_extensions = user.general_util.GeneralUtil, user.stats_util.StatsUtil, user.diagram_util.DiagramUtil, user.celestial_util.CelestialUtil, user.archive_util.ArchiveUtil, user.table_util.TableUtil, user.forecast_util.ForecastUtil
@@ -265,7 +267,11 @@ For a combined diagram of Temperature and Dew point:
 
 `# 3` Under the key `obs` specify the observations to combine.
 
-`# 4` Optionally define a color.
+`# 4` Optionally define a colour.
+
+`stat_tile_winddir_ordinal` Show ordinals (S, E, SE, etc.) on the wind direction stat tile.
+
+`diagram_tile_winddir_ordinal` Show ordinals legend in wind direction diagram.
 
 ### Performance
 

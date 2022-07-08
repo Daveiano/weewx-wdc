@@ -186,3 +186,33 @@ class GeneralUtil(SearchList):
             )
 
         return static_pages
+
+    def get_ordinates(self):
+        default_ordinate_names = [
+            "N",
+            "NNE",
+            "NE",
+            "ENE",
+            "E",
+            "ESE",
+            "SE",
+            "SSE",
+            "S",
+            "SSW",
+            "SW",
+            "WSW",
+            "W",
+            "WNW",
+            "NW",
+            "NNW",
+            "N/A",
+        ]
+        try:
+            ordinate_names = self.generator.skin_dict["Units"]["Ordinates"][
+                "directions"
+            ]
+
+        except KeyError:
+            ordinate_names = default_ordinate_names
+
+        return ordinate_names

@@ -25,3 +25,12 @@
     });
   }
 </script>
+<!--prettier-ignore-->
+#set $diagramWindDirOrdinals = int($DisplayOptions.get('diagram_tile_winddir_ordinal', True) == "True")
+<script>
+  /*prettier-ignore*/
+  window.weewxWdcConfig = {
+    diagramWindDirOrdinals: $diagramWindDirOrdinals,
+    ordinalCompass: $get_ordinates,
+  };
+</script>

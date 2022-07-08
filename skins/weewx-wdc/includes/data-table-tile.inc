@@ -9,7 +9,7 @@
       <div class="bx--col">
         <script>
           /*prettier-ignore*/
-          var tableHeaders = $get_table_headers($table_tile_observations, $span($hour_delta=$get_hour_delta($precision), $week_delta=$get_week_delta($precision), $boundary=$get_table_boundary($precision)));
+          var tableHeaders = $jsonize($get_table_headers($table_tile_observations, $span($hour_delta=$get_hour_delta($precision), $week_delta=$get_week_delta($precision), $boundary=$get_table_boundary($precision))));
           /*prettier-ignore*/
           var tableRows = $get_table_rows($table_tile_observations, $span($hour_delta=$get_hour_delta($precision), $week_delta=$get_week_delta($precision), $boundary=$get_table_boundary($precision)), $precision);
           var tableTitle = '$gettext("All data")';

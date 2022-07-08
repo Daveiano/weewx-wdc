@@ -104,3 +104,5 @@
 # Next
 
 - Typo fixes for de
+- Bugfix: Month navigation only visible for current year when inside a month archive page [GH-24]
+- Bugfix: Encoding issues in Data tables [GH-26]

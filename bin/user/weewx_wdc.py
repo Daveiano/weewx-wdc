@@ -248,8 +248,8 @@ class WdcArchiveUtil(SearchList):
         Returns:
             list: [2022, 2021].
         """
-        first_year = int(first.format("%Y"))
-        last_year = int(last.format("%Y"))
+        first_year = int(first)
+        last_year = int(last)
 
         if first_year == last_year:
             return [last_year]

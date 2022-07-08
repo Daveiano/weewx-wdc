@@ -1501,10 +1501,10 @@ carbon-components@10.25.0:
     lodash.debounce "^4.0.8"
     warning "^3.0.0"
 
-carbon-data-table-state-manager@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/carbon-data-table-state-manager/-/carbon-data-table-state-manager-1.0.2.tgz#685c4a6a590663f22e9b7b0de461fb1c8769e6d8"
-  integrity sha512-DXJH2KFYL8RB9J3wAyHCmmcDVRazyWzdPIWs7rDiiMPnauj5zD3io2lJTjloaC8uhlFQMx5VtGpzoKEmI1j4ew==
+carbon-data-table-state-manager@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/carbon-data-table-state-manager/-/carbon-data-table-state-manager-1.0.3.tgz#e55a5c40ef72b1472a2d29aa0a4c0598dab4de96"
+  integrity sha512-I91Tkj601BuytEt9xlK2IcOq3au796HFkVp/TWqhl0nwY2G02TjDBzsJ8pgZ1rReD29Xi6Rlq4YxOkFeZkGdzQ==
   dependencies:
     dayjs "^1.11.2"
     use-debounce "^7.0.1"

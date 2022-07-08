@@ -101,6 +101,12 @@
 - Added thunderstorm logic and icon to forecast table
 - Fullscreen display for diagrams [GH-6]
 
+# 1.3.1
+
+- Typo fixes for de
+- Bugfix: Month navigation only visible for current year when inside a month archive page [GH-24]
+- Bugfix: Encoding issues in Data tables [GH-26]
+
 # Next
 
 # 2.0.0

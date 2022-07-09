@@ -1,3 +1,5 @@
+<!--prettier-ignore-->
+#set $diagrams_config = $DisplayOptions.get("diagrams", {})
 #if $encoding == 'utf8'
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 #end if
@@ -34,3 +36,80 @@
     ordinalCompass: $get_ordinates,
   };
 </script>
+
+#if "heights" in $diagrams_config
+<!--prettier-ignore-->
+<style>
+  #if "alternative" in $diagrams_config.heights
+    #if "height" in $diagrams_config.heights.alternative
+      .diagram {
+        height: $diagrams_config.heights.alternative.height;
+      }
+    #end if
+    #if "height_md" in $diagrams_config.heights.alternative
+      @media screen and (min-width: 672px) {
+        .diagram {
+          height: $diagrams_config.heights.alternative.height_md;
+        }
+      }
+    #end if
+    #if "height_lg" in $diagrams_config.heights.alternative
+      @media screen and (min-width: 1056px) {
+        .diagram {
+          height: $diagrams_config.heights.alternative.height_lg;
+        }
+      }
+    #end if
+    #if "height_xlg" in $diagrams_config.heights.alternative
+      @media screen and (min-width: 1312px) {
+        .diagram {
+          height: $diagrams_config.heights.alternative.height_xlg;
+        }
+      }
+    #end if
+    #if "height_max" in $diagrams_config.heights.alternative
+      @media screen and (min-width: 1920px) {
+        .diagram {
+          height: $diagrams_config.heights.alternative.height_max;
+        }
+      }
+    #end if
+  #end if
+
+  #if "classic" in $diagrams_config.heights
+    #if "height" in $diagrams_config.heights.classic
+      body.theme-classic .diagram {
+        height: $diagrams_config.heights.classic.height;
+      }
+    #end if
+    #if "height_md" in $diagrams_config.heights.classic
+      @media screen and (min-width: 672px) {
+        body.theme-classic .diagram {
+          height: $diagrams_config.heights.classic.height_md;
+        }
+      }
+    #end if
+    #if "height_lg" in $diagrams_config.heights.classic
+      @media screen and (min-width: 1056px) {
+        body.theme-classic .diagram {
+          height: $diagrams_config.heights.classic.height_lg;
+        }
+      }
+    #end if
+    #if "height_xlg" in $diagrams_config.heights.classic
+      @media screen and (min-width: 1312px) {
+        body.theme-classic .diagram {
+          height: $diagrams_config.heights.classic.height_xlg;
+        }
+      }
+    #end if
+    #if "height_max" in $diagrams_config.heights.classic
+      @media screen and (min-width: 1920px) {
+        body.theme-classic .diagram {
+          height: $diagrams_config.heights.classic.height_max;
+        }
+      }
+    #end if
+  #end if
+</style>
+#end if

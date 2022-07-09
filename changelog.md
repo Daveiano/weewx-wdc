@@ -101,8 +101,16 @@
 - Added thunderstorm logic and icon to forecast table
 - Fullscreen display for diagrams [GH-6]
 
-# Next
+# 1.3.1
 
 - Typo fixes for de
 - Bugfix: Month navigation only visible for current year when inside a month archive page [GH-24]
 - Bugfix: Encoding issues in Data tables [GH-26]
+
+# Next
+
+# 2.0.0
+
+- Breaking change: Refactored Search list extensions into two modules (weewx_wdc and weewx_wdc_forecast), see updated skin.conf.
+- Added classic layout [GH-12]
+- More customisation via skin.conf: diagram height, digram aggregate_type, Time formats, some basic diagram options like line width or point size [GH-17]

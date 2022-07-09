@@ -99,7 +99,7 @@
           #if $precision == 'year' or $precision == 'alltime'
           <bx-tooltip-definition
             alignment="center"
-            body-text="$getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $partial_obs).mintime.format('%d.%m.%Y %H:%M')"
+            body-text="$getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $partial_obs).mintime.format($get_time_format_dict['stats'])"
             direction="top"
           >
             $gettext($label_min)
@@ -121,7 +121,7 @@
           #if $precision == 'year' or $precision == 'alltime'
           <bx-tooltip-definition
             alignment="center"
-            body-text="$getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $partial_obs).maxtime.format('%d.%m.%Y %H:%M')"
+            body-text="$getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $partial_obs).maxtime.format($get_time_format_dict['stats'])"
             direction="top"
           >
             $gettext($label_max)

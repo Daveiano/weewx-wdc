@@ -18,6 +18,8 @@
     - [Configuration](#configuration)
       - [Extras](#extras)
       - [DisplayOptions](#displayoptions)
+        - [[[diagrams]]](#diagrams)
+      - [Units](#units)
     - [Performance](#performance)
     - [Support for weewx-forecast](#support-for-weewx-forecast)
     - [Localization](#localization)
@@ -54,6 +56,7 @@ If you like the look and feel of the skin please consider having a look into the
 - Calendar charts for rain days and average day temperature
 - Support for [weewx-forecast](https://github.com/chaunceygardiner/weewx-forecast)
 - User-generated "About page"
+- Classic and alternative layout
 
 ## [Demo](https://www.weewx-hbt.de)
 
@@ -85,7 +88,26 @@ If you like the look and feel of the skin please consider having a look into the
 
 ### Full Page
 
-![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-01.png)
+<table>
+    <thead>
+        <tr>
+            <th>Classic</th>
+            <th>Alternative</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td valign="top">
+
+![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-classic-01.png)</td>
+
+<td valign="top">
+
+![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-01.png)</td>
+
+</tr>
+</tbody>
+</table>
 
 ## Usage
 
@@ -93,7 +115,7 @@ If you like the look and feel of the skin please consider having a look into the
 
 **Requires weewx >= 4.5**
 
-**Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v1.3.0/weewx-wdc-v1.3.0.zip.
+**Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v1.3.1/weewx-wdc-v1.3.1.zip.
 Don't download the repository directly and don't use the GitHub generated zip and tar.gz archives that come alongside the release. Always use the zip archive named **weewx-wdc-vX.X.X.zip**
 
 Background: The files in the src/ directory are the source files (TypeScript, SCSS). When creating a release, these source files get transformed and optimized, and the output location of these transformed files is the location which matches the location in the install.py script. The weewx-wdc-vX.X.X.zip should contain all these transformed files (like service-worker.js), but if you download the current state of the repo, these files are not included and this will throw multiple `FileNotFoundError` errors while installing.
@@ -112,7 +134,7 @@ The default skin.conf looks like this:
 ```
 # configuration file for the weewx-wdc skin
 SKIN_NAME = Weather Data Center
-SKIN_VERSION = 1.3.0
+SKIN_VERSION = 2.0.0
 
 [Extras]
     # Show a link to the GitHub respository of this skin. Set to False to hide.
@@ -122,6 +144,9 @@ SKIN_VERSION = 1.3.0
     #radar_img = https://www.dwd.de/DWD/wetter/radar/radfilm_sac_akt.gif
     # This URL will be used as the image hyperlink:
     #radar_url =	https://www.dwd.de/DE/leistungen/radarbild_film/radarbild_film.html
+
+    [[forecast_zambretti]]
+        enable = True
 
     [[forecast_table_settings]]
         source = WU
@@ -144,36 +169,99 @@ SKIN_VERSION = 1.3.0
         show_obvis = 0
 
 [DisplayOptions]
+    layout = 'alternative'
     climatological_days = rainDays, summerDays, hotDays, desertDays, tropicalNights, stormDays, iceDays, frostDays
     table_tile_observations = outTemp, outHumidity, barometer, windSpeed, windGust, windDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
     stat_tile_observations = outTemp, outHumidity, barometer, windSpeed, windGust, windDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
-    diagram_tile_observations = tempdew, outHumidity, barometer, windchill_heatindex, wind, windDir, rain, rainRate, snowDepth, UV, ET, radiation, cloudbase, appTemp
-    [[diagram_tile_combined_obervations]]
-        [[[tempdew]]]
-            label = 'Temperature / Dewpoint'
-            [[[[obs]]]]
-                [[[[[outTemp]]]]]
-                [[[[[dewpoint]]]]]
+    diagram_tile_observations = temp_min_max_avg, tempdew, outHumidity, barometer, windchill_heatindex, wind, windDir, rain, rainRate, snowDepth, UV, ET, radiation, cloudbase, appTemp
 
-        [[[windchill_heatindex]]]
-            label = 'Windchill / Heatindex'
-            [[[[obs]]]]
-                [[[[[windchill]]]]]
-                    color = '#0099CC'
-                [[[[[heatindex]]]]]
-                    color = '#610000'
+    [[diagrams]]
+        [[[combined_observations]]]
+            [[[[temp_min_max_avg]]]]
+                label = "Temperature Min/Max/Avg"
+                pointSize = 3
+                [[[[[obs]]]]]
+                    [[[[[[outTemp_min]]]]]]
+                        observation = "outTemp"
+                        aggregate_type = "min"
+                        color = "#0198E1"
+                    [[[[[[outTemp_average]]]]]]
+                        observation = "outTemp"
+                        aggregate_type = "avg"
+                        color = "#666666"
+                    [[[[[[outTemp_max]]]]]]
+                        observation = "outTemp"
+                        aggregate_type = "max"
+                        color = "#8B0000"
+            [[[[tempdew]]]]
+                label = 'Temperature / Dewpoint'
+                [[[[[obs]]]]]
+                    [[[[[[temp]]]]]]
+                        observation = "outTemp"
+                    [[[[[[dew]]]]]]
+                        observation = "dewpoint"
 
-        [[[wind]]]
-            label = 'Wind speed / Gust speed'
-            [[[[obs]]]]
-                [[[[[windSpeed]]]]]
-                [[[[[windGust]]]]]
+            [[[[windchill_heatindex]]]]
+                label = 'Windchill / Heatindex'
+                [[[[[obs]]]]]
+                    [[[[[[chill]]]]]]
+                        observation = "windchill"
+                        color = '#0099CC'
+                    [[[[[[heat]]]]]]
+                        observation = "heatindex"
+                        color = '#610000'
+
+            [[[[wind]]]]
+                label = 'Wind speed / Gust speed'
+                [[[[[obs]]]]]
+                    [[[[[[speed]]]]]]
+                        observation = "windSpeed"
+                    [[[[[[gust]]]]]]
+                        observation = "windGust"
+
+        [[[line]]]
+            lineWidth = 2
+            pointSize = 5
+            isInteractive = True
+            enablePoints = True
+            enableCrosshair = True
+            # @see https://github.com/plouc/nivo/blob/master/packages/line/index.d.ts#L144
+            curve = "natural"
+        [[[bar]]]
+            enableLabel = False
+            isInteractive = True
+        [[[windDir]]]
+            curve = "basis"
+        [[[radiation]]]
+            curve = "basis"
+        [[[UV]]]
+            curve = "step"
+        [[[rainRate]]]
+            curve = "linear"
+        [[[windSpeed]]]
+            curve = "linear"
+        [[[windGust]]]
+            curve = "linear"
+
+        [[[heights]]]
+            [[[[classic]]]]
+                height = "220px"
+                height_md = "300px"
+                height_lg = "250px"
+                height_xlg = "225px"
+                height_max = "225px"
+            [[[[alternative]]]]
+                height = "220px"
+                height_md = "325px"
+                height_lg = "325px"
+                height_xlg = "250px"
+                height_max = "250px"
 
     stat_tile_winddir_ordinal = True
 
 [CheetahGenerator]
     encoding = html_entities
-    search_list_extensions = user.general_util.GeneralUtil, user.stats_util.StatsUtil, user.diagram_util.DiagramUtil, user.celestial_util.CelestialUtil, user.archive_util.ArchiveUtil, user.table_util.TableUtil, user.forecast_util.ForecastUtil
+    search_list_extensions = user.weewx_wdc.WdcGeneralUtil, user.weewx_wdc.WdcStatsUtil, user.weewx_wdc.WdcDiagramUtil, user.weewx_wdc.WdcCelestialUtil, user.weewx_wdc.WdcArchiveUtil, user.weewx_wdc.WdcTableUtil, user.weewx_wdc_forecast.WdcForecastUtil
 
     [[SummaryByMonth]]
         # Reports that summarize "by month"
@@ -224,6 +312,19 @@ SKIN_VERSION = 1.3.0
             #template = about.html.tmpl
             #title = About
 
+[Units]
+    [[TimeFormats]]
+        # @see https://weewx.com/docs/customizing.htm#Units_TimeFormats
+        day        = %X
+        week       = %x
+        month      = %x
+        year       = %x
+        rainyear   = %x
+        current    = %x %X
+        ephem_day  = %X
+        ephem_year = %x
+        stats      = %x %X
+
 [CopyGenerator]
     copy_once = dist/js/index.js, dist/scss/index.css, favicon.ico, manifest.json, icon-192x192.png, icon-256x256.png, icon-384x384.png, icon-512x512.png, service-worker.js
     # copy_always =
@@ -238,7 +339,11 @@ SKIN_VERSION = 1.3.0
 
 `radar_img` and `radar_url` Same as in the default Seasons Skin
 
+`forecast_zambretti` Enable/Disable Zambretti forecast.
+
 #### DisplayOptions
+
+`layout` Switch between `classic` or `alternative`. See [Screenshots](#full-page) for comparison. [weewx-hbt.de](https://weewx-hbt.de) uses the alternative layout. The classic layout can be seen here: https://weewx-hbt.de/classic
 
 `climatological_days` E.g. Rain days (days with precipitation) or Summer days (Temp > 25°C). Leave empty to disable. When activated a rain days calendar chart and an averge temperature calendar chart is shown alongside.
 
@@ -248,30 +353,108 @@ Simply comment this out or leave empty to hide the tables at all pages:
 
 `stat_tile_observations` Define which observations should be shown in the stat tiles (at the top of each page).
 
-`diagram_tile_observations` Define which observations to show as diagrams. This can include definitions for combined diagrams. Combined diagrams (like Temperature and Dew point or Windchill and Heat index) need to be defined in the `[[diagram_tile_combined_obervations]]` section like this:
+`diagram_tile_observations` Define which observations to show as diagrams. This can include definitions for combined diagrams. Combined diagrams (like Temperature and Dew point or Windchill and Heat index) need to be defined in the `[[diagrams]][[combined_observations]]` section like this:
 
 For a combined diagram of Temperature and Dew point:
 
 ```
 [[[tempdew]]]                           # 1
     label = 'Temperature / Dewpoint'    # 2
+    pointSize = 3
     [[[[obs]]]]                         # 3
         [[[[[outTemp]]]]]
+            observation = "outTemp"     # 4
+            aggregate_type = "avg"
         [[[[[dewpoint]]]]]
-            color = '#610000'           # 4
+            observation = "dewpoint"    # 4
+            aggregate_type = "avg"      # 5
+            color = '#610000'           # 6
 ```
 
 `# 1` Name of the combined diagram, needs to be the same as used in `diagram_tile_observations`.
 
 `# 2` Label of the diagram.
 
-`# 3` Under the key `obs` specify the observations to combine.
+`# 3` Under the key `obs` specify the observations to combine (The keys here are random and only used internally).
 
-`# 4` Optionally define a colour.
+`# 4` Set the observation to show.
+
+`# 5` Optionally, define the aggregate type (min, max, avg, sum)
+
+`# 6` Optionally, define a color.
 
 `stat_tile_winddir_ordinal` Show ordinals (S, E, SE, etc.) on the wind direction stat tile.
 
 `diagram_tile_winddir_ordinal` Show ordinals legend in wind direction diagram.
+
+##### [[diagrams]]
+
+Besides the `combined_observations`, you can configure the look of the diagrams in the skin in the `diagrams` section.
+
+For general behaviour changes, use the options under `[[line]]` and `[[bar]]`:
+
+```
+[[[line]]]
+    lineWidth = 2
+    pointSize = 5
+    isInteractive = True
+    enablePoints = True
+    enableCrosshair = True
+    curve = "natural"
+[[[bar]]]
+    enableLabel = False
+    isInteractive = True
+```
+
+`lineWidth` The line width (line diagrams)
+
+`pointSize` The point size (line diagrams)
+
+`isInteractive` Enable/disable interactive tooltips (line and bar)
+
+`enablePoints` Show points at all (line diagrams)
+
+`enableCrosshair` Show the crosshair on mouse over (line and bar)
+
+`enableLabel` Show the value as label on the bars (bar)
+
+`curve` Curve interpolation. One of basis, cardinal, catmullRom, linear, monotoneX, monotoneY, natural, step, stepAfter, stepBefore (line diagram)
+
+You can configure every diagram under the given observation key like:
+
+```
+[[diagrams]]
+    ...
+    [[[windDir]]]
+        curve = "basis"
+    [[[radiation]]]
+        curve = "basis"
+        color = "black"
+    [[[UV]]]
+        curve = "step"
+        lineWidth = 1
+    [[[rainRate]]]
+        curve = "linear"
+        enablePoints = False
+    [[[windSpeed]]]
+        curve = "linear"
+    [[[windGust]]]
+        curve = "linear"
+        isInteractive = False
+```
+
+`[[[heights]]]` Configure the height of the diagram tiles seperate for each layout, classic and alternative per screen size.
+
+Breakpoints are:
+
+md: > 672px <br/>
+lg > 1056px <br/>
+xlg > 1312px <br/>
+max > 1920px <br/>
+
+#### Units
+
+Under the `[[TimeFormats]]` key, you can specify the time formats used to format the headings of the pages. Like the heading "27.06.2022 07:55:00" (current = %x %X) on the index page. For more info see the [weewx documentation](https://weewx.com/docs/customizing.htm#Units_TimeFormats). The TimeFormat `stats` is used for the Min/Max date display in the stat tile and table.
 
 ### Performance
 
@@ -298,7 +481,7 @@ It should look like this
 ...
 [CheetahGenerator]
     encoding = html_entities
-    search_list_extensions = user.general_util.GeneralUtil, user.stats_util.StatsUtil, user.diagram_util.DiagramUtil, user.celestial_util.CelestialUtil, user.archive_util.ArchiveUtil, user.table_util.TableUtil, user.forecast_util.ForecastUtil, user.forecast.ForecastVariables
+    search_list_extensions = user.weewx_wdc.WdcGeneralUtil, user.weewx_wdc.WdcStatsUtil, user.weewx_wdc.WdcDiagramUtil, user.weewx_wdc.WdcCelestialUtil, user.weewx_wdc.WdcArchiveUtil, user.weewx_wdc.WdcTableUtil, user.weewx_wdc_forecast.WdcForecastUtil, user.forecast.ForecastVariables
 ...
 ```
 

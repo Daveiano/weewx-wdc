@@ -3,8 +3,20 @@ name: Tests
 on:
   push:
     branches: [1.x, 2.x]
+    paths:
+      - "**.py"
+      - skins/**
+      - bin/**
+      - test/**
+      - package.json
   pull_request:
     branches: [1.x, 2.x]
+    paths:
+      - "**.py"
+      - skins/**
+      - bin/**
+      - test/**
+      - package.json
 
 jobs:
   shunit2-tests:

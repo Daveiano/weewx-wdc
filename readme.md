@@ -174,7 +174,8 @@ SKIN_VERSION = 2.0.0
     table_tile_observations = outTemp, outHumidity, barometer, windSpeed, windGust, windDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
     stat_tile_observations = outTemp, outHumidity, barometer, windSpeed, windGust, windDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
     diagram_tile_observations = temp_min_max_avg, tempdew, outHumidity, barometer, windchill_heatindex, wind, windDir, rain, rainRate, snowDepth, UV, ET, radiation, cloudbase, appTemp
-
+    stat_tile_winddir_ordinal = True
+    diagram_tile_winddir_ordinal = True
     [[diagrams]]
         [[[combined_observations]]]
             [[[[temp_min_max_avg]]]]
@@ -380,6 +381,10 @@ For a combined diagram of Temperature and Dew point:
 `# 5` Optionally, define the aggregate type (min, max, avg, sum)
 
 `# 6` Optionally, define a color.
+
+`stat_tile_winddir_ordinal` Show ordinals (S, E, SE, etc.) on the wind direction stat tile.
+
+`diagram_tile_winddir_ordinal` Show ordinals legend in wind direction diagram.
 
 ##### [[diagrams]]
 

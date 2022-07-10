@@ -74,21 +74,25 @@
   #if $skin_obs in $combined.keys()
     #set $combined_diagram = $combined[$skin_obs]
     #for $combined_obs in $combined_diagram.obs.keys()
-        #if $getattr($current, $combined_diagram.obs[$combined_obs].observation).has_data
-          #set global $comb_obs = $skin_obs
-          #set global $combined_diagram = $combined_diagram
-          #set global $diagram_index = $diagram_index
-          #include "includes/combined-diagram-tile.inc"
-          #set $diagram_index = $diagram_index + 1
-          #break
-        #end if
+      #if $getattr($current, $combined_diagram.obs[$combined_obs].observation).has_data
+        #set global $comb_obs = $skin_obs
+        #set global $combined_diagram = $combined_diagram
+        #set global $diagram_index = $diagram_index
+        #include "includes/combined-diagram-tile.inc"
+        #set $diagram_index = $diagram_index + 1
+        #break
+      #end if
     #end for
   #else
     #if $getattr($current, $skin_obs).has_data or ($skin_obs == 'windDir' and $current.windSpeed.has_data)
-        #set global $partial_obs = $skin_obs
-        #set global $diagram_index = $diagram_index
+      #set global $partial_obs = $skin_obs
+      #set global $diagram_index = $diagram_index
+      #if $skin_obs == 'windDir' and $to_bool($DisplayOptions.get("diagram_tile_winddir_windrose", False))
+        #include "includes/diagram-tile-wind-rose.inc"
+      #else
         #include "includes/diagram-tile.inc"
-        #set $diagram_index = $diagram_index + 1
+      #end if
+      #set $diagram_index = $diagram_index + 1
     #end if
   #end if
 #end for

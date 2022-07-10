@@ -1,8 +1,6 @@
 <!--prettier-ignore-->
 #set $diagrams_config = $DisplayOptions.get("diagrams", {})
-#if $encoding == 'utf8'
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-#end if
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.6.0/webcomponents-loader.min.js"></script>
 <script>

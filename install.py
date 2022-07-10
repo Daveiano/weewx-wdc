@@ -69,6 +69,7 @@ class BasicInstaller(ExtensionInstaller):
                         "skins/weewx-wdc/includes/combined-diagram-tile.inc",
                         "skins/weewx-wdc/includes/data-table-tile.inc",
                         "skins/weewx-wdc/includes/diagram-tile.inc",
+                        "skins/weewx-wdc/includes/diagram-tile-wind-rose.inc",
                         "skins/weewx-wdc/includes/stat-tile.inc",
                         "skins/weewx-wdc/includes/conditions-table.inc",
                         "skins/weewx-wdc/includes/climatological-days.inc",

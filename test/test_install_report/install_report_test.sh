@@ -60,10 +60,26 @@ testWeeReportRunAlternative() {
 
 testWeeReportRunClassic() {
     docker run --entrypoint "/start-classic.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunClassic.txt 2>&1
+    docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
 
     output=$(cat "$DIR"/artifacts/testWeeReportRunClassic.txt)
 
     assertContains "$output" "Starting weewx reports (classic layout)"
+    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Generating for all time"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 9 files to /home/weewx/public_html"
+
+    assertNotContains "$output" "failed with exception"
+    assertNotContains "$output" "Ignoring template"
+}
+
+testWeeReportRunWithoutWeewxForecast() {
+    docker run --entrypoint "/start-without-forecast.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunWithoutWeewxForecast.txt 2>&1
+
+    output=$(cat "$DIR"/artifacts/testWeeReportRunWithoutWeewxForecast.txt)
+
+    assertContains "$output" "Starting weewx reports (without forecast)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating for all time"
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"

@@ -3,7 +3,7 @@
 #encoding UTF-8
 #set $forecast_source = $Extras.forecast_table_settings.source
 #set $forecast_zambretti_active = True if $varExists('forecast.zambretti') and $to_bool($Extras['forecast_zambretti']['enable']) else False
-#set $forecat_table_active = True if len($forecast.weather_periods($forecast_source)) > 0 else False
+#set $forecat_table_active = True if $varExists('forecast') and len($forecast.weather_periods($forecast_source)) > 0 else False
 
 #if ($varExists('forecast') and ($forecast_zambretti_active or $forecat_table_active)) or 'radar_img' in $Extras
 <!--prettier-ignore-->

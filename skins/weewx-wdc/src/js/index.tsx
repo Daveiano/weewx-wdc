@@ -152,7 +152,7 @@ plotlyDiagrams.forEach((plotyDiagram) => {
               "N-W",
             ],
             name: "11-14 m/s",
-            marker: { color: "rgb(106,81,163)" },
+            marker: { color: "green" },
             type: "barpolar",
           },
           {
@@ -205,15 +205,21 @@ plotlyDiagrams.forEach((plotyDiagram) => {
           },
         ]}
         layout={{
+          dragmode: false,
           font: { size: 14 },
-          legend: { font: { size: 14 } },
+          legend: {
+            font: { size: 14 },
+            xanchor: "left",
+            orientation: "v",
+            x: 0,
+          },
           autosize: true,
           margin: {
-            b: 0,
+            b: 30,
             l: 0,
             pad: 0,
             r: 0,
-            t: 0,
+            t: 30,
           },
           polar: {
             barmode: "overlay",
@@ -225,7 +231,11 @@ plotlyDiagrams.forEach((plotyDiagram) => {
             range: [0, 20],
           },
         }}
-        config={{ responsive: true, displayModeBar: false }}
+        config={{
+          responsive: true,
+          displayModeBar: false,
+          showAxisDragHandles: false,
+        }}
         style={{ width: "100%", height: "100%" }}
       />
     );

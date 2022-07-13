@@ -107,4 +107,8 @@
 - Bugfix: Month navigation only visible for current year when inside a month archive page [GH-24]
 - Bugfix: Encoding issues in Data tables [GH-26]
 
+# 1.3.2
+
+- Bugfix: No module named 'user.forecast' [GH-29]
+
 # Next

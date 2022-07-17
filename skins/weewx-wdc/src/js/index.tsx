@@ -135,78 +135,17 @@ diagrams.forEach((diagram) => {
 const plotlyDiagrams = document.querySelectorAll("div.diagram.plotly");
 plotlyDiagrams.forEach((plotyDiagram) => {
   const root = createRoot(plotyDiagram);
-  if (plotyDiagram.classList.contains("windrose")) {
+  if (
+    plotyDiagram.classList.contains("windrose") &&
+    plotyDiagram instanceof HTMLElement &&
+    plotyDiagram.dataset.value
+  ) {
     root.render(
       <Plot
-        data={[
-          {
-            r: [77.5, 72.5, 70.0, 45.0, 22.5, 42.5, 40.0, 62.5],
-            theta: [
-              "North",
-              "N-E",
-              "East",
-              "S-E",
-              "South",
-              "S-W",
-              "West",
-              "N-W",
-            ],
-            name: "11-14 m/s",
-            marker: { color: "green" },
-            type: "barpolar",
-          },
-          {
-            r: [57.5, 50.0, 45.0, 35.0, 20.0, 22.5, 37.5, 55.0],
-            theta: [
-              "North",
-              "N-E",
-              "East",
-              "S-E",
-              "South",
-              "S-W",
-              "West",
-              "N-W",
-            ],
-            name: "8-11 m/s",
-            marker: { color: "rgb(158,154,200)" },
-            type: "barpolar",
-          },
-          {
-            r: [40.0, 30.0, 30.0, 35.0, 7.5, 7.5, 32.5, 40.0],
-            theta: [
-              "North",
-              "N-E",
-              "East",
-              "S-E",
-              "South",
-              "S-W",
-              "West",
-              "N-W",
-            ],
-            name: "5-8 m/s",
-            marker: { color: "rgb(203,201,226)" },
-            type: "barpolar",
-          },
-          {
-            r: [20.0, 7.5, 15.0, 22.5, 2.5, 2.5, 12.5, 22.5],
-            theta: [
-              "North",
-              "N-E",
-              "East",
-              "S-E",
-              "South",
-              "S-W",
-              "West",
-              "N-W",
-            ],
-            name: "< 5 m/s",
-            marker: { color: "rgb(242,240,247)" },
-            type: "barpolar",
-          },
-        ]}
+        data={(window as any)[plotyDiagram.dataset.value]}
         layout={{
           dragmode: false,
-          font: { size: 14 },
+          font: { size: 12 },
           legend: {
             font: { size: 14 },
             xanchor: "left",
@@ -222,11 +161,24 @@ plotlyDiagrams.forEach((plotyDiagram) => {
             t: 30,
           },
           polar: {
-            barmode: "overlay",
+            barmode: "stack",
             bargap: 0,
-            radialaxis: { ticksuffix: "%", angle: 45, dtick: 20 },
+            radialaxis: {
+              ticksuffix: "%",
+              angle: 45,
+              dtick: 20,
+            },
             angularaxis: { direction: "clockwise" },
           },
+          colorway: [
+            "#f3cec9",
+            "#e7a4b6",
+            "#cd7eaf",
+            "#a262a9",
+            "#6f4d96",
+            "#3d3b72",
+            "#182844",
+          ],
           yaxis: {
             range: [0, 20],
           },

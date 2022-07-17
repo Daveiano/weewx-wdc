@@ -70,7 +70,7 @@
   },
   "scripts": {
     "lint": "eslint --ext .ts,.tsx,.js ./skins/weewx-wdc/src",
-    "dev": "parcel watch --no-hmr",
+    "dev": "parcel watch --no-hmr --no-cache",
     "build": "parcel build --no-scope-hoist",
     "deploy:local": "sudo rsync -vua ./skins/weewx-wdc/ /etc/weewx/skins/weewx-wdc/ && sudo cp -r ./bin/user/. /usr/share/weewx/user/ && sudo systemctl restart weewx && sudo /usr/share/weewx/wee_reports",
     "serve:local": "docker run -it --rm -d -p 8080:80 --name web -v /var/www/html/weewx:/usr/share/nginx/html nginx",

@@ -1,7 +1,7 @@
 import { ScaleSpec } from "@nivo/scales";
 import { Box } from "@nivo/core";
 import { Series } from "../diagrams/types";
-import moment from "moment";
+import dayjs from "dayjs";
 
 export const enableArea: string[] = [
   "humidity",
@@ -144,8 +144,8 @@ export const getAxisLeftLegendOffset = (obs: string): number => {
 };
 
 export const getTimeDifferenceInMonths = (data: string | any[]): number => {
-  const firstDate = moment.unix(data[0].x),
-    lastDate = moment.unix(data[data.length - 1].x);
+  const firstDate = dayjs.unix(data[0].x),
+    lastDate = dayjs.unix(data[data.length - 1].x);
 
   let diff = (lastDate.year() - firstDate.year()) * 12;
 

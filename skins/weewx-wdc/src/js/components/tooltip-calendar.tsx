@@ -1,4 +1,4 @@
-import moment from "moment";
+import dayjs from "dayjs";
 import React from "react";
 
 interface TooltipPropsCalendar {
@@ -24,7 +24,7 @@ export const TooltipCalendar: React.FC<TooltipPropsCalendar> = (
       className="diagram-tooltip"
     >
       <div style={{ marginBottom: "5px", lineHeight: "1.25em" }}>
-        {moment(props.day).format("DD.MM.YYYY")}
+        {dayjs(props.day).format("DD.MM.YYYY")}
       </div>
       <div>
         {props.value} {props.unit}

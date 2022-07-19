@@ -1,13 +1,15 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { Serie } from "@nivo/line";
-import Plot from "react-plotly.js";
+import type { Serie } from "@nivo/line";
+import createPlotlyComponent from "react-plotly.js/factory";
 
 import { CarbonDataTableStateManager } from "carbon-data-table-state-manager";
 import { BarDiagram } from "./diagrams/bar";
 import { LineDiagram } from "./diagrams/line";
-import { precision, Series } from "./diagrams/types";
+import type { precision, Series } from "./diagrams/types";
 import { CalendarDiagram } from "./diagrams/calendar";
+
+import "./../scss/index.scss";
 
 const calendarDiagrams = document.querySelectorAll(
   "div.calendar-diagram-clim-wrap"
@@ -97,7 +99,6 @@ diagrams.forEach((diagram) => {
       nivoProps = JSON.parse(diagram.dataset.nivoProps.replace(/'/g, '"'));
 
       for (const item in nivoProps) {
-        console.log(item, nivoProps[item]);
         if (nivoProps[item] === "True" || nivoProps[item] === "False") {
           nivoProps[item] = nivoProps[item] === "True";
         }
@@ -133,8 +134,10 @@ diagrams.forEach((diagram) => {
 });
 
 const plotlyDiagrams = document.querySelectorAll("div.diagram.plotly");
+
 plotlyDiagrams.forEach((plotyDiagram) => {
   const root = createRoot(plotyDiagram);
+  const Plot = createPlotlyComponent((window as any).Plotly);
   if (
     plotyDiagram.classList.contains("windrose") &&
     plotyDiagram instanceof HTMLElement &&
@@ -160,9 +163,11 @@ plotlyDiagrams.forEach((plotyDiagram) => {
             r: 0,
             t: 30,
           },
+          barmode: "stack",
+          bargap: 0,
           polar: {
-            barmode: "stack",
-            bargap: 0,
+            //barmode: "stack",
+            //bargap: 0,
             radialaxis: {
               ticksuffix: "%",
               angle: 45,

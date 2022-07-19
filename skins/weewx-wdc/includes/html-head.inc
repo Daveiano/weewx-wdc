@@ -7,7 +7,15 @@
   window.WebComponents = window.WebComponents || {};
   window.WebComponents.root = "node_modules/@webcomponents/webcomponentsjs/";
 </script>
-<link rel="stylesheet" href="dist/scss/index.css" />
+<!--@todo Add condition-->
+<script src="/plotly-custom-build.min.js"></script>
+<link
+  href="/dist/main.css"
+  rel="preload"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+<noscript><link rel="stylesheet" href="/dist/main.css" /></noscript>
 <link rel="icon" type="image/x-icon" href="favicon.ico" />
 <meta
   name="description"

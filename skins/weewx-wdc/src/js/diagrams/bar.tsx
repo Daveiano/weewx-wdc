@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { ResponsiveBar } from "@nivo/bar";
-import moment from "moment";
+import dayjs from "dayjs";
 import { useMediaQuery } from "@react-hook/media-query";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
@@ -29,13 +29,10 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
       break;
   }
 
-  console.log(props.nivoProps);
-  console.log({ enableLabel: false, isInteractive: true });
-
   const barDiagram = (
     <ResponsiveBar
       axisBottom={{
-        format: (value) => moment.unix(value).format(dateFormat),
+        format: (value) => dayjs.unix(value).format(dateFormat),
         tickSize: props.precision === "day" ? 2 : 0,
         tickPadding: 5,
         tickRotation: -65,
@@ -73,10 +70,10 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
         <TooltipBar
           formattedValue={point.formattedValue}
           color={props.color[0]}
-          time={moment
+          time={dayjs
             .unix((point as { data: { x: number } }).data.x)
             .format(dateFormat)}
-          endTime={moment.unix(point.data.end).format(dateFormat)}
+          endTime={dayjs.unix(point.data.end).format(dateFormat)}
         />
       )}
       valueFormat={(value) => `${value} ${props.unit}`}

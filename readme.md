@@ -118,7 +118,7 @@ If you like the look and feel of the skin please consider having a look into the
 **Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v1.3.1/weewx-wdc-v1.3.1.zip.
 Don't download the repository directly and don't use the GitHub generated zip and tar.gz archives that come alongside the release. Always use the zip archive named **weewx-wdc-vX.X.X.zip**
 
-Background: The files in the src/ directory are the source files (TypeScript, SCSS). When creating a release, these source files get transformed and optimized, and the output location of these transformed files is the location which matches the location in the install.py script. The weewx-wdc-vX.X.X.zip should contain all these transformed files (like service-worker.js), but if you download the current state of the repo, these files are not included and this will throw multiple `FileNotFoundError` errors while installing.
+Background: The files in the src/ directory are the source files (TypeScript, SCSS). When creating a release, these source files get transformed and optimized, and the output location of these transformed files is the location which matches the location in the install.py script. The weewx-wdc-vX.X.X.zip should contain all these transformed files (like service-worker.js), but if you download the current state of the repo, these files are not included and this will throw multiple `FileNotFoundError` errors while installing. For manual building these files, see [Development](#development).
 
 1. [Download](https://github.com/Daveiano/weewx-wdc/releases) the latest version
 2. Create a new folder and unzip to that folder
@@ -132,6 +132,7 @@ For help, please have a look at the [official weewx documentation](https://weewx
 The default skin.conf looks like this:
 
 ```
+# configuration file for the weewx-wdc skin
 # configuration file for the weewx-wdc skin
 SKIN_NAME = Weather Data Center
 SKIN_VERSION = 2.0.0
@@ -169,12 +170,15 @@ SKIN_VERSION = 2.0.0
         show_obvis = 0
 
 [DisplayOptions]
-    layout = 'alternative'
+    layout = 'classic'
     climatological_days = rainDays, summerDays, hotDays, desertDays, tropicalNights, stormDays, iceDays, frostDays
     table_tile_observations = outTemp, outHumidity, barometer, windSpeed, windGust, windDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
     stat_tile_observations = outTemp, outHumidity, barometer, windSpeed, windGust, windDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
     diagram_tile_observations = temp_min_max_avg, tempdew, outHumidity, barometer, windchill_heatindex, wind, windDir, rain, rainRate, snowDepth, UV, ET, radiation, cloudbase, appTemp
-
+    stat_tile_winddir_ordinal = True
+    diagram_tile_winddir_ordinal = True
+    # TODO: Make available as windDir_rose
+    diagram_tile_winddir_windrose = True
     [[diagrams]]
         [[[combined_observations]]]
             [[[[temp_min_max_avg]]]]
@@ -232,6 +236,7 @@ SKIN_VERSION = 2.0.0
             isInteractive = True
         [[[windDir]]]
             curve = "basis"
+            lineWidth = 0
         [[[radiation]]]
             curve = "basis"
         [[[UV]]]
@@ -256,8 +261,6 @@ SKIN_VERSION = 2.0.0
                 height_lg = "325px"
                 height_xlg = "250px"
                 height_max = "250px"
-
-    stat_tile_winddir_ordinal = True
 
 [CheetahGenerator]
     encoding = html_entities
@@ -312,6 +315,7 @@ SKIN_VERSION = 2.0.0
             #template = about.html.tmpl
             #title = About
 
+# TODO: Document
 [Units]
     [[TimeFormats]]
         # @see https://weewx.com/docs/customizing.htm#Units_TimeFormats
@@ -326,7 +330,7 @@ SKIN_VERSION = 2.0.0
         stats      = %x %X
 
 [CopyGenerator]
-    copy_once = dist/js/index.js, dist/scss/index.css, favicon.ico, manifest.json, icon-192x192.png, icon-256x256.png, icon-384x384.png, icon-512x512.png, service-worker.js
+    copy_once = dist/main.js, dist/main.css, plotly-custom-build.min.js, favicon.ico, manifest.json, icon-192x192.png, icon-256x256.png, icon-384x384.png, icon-512x512.png, service-worker.js, offline.html
     # copy_always =
 
 [Generators]
@@ -510,13 +514,13 @@ editing the page can be found [here](https://www.weewx-hbt.de/about.html).
 ## Development
 
 The skin uses the Cheetah templating engine provided by weewx in combination with carbon web components
-and a react entry point to render the diagrams written in TypeScript via nivo. Bundling for Typescript and SCSS is done via parcel.
+and a react entry point to render the diagrams written in TypeScript via nivo. Bundling for Typescript and SCSS is done via webpack.
 
 ### Scripts
 
 #### `yarn run dev`
 
-Starts parcel in watch mode
+Starts webpack in watch mode
 
 #### `yarn run build`
 

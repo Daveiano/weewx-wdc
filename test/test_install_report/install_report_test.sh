@@ -15,15 +15,14 @@ oneTimeSetUp() {
 }
 
 testBundling() {
-    ./node_modules/.bin/parcel build --no-scope-hoist --no-cache > "$DIR"/artifacts/testBundling.txt 2>&1
+    yarn run build > "$DIR"/artifacts/testBundling.txt 2>&1
 
     output=$(cat "$DIR"/artifacts/testBundling.txt)
-    line1=$(sed '1q;d' "$DIR"/artifacts/testBundling.txt)
 
-    assertEquals "Building..." "$line1"
-    assertContains "$output" "Bundling..."
-    assertContains "$output" "Packaging & Optimizing..."
-    assertContains "$output" "✨ Built in"
+    assertContains "$output" "asset main.js"
+    assertContains "$output" "asset main.css"
+    assertContains "$output" "asset service-worker.js"
+    assertContains "$output" "Done in"
 }
 
 testInstall() {
@@ -52,7 +51,7 @@ testWeeReportRunAlternative() {
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating for all time"
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 9 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.reportengine: Copied 10 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"
@@ -67,7 +66,7 @@ testWeeReportRunClassic() {
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating for all time"
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 9 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.reportengine: Copied 10 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"

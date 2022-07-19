@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
-self.__WB_DISABLE_DEV_LOGS = false;
+//(window as any).__WB_DISABLE_DEV_LOGS = false;
 
-import { manifest, version } from "@parcel/service-worker";
+//import { manifest, version } from "@parcel/service-worker";
 
 import {
   registerRoute,
@@ -15,8 +15,8 @@ import {
 } from "workbox-strategies";
 import { warmStrategyCache } from "workbox-recipes";
 
-console.log(manifest);
-console.log(version);
+//console.log(manifest);
+//console.log(version);
 
 // Fallback assets to cache
 const FALLBACK_HTML_URL = "/offline.html";

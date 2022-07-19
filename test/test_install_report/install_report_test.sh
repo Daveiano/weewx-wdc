@@ -19,10 +19,12 @@ testBundling() {
 
     output=$(cat "$DIR"/artifacts/testBundling.txt)
 
-    assertContains "$output" "asset main.js"
-    assertContains "$output" "asset main.css"
-    assertContains "$output" "asset service-worker.js"
+    assertContains "$output" "main.js"
+    assertContains "$output" "main.css"
+    assertContains "$output" "service-worker.js"
     assertContains "$output" "Done in"
+    assertNotContains "$output" "fail"
+    assertNotContains "$output" "error"
 }
 
 testInstall() {
@@ -82,7 +84,7 @@ testWeeReportRunWithoutWeewxForecast() {
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating for all time"
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 9 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.reportengine: Copied 10 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"

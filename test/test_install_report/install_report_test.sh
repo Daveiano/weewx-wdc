@@ -15,7 +15,7 @@ oneTimeSetUp() {
 }
 
 testBundling() {
-    yarn run build > "$DIR"/artifacts/testBundling.txt 2>&1
+    yarn run build:ci > "$DIR"/artifacts/testBundling.txt 2>&1
 
     output=$(cat "$DIR"/artifacts/testBundling.txt)
 

@@ -514,6 +514,11 @@ editing the page can be found [here](https://www.weewx-hbt.de/about.html).
 The skin uses the Cheetah templating engine provided by weewx in combination with carbon web components
 and a react entry point to render the diagrams written in TypeScript via nivo. Bundling for Typescript and SCSS is done via webpack.
 
+To start developing, you first need to have Node (npm) installed (>= v14).
+Then, install yarn (https://yarnpkg.com/getting-started/install).
+
+Install the dependencies: `yarn install`
+
 ### Scripts
 
 #### `yarn run dev`

@@ -28,11 +28,11 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "14"
+          cache: "yarn"
 
       - name: 🔨 install yarn and dependecies
         run: |
           npm install -g yarn
-          yarn set version berry
           yarn install
 
       - name: Run shunit2 tests

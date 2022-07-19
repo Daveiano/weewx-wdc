@@ -67,6 +67,7 @@
     "lint": "eslint --ext .ts,.tsx,.js ./skins/weewx-wdc/src",
     "dev": "yarn run cleanOutput &&  NODE_ENV=development webpack --watch",
     "build": "yarn run cleanOutput && NODE_ENV=production webpack && mv skins/weewx-wdc/dist/service-worker.js skins/weewx-wdc/service-worker.js",
+    "build:ci": "NODE_ENV=production webpack && mv skins/weewx-wdc/dist/service-worker.js skins/weewx-wdc/service-worker.js",
     "deploy:local": "sudo rsync -vua ./skins/weewx-wdc/ /etc/weewx/skins/weewx-wdc/ && sudo cp -r ./bin/user/. /usr/share/weewx/user/ && sudo systemctl restart weewx && sudo /usr/share/weewx/wee_reports",
     "serve:local": "docker run -it --rm -d -p 8080:80 --name web -v /var/www/html/weewx:/usr/share/nginx/html nginx",
     "deploy:pi": "yarn run build && sudo rsync -vua ./bin/ pi@weewx:/home/pi/bin && sudo rsync -vua --exclude 'weewx-wdc/skin.conf' ./skins/ pi@weewx:/home/pi/skins"

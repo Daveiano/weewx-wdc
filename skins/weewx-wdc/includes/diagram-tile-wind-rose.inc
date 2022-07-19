@@ -12,10 +12,10 @@
       <div class="bx--col">
         <p class="label">
           <!--prettier-ignore-->
-          #if $get_icon($partial_obs) is not None
-            #include $get_icon($partial_obs)
+          #if $get_icon("windDir") is not None
+            #include $get_icon("windDir")
           #end if
-          $obs.label[$partial_obs]
+          $obs.label["windDir"]
         </p>
         <div class="value">
           <!--prettier-ignore-->

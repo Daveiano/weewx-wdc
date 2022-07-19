@@ -39,10 +39,10 @@
           #end if
         #end for
       #else
-        #if $getattr($current, $skin_obs).has_data or ($skin_obs == 'windDir' and $current.windSpeed.has_data)
+        #if $getattr($current, $skin_obs).has_data or (($skin_obs == 'windDir' or $skin_obs == 'windRose') and $current.windSpeed.has_data)
           #set global $partial_obs = $skin_obs
           #set global $diagram_index = $diagram_index
-          #if $skin_obs == 'windDir' and $to_bool($DisplayOptions.get("diagram_tile_winddir_windrose", False))
+          #if $skin_obs == 'windRose'
             #include "includes/diagram-tile-wind-rose.inc"
           #else
             #include "includes/diagram-tile.inc"

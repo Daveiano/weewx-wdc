@@ -133,7 +133,6 @@ The default skin.conf looks like this:
 
 ```
 # configuration file for the weewx-wdc skin
-# configuration file for the weewx-wdc skin
 SKIN_NAME = Weather Data Center
 SKIN_VERSION = 2.0.0
 
@@ -174,11 +173,9 @@ SKIN_VERSION = 2.0.0
     climatological_days = rainDays, summerDays, hotDays, desertDays, tropicalNights, stormDays, iceDays, frostDays
     table_tile_observations = outTemp, outHumidity, barometer, windSpeed, windGust, windDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
     stat_tile_observations = outTemp, outHumidity, barometer, windSpeed, windGust, windDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
-    diagram_tile_observations = temp_min_max_avg, tempdew, outHumidity, barometer, windchill_heatindex, wind, windDir, rain, rainRate, snowDepth, UV, ET, radiation, cloudbase, appTemp
+    diagram_tile_observations = temp_min_max_avg, tempdew, outHumidity, barometer, windchill_heatindex, wind, windDir, windRose, rain, rainRate, snowDepth, UV, ET, radiation, cloudbase, appTemp
     stat_tile_winddir_ordinal = True
     diagram_tile_winddir_ordinal = True
-    # TODO: Make available as windDir_rose
-    diagram_tile_winddir_windrose = True
     [[diagrams]]
         [[[combined_observations]]]
             [[[[temp_min_max_avg]]]]
@@ -315,7 +312,6 @@ SKIN_VERSION = 2.0.0
             #template = about.html.tmpl
             #title = About
 
-# TODO: Document
 [Units]
     [[TimeFormats]]
         # @see https://weewx.com/docs/customizing.htm#Units_TimeFormats
@@ -357,7 +353,9 @@ Simply comment this out or leave empty to hide the tables at all pages:
 
 `stat_tile_observations` Define which observations should be shown in the stat tiles (at the top of each page).
 
-`diagram_tile_observations` Define which observations to show as diagrams. This can include definitions for combined diagrams. Combined diagrams (like Temperature and Dew point or Windchill and Heat index) need to be defined in the `[[diagrams]][[combined_observations]]` section like this:
+`diagram_tile_observations` Define which observations to show as diagrams. This can include definitions for combined diagrams. There are two different charts available for the wind direction: `windDir` will render a scatter diagram, `windRose` will render a windrose chart.
+
+Combined diagrams (like Temperature and Dew point or Windchill and Heat index) need to be defined in the `[[diagrams]][[combined_observations]]` section like this:
 
 For a combined diagram of Temperature and Dew point:
 

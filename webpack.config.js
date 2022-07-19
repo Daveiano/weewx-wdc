@@ -39,6 +39,7 @@ module.exports = {
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
   },
+  devtool: devMode ? "source-map" : false,
   output: {
     filename: "[name].js",
     path: path.resolve(__dirname, "skins/weewx-wdc/dist"),

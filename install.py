@@ -122,10 +122,3 @@ class BasicInstaller(ExtensionInstaller):
                 ),
             ],
         )
-
-    # def configure(self, engine):
-    #    """Customized configuration that sets a language code"""
-    #    # TODO: Set a units code as well
-    #    code = engine.get_lang_code('wdc', 'en')
-    #    self['config']['StdReport']['WdcReport']['lang'] = code
-    #    return True

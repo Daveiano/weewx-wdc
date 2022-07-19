@@ -21,7 +21,7 @@ jobs:
       - name: 🔨 install yarn and dependecies
         run: |
           npm i -g yarn
-          yarn set version latest
+          yarn set version berry
           yarn install --network-timeout 1000000
 
       - name: 🚀 Build JS & SCSS

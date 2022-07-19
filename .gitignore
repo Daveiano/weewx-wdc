@@ -19,3 +19,11 @@ skins/weewx-wdc/service-worker.js.map
 test/test_install_report/src/weewx-wdc.zip
 test/shunit2
 test/*/artifacts
+
+# yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

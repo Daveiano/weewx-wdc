@@ -205,7 +205,8 @@ if (table) {
   const tableHeaders = (window as any).tableHeaders;
   const tableRows = (window as any).tableRows;
   const tableTitle = (window as any).tableTitle;
-  // @todo Could be in a global config obj.
+  // @todo Could be in a global config obj,
+  // @see window.weewxWdcConfig in html-head.inc.
   const precision = (window as any).precision;
 
   const root = createRoot(table);
@@ -223,7 +224,6 @@ if (table) {
       }}
       size="short"
       title={tableTitle}
-      // @todo Change per precision.
       dateFormat={
         precision === "alltime" || precision == "year"
           ? "YYYY/MM/DD"

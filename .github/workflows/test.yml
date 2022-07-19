@@ -41,7 +41,3 @@ jobs:
         with:
           name: test_install_report_artifacts
           path: test/test_install_report/artifacts/
-
-      - name: 🔨 uninstall Yarn
-        if: always()
-        run: npm uninstall -g yarn

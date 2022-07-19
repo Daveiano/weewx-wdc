@@ -15,17 +15,14 @@ jobs:
       - name: 🔨 setup node
         uses: actions/setup-node@v2
         with:
-          always-auth: true
           node-version: "14"
+          cache: "yarn"
 
       - name: 🔨 install yarn and dependecies
-        run: |
-          npm i -g yarn
-          yarn set version berry
-          yarn install --network-timeout 1000000
+        run: yarn install --network-timeout 1000000
 
       - name: 🚀 Build JS & SCSS
-        run: yarn run build
+        run: yarn run build:ci
 
       - name: Archive Release (zip)
         uses: thedoctor0/zip-release@master

@@ -115,7 +115,7 @@ If you like the look and feel of the skin please consider having a look into the
 
 **Requires weewx >= 4.5**
 
-**Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v1.3.1/weewx-wdc-v1.3.1.zip.
+**Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v1.3.2/weewx-wdc-v1.3.2.zip.
 Don't download the repository directly and don't use the GitHub generated zip and tar.gz archives that come alongside the release. Always use the zip archive named **weewx-wdc-vX.X.X.zip**
 
 Background: The files in the src/ directory are the source files (TypeScript, SCSS). When creating a release, these source files get transformed and optimized, and the output location of these transformed files is the location which matches the location in the install.py script. The weewx-wdc-vX.X.X.zip should contain all these transformed files (like service-worker.js), but if you download the current state of the repo, these files are not included and this will throw multiple `FileNotFoundError` errors while installing. For manual building these files, see [Development](#development).
@@ -261,7 +261,7 @@ SKIN_VERSION = 2.0.0
 
 [CheetahGenerator]
     encoding = html_entities
-    search_list_extensions = user.weewx_wdc.WdcGeneralUtil, user.weewx_wdc.WdcStatsUtil, user.weewx_wdc.WdcDiagramUtil, user.weewx_wdc.WdcCelestialUtil, user.weewx_wdc.WdcArchiveUtil, user.weewx_wdc.WdcTableUtil, user.weewx_wdc_forecast.WdcForecastUtil
+    search_list_extensions = user.weewx_wdc.WdcGeneralUtil, user.weewx_wdc.WdcStatsUtil, user.weewx_wdc.WdcDiagramUtil, user.weewx_wdc.WdcCelestialUtil, user.weewx_wdc.WdcArchiveUtil, user.weewx_wdc.WdcTableUtil
 
     [[SummaryByMonth]]
         # Reports that summarize "by month"
@@ -475,7 +475,7 @@ This will generate the year.html page only once a hour. `stale_age` is in second
 
 ### Support for weewx-forecast
 
-Add `user.forecast.ForecastVariables` to `[CheetahGenerator].search_list_extensions` in weewx-wdc skin.conf.
+Install the forecast extension and add `user.forecast.ForecastVariables` and `user.forecast_util.ForecastUtil` to `[CheetahGenerator].search_list_extensions` in weewx-wdc skin.conf.
 
 It should look like this
 
@@ -551,5 +551,5 @@ This skin uses only free software. You can read more about [Carbon IBM](https://
 Thanks to [ngulden](https://github.com/ngulden) for the [niculskin](https://github.com/ngulden/niculskin) and
 [neoground](https://github.com/neoground) for the [neowx-material skin](https://github.com/neoground/neowx-material). Both are amazing skins and gave me a basic understanding of creating a weewx skin.
 
-The config, NOAA Reports and some templating ideas and concepts are based on the orignal Standard and Seasons
+The config, NOAA Reports and some templating ideas and concepts are based on the original Standard and Seasons
 weewx skins by Tom Keffer and the weewx contributors.

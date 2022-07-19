@@ -22,7 +22,7 @@ testBundling() {
     assertContains "$output" "main.js"
     assertContains "$output" "main.css"
     assertContains "$output" "service-worker.js"
-    assertContains "$output" "Done in"
+    assertContains "$output" "compiled with"
     assertNotContains "$output" "fail"
     assertNotContains "$output" "error"
 }

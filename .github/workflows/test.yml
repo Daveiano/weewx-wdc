@@ -31,9 +31,7 @@ jobs:
           cache: "yarn"
 
       - name: 🔨 install yarn and dependecies
-        run: |
-          npm install -g yarn
-          yarn install
+        run: yarn install
 
       - name: Run shunit2 tests
         run: ./test/run_tests.sh

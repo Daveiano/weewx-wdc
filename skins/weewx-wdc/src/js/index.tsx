@@ -152,8 +152,9 @@ plotlyDiagrams.forEach((plotyDiagram) => {
           legend: {
             font: { size: 14 },
             xanchor: "left",
-            orientation: "v",
-            x: 0,
+            //orientation: "v",
+            x: -0.5,
+            y: 0.5,
           },
           autosize: true,
           margin: {

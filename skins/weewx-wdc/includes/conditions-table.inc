@@ -53,20 +53,34 @@
             <bx-structured-list-cell>
               <!--prettier-ignore-->
               #if $precision == 'day'
+                #if $skin_obs == "windDir" and $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
+                  $getattr($current, $skin_obs).ordinal_compass, $getattr($current, $skin_obs)
+                #else
                   $getattr($current, $skin_obs)
+                #end if
+
               #else
                 #if $get_show_sum($skin_obs)
                   $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).sum
                 #else if $get_show_max($skin_obs)
                   $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).max
                 #else
-                  $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).avg
+                  #if $skin_obs == "windDir" and $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
+                    $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).avg.ordinal_compass, $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).avg
+                  #else
+                    $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).avg
+                  #end if
                 #end if
               #end if
             </bx-structured-list-cell>
             <bx-structured-list-cell>
               <!--prettier-ignore-->
-              $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).min
+              #if $skin_obs == "windDir" and $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
+                $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).min.ordinal_compass, $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).min
+              #else
+                $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).min
+              #end if
+
 
               <!--prettier-ignore-->
               #if $precision == 'year' or $precision == 'alltime'
@@ -75,7 +89,11 @@
             </bx-structured-list-cell>
             <bx-structured-list-cell>
               <!--prettier-ignore-->
-              $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).max
+              #if $skin_obs == "windDir" and $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
+                $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).max.ordinal_compass, $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).max
+              #else
+                $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).max
+              #end if
 
               <!--prettier-ignore-->
               #if $precision == 'year' or $precision == 'alltime'

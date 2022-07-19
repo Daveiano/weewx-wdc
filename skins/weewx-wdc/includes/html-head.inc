@@ -1,15 +1,21 @@
 <!--prettier-ignore-->
 #set $diagrams_config = $DisplayOptions.get("diagrams", {})
-#if $encoding == 'utf8'
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-#end if
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.6.0/webcomponents-loader.min.js"></script>
 <script>
   window.WebComponents = window.WebComponents || {};
   window.WebComponents.root = "node_modules/@webcomponents/webcomponentsjs/";
 </script>
-<link rel="stylesheet" href="dist/scss/index.css" />
+<!--@todo Add condition-->
+<script src="/plotly-custom-build.min.js"></script>
+<link
+  href="/dist/main.css"
+  rel="preload"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+<noscript><link rel="stylesheet" href="/dist/main.css" /></noscript>
 <link rel="icon" type="image/x-icon" href="favicon.ico" />
 <meta
   name="description"
@@ -26,6 +32,15 @@
       navigator.serviceWorker.register("/service-worker.js");
     });
   }
+</script>
+<!--prettier-ignore-->
+#set $diagramWindDirOrdinals = int($DisplayOptions.get('diagram_tile_winddir_ordinal', True) == "True")
+<script>
+  /*prettier-ignore*/
+  window.weewxWdcConfig = {
+    diagramWindDirOrdinals: $diagramWindDirOrdinals,
+    ordinalCompass: $get_ordinates,
+  };
 </script>
 
 #if "heights" in $diagrams_config

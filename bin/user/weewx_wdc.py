@@ -1,5 +1,12 @@
 from weewx.cheetahgenerator import SearchList
-from weewx.units import UnitInfoHelper, ObsInfoHelper
+from weewx.units import (
+    UnitInfoHelper,
+    ObsInfoHelper,
+    mph_to_knot,
+    kph_to_knot,
+    mps_to_knot,
+)
+from weewx.wxformulas import beaufort
 from datetime import datetime
 from calendar import isleap
 from pprint import pprint
@@ -203,6 +210,36 @@ class WdcGeneralUtil(SearchList):
 
         return static_pages
 
+    def get_ordinates(self):
+        default_ordinate_names = [
+            "N",
+            "NNE",
+            "NE",
+            "ENE",
+            "E",
+            "ESE",
+            "SE",
+            "SSE",
+            "S",
+            "SSW",
+            "SW",
+            "WSW",
+            "W",
+            "WNW",
+            "NW",
+            "NNW",
+            "N/A",
+        ]
+        try:
+            ordinate_names = self.generator.skin_dict["Units"]["Ordinates"][
+                "directions"
+            ]
+
+        except KeyError:
+            ordinate_names = default_ordinate_names
+
+        return ordinate_names
+
 
 class WdcArchiveUtil(SearchList):
     def filter_months(self, months, year):
@@ -297,7 +334,10 @@ class WdcCelestialUtil(SearchList):
 class WdcDiagramUtil(SearchList):
     def __init__(self, generator):
         SearchList.__init__(self, generator)
+        self.obs = ObsInfoHelper(generator.skin_dict)
+        self.unit = UnitInfoHelper(generator.formatter, generator.converter)
         self.skin_dict = generator.skin_dict
+        self.general_util = WdcGeneralUtil(generator)
 
     def get_diagram_type(self, observation):
         """
@@ -545,6 +585,94 @@ class WdcDiagramUtil(SearchList):
             }
         else:
             return diagram_base_props
+
+    def get_windrose_data(self, period, precision):
+        """
+        Get data for rendering wind rose in JS.
+
+        period (obj): Period to use, eg. $year, month, $span
+
+        Returns:
+            list: Windrose data.
+        """
+        ordinals = self.general_util.get_ordinates()
+        windrose_data = []
+
+        # Remove "N/A" from ordinals.
+        if len(ordinals) == 17:
+            ordinals.pop()
+
+        # We use a scale of 6: <=BF1, BF2, ..., BF5, >=BF6.
+        for i in range(6):
+            name_prefix = "<= " if i == 0 else ">= " if i == 5 else ""
+            windrose_data.append(
+                {
+                    "r": [0] * len(ordinals),
+                    "hovertemplate": self.obs.label["windDir"]
+                    + ": %{theta} <br>"
+                    + "%{r}<br>",
+                    "theta": ordinals,
+                    "name": name_prefix + "Beaufort " + str(i + 1),
+                    "type": "barpolar",
+                }
+            )
+
+        # @todo aggregate_interval=None
+        windDir = period.windDir.series(
+            aggregate_type="avg",
+            aggregate_interval=self.get_aggregate_interval(
+                observation="windDir", precision=precision
+            ),
+            time_series="start",
+            time_unit="unix_epoch",
+        )
+
+        # @todo aggregate_interval=None
+        windSpeed = period.windSpeed.series(
+            aggregate_type="max",
+            aggregate_interval=self.get_aggregate_interval(
+                observation="windSpeed", precision=precision
+            ),
+            time_series="start",
+            time_unit="unix_epoch",
+        )
+
+        for windSpeed_data, windDir_data in zip(windSpeed.data, windDir.data):
+            # Convert windSpeed to knots, get beaufort.
+            windspeed_target_unit = self.unit.unit_type.windSpeed
+            if windspeed_target_unit in ("km_per_hour", "km_per_hour2"):
+                windspeed_knots = kph_to_knot(windSpeed_data.raw)
+            elif windspeed_target_unit in ("mile_per_hour", "mile_per_hour2"):
+                windspeed_knots = mph_to_knot(windSpeed_data.raw)
+            elif windspeed_target_unit in ("meter_per_second", "meter_per_second2"):
+                windspeed_knots = mps_to_knot(windSpeed_data.raw)
+            else:
+                windspeed_knots = windSpeed_data.raw
+
+            windspeed_beaufort = beaufort(windspeed_knots)
+            winddir_oridnal = windDir_data.ordinal_compass()
+            windrose_data_oridnal_index = ordinals.index(winddir_oridnal)
+
+            # Add 1 (one part of total number of parts) to the direction and
+            # beaufort matrix.
+            if windspeed_beaufort is None or windspeed_beaufort <= 1:
+                windrose_data[0]["r"][windrose_data_oridnal_index] += 1
+            elif windspeed_beaufort <= 5:
+                windrose_data[windspeed_beaufort - 1]["r"][
+                    windrose_data_oridnal_index
+                ] += 1
+            else:
+                windrose_data[5]["r"][windrose_data_oridnal_index] += 1
+
+        # Calculate percentages.
+        num_of_values = len(list(windSpeed.data))
+        for index, data in enumerate(windrose_data):
+            for p_index, percent in enumerate(data["r"]):
+                windrose_data[index]["r"][p_index] = round(
+                    (percent / num_of_values) * 100
+                )
+
+        return windrose_data
 
 
 class WdcStatsUtil(SearchList):

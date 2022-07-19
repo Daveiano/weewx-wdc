@@ -1,12 +1,15 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { Serie } from "@nivo/line";
+import type { Serie } from "@nivo/line";
+import createPlotlyComponent from "react-plotly.js/factory";
 
 import { CarbonDataTableStateManager } from "carbon-data-table-state-manager";
 import { BarDiagram } from "./diagrams/bar";
 import { LineDiagram } from "./diagrams/line";
-import { precision, Series } from "./diagrams/types";
+import type { precision, Series } from "./diagrams/types";
 import { CalendarDiagram } from "./diagrams/calendar";
+
+import "./../scss/index.scss";
 
 const calendarDiagrams = document.querySelectorAll(
   "div.calendar-diagram-clim-wrap"
@@ -34,7 +37,7 @@ calendarDiagrams.forEach((diagram) => {
   }
 });
 
-const diagrams = document.querySelectorAll("div.diagram");
+const diagrams = document.querySelectorAll("div.diagram:not(.plotly)");
 diagrams.forEach((diagram) => {
   if (
     diagram instanceof HTMLElement &&
@@ -96,7 +99,6 @@ diagrams.forEach((diagram) => {
       nivoProps = JSON.parse(diagram.dataset.nivoProps.replace(/'/g, '"'));
 
       for (const item in nivoProps) {
-        console.log(item, nivoProps[item]);
         if (nivoProps[item] === "True" || nivoProps[item] === "False") {
           nivoProps[item] = nivoProps[item] === "True";
         }
@@ -128,6 +130,73 @@ diagrams.forEach((diagram) => {
           />
         );
     }
+  }
+});
+
+const plotlyDiagrams = document.querySelectorAll("div.diagram.plotly");
+
+plotlyDiagrams.forEach((plotyDiagram) => {
+  const root = createRoot(plotyDiagram);
+  const Plot = createPlotlyComponent((window as any).Plotly);
+  if (
+    plotyDiagram.classList.contains("windrose") &&
+    plotyDiagram instanceof HTMLElement &&
+    plotyDiagram.dataset.value
+  ) {
+    root.render(
+      <Plot
+        data={(window as any)[plotyDiagram.dataset.value]}
+        layout={{
+          dragmode: false,
+          font: { size: 12 },
+          legend: {
+            font: { size: 14 },
+            xanchor: "left",
+            //orientation: "v",
+            x: -0.5,
+            y: 0.5,
+          },
+          autosize: true,
+          margin: {
+            b: 30,
+            l: 0,
+            pad: 0,
+            r: 0,
+            t: 30,
+          },
+          barmode: "stack",
+          bargap: 0,
+          polar: {
+            //barmode: "stack",
+            //bargap: 0,
+            radialaxis: {
+              ticksuffix: "%",
+              angle: 45,
+              dtick: 20,
+            },
+            angularaxis: { direction: "clockwise" },
+          },
+          colorway: [
+            "#f3cec9",
+            "#e7a4b6",
+            "#cd7eaf",
+            "#a262a9",
+            "#6f4d96",
+            "#3d3b72",
+            "#182844",
+          ],
+          yaxis: {
+            range: [0, 20],
+          },
+        }}
+        config={{
+          responsive: true,
+          displayModeBar: false,
+          showAxisDragHandles: false,
+        }}
+        style={{ width: "100%", height: "100%" }}
+      />
+    );
   }
 });
 

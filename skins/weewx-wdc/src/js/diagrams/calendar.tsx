@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { ResponsiveCalendar } from "@nivo/calendar";
-import moment from "moment";
+import dayjs from "dayjs";
 import { NumberValue, scaleQuantize } from "d3-scale";
 import { useMediaQuery } from "@react-hook/media-query";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
@@ -19,8 +19,8 @@ export const CalendarDiagram: FunctionComponent<CalendarDiagramBaseProps> = (
   const start = props.data[0].day;
   const end = props.data[props.data.length - 1].day;
   const yearDiff =
-    parseInt(moment(end, "YYYY-MM-DD").format("YYYY")) -
-    parseInt(moment(start, "YYYY-MM-DD").format("YYYY"));
+    parseInt(dayjs(end, "YYYY-MM-DD").format("YYYY")) -
+    parseInt(dayjs(start, "YYYY-MM-DD").format("YYYY"));
 
   // @see https://nivo.rocks/storybook/?path=/story/calendarcanvas--custom-color-space-function
   // @see https://github.com/plouc/nivo/issues/744#issuecomment-573340879
@@ -36,11 +36,11 @@ export const CalendarDiagram: FunctionComponent<CalendarDiagramBaseProps> = (
     };
     colorScale.ticks = (count: number | undefined) => {
       return defaultColorScale.ticks(count).map((e) => {
-        return `${e}${props.unit}`;
+        // @todo dirty TS hack.
+        return `${e}${props.unit}` as unknown as number;
       });
     };
 
-    /*tslint-ignore*/
     return colorScale;
   };
 

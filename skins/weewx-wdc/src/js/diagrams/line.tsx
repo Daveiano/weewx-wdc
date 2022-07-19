@@ -18,6 +18,9 @@ import { sliceTooltip } from "../components/tooltip-slice";
 import { useMediaQuery } from "@react-hook/media-query";
 import { Maximize } from "../assets/maximize";
 
+const windDirOrdinals = (window as any).weewxWdcConfig.diagramWindDirOrdinals;
+const ordinalCompass = (window as any).weewxWdcConfig.ordinalCompass;
+
 export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
   props: DiagramBaseProps
 ): React.ReactElement => {
@@ -91,11 +94,19 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
         tickPadding: 5,
       }}
       axisLeft={{
-        legend: props.unit,
+        legend:
+          props.observation === "windDir" && windDirOrdinals ? "" : props.unit,
         legendOffset: getAxisLeftLegendOffset(props.observation),
         legendPosition: "middle",
         tickSize: 0,
         tickPadding: 10,
+        format: (value) => {
+          if (props.observation === "windDir" && windDirOrdinals) {
+            return ordinalCompass[Math.floor(value / 22.5 + 0.5) % 16];
+          } else {
+            return value;
+          }
+        },
       }}
       colors={props.color}
       curve={getCurve(props.observation)}

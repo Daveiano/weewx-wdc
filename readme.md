@@ -118,7 +118,7 @@ If you like the look and feel of the skin please consider having a look into the
 **Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v1.3.2/weewx-wdc-v1.3.2.zip.
 Don't download the repository directly and don't use the GitHub generated zip and tar.gz archives that come alongside the release. Always use the zip archive named **weewx-wdc-vX.X.X.zip**
 
-Background: The files in the src/ directory are the source files (TypeScript, SCSS). When creating a release, these source files get transformed and optimized, and the output location of these transformed files is the location which matches the location in the install.py script. The weewx-wdc-vX.X.X.zip should contain all these transformed files (like service-worker.js), but if you download the current state of the repo, these files are not included and this will throw multiple `FileNotFoundError` errors while installing.
+Background: The files in the src/ directory are the source files (TypeScript, SCSS). When creating a release, these source files get transformed and optimized, and the output location of these transformed files is the location which matches the location in the install.py script. The weewx-wdc-vX.X.X.zip should contain all these transformed files (like service-worker.js), but if you download the current state of the repo, these files are not included and this will throw multiple `FileNotFoundError` errors while installing. For manual building these files, see [Development](#development).
 
 1. [Download](https://github.com/Daveiano/weewx-wdc/releases) the latest version
 2. Create a new folder and unzip to that folder
@@ -169,11 +169,11 @@ SKIN_VERSION = 2.0.0
         show_obvis = 0
 
 [DisplayOptions]
-    layout = 'alternative'
+    layout = 'classic'
     climatological_days = rainDays, summerDays, hotDays, desertDays, tropicalNights, stormDays, iceDays, frostDays
     table_tile_observations = outTemp, outHumidity, barometer, windSpeed, windGust, windDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
     stat_tile_observations = outTemp, outHumidity, barometer, windSpeed, windGust, windDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
-    diagram_tile_observations = temp_min_max_avg, tempdew, outHumidity, barometer, windchill_heatindex, wind, windDir, rain, rainRate, snowDepth, UV, ET, radiation, cloudbase, appTemp
+    diagram_tile_observations = temp_min_max_avg, tempdew, outHumidity, barometer, windchill_heatindex, wind, windDir, windRose, rain, rainRate, snowDepth, UV, ET, radiation, cloudbase, appTemp
     stat_tile_winddir_ordinal = True
     diagram_tile_winddir_ordinal = True
     [[diagrams]]
@@ -233,6 +233,7 @@ SKIN_VERSION = 2.0.0
             isInteractive = True
         [[[windDir]]]
             curve = "basis"
+            lineWidth = 0
         [[[radiation]]]
             curve = "basis"
         [[[UV]]]
@@ -325,7 +326,7 @@ SKIN_VERSION = 2.0.0
         stats      = %x %X
 
 [CopyGenerator]
-    copy_once = dist/js/index.js, dist/scss/index.css, favicon.ico, manifest.json, icon-192x192.png, icon-256x256.png, icon-384x384.png, icon-512x512.png, service-worker.js
+    copy_once = dist/main.js, dist/main.css, plotly-custom-build.min.js, favicon.ico, manifest.json, icon-192x192.png, icon-256x256.png, icon-384x384.png, icon-512x512.png, service-worker.js, offline.html
     # copy_always =
 
 [Generators]
@@ -352,7 +353,9 @@ Simply comment this out or leave empty to hide the tables at all pages:
 
 `stat_tile_observations` Define which observations should be shown in the stat tiles (at the top of each page).
 
-`diagram_tile_observations` Define which observations to show as diagrams. This can include definitions for combined diagrams. Combined diagrams (like Temperature and Dew point or Windchill and Heat index) need to be defined in the `[[diagrams]][[combined_observations]]` section like this:
+`diagram_tile_observations` Define which observations to show as diagrams. This can include definitions for combined diagrams. There are two different charts available for the wind direction: `windDir` will render a scatter diagram, `windRose` will render a windrose chart.
+
+Combined diagrams (like Temperature and Dew point or Windchill and Heat index) need to be defined in the `[[diagrams]][[combined_observations]]` section like this:
 
 For a combined diagram of Temperature and Dew point:
 
@@ -509,13 +512,13 @@ editing the page can be found [here](https://www.weewx-hbt.de/about.html).
 ## Development
 
 The skin uses the Cheetah templating engine provided by weewx in combination with carbon web components
-and a react entry point to render the diagrams written in TypeScript via nivo. Bundling for Typescript and SCSS is done via parcel.
+and a react entry point to render the diagrams written in TypeScript via nivo. Bundling for Typescript and SCSS is done via webpack.
 
 ### Scripts
 
 #### `yarn run dev`
 
-Starts parcel in watch mode
+Starts webpack in watch mode
 
 #### `yarn run build`
 

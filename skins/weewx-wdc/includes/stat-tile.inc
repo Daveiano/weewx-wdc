@@ -21,10 +21,15 @@
           #include $get_icon($partial_obs)
           #end if
 
+          <!--prettier-ignore-->
           <span>
             <!--prettier-ignore-->
             #if $precision == 'day'
+              #if $partial_obs == "windDir" and $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
+              $getattr($current, $partial_obs).ordinal_compass<span>, $getattr($current, $partial_obs)</span>
+              #else
               $getattr($current, $partial_obs)
+              #end if
             #else
               #if $get_show_sum($partial_obs)
                 $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $partial_obs).sum

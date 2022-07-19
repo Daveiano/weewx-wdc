@@ -553,14 +553,6 @@ bx-tabs {
   white-space: nowrap;
 }
 
-@include carbon--breakpoint-down(lg) {
-  section.main.bx--content,
-  #footer {
-    padding-left: $spacing-09;
-    padding-right: $spacing-03;
-  }
-}
-
 @include carbon--breakpoint-up(lg) {
   section.main.bx--content,
   #footer {
@@ -626,6 +618,16 @@ body.theme-classic {
       padding-left: 2rem;
       padding-right: 1rem;
       margin-right: 0;
+    }
+  }
+}
+
+body.theme-alternative {
+  @include carbon--breakpoint-down(lg) {
+    section.main.bx--content,
+    #footer {
+      padding-left: 0;
+      padding-right: 0;
     }
   }
 }

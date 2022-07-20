@@ -69,7 +69,7 @@
           #if 'radar_url' in $Extras
           <a href="$Extras.radar_url">
             #end if
-            <img src="$Extras.radar_img" alt="Radar" />
+            <img src="$Extras.radar_img" alt="Radar" loading="lazy" />
             #if 'radar_url' in $Extras
           </a>
           <!--prettier-ignore-->

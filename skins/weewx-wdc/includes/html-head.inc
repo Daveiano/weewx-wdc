@@ -8,7 +8,7 @@
   window.WebComponents.root = "node_modules/@webcomponents/webcomponentsjs/";
 </script>
 #if 'windRose' in $DisplayOptions.get('diagram_tile_observations', [])
-<script src="/plotly-custom-build.min.js"></script>
+<script src="/plotly-custom-build.min.js" defer></script>
 #end if
 <link
   href="/dist/main.css"

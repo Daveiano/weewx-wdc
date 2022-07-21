@@ -291,11 +291,8 @@ class WdcArchiveUtil(SearchList):
         if first_year == last_year:
             return [last_year]
 
-        if first_year + 1 == last_year:
-            return [first_year, last_year]
-
         else:
-            return list(range(first_year, last_year))
+            return list(range(first_year, last_year + 1))
 
 
 class WdcCelestialUtil(SearchList):

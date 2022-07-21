@@ -111,6 +111,11 @@
 
 - Bugfix: No module named 'user.forecast' [GH-29]
 
+# 1.3.3
+
+- Bugfix: Last year missing in the navigation bar of monthly pages [GH-30]
+- Bugfix: Typo de.conf [GH-31]
+
 # Next
 
 # 2.0.0

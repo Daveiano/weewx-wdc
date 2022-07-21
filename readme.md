@@ -176,6 +176,7 @@ SKIN_VERSION = 2.0.0
     diagram_tile_observations = temp_min_max_avg, tempdew, outHumidity, barometer, windchill_heatindex, wind, windDir, windRose, rain, rainRate, snowDepth, UV, ET, radiation, cloudbase, appTemp
     stat_tile_winddir_ordinal = True
     diagram_tile_winddir_ordinal = True
+    windRose_colors = "rgb(243, 206, 201)", "#e7a4b6", "#cd7eaf", "#a262a9", "#6f4d96", "#3d3b72"
     [[diagrams]]
         [[[combined_observations]]]
             [[[[temp_min_max_avg]]]]
@@ -383,11 +384,22 @@ For a combined diagram of Temperature and Dew point:
 
 `# 5` Optionally, define the aggregate type (min, max, avg, sum)
 
-`# 6` Optionally, define a color.
+`# 6` Optionally, define a colour.
 
 `stat_tile_winddir_ordinal` Show ordinals (S, E, SE, etc.) on the wind direction stat tile.
 
 `diagram_tile_winddir_ordinal` Show ordinals legend in wind direction diagram.
+
+`windRose_colors` The skin uses six different scales for the windrose, each with its own colour, by default:
+
+- ![#f3cec9](https://via.placeholder.com/15/f3cec9/f3cec9.png) `#f3cec9` for <= Beaufort 1
+- ![#e7a4b6](https://via.placeholder.com/15/e7a4b6/e7a4b6.png) `#e7a4b6` for Beaufort 2
+- ![#cd7eaf](https://via.placeholder.com/15/cd7eaf/cd7eaf.png) `#cd7eaf` for Beaufort 3
+- ![#a262a9](https://via.placeholder.com/15/a262a9/a262a9.png) `#a262a9` for Beaufort 4
+- ![#6f4d96](https://via.placeholder.com/15/6f4d96/6f4d96.png) `#6f4d96` for Beaufort 5
+- ![#3d3b72](https://via.placeholder.com/15/3d3b72/3d3b72.png) `#3d3b72` for >= Beaufort 6
+
+When changing the colours, you can also use rgb() values or just "red".
 
 ##### [[diagrams]]
 

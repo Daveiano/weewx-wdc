@@ -36,7 +36,11 @@
               #else if $get_show_max($partial_obs)
                 $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $partial_obs).max
               #else
-                $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $partial_obs).avg
+                #if $partial_obs == "windDir" and $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
+                  $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $partial_obs).avg.ordinal_compass<span>, $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $partial_obs).avg</span>
+                #else
+                  $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $partial_obs).avg
+                #end if
               #end if
             #end if
             <!--prettier-ignore-->

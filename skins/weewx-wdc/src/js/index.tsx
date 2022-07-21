@@ -143,6 +143,8 @@ plotlyDiagrams.forEach((plotyDiagram) => {
     plotyDiagram instanceof HTMLElement &&
     plotyDiagram.dataset.value
   ) {
+    const colors = (window as any).weewxWdcConfig.windRoseColors;
+
     root.render(
       <Plot
         data={(window as any)[plotyDiagram.dataset.value]}
@@ -176,15 +178,7 @@ plotlyDiagrams.forEach((plotyDiagram) => {
             },
             angularaxis: { direction: "clockwise" },
           },
-          colorway: [
-            "#f3cec9",
-            "#e7a4b6",
-            "#cd7eaf",
-            "#a262a9",
-            "#6f4d96",
-            "#3d3b72",
-            "#182844",
-          ],
+          colorway: colors,
           yaxis: {
             range: [0, 20],
           },

@@ -515,6 +515,12 @@ bx-tabs {
   font-family: carbon--font-family("mono"), monospace;
 }
 
+.windrose-tooltip {
+  display: none;
+  z-index: 10;
+  transition: left 300ms ease, top 300ms ease;
+}
+
 .diagram {
   height: 220px;
   @include carbon--breakpoint-up(md) {

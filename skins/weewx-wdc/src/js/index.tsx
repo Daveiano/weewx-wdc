@@ -1,7 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import type { Serie } from "@nivo/line";
-import createPlotlyComponent from "react-plotly.js/factory";
 
 import { CarbonDataTableStateManager } from "carbon-data-table-state-manager";
 import { BarDiagram } from "./diagrams/bar";
@@ -10,6 +9,7 @@ import type { precision, Series } from "./diagrams/types";
 import { CalendarDiagram } from "./diagrams/calendar";
 
 import "./../scss/index.scss";
+import { WindRoseDiagram } from "./diagrams/windrose";
 
 const calendarDiagrams = document.querySelectorAll(
   "div.calendar-diagram-clim-wrap"
@@ -137,59 +137,14 @@ const plotlyDiagrams = document.querySelectorAll("div.diagram.plotly");
 
 plotlyDiagrams.forEach((plotyDiagram) => {
   const root = createRoot(plotyDiagram);
-  const Plot = createPlotlyComponent((window as any).Plotly);
+
   if (
     plotyDiagram.classList.contains("windrose") &&
     plotyDiagram instanceof HTMLElement &&
     plotyDiagram.dataset.value
   ) {
-    const colors = (window as any).weewxWdcConfig.windRoseColors;
-
     root.render(
-      <Plot
-        data={(window as any)[plotyDiagram.dataset.value]}
-        layout={{
-          dragmode: false,
-          font: { size: 12 },
-          legend: {
-            font: { size: 12 },
-            xanchor: "left",
-            //orientation: "v",
-            x: -0.5,
-            y: 0.5,
-          },
-          autosize: true,
-          margin: {
-            b: 30,
-            l: 0,
-            pad: 0,
-            r: 0,
-            t: 30,
-          },
-          barmode: "stack",
-          bargap: 0,
-          polar: {
-            //barmode: "stack",
-            //bargap: 0,
-            radialaxis: {
-              ticksuffix: "%",
-              angle: 45,
-              dtick: 20,
-            },
-            angularaxis: { direction: "clockwise" },
-          },
-          colorway: colors,
-          yaxis: {
-            range: [0, 20],
-          },
-        }}
-        config={{
-          responsive: true,
-          displayModeBar: false,
-          showAxisDragHandles: false,
-        }}
-        style={{ width: "100%", height: "100%" }}
-      />
+      <WindRoseDiagram data={(window as any)[plotyDiagram.dataset.value]} />
     );
   }
 });

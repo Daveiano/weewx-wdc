@@ -487,7 +487,7 @@ This will generate the year.html page only once a hour. `stale_age` is in second
 
 ### Support for weewx-forecast
 
-Install the forecast extension and add `user.forecast.ForecastVariables` and `user.forecast_util.ForecastUtil` to `[CheetahGenerator].search_list_extensions` in weewx-wdc skin.conf.
+Install the forecast extension and add `user.forecast.ForecastVariables` and `user.weewx_wdc_forecast.WdcForecastUtil` to `[CheetahGenerator].search_list_extensions` in weewx-wdc skin.conf.
 
 It should look like this
 
@@ -506,7 +506,7 @@ Please set `source` to your used forecast source. For help on configuring weewx-
 
 ### Localization
 
-The skin currently has an english and a german translation, you can change the language in weewx.conf:
+The skin currently has an English and a german translation, you can change the language in weewx.conf:
 
 ```
 [[WdcReport]]

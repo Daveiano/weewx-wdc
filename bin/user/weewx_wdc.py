@@ -605,9 +605,7 @@ class WdcDiagramUtil(SearchList):
             windrose_data.append(
                 {
                     "r": [0] * len(ordinals),
-                    "hovertemplate": self.obs.label["windDir"]
-                    + ": %{theta} <br>"
-                    + "%{r}<br>",
+                    "hovertemplate": "%{theta}, %{r}%",
                     "theta": ordinals,
                     "name": name_prefix + "Beaufort " + str(i + 1),
                     "type": "barpolar",

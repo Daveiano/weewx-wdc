@@ -26,9 +26,19 @@ type DiagramBaseProps = {
   };
 };
 
+type WindRoseProps = {
+  data: any[];
+};
+
 interface Series {
   x: number;
   y: number;
 }
 
-export { CalendarDiagramBaseProps, DiagramBaseProps, precision, Series };
+export {
+  CalendarDiagramBaseProps,
+  DiagramBaseProps,
+  precision,
+  Series,
+  WindRoseProps,
+};

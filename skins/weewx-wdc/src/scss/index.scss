@@ -51,6 +51,15 @@ $carbon--grid-breakpoints: (
 @include carbon--font-face-sans();
 @include carbon--font-face-serif();
 
+.diagram.plotly {
+  g.hoverlayer {
+    display: none;
+  }
+  #hoverInfoWindRose {
+    position: absolute;
+  }
+}
+
 body,
 html {
   overflow-x: hidden;

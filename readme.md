@@ -15,6 +15,7 @@
     - [Full Page](#full-page)
   - [Usage](#usage)
     - [Installation](#installation)
+    - [Update from 1.x to 2.x](#update-from-1x-to-2x)
     - [Configuration](#configuration)
       - [Extras](#extras)
       - [DisplayOptions](#displayoptions)
@@ -23,7 +24,7 @@
     - [Performance](#performance)
     - [Support for weewx-forecast](#support-for-weewx-forecast)
     - [Localization](#localization)
-    - [About page (user generated content)](#about-page-user-generated-content)
+    - [About page (user-generated content)](#about-page-user-generated-content)
   - [Development](#development)
     - [Scripts](#scripts)
       - [yarn run dev](#yarn-run-dev)
@@ -57,6 +58,7 @@ If you like the look and feel of the skin please consider having a look into the
 - Support for [weewx-forecast](https://github.com/chaunceygardiner/weewx-forecast)
 - User-generated "About page"
 - Classic and alternative layout
+- Windrose chart
 
 ## [Demo](https://www.weewx-hbt.de)
 
@@ -126,6 +128,10 @@ Background: The files in the src/ directory are the source files (TypeScript, SC
 4. Restart weewx: weewx restart
 
 For help, please have a look at the [official weewx documentation](https://weewx.com/docs/utilities.htm#wee_extension_utility).
+
+### Update from 1.x to 2.x
+
+Please have a look at the guide from the release notes: https://github.com/Daveiano/weewx-wdc/releases/tag/v2.0.0
 
 ### Configuration
 
@@ -515,7 +521,7 @@ The skin currently has an English and a german translation, you can change the l
     lang = de
 ```
 
-### About page (user generated content)
+### About page (user-generated content)
 
 The skin includes an optional [About page](https://www.weewx-hbt.de/about.html). It is disabled by default in the skin.conf and meant
 to be customized by the user. One could for example add an "About my station" page. More info on how to enable and

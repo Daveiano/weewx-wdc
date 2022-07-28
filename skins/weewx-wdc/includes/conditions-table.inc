@@ -48,6 +48,9 @@
         #set $otherData = ($skin_obs != 'windDir' and $skin_obs != 'windSpeed') and $getattr($current, $skin_obs).has_data
 
         #if $windData or $otherData and not $get_show_sum($skin_obs)
+          <div class="mobile-header">
+            <div class="label">$obs.label[$skin_obs]</div>
+          </div>
           <bx-structured-list-row>
             <bx-structured-list-cell>$obs.label[$skin_obs]</bx-structured-list-cell>
             <bx-structured-list-cell>
@@ -127,7 +130,7 @@
 
             #if ($windData or $otherData) and $get_show_sum($skin_obs)
               <bx-structured-list-row>
-                <bx-structured-list-cell>$obs.label[$skin_obs]</bx-structured-list-cell>
+                <bx-structured-list-cell class="keep-cell">$obs.label[$skin_obs]</bx-structured-list-cell>
                 <bx-structured-list-cell>
                   <!--prettier-ignore-->
                   $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).sum

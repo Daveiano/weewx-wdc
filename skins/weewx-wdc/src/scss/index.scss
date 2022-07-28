@@ -242,6 +242,17 @@ bx-tabs {
     @include carbon--type-style("expressive-heading-02");
   }
   bx-structured-list {
+    bx-structured-list-head {
+      bx-structured-list-header-row {
+        bx-structured-list-header-cell {
+          &:nth-child(1) {
+            @media screen and (max-width: 465px) {
+              display: none;
+            }
+          }
+        }
+      }
+    }
     bx-structured-list-row {
       bx-structured-list-cell {
         span.date {
@@ -252,7 +263,26 @@ bx-tabs {
           @include carbon--breakpoint-down(md) {
             font-size: 12px;
           }
+          @media screen and (max-width: 465px) {
+            &:not(.keep-cell) {
+              display: none;
+            }
+          }
         }
+      }
+    }
+    div.mobile-header {
+      position: relative;
+      padding: 12px 0 22px 8px;
+      border-bottom: 1px solid #e0e0e0;
+      width: 300%;
+      font-size: 0.85em;
+      .label {
+        position: absolute;
+        font-weight: 600;
+      }
+      @media screen and (min-width: 466px) {
+        display: none;
       }
     }
     @include carbon--breakpoint-down(md) {

@@ -120,8 +120,8 @@
 
 # 2.0.0
 
-- Breaking change: Refactored Search list extensions into two modules (weewx_wdc and weewx_wdc_forecast), see updated skin.conf.
-- Added classic layout [GH-12]
+- Breaking change: Refactored Search list extensions into two modules (weewx_wdc and weewx_wdc_forecast), see updated skin.conf. [GH-21]
+- Added classic layout, preview here: https://weewx-hbt.de/classic [GH-12]
 - More customisation via skin.conf: diagram height, digram aggregate_type, Time formats, some basic diagram options like line width or point size (please see the readme for more information) [GH-17]
 - windDir ordinals display support, new chart type: windRose [GH-27]
 - Some Frontend JavaScript optimization resulting in smaller files and better performance [GH-1]

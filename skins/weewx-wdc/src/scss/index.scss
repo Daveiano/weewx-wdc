@@ -241,6 +241,13 @@ bx-tabs {
   h3 {
     @include carbon--type-style("expressive-heading-02");
   }
+  > .bx--row > .bx--col {
+    @media screen and (max-width: 465px) {
+      overflow-x: hidden;
+      margin-right: 0.5rem;
+      padding-right: 0 !important;
+    }
+  }
   bx-structured-list {
     bx-structured-list-head {
       bx-structured-list-header-row {
@@ -275,7 +282,7 @@ bx-tabs {
       position: relative;
       padding: 12px 0 22px 8px;
       border-bottom: 1px solid #e0e0e0;
-      width: 300%;
+      width: 600%;
       font-size: 0.85em;
       .label {
         position: absolute;
@@ -663,6 +670,18 @@ body.theme-classic {
       padding-left: 2rem;
       padding-right: 1rem;
       margin-right: 0;
+    }
+  }
+  .forecast {
+    bx-structured-list {
+      bx-structured-list-header-cell,
+      bx-structured-list-cell {
+        &:nth-child(n + 6) {
+          @media screen and (min-width: 1312px) and (max-width: 1500px) {
+            display: none;
+          }
+        }
+      }
     }
   }
 }

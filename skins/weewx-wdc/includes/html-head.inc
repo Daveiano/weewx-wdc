@@ -8,15 +8,15 @@
   window.WebComponents.root = "node_modules/@webcomponents/webcomponentsjs/";
 </script>
 #if 'windRose' in $DisplayOptions.get('diagram_tile_observations', [])
-<script src="/plotly-custom-build.min.js" defer></script>
+<script src="plotly-custom-build.min.js" defer></script>
 #end if
 <link
-  href="/dist/main.css"
+  href="dist/main.css"
   rel="preload"
   as="style"
   onload="this.onload=null;this.rel='stylesheet'"
 />
-<noscript><link rel="stylesheet" href="/dist/main.css" /></noscript>
+<noscript><link rel="stylesheet" href="dist/main.css" /></noscript>
 <link rel="icon" type="image/x-icon" href="favicon.ico" />
 <meta
   name="description"
@@ -24,13 +24,13 @@
 />
 <link rel="manifest" href="manifest.json" />
 <meta name="theme-color" content="#161616" />
-<link rel="apple-touch-icon" href="/icon-192x192.png" />
+<link rel="apple-touch-icon" href="icon-192x192.png" />
 <script>
   // Check that service workers are supported
   if ("serviceWorker" in navigator) {
     // Use the window load event to keep the page load performant
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("/service-worker.js");
+      navigator.serviceWorker.register("service-worker.js");
     });
   }
 </script>

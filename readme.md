@@ -369,28 +369,31 @@ For a combined diagram of Temperature and Dew point:
 ```
 [[[tempdew]]]                           # 1
     label = 'Temperature / Dewpoint'    # 2
-    pointSize = 3
-    [[[[obs]]]]                         # 3
+    pointSize = 3                       # 3
+    curve = "linear"                    # 3
+    [[[[obs]]]]                         # 4
         [[[[[outTemp]]]]]
-            observation = "outTemp"     # 4
+            observation = "outTemp"     # 5
             aggregate_type = "avg"
         [[[[[dewpoint]]]]]
-            observation = "dewpoint"    # 4
-            aggregate_type = "avg"      # 5
-            color = '#610000'           # 6
+            observation = "dewpoint"    # 5
+            aggregate_type = "avg"      # 6
+            color = '#610000'           # 7
 ```
 
 `# 1` Name of the combined diagram, needs to be the same as used in `diagram_tile_observations`.
 
 `# 2` Label of the diagram.
 
-`# 3` Under the key `obs` specify the observations to combine (The keys here are random and only used internally).
+`# 3` Any additional diagram config available (see [[[diagrams]]](#diagrams)).
 
-`# 4` Set the observation to show.
+`# 4` Under the key `obs` specify the observations to combine (The keys here are random and only used internally).
 
-`# 5` Optionally, define the aggregate type (min, max, avg, sum)
+`# 5` Set the observation to show.
 
-`# 6` Optionally, define a colour.
+`# 6` Optionally, define the aggregate type (min, max, avg, sum)
+
+`# 7` Optionally, define a colour.
 
 `stat_tile_winddir_ordinal` Show ordinals (S, E, SE, etc.) on the wind direction stat tile.
 

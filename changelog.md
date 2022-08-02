@@ -116,8 +116,6 @@
 - Bugfix: Last year missing in the navigation bar of monthly pages [GH-30]
 - Bugfix: Typo de.conf [GH-31]
 
-# Next
-
 # 2.0.0
 
 - Breaking change: Refactored Search list extensions into two modules (weewx_wdc and weewx_wdc_forecast), see updated skin.conf. [GH-21]
@@ -139,3 +137,10 @@
 6. Wait for the next report cycle or run `wee_reports`
 
 For more info about installing and uninstalling extensions in weewx, see https://www.weewx.com/docs/utilities.htm#wee_extension_utility.
+
+# Next
+
+- Bugfix: Only working when generated into webservers root [GH-35]
+- Bugfix: Pressure diagram with inHg unit. Updated rounding and yScale for pressure/barometer diagram in inHg. [GH-37]
+- Forecast Min/Max - Updated forecast table typography. [GH-43]
+- Bugfix: Time is Not Correct In All Data - Show stop instead of start date of interval, 1hr interval for daily table values. [GH-40]

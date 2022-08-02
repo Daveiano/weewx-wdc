@@ -471,6 +471,9 @@ bx-tabs {
           .templo {
             color: #0053ae;
           }
+          .unit-label {
+            @include carbon--type-style("helper-text-01");
+          }
           svg {
             display: block;
             width: 42px;

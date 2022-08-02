@@ -172,8 +172,8 @@
     <bx-structured-list-row>
       #if $show_legend
       <bx-structured-list-cell>
-        $gettext("Temperature")<sub>$gettext("Min")/$gettext("Max")</sub><br />
-        in $unit.label.outTemp
+        $gettext("Temperature")<br />
+        <span class="unit-label">in $unit.label.outTemp</span>
       </bx-structured-list-cell>
       #end if
 
@@ -200,8 +200,8 @@
     <bx-structured-list-row>
       #if $show_legend
       <bx-structured-list-cell>
-        $obs.label.dewpoint <sub>$gettext("Min")/$gettext("Max")</sub><br />
-        in $unit.label.dewpoint
+        $obs.label.dewpoint <br />
+        <span class="unit-label">in $unit.label.dewpoint</span>
       </bx-structured-list-cell>
       #end if
 
@@ -228,8 +228,8 @@
     <bx-structured-list-row>
       #if $show_legend
       <bx-structured-list-cell>
-        $obs.label.outHumidity <sub>$gettext("Min")/$gettext("Max")</sub><br />
-        in $unit.label.outHumidity
+        $obs.label.outHumidity <br />
+        <span class="unit-label">in $unit.label.outHumidity</span>
       </bx-structured-list-cell>
       #end if
 
@@ -257,7 +257,7 @@
       #if $show_legend
       <bx-structured-list-cell>
         $obs.label.wind<br />
-        in $unit.label.wind
+        <span class="unit-label">in $unit.label.wind</span>
       </bx-structured-list-cell>
       #end if
 
@@ -424,8 +424,9 @@
     #if $show_precip
     <bx-structured-list-row class="rain">
       #if $show_legend
-      <bx-structured-list-cell>
-        $obs.label.rain in $unit.label.rain
+      <bx-structured-list-cell style="vertical-align: bottom">
+        $obs.label.rain <br />
+        <span class="unit-label">in $unit.label.rain</span>
       </bx-structured-list-cell>
       #end if
 
@@ -437,7 +438,7 @@
       #set $lastday = $thisday
       #set $summary = $forecast.weather_summary($forecast_source, $period.event_ts.raw, periods=$periods)
       <!--prettier-ignore-->
-      <bx-structured-list-cell class="index-$x">
+      <bx-structured-list-cell class="index-$x" style="vertical-align: bottom">
         #if $summary.qpf.raw > 0
           #include 'includes/icons/forecast/rain.svg'
           $summary.qpf.nolabel('%.2f','')
@@ -446,6 +447,9 @@
         #if $summary.qsf.raw > 0
           #include 'includes/icons/forecast/snow.svg'
           $summary.qsf.nolabel('%.2f','')
+        #end if
+        #if $summary.qpf.raw == 0 and $summary.qsf.raw == 0
+        -
         #end if
       </bx-structured-list-cell>
       <!--prettier-ignore-->

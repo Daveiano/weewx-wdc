@@ -113,8 +113,6 @@ export const WindRoseDiagram: FunctionComponent<WindRoseProps> = (
     />
   );
 
-  console.log(hoverInfoPosition);
-
   return (
     <>
       <Maximize onClick={handle.enter} />

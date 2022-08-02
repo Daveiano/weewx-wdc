@@ -52,6 +52,13 @@ export const getyScaleOffset = (obs: string): number => {
     offset = 1;
   }
 
+  if (
+    (obs === "pressure" || obs === "barometer") &&
+    (window as any).weewxWdcConfig.units.group_pressure === "inHg"
+  ) {
+    offset = 0.1;
+  }
+
   return offset;
 };
 

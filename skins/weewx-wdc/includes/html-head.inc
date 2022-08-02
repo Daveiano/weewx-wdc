@@ -42,6 +42,7 @@
     diagramWindDirOrdinals: $diagramWindDirOrdinals,
     ordinalCompass: $get_ordinates,
     windRoseColors: $jsonize($DisplayOptions.get('windRose_colors', ["rgb(243, 206, 201)", "#e7a4b6", "#cd7eaf", "#a262a9", "#6f4d96", "#3d3b72"])),
+    units: $unit.unit_type_dict
   };
 </script>
 

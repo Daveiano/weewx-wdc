@@ -515,6 +515,11 @@ class WdcDiagramUtil(SearchList):
         if observation == "ET" or observation == "rain":
             return 2
 
+        if (
+            observation == "pressure" or observation == "barometer"
+        ) and self.unit.unit_type.pressure == "inHg":
+            return 3
+
         return 1
 
     def get_hour_delta(self, precision):

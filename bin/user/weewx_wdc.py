@@ -1053,7 +1053,7 @@ class WdcTableUtil(SearchList):
             int: aggregate_interval
         """
         if precision == "day":
-            return 900 * 8  # 2 hours
+            return 900 * 4  # 1 hours
 
         if precision == "week":
             return 900 * 24  # 6 hours
@@ -1145,14 +1145,14 @@ class WdcTableUtil(SearchList):
                         aggregate_interval=self.get_table_aggregate_interval(
                             observation, precision
                         ),
-                        time_series="start",
+                        time_series="both",
                         time_unit="unix_epoch",
                     )
                     .round(self.diagram_util.get_rounding(observation))
                 )
 
-                for start, data in zip(series.start, series.data):
-                    cs_time = datetime.fromtimestamp(start.raw)
+                for start, stop, data in zip(series.start, series.stop, series.data):
+                    cs_time = datetime.fromtimestamp(stop.raw)
                     # The current series item by time.
                     cs_item = list(
                         filter(

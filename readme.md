@@ -23,6 +23,7 @@
       - [Units](#units)
     - [Performance](#performance)
     - [Support for weewx-forecast](#support-for-weewx-forecast)
+      - [Configuration](#configuration-1)
     - [Localization](#localization)
     - [About page (user-generated content)](#about-page-user-generated-content)
   - [Development](#development)
@@ -346,8 +347,6 @@ SKIN_VERSION = 2.0.0
 
 `radar_img` and `radar_url` Same as in the default Seasons Skin
 
-`forecast_zambretti` Enable/Disable Zambretti forecast.
-
 #### DisplayOptions
 
 `layout` Switch between `classic` or `alternative`. See [Screenshots](#full-page) for comparison. [weewx-hbt.de](https://weewx-hbt.de) uses the alternative layout. The classic layout can be seen here: https://weewx-hbt.de/classic
@@ -490,13 +489,18 @@ trouble because of this you can comment out the `stale_age` options in skin.conf
     stale_age = 3600 # Every hour
 ```
 
-This will generate the year.html page only once a hour. `stale_age` is in seconds, see https://weewx.com/docs/customizing.htm#CheetahGenerator. You can experiment with the `stale_age` options to find a good balance between being 'up-to-date' and reasonableness.
+This will generate the year.html page only once an hour. `stale_age` is in seconds, see https://weewx.com/docs/customizing.htm#CheetahGenerator. You can experiment with the `stale_age` options to find a good balance between being 'up-to-date' and reasonableness.
 
 `statistics.html` stale age is 43200 (twice a day) by default because it's the most performance-expensive template to generate.
 
 ### Support for weewx-forecast
 
-Install the forecast extension and add `user.forecast.ForecastVariables` and `user.weewx_wdc_forecast.WdcForecastUtil` to `[CheetahGenerator].search_list_extensions` in weewx-wdc skin.conf.
+First, install the weewx-forecast extension. I am personally not using the original extension https://github.com/matthewwall/weewx-forecast,
+but a fork of it: https://github.com/chaunceygardiner/weewx-forecast. The original produced an error for me preventing it to work (https://github.com/matthewwall/weewx-forecast/issues/7).
+
+For help on configuring the extension, see https://github.com/chaunceygardiner/weewx-forecast.
+
+Then, add `user.forecast.ForecastVariables` and `user.weewx_wdc_forecast.WdcForecastUtil` to `[CheetahGenerator].search_list_extensions` in weewx-wdc skin.conf.
 
 It should look like this
 
@@ -508,10 +512,36 @@ It should look like this
 ...
 ```
 
-weewx-wdc includes predefined and tested configuration values for the forecast table template, located in skin.conf in `forecast_table_settings`.
-Please set `source` to your used forecast source. For help on configuring weewx-forecast, see https://github.com/chaunceygardiner/weewx-forecast.
+#### Configuration
 
-`show_hourly` is not yet supported.
+Located in skin.conf, section `[Extras]`:
+
+`forecast_zambretti` Enable/Disable Zambretti forecast.
+
+`forecast_table_settings` Predefined and tested configuration values for the forecast table template (the descriptions are partly taken from https://github.com/matthewwall/weewx-forecast/blob/master/skins/forecast/forecast_table.inc):
+
+|                   |                                                                                                                           |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `source=WU`       | **Important:** Please set `source` to your used forecast source (NWS, WU, OWM, UKMO, Aeris, DS).                          |
+| `num_periods=72`  | How many forecast periods should be considered? Up to 40 for NWS, up to 240 for WU. More periods take longer to generate. |
+| `num_days=5`      | If number of days is specified, then display up to that many days                                                         |
+| `show_legend=1`   | Show the legend column?                                                                                                   |
+| `show_hourly=0`   | Not yet supported.                                                                                                        |
+| `show_day=1`      | Show the day (Mon, Tue, Wed, ...)?                                                                                        |
+| `show_date=1`     | show the date (02 Aug, 03 Aug, 04 Aug, ...)?                                                                              |
+| `show_outlook=1`  | Show the outlook icon?                                                                                                    |
+| `show_temp=1`     | Show the temperature?                                                                                                     |
+| `show_dewpoint=0` | Show the dew point?                                                                                                       |
+| `show_humidity=0` | Show the humidity?                                                                                                        |
+| `show_wind=1`     | Show the wind speed?                                                                                                      |
+| `show_tides=0`    | Show the tides?                                                                                                           |
+| `show_sun=1`      | Show sunrise and sunset?                                                                                                  |
+| `show_moon=1`     | Show moonrise and moonset?                                                                                                |
+| `show_pop=1`      | Show the probability of precipitation?                                                                                    |
+| `show_precip=1`   | Show the precipitation?                                                                                                   |
+| `show_obvis=0`    | Not yet supported.                                                                                                        |
+
+`show_hourly` and `show_obvis` are not yet supported.
 
 ### Localization
 

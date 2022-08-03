@@ -138,9 +138,12 @@
 
 For more info about installing and uninstalling extensions in weewx, see https://www.weewx.com/docs/utilities.htm#wee_extension_utility.
 
-# Next
+# 2.0.1
 
 - Bugfix: Only working when generated into webservers root [GH-35]
 - Bugfix: Pressure diagram with inHg unit. Updated rounding and yScale for pressure/barometer diagram in inHg. [GH-37]
-- Forecast Min/Max - Updated forecast table typography. [GH-43]
 - Bugfix: Time is Not Correct In All Data - Show stop instead of start date of interval, 1hr interval for daily table values. [GH-40]
+- Forecast Min/Max - Updated forecast table typography. [GH-43]
+- Bugfix: Rain Rate Graph in/h Intruding on Amount Values [GH-44]
+
+# Next

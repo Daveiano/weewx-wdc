@@ -118,7 +118,7 @@ If you like the look and feel of the skin please consider having a look into the
 
 **Requires weewx >= 4.5**
 
-**Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v1.3.3/weewx-wdc-v1.3.3.zip.
+**Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v2.0.1/weewx-wdc-v2.0.1.zip.
 Don't download the repository directly and don't use the GitHub generated zip and tar.gz archives that come alongside the release. Always use the zip archive named **weewx-wdc-vX.X.X.zip**
 
 Background: The files in the src/ directory are the source files (TypeScript, SCSS). When creating a release, these source files get transformed and optimized, and the output location of these transformed files is the location which matches the location in the install.py script. The weewx-wdc-vX.X.X.zip should contain all these transformed files (like service-worker.js), but if you download the current state of the repo, these files are not included and this will throw multiple `FileNotFoundError` errors while installing. For manual building these files, see [Development](#development).
@@ -141,7 +141,7 @@ The default skin.conf looks like this:
 ```
 # configuration file for the weewx-wdc skin
 SKIN_NAME = Weather Data Center
-SKIN_VERSION = 2.0.0
+SKIN_VERSION = 2.0.1
 
 [Extras]
     # Show a link to the GitHub respository of this skin. Set to False to hide.
@@ -176,14 +176,14 @@ SKIN_VERSION = 2.0.0
         show_obvis = 0
 
 [DisplayOptions]
-    layout = 'classic'
+    layout = 'alternative'
     climatological_days = rainDays, summerDays, hotDays, desertDays, tropicalNights, stormDays, iceDays, frostDays
     table_tile_observations = outTemp, outHumidity, barometer, windSpeed, windGust, windDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
     stat_tile_observations = outTemp, outHumidity, barometer, windSpeed, windGust, windDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
     diagram_tile_observations = temp_min_max_avg, tempdew, outHumidity, barometer, windchill_heatindex, wind, windDir, windRose, rain, rainRate, snowDepth, UV, ET, radiation, cloudbase, appTemp
     stat_tile_winddir_ordinal = True
     diagram_tile_winddir_ordinal = True
-    windRose_colors = "rgb(243, 206, 201)", "#e7a4b6", "#cd7eaf", "#a262a9", "#6f4d96", "#3d3b72"
+    windRose_colors = "#f3cec9", "#e7a4b6", "#cd7eaf", "#a262a9", "#6f4d96", "#3d3b72"
     [[diagrams]]
         [[[combined_observations]]]
             [[[[temp_min_max_avg]]]]
@@ -247,10 +247,6 @@ SKIN_VERSION = 2.0.0
         [[[UV]]]
             curve = "step"
         [[[rainRate]]]
-            curve = "linear"
-        [[[windSpeed]]]
-            curve = "linear"
-        [[[windGust]]]
             curve = "linear"
 
         [[[heights]]]

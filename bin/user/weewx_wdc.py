@@ -9,7 +9,8 @@ from weewx.units import (
 from weewx.wxformulas import beaufort
 from datetime import datetime
 from calendar import isleap
-from pprint import pprint
+
+# from pprint import pprint
 
 # Copyright 2022 David Bätge
 # Distributed under the terms of the GNU Public License (GPLv3)
@@ -58,7 +59,7 @@ class WdcGeneralUtil(SearchList):
         elif observation == "windGust":
             return icon_path + "wind-gust.svg"
 
-        elif observation == "windDir":
+        elif observation == "windDir" or observation == "windGustDir":
             return icon_path + "wind-direction.svg"
 
         elif observation == "rain":

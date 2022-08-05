@@ -724,7 +724,7 @@ class WdcStatsUtil(SearchList):
         Returns:
             bool: Show or hide sum stat.
         """
-        show_sum = ["rain", "ET"]
+        show_sum = ["rain", "ET", "lightning_strike_count"]
 
         if observation in show_sum:
             return True

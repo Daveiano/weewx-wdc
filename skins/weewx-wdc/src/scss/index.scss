@@ -319,6 +319,13 @@ bx-tabs {
         display: inline-block;
         margin-right: $spacing-02;
       }
+      span.stat-wind-dir {
+        svg {
+          max-width: 24px;
+          vertical-align: text-bottom;
+          margin-right: 0;
+        }
+      }
       > span {
         @include carbon--type-style("productive-heading-05");
         @include carbon--breakpoint-up(md) {

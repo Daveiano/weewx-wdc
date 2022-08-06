@@ -79,9 +79,9 @@
                       <span class="stat-wind-dir">, $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), "windDir").avg</span>
                     #else if $show_wind_dir_ordinal and $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), "windDir").has_data
                       <span class="stat-wind-dir">, $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), "windDir").avg.ordinal_compass</span>
-                    #else if $show_gust_dir and $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), "windDir").has_data
+                    #else if $show_gust_dir and $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), "windGustDir").has_data
                       <span class="stat-wind-dir">, $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), "windGustDir").avg</span>
-                    #else if $show_gust_dir_ordinal and $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), "windDir").has_data
+                    #else if $show_gust_dir_ordinal and $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), "windGustDir").has_data
                       <span class="stat-wind-dir">, $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), "windGustDir").avg.ordinal_compass</span>
                     #end if
                 #end if
@@ -103,9 +103,9 @@
                 <span class="stat-wind-dir">, $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), "windDir").max</span>
               #else if $show_wind_dir_ordinal and $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), "windDir").has_data
                 <span class="stat-wind-dir">, $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), "windDir").max.ordinal_compass</span>
-              #else if $show_gust_dir and $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), "windDir").has_data
+              #else if $show_gust_dir and $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), "windGustDir").has_data
                 <span class="stat-wind-dir">, $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), "windGustDir").max</span>
-              #else if $show_gust_dir_ordinal and $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), "windDir").has_data
+              #else if $show_gust_dir_ordinal and $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), "windGustDir").has_data
                 <span class="stat-wind-dir">, $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), "windGustDir").max.ordinal_compass</span>
               #end if
 

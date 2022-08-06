@@ -7,13 +7,7 @@
 <div class="bx--row">
   <!--prettier-ignore-->
   #for $skin_obs in $DisplayOptions.get('stat_tile_observations')
-    ## Show windDir, see https://github.com/Daveiano/weewx-wdc/issues/2
-    #if $skin_obs == 'windDir' or $skin_obs == 'windSpeed'
-      #if $getattr($current, 'windSpeed').has_data
-        #set global $partial_obs = $skin_obs
-        #include "includes/stat-tile.inc"
-      #end if
-    #else
+    #if $skin_obs != 'windDir' and $skin_obs != 'windGustDir'
       #if $getattr($current, $skin_obs).has_data
         #set global $partial_obs = $skin_obs
         #include "includes/stat-tile.inc"

@@ -4,14 +4,14 @@
 
 - [Weewx Weather Data Center skin](#weewx-weather-data-center-skin)
   - [Key Features](#key-features)
-  - [<a href="https://www.weewx-hbt.de" rel="nofollow">Demo</a>](#demo)
+  - [Demo](#demo)
   - [Screenshots](#screenshots)
     - [Stat tiles](#stat-tiles)
     - [Diagram Tiles](#diagram-tiles)
     - [Table Tile](#table-tile)
     - [Climatological days](#climatological-days)
     - [Avg Temperature Calendar](#avg-temperature-calendar)
-    - [Forecast &amp; Radar](#forecast--radar)
+    - [Forecast & Radar](#forecast--radar)
     - [Full Page](#full-page)
   - [Usage](#usage)
     - [Installation](#installation)
@@ -28,10 +28,10 @@
     - [About page (user-generated content)](#about-page-user-generated-content)
   - [Development](#development)
     - [Scripts](#scripts)
-      - [yarn run dev](#yarn-run-dev)
-      - [yarn run build](#yarn-run-build)
-      - [yarn run deploy:local](#yarn-run-deploylocal)
-      - [yarn run serve:local](#yarn-run-servelocal)
+      - [`yarn run dev`](#yarn-run-dev)
+      - [`yarn run build`](#yarn-run-build)
+      - [`yarn run deploy:local`](#yarn-run-deploylocal)
+      - [`yarn run serve:local`](#yarn-run-servelocal)
     - [Ideas for further development](#ideas-for-further-development)
   - [Free Software](#free-software)
   - [Credits](#credits)
@@ -347,13 +347,13 @@ SKIN_VERSION = 2.0.1
 
 `layout` Switch between `classic` or `alternative`. See [Screenshots](#full-page) for comparison. [weewx-hbt.de](https://weewx-hbt.de) uses the alternative layout. The classic layout can be seen here: https://weewx-hbt.de/classic
 
-`climatological_days` E.g. Rain days (days with precipitation) or Summer days (Temp > 25°C). Leave empty to disable. When activated a rain days calendar chart and an averge temperature calendar chart is shown alongside.
+`climatological_days` E.g. Rain days (days with precipitation) or Summer days (Temp > 25°C). Leave empty to disable. When activated a rain days calendar chart and an average temperature calendar chart are shown alongside.
 
 `table_tile_observations` Defines which observations should be shown in the data table component.
 Simply comment this out or leave empty to hide the tables at all pages:
 `#table_tile_observations = outTemp, outHumidity, barometer, ...`
 
-`stat_tile_observations` Define which observations should be shown in the stat tiles (at the top of each page).
+`stat_tile_observations` Define which observations should be shown in the stat tiles (at the top of each page). If you enable `windDir` or `windGustDir`, these will not be added as separate tiles (or rows in the classic layout), but be shown along with the corresponding `windSpeed` and `windGust`.
 
 `diagram_tile_observations` Define which observations to show as diagrams. This can include definitions for combined diagrams. There are two different charts available for the wind direction: `windDir` will render a scatter diagram, `windRose` will render a windrose chart.
 

@@ -82,7 +82,7 @@ For help, please have a look at the [official weewx documentation](https://weewx
 
 Please have a look at the guide from the release notes: https://github.com/Daveiano/weewx-wdc/releases/tag/v2.0.0
 
-## Wiki
+## [Wiki](https://github.com/Daveiano/weewx-wdc/wiki)
 
 For detailed information on how to configure the skin.conf or how to add a page with its own generated content, please have a look at the [Projects Wiki](https://github.com/Daveiano/weewx-wdc/wiki). It also covers some other important things.
 

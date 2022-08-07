@@ -6,13 +6,6 @@
   - [Key Features](#key-features)
   - [Demo](#demo)
   - [Screenshots](#screenshots)
-    - [Stat tiles](#stat-tiles)
-    - [Diagram Tiles](#diagram-tiles)
-    - [Table Tile](#table-tile)
-    - [Climatological days](#climatological-days)
-    - [Avg Temperature Calendar](#avg-temperature-calendar)
-    - [Forecast & Radar](#forecast--radar)
-    - [Full Page](#full-page)
   - [Installation](#installation)
   - [Update from 1.x to 2.x](#update-from-1x-to-2x)
   - [Wiki](#wiki)
@@ -48,37 +41,11 @@ If you like the look and feel of the skin please consider having a look into the
 
 ## Screenshots
 
-### Stat tiles
-
-![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-stat-tiles.png)
-
-### Diagram Tiles
-
-![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-diagram-tiles.png)
-
-### Table Tile
-
-![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/wewx-wdc-table-tile.png)
-
-### Climatological days
-
-![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-climatological-days.png)
-
-### Avg Temperature Calendar
-
-![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-avg-tmp-calendar.png)
-
-### Forecast & Radar
-
-![Screenshot](https://public-images-social.s3.eu-west-1.amazonaws.com/weewx-wdc-radar-forecast.png)
-
-### Full Page
-
 <table>
     <thead>
         <tr>
-            <th>Classic</th>
-            <th>Alternative</th>
+            <th>Classic layout</th>
+            <th>Alternative layout</th>
         </tr>
     </thead>
     <tbody>

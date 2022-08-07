@@ -147,3 +147,7 @@ For more info about installing and uninstalling extensions in weewx, see https:/
 - Bugfix: Rain Rate Graph in/h Intruding on Amount Values [GH-44]
 
 # Next
+
+- Updated windDir/windGustDir handling: These two observations are now printed alongside there corresponding speeds in the stat tiles (alternative layout) and the conditions table (classic layout). [GH-39]
+- Stat Tile: lightning_strike_count should show the sum [GH-45]
+- Updated altimeter support

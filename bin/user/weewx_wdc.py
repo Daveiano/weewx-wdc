@@ -50,7 +50,11 @@ class WdcGeneralUtil(SearchList):
         elif observation == "outHumidity" or observation == "inHumidity":
             return icon_path + "humidity.svg"
 
-        elif observation == "barometer":
+        elif (
+            observation == "barometer"
+            or observation == "pressure"
+            or observation == "altimeter"
+        ):
             return icon_path + "barometer.svg"
 
         elif observation == "windSpeed":
@@ -116,7 +120,11 @@ class WdcGeneralUtil(SearchList):
         if "humidity" in observation.lower():
             return "#0099CC"
 
-        if observation == "barometer":
+        if (
+            observation == "barometer"
+            or observation == "pressure"
+            or observation == "altimeter"
+        ):
             return "#666666"
 
         if observation == "dewpoint":
@@ -357,7 +365,11 @@ class WdcDiagramUtil(SearchList):
         if observation == "windSpeed" or observation == "windGust":
             return "wind"
 
-        if observation == "barometer" or observation == "pressure":
+        if (
+            observation == "barometer"
+            or observation == "pressure"
+            or observation == "altimeter"
+        ):
             return "pressure"
 
         return observation
@@ -517,7 +529,9 @@ class WdcDiagramUtil(SearchList):
             return 2
 
         if (
-            observation == "pressure" or observation == "barometer"
+            observation == "pressure"
+            or observation == "barometer"
+            or observation == "altimeter"
         ) and self.unit.unit_type.pressure == "inHg":
             return 3
 
@@ -697,7 +711,8 @@ class WdcStatsUtil(SearchList):
             "outTemp",
             "outHumidity",
             "barometer",
-            "windDir",
+            "pressure",
+            "altimeter",
             "snowDepth",
             "heatindex",
             "dewpoint",

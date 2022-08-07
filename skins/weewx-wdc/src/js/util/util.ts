@@ -127,8 +127,12 @@ export const getMargins = (obs: string): Box => {
     left: 40,
   };
 
-  if (obs === "pressure" || obs == "cloudbase" || obs == "rainRate") {
+  if (obs == "cloudbase" || obs == "rainRate") {
     margin.left = 50;
+  }
+
+  if (obs === "pressure") {
+    margin.left = 55;
   }
 
   if (obs === "radiation") {
@@ -139,8 +143,10 @@ export const getMargins = (obs: string): Box => {
 };
 
 export const getAxisLeftLegendOffset = (obs: string): number => {
+  console.log(obs);
   switch (obs) {
     case "pressure":
+      return -50;
     case "cloudbase":
     case "rainRate":
       return -45;

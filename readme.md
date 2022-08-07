@@ -71,10 +71,19 @@ Don't download the repository directly and don't use the GitHub generated zip an
 
 Background: The files in the src/ directory are the source files (TypeScript, SCSS). When creating a release, these source files get transformed and optimized, and the output location of these transformed files is the location which matches the location in the install.py script. The weewx-wdc-vX.X.X.zip should contain all these transformed files (like service-worker.js), but if you download the current state of the repo, these files are not included and this will throw multiple `FileNotFoundError` errors while installing. For manual building these files, see [Development](#development).
 
-1. [Download](https://github.com/Daveiano/weewx-wdc/releases) the latest version
+1. Download the [latest version](https://github.com/Daveiano/weewx-wdc/releases)
+```
+wget -O "/tmp/weewx-wdc.zip" https://github.com/Daveiano/weewx-wdc/releases/download/v2.0.1/weewx-wdc-v2.0.1.zip
+```
+
 2. Create a new folder and unzip to that folder
-3. Install the extension: wee_extension --install=path/to/weewx-wdc
-4. Restart weewx: weewx restart
+```
+mkdir /tmp/weewx-wdc/
+unzip /tmp/weewx-wdc.zip -d /tmp/weewx-wdc/
+```
+
+3. Install the extension: `wee_extension --install /tmp/weewx-wdc/`
+4. Restart weewx
 
 For help, please have a look at the [official weewx documentation](https://weewx.com/docs/utilities.htm#wee_extension_utility).
 

@@ -151,3 +151,4 @@ For more info about installing and uninstalling extensions in weewx, see https:/
 - Updated windDir/windGustDir handling: These two observations are now printed alongside there corresponding speeds in the stat tiles (alternative layout) and the conditions table (classic layout). [GH-39]
 - Stat Tile: lightning_strike_count should show the sum [GH-45]
 - Updated altimeter support
+- Added Italian translation contributed by Montefiori Luca.

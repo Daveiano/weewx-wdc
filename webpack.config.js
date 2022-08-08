@@ -20,7 +20,7 @@ module.exports = {
       {
         test: /\.(sa|sc|c)ss$/,
         use: [
-          devMode ? "style-loader" : MiniCssExtractPlugin.loader,
+          MiniCssExtractPlugin.loader,
           "css-loader",
           "postcss-loader",
           {
@@ -45,5 +45,5 @@ module.exports = {
     path: path.resolve(__dirname, "skins/weewx-wdc/dist"),
     globalObject: "this",
   },
-  plugins: devMode ? [] : [new MiniCssExtractPlugin()],
+  plugins: [new MiniCssExtractPlugin()],
 };

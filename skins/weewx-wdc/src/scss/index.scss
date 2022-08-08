@@ -1,6 +1,74 @@
+$feature-flags: (
+  enable-css-custom-properties: true,
+);
 @import "~@carbon/themes/scss/themes";
+$custom-property-prefix: "cds";
 $carbon--theme: $carbon--theme--g10;
 @include carbon--theme();
+
+bx-code-snippet,
+bx-tabs,
+bx-inline-notification,
+dds-image-with-caption,
+bx-code-snippet,
+bx-header,
+bx-btn,
+bx-tooltip,
+bx-tooltip-definition,
+bx-structured-list {
+  @include carbon--theme($carbon--theme--g10, true);
+}
+
+html.dark {
+  @include carbon--theme($carbon--theme--g90, true);
+
+  bx-code-snippet,
+  bx-tabs,
+  bx-inline-notification,
+  dds-image-with-caption,
+  bx-code-snippet,
+  bx-header,
+  bx-btn,
+  bx-tooltip,
+  bx-tooltip-definition,
+  bx-structured-list {
+    @include carbon--theme($carbon--theme--g90, true);
+  }
+
+  div.diagram {
+    //background: $ui-02;
+    &.plotly {
+      svg.main-svg {
+        background: transparent !important;
+      }
+      g.legend {
+        rect.bg {
+          fill: transparent !important;
+        }
+      }
+      g.polarsublayer.plotbg {
+        path {
+          fill: transparent !important;
+        }
+      }
+    }
+  }
+}
+
+#header-global {
+  margin-inline-start: auto;
+  display: flex;
+  bx-btn {
+    @include carbon--theme($carbon--theme--g90, true);
+    svg {
+      fill: var(--cds-icon-03);
+    }
+  }
+}
+
+.hidden {
+  display: none !important;
+}
 
 @import "~@carbon/layout/scss/breakpoint";
 @import "~@carbon/layout/scss/convert";
@@ -154,7 +222,6 @@ main.user-page {
     max-width: 40rem;
   }
   bx-code-snippet {
-    @include carbon--theme($carbon--theme--g10, true);
     margin-bottom: $spacing-05;
   }
   dds-image-with-caption {
@@ -194,9 +261,6 @@ header.section-header {
   }
 }
 
-bx-tabs {
-  @include carbon--theme($carbon--theme--g10, true);
-}
 .bx-ce-demo-devenv--tab-panels {
   flex: 1;
   padding: 1rem 1rem 0rem 1rem;
@@ -358,9 +422,10 @@ bx-tabs {
     cursor: pointer;
     position: absolute;
     right: 0;
-    top: -#{$spacing-07};
+    top: -2rem;
     padding: $spacing-02;
     box-sizing: content-box;
+    fill: $text-02;
     &:hover {
       background: $background-active;
     }
@@ -419,6 +484,7 @@ bx-tabs {
     align-items: center;
     svg {
       margin-right: $spacing-02;
+      fill: $text-02;
     }
   }
 }
@@ -562,6 +628,15 @@ bx-tabs {
   font-family: carbon--font-family("mono"), monospace;
 }
 
+.diagram-tooltip {
+  background: $interactive-02;
+}
+
+.diagram text,
+.calendar-diagram text {
+  fill: $text-01 !important;
+}
+
 .windrose-tooltip {
   display: none;
   z-index: 10;
@@ -586,7 +661,6 @@ bx-tabs {
 
 #footer {
   padding: 2rem;
-  margin-top: $spacing-09;
   background-color: $background-inverse;
   color: $text-inverse;
   a {

@@ -281,8 +281,6 @@
     '[data-id="theme-toggle-light-icon"]'
   );
 
-  console.log(themeToggleDarkIcon);
-
   // Change the icons inside the button based on previous settings
   if (
     localStorage.getItem("color-theme") === "dark" ||

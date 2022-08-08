@@ -58,9 +58,10 @@ export const CalendarDiagram: FunctionComponent<CalendarDiagramBaseProps> = (
         bottom: small ? 40 : 20,
         left: small ? 0 : 25,
       }}
-      dayBorderColor="#ffffff"
+      daySpacing={1}
+      dayBorderColor="transparent"
       monthSpacing={2}
-      monthBorderColor="#ffffff"
+      monthBorderColor="transparent"
       monthLegendOffset={14}
       monthLegendPosition="after"
       yearSpacing={30}

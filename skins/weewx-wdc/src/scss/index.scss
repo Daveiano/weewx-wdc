@@ -35,6 +35,15 @@ html.dark {
     @include carbon--theme($carbon--theme--g90, true);
   }
 
+  bx-tooltip-definition {
+    --cds-interactive-01: var(--cds-text-02);
+    --cds-interactive-04: var(--cds-text-01);
+  }
+
+  .bx-ce-demo-devenv--tab-panels {
+    background: $ui-01;
+  }
+
   div.diagram {
     //background: $ui-02;
     &.plotly {
@@ -382,6 +391,7 @@ header.section-header {
         max-width: 32px;
         display: inline-block;
         margin-right: $spacing-02;
+        fill: $text-02;
       }
       span.stat-wind-dir {
         svg {
@@ -630,6 +640,7 @@ header.section-header {
 
 .diagram-tooltip {
   background: $interactive-02;
+  box-shadow: 0 2px 6px $interactive-02;
 }
 
 .diagram text,

@@ -14,9 +14,7 @@ export const TooltipBar: React.FC<TooltipPropsBar> = (
     <div
       style={{
         padding: "7px",
-        background: "rgb(57 57 57)",
         color: "white",
-        boxShadow: `0 2px 6px rgb(57 57 57)`,
         borderLeft: `5px solid ${props.color}`,
         textAlign: "right",
       }}

@@ -9,13 +9,7 @@ export const sliceTooltip = (props: SliceTooltipProps): React.ReactElement => {
   ));
 
   return (
-    <div
-      style={{
-        background: "rgb(57 57 57)",
-        boxShadow: `0 2px 6px rgb(57 57 57)`,
-      }}
-      className="diagram-tooltip"
-    >
+    <div className="diagram-tooltip">
       <header
         style={{
           textAlign: "right",

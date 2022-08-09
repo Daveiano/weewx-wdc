@@ -55,6 +55,11 @@
             /* prettier-ignore */
             var $series_name = $getattr($year, $series_observation).series(aggregate_type=$get_aggregate_type($series_observation, combined=$combined_diagram.obs[$combined_obs]), aggregate_interval=$get_aggregate_interval($series_observation, $precision, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($series_observation)).json;
           </script>
+          #else if $precision == 'alltime'
+          <script>
+            /* prettier-ignore */
+            var $series_name = $getattr($alltime, $series_observation).series(aggregate_type=$get_aggregate_type($series_observation), aggregate_interval=$get_aggregate_interval($series_observation, $precision, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($series_observation)).json;
+          </script>
           #else
           <script>
             /* prettier-ignore */

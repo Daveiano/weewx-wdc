@@ -567,6 +567,8 @@ class WdcDiagramUtil(SearchList):
         """
         Get delta for $span($week_delta=$delta) call.
 
+        TODO: Remove
+
         Args:
             precision (string): Day, week, month, year, alltime
 
@@ -574,9 +576,6 @@ class WdcDiagramUtil(SearchList):
             float: A delta
         """
         week_delta = 0
-
-        if precision == "alltime":
-            week_delta = 1000  # TODO: This will stop to work after 19 years.
 
         return week_delta
 
@@ -1168,7 +1167,11 @@ class WdcTableUtil(SearchList):
                 )
 
                 for start, stop, data in zip(series.start, series.stop, series.data):
-                    cs_time = datetime.fromtimestamp(stop.raw)
+                    if precision == "alltime":
+                        cs_time = datetime.fromtimestamp(start.raw)
+                    else:
+                        cs_time = datetime.fromtimestamp(stop.raw)
+
                     # The current series item by time.
                     cs_item = list(
                         filter(

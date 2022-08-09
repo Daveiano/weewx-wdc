@@ -140,7 +140,11 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
         // @todo if area, no lighten. if color.lightness < background.lightness, lighten more, else lighten normal
         darkMode
           ? enableArea.includes(props.observation)
-            ? props.color
+            ? props.color.map((c) =>
+                color(c).lightness() <= backgroundColorDarkModeLightness * 2
+                  ? color(c).lighten(0.75).hex()
+                  : c
+              )
             : props.color.map((c) =>
                 color(c).lightness() <= backgroundColorDarkModeLightness
                   ? color(c).lighten(10).hex()

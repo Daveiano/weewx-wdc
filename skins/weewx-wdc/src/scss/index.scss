@@ -62,6 +62,20 @@ html.dark {
       }
     }
   }
+
+  // Forecast.
+  .forecast-tile
+    .forecast
+    bx-structured-list
+    bx-structured-list-row
+    bx-structured-list-cell {
+    .temphi {
+      color: $text-02;
+    }
+    .templo {
+      color: $text-02;
+    }
+  }
 }
 
 #header-global {
@@ -561,6 +575,7 @@ header.section-header {
             display: block;
             width: 42px;
             height: 42px;
+            fill: $text-02;
           }
         }
         &.rain {

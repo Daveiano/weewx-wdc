@@ -22,6 +22,7 @@
     "carbon-components-react": "7.50.0",
     "carbon-data-table-state-manager": "^1.0.3",
     "carbon-icons": "7.0.7",
+    "color": "^4.2.3",
     "d3-scale": "^4.0.2",
     "dayjs": "^1.11.3",
     "prop-types": "^15.8.1",
@@ -39,6 +40,7 @@
   "devDependencies": {
     "@types/carbon-components-react": "^7.46.1",
     "@types/carbon__icons-react": "^10.24.0",
+    "@types/color": "^3.0.3",
     "@types/d3-scale": "^4.0.2",
     "@types/plotly.js": "^2.12.1",
     "@types/react": "^18.0.8",

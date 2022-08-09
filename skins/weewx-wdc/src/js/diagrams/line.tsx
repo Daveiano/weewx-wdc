@@ -1,6 +1,7 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
 import { ResponsiveLine } from "@nivo/line";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
+import color from "color";
 
 import { DiagramBaseProps } from "./types";
 import { TooltipLine } from "../components/tooltip-line";
@@ -27,6 +28,7 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
   const small = useMediaQuery("(max-width: 672px)");
   const timeDifferenceInMonths = getTimeDifferenceInMonths(props.data[0].data);
   const handle = useFullScreenHandle();
+  const backgroundColorDarkModeLightness = color("#393939").lightness();
   // @todo This adds one MutationObserver per LineDiagram. Add this to one
   //    general component which shares the state.
   const [darkMode, setDarkMode] = useState(
@@ -134,7 +136,18 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
           }
         },
       }}
-      colors={props.color}
+      colors={
+        // @todo if area, no lighten. if color.lightness < background.lightness, lighten more, else lighten normal
+        darkMode
+          ? enableArea.includes(props.observation)
+            ? props.color
+            : props.color.map((c) =>
+                color(c).lightness() <= backgroundColorDarkModeLightness
+                  ? color(c).lighten(10).hex()
+                  : color(c).lighten(0.25).hex()
+              )
+          : props.color
+      }
       curve={getCurve(props.observation)}
       data={props.data}
       enableArea={enableArea.includes(props.observation)}

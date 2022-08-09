@@ -166,7 +166,7 @@ class WdcGeneralUtil(SearchList):
         if observation in temp_obs or "temp" in observation.lower():
             return "#8B0000"
 
-        return "black"
+        return "#161616"
 
     def get_time_span_from_attr(self, attr, day, week, month, year, alltime):
         """

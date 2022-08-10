@@ -70,12 +70,12 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: artifacts-alternative-weewx-html
-          path: test/e2e-tests
+          path: test/e2e-tests/artifacts-alternative-weewx-html
 
       - uses: actions/download-artifact@v3
         with:
           name: artifacts-classic-weewx-html
-          path: test/e2e-tests
+          path: test/e2e-tests/artifacts-classic-weewx-html
 
       - name: Display structure of downloaded files
         run: ls -R

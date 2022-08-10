@@ -3,10 +3,10 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.6.0/webcomponents-loader.min.js"></script>
-<script>
+<!-- <script>
   window.WebComponents = window.WebComponents || {};
   window.WebComponents.root = "node_modules/@webcomponents/webcomponentsjs/";
-</script>
+</script> -->
 #if 'windRose' in $DisplayOptions.get('diagram_tile_observations', [])
 <script src="plotly-custom-build.min.js" defer></script>
 #end if

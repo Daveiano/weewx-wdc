@@ -12,6 +12,16 @@ oneTimeSetUp() {
         sleep 2
         mkdir "$DIR"/artifacts
     fi
+    if ! [ -d "$DIR"/artifacts-alternative-weewx-html ] ; then
+        echo Creating artifacts-alternative-weewx-html directory...
+        sleep 1
+        mkdir "$DIR"/artifacts-alternative-weewx-html
+    fi
+    if ! [ -d "$DIR"/artifacts-classic-weewx-html ] ; then
+        echo Creating artifacts-classic-weewx-html directory...
+        sleep 1
+        mkdir "$DIR"/artifacts-classic-weewx-html
+    fi
 }
 
 testBundling() {
@@ -45,6 +55,7 @@ testInstall() {
 
 testWeeReportRunAlternative() {
     docker run --name weewx weewx > "$DIR"/artifacts/testWeeReportRunAlternative.txt 2>&1
+    docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-alternative-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
     docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
 
     output=$(cat "$DIR"/artifacts/testWeeReportRunAlternative.txt)
@@ -61,6 +72,7 @@ testWeeReportRunAlternative() {
 
 testWeeReportRunClassic() {
     docker run --entrypoint "/start-classic.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunClassic.txt 2>&1
+    docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-classic-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
     docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
 
     output=$(cat "$DIR"/artifacts/testWeeReportRunClassic.txt)

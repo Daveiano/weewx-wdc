@@ -2,7 +2,7 @@ name: Tests
 
 on:
   push:
-    branches: [1.x, 2.x]
+    branches: ["*"]
     paths:
       - "**.py"
       - skins/**
@@ -41,3 +41,45 @@ jobs:
         with:
           name: test_install_report_artifacts
           path: test/test_install_report/artifacts/
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: artifacts-alternative-weewx-html
+          path: test/test_install_report/artifacts-alternative-weewx-html/
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: artifacts-classic-weewx-html
+          path: test/test_install_report/artifacts-classic-weewx-html/
+
+  jest:
+    needs: shunit2-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: 🔨 Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+          cache: "yarn"
+
+      - name: 🔨 install yarn and dependecies
+        run: yarn install
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: artifacts-alternative-weewx-html
+          path: test/e2e-tests
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: artifacts-classic-weewx-html
+          path: test/e2e-tests
+
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: test/e2e-tests
+
+      - name: Run jest tests
+        run: yarn run test

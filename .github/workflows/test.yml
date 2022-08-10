@@ -85,7 +85,7 @@ jobs:
           name: artifacts-classic-weewx-html
           path: test/e2e-tests/artifacts-classic-weewx-html
 
-      - name: Run jest tests
+      - name: Run playwright tests
         run: yarn run test:e2e
 
       - name: Upload test results

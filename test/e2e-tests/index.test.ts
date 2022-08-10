@@ -5,7 +5,10 @@ import fs from "fs";
 import path from "path";
 
 const html = fs.readFileSync(
-  path.resolve(__dirname, "weewx/index.html"),
+  path.resolve(
+    __dirname,
+    "artifacts-alternative-weewx-html/public_html/index.html"
+  ),
   "utf8"
 );
 

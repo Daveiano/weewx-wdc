@@ -17,7 +17,7 @@ test.describe("Alternative index.html", () => {
     // expect(getAllByRole(sideNav, "listitem", { hidden: true }).length).toBe(10);
     await expect(page.locator("h1")).toHaveText("Current Weather Conditions");
 
-    await expect(page).toHaveScreenshot({ fullPage: true, maxDiffPixelRatio });
+    await expect(page).toHaveScreenshot({ fullPage: true });
   });
 });
 

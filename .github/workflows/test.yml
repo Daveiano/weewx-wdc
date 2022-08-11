@@ -9,6 +9,7 @@ on:
       - bin/**
       - test/**
       - package.json
+      - playwright.config.ts
   pull_request:
     branches: [1.x, 2.x]
     paths:

@@ -22,7 +22,7 @@ const config: PlaywrightTestConfig = {
      * For example in `await expect(locator).toHaveText();`
      */
     timeout: 7500,
-    toMatchSnapshot: {
+    toHaveScreenshot: {
       maxDiffPixelRatio: 0.1,
     },
   },

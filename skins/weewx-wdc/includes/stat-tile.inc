@@ -17,7 +17,7 @@
 
 <div class="bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-3 bx--col-max-2">
   <!--prettier-ignore-->
-  <div class="bx--tile stat-tile">
+  <div class="bx--tile stat-tile" data-test="$partial_obs">
     <!-- Main row -->
     <div class="bx--row">
       <div class="bx--col">

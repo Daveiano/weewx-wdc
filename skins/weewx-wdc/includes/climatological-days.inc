@@ -65,7 +65,7 @@
       </bx-structured-list-head>
       <bx-structured-list-body>
         #for $clim_day in $DisplayOptions.get('climatological_days')
-        <bx-structured-list-row>
+        <bx-structured-list-row data-test="$clim_day">
           <bx-structured-list-cell>$gettext($clim_day)</bx-structured-list-cell>
           <bx-structured-list-cell>
             <!--prettier-ignore-->

@@ -2,7 +2,7 @@ name: Tests
 
 on:
   push:
-    branches: ["*"]
+    branches: [1.x, 2.x]
     paths:
       - "**.py"
       - skins/**

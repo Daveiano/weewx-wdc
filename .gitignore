@@ -18,7 +18,7 @@ skins/weewx-wdc/service-worker.js.map
 # Tests
 test/test_install_report/src/weewx-wdc.zip
 test/shunit2
-test/*/artifacts
+test/*/artifacts*
 
 # yarn
 .yarn/*
@@ -27,3 +27,9 @@ test/*/artifacts
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+/test-results/
+**playwright-report/
+/playwright/.cache/
+/test-results/
+/playwright-report/
+/playwright/.cache/

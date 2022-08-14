@@ -146,8 +146,14 @@ For more info about installing and uninstalling extensions in weewx, see https:/
 - Forecast Min/Max - Updated forecast table typography. [GH-43]
 - Bugfix: Rain Rate Graph in/h Intruding on Amount Values [GH-44]
 
-# Next
+# 2.1.0
 
 - Updated windDir/windGustDir handling: These two observations are now printed alongside there corresponding speeds in the stat tiles (alternative layout) and the conditions table (classic layout). [GH-39]
 - Stat Tile: lightning_strike_count should show the sum [GH-45]
 - Updated altimeter support
+- Added Italian translation contributed by Montefiori Luca.
+- Bugfix: Running wee_reports takes forever when there is not enough weather data [GH-47]
+
+# Next
+
+- Bugfix: Windchill is not translated to Windkühle in German [GH-50]

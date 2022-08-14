@@ -7,7 +7,7 @@
 #end if
 
 <div class="$diagram_classes">
-  <div class="bx--tile diagram-tile">
+  <div class="bx--tile diagram-tile" data-test="windrose">
     <div class="bx--row">
       <div class="bx--col">
         <p class="label">

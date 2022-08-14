@@ -7,7 +7,7 @@
   - [Demo](#demo)
   - [Screenshots](#screenshots)
   - [Installation](#installation)
-  - [Update from 1.x to 2.x](#update-from-1x-to-2x)
+  - [Updating the skin](#updating-the-skin)
   - [Wiki](#wiki)
   - [Free Software](#free-software)
   - [Credits](#credits)
@@ -64,32 +64,50 @@ If you like the look and feel of the skin please consider having a look into the
 
 ## Installation
 
-**Requires weewx >= 4.5**
-
-**Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v2.0.1/weewx-wdc-v2.0.1.zip.
-Don't download the repository directly and don't use the GitHub generated zip and tar.gz archives that come alongside the release. Always use the zip archive named **weewx-wdc-vX.X.X.zip**
-
-Background: The files in the src/ directory are the source files (TypeScript, SCSS). When creating a release, these source files get transformed and optimized, and the output location of these transformed files is the location which matches the location in the install.py script. The weewx-wdc-vX.X.X.zip should contain all these transformed files (like service-worker.js), but if you download the current state of the repo, these files are not included and this will throw multiple `FileNotFoundError` errors while installing. For manual building these files, see [Development](#development).
+**Requires weewx >= 4.6**
 
 1. Download the [latest version](https://github.com/Daveiano/weewx-wdc/releases)
+
 ```
-wget -O "/tmp/weewx-wdc.zip" https://github.com/Daveiano/weewx-wdc/releases/download/v2.0.1/weewx-wdc-v2.0.1.zip
+wget -O "/tmp/weewx-wdc.zip" https://github.com/Daveiano/weewx-wdc/releases/download/v2.1.0/weewx-wdc-v2.1.0.zip
 ```
 
 2. Create a new folder and unzip to that folder
+
 ```
 mkdir /tmp/weewx-wdc/
 unzip /tmp/weewx-wdc.zip -d /tmp/weewx-wdc/
 ```
 
-3. Install the extension: `wee_extension --install /tmp/weewx-wdc/`
+3. Install the extension:
+
+   `wee_extension --install /tmp/weewx-wdc/`
+
 4. Restart weewx
 
 For help, please have a look at the [official weewx documentation](https://weewx.com/docs/utilities.htm#wee_extension_utility).
 
-## Update from 1.x to 2.x
+**Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v2.1.0/weewx-wdc-v2.1.0.zip.
+Don't download the repository directly and don't use the GitHub generated zip and tar.gz archives that come alongside the release. Always use the zip archive named **weewx-wdc-vX.X.X.zip**
 
-Please have a look at the guide from the release notes: https://github.com/Daveiano/weewx-wdc/releases/tag/v2.0.0
+Background: The files in the src/ directory are the source files (TypeScript, SCSS). When creating a release, these source files get transformed and optimized, and the output location of these transformed files is the location which matches the location in the install.py script. The weewx-wdc-vX.X.X.zip should contain all these transformed files (like service-worker.js or main.css), but if you download the current state of the repo, these files are not included and this will throw multiple `FileNotFoundError` errors while installing. For manual building of these files, see [Development](#development).
+
+## Updating the skin
+
+When updating the skin to the latest version:
+
+1. Uninstall the skin
+
+   `wee_extension --uninstall=weewx-wdc`
+
+2. Remove all generated content from your weewx html directory
+
+   `rm -rf /var/www/html/weewx` (or whatever your output directory may be)
+
+3. Do all 4 steps from the [Installation guide](#installation)
+4. Run the reports to re-generate the html files
+
+   `wee_reports`
 
 ## [Wiki](https://github.com/Daveiano/weewx-wdc/wiki)
 

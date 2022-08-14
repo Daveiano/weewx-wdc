@@ -103,224 +103,24 @@
               </div>
 
               <h3 class="bx--type-productive-heading-04">Quick guide</h3>
-              <h4 class="bx--type-productive-heading-03">Installation</h4>
-              <h5 class="bx--type-productive-heading-02">
-                Requires weewx >= 4.5
-              </h5>
+              <h4 class="bx--type-productive-heading-03">
+                Installation and Update
+              </h4>
               <p class="bx--type-body-long-02">
-                <b>Please note:</b> For installation, please use the generated
-                zip archive from a release, eg.
-                https://github.com/Daveiano/weewx-wdc/releases/download/v2.0.1/weewx-wdc-v2.0.1.zip.
-                Don't download the repository directly and don't use the GitHub
-                generated zip and tar.gz archives that come alongside the
-                release. Always use the zip archive named
-                <b>weewx-wdc-vX.X.X.zip</b>
-              </p>
-              <p class="bx--type-helper-text-01">
-                Background: The files in the src/ directory are the source files
-                (TypeScript, SCSS). When creating a release, these source files
-                get transformed and optimized, and the output location of these
-                transformed files is the location which matches the location in
-                the install.py script. The weewx-wdc-vX.X.X.zip should contain
-                all these transformed files (like service-worker.js), but if you
-                download the current state of the repo, these files are not
-                included and this will throw multiple
-                <code>FileNotFoundError</code> errors while installing.
-              </p>
-              <ol class="bx--type-body-long-02">
-                <li>
-                  <a
-                    href="https://github.com/Daveiano/weewx-wdc/releases"
-                    target="_blank"
-                    >Download</a
-                  >
-                  the latest version
-                </li>
-                <li>
-                  Create a new folder:
-                  <bx-code-snippet type="inline"
-                    >mkdir /tmp/weewx-wdc/</bx-code-snippet
-                  >
-                </li>
-                <li>
-                  Unzip to that folder:
-                  <!--prettier-ignore-->
-                  <bx-code-snippet type="inline"
-                    >unzip weewx-wdc-v2.0.1.zip -d /tmp/weewx-wdc/</bx-code-snippet
-                  >
-                </li>
-                <li>
-                  Install the extension:
-                  <bx-code-snippet type="inline"
-                    >wee_extension --install=path/to/folder</bx-code-snippet
-                  >
-                </li>
-                <li>
-                  Restart weewx:
-                  <bx-code-snippet type="inline">weewx restart</bx-code-snippet>
-                </li>
-              </ol>
-              <h4 class="bx--type-productive-heading-03">Configuration</h4>
-              <h5 class="bx--type-productive-heading-02">Localization</h5>
-              <p class="bx--type-body-long-02">
-                The skin currently has an english and a german translation, you
-                can change the language in weewx.conf:
-              </p>
-              <!--prettier-ignore-->
-              <bx-code-snippet type="multi">[[WdcReport]]
-    skin = weewx-wdc
-    enable = true
-    lang = de</bx-code-snippet>
-              <h5 class="bx--type-productive-heading-02">DisplayOptions</h5>
-              <p class="bx--type-body-long-02">
-                <bx-code-snippet type="inline">layout</bx-code-snippet>
-                Switch between classic or alternative. See
+                Please have a look at the GitHub page for
                 <a
-                  href="https://github.com/Daveiano/weewx-wdc#full-page"
+                  href="https://github.com/Daveiano/weewx-wdc#installation"
                   target="_blank"
-                  >Screenshots</a
+                  >Installation</a
                 >
-                for comparison.
-                <a href="https://www.weewx-hbt.de/" target="_blank"
-                  >https://www.weewx-hbt.de/</a
+                and
+                <a
+                  href="https://github.com/Daveiano/weewx-wdc#updating-the-skin"
+                  target="_blank"
+                  >Update</a
                 >
-                uses the alternative layout. The classic layout can be seen
-                here: https://weewx-hbt.de/classic
+                instructions.
               </p>
-              <p class="bx--type-body-long-02">
-                <bx-code-snippet type="inline"
-                  >climatological_days</bx-code-snippet
-                >
-                E.g. Rain days (days with precipitation) or Summer days (Temp >
-                25°C). Leave empty to disable. When activated a rain days
-                calendar chart and an averge temperature calendar chart is shown
-                alongside.
-              </p>
-              <p class="bx--type-body-long-02">
-                <bx-code-snippet type="inline"
-                  >table_tile_observations</bx-code-snippet
-                >
-                Defines which observations should be shown in the data table
-                component. Simply comment this out or leave empty to hide the
-                tables at all pages:
-                <!--prettier-ignore-->
-                <bx-code-snippet type="inline"
-                  >#table_tile_observations = outTemp, outHumidity, barometer, ...</bx-code-snippet>
-              </p>
-              <p class="bx--type-body-long-02">
-                <bx-code-snippet type="inline"
-                  >stat_tile_observations</bx-code-snippet
-                >
-                Define which observations should be shown in the stat tiles (at
-                the top of each page).
-              </p>
-              <p class="bx--type-body-long-02">
-                <bx-code-snippet type="inline"
-                  >diagram_tile_observations</bx-code-snippet
-                >
-                Define which observations to show as diagrams. This can include
-                definitions for combined diagrams. Combined diagrams (like
-                Temperature and Dew point or Windchill and Heat index) need to
-                be defined in the `<bx-code-snippet type="inline"
-                  >[[diagram_tile_combined_observations]]</bx-code-snippet
-                >
-                section like this:
-              </p>
-              <p class="bx--type-body-long-02">
-                For a combined diagram of Temperature and Dew point:
-              </p>
-              <!--prettier-ignore-->
-              <bx-code-snippet type="multi">[[[tempdew]]]                           # 1
-    label = 'Temperature / Dewpoint'    # 2
-    pointSize = 3
-    [[[[obs]]]]                         # 3
-        [[[[[outTemp]]]]]
-            observation = "outTemp"     # 4
-            aggregate_type = "avg"
-        [[[[[dewpoint]]]]]
-            observation = "dewpoint"    # 4
-            aggregate_type = "avg"      # 5
-            color = '#610000'           # 6</bx-code-snippet>
-              <p class="bx--type-body-long-02">
-                <bx-code-snippet type="inline"># 1</bx-code-snippet> Name of the
-                combined diagram, needs to be the same as used in
-                <bx-code-snippet type="inline"
-                  >diagram_tile_observations</bx-code-snippet
-                >.<br />
-                <bx-code-snippet type="inline"># 2</bx-code-snippet> Label of
-                the diagram.<br />
-                <bx-code-snippet type="inline"># 3</bx-code-snippet> Under the
-                key <bx-code-snippet type="inline">obs</bx-code-snippet> specify
-                the observations to combine (The keys here are random and only
-                used internally).<br />
-                <bx-code-snippet type="inline"># 4</bx-code-snippet>
-                Set the observation to show.<br />
-                <bx-code-snippet type="inline"># 5</bx-code-snippet>
-                Optionally, define the aggregate type (min, max, avg, sum)<br />
-                <bx-code-snippet type="inline"># 6</bx-code-snippet>
-                Optionally, define a color.
-              </p>
-              <h6 class="bx--type-productive-heading-01">[[diagrams]]</h6>
-              <p class="bx--type-body-long-02">
-                Besides the combined_observations, you can configure the look of
-                the diagrams in the skin in the diagrams section.
-                <br />
-                For general behaviour changes, use the options under [[line]]
-                and [[bar]]:
-              </p>
-              <bx-code-snippet type="multi"
-                >[[[line]]] lineWidth = 2 pointSize = 5 isInteractive = True
-                enablePoints = True enableCrosshair = True curve = "natural"
-                [[[bar]]] enableLabel = False isInteractive = True
-              </bx-code-snippet>
-              <p class="bx--type-body-long-02">
-                <bx-code-snippet type="inline">lineWidth</bx-code-snippet> The
-                line width (line diagrams)<br />
-
-                <bx-code-snippet type="inline">pointSize</bx-code-snippet> The
-                point size (line diagrams)<br />
-
-                <bx-code-snippet type="inline">isInteractive</bx-code-snippet>
-                Enable/disable interactive tooltips (line and bar)<br />
-
-                <bx-code-snippet type="inline">enablePoints</bx-code-snippet>
-                Show points at all (line diagrams)<br />
-
-                <bx-code-snippet type="inline">enableCrosshair</bx-code-snippet>
-                Show the crosshair on mouse over (line and bar)<br />
-
-                <bx-code-snippet type="inline">enableLabel</bx-code-snippet>
-                Show the value as label on the bars (bar)<br />
-
-                <bx-code-snippet type="inline">curve</bx-code-snippet> Curve
-                interpolation. One of basis, cardinal, catmullRom, linear,
-                monotoneX, monotoneY, natural, step, stepAfter, stepBefore (line
-                diagram)<br />
-              </p>
-              <p class="bx--type-body-long-02">
-                You can configure every diagram under the given observation key
-                like:
-              </p>
-              <bx-code-snippet type="multi"
-                >[[diagrams]] [[[windDir]]] curve = "basis" [[[radiation]]]
-                curve = "basis" color = "black" [[[UV]]] curve = "step"
-                lineWidth = 1 [[[rainRate]]] curve = "linear" enablePoints =
-                False [[[windSpeed]]] curve = "linear" [[[windGust]]] curve =
-                "linear" isInteractive = False
-              </bx-code-snippet>
-              <h6 class="bx--type-productive-heading-01">[[[heights]]]</h6>
-              <p class="bx--type-body-long-02">
-                Configure the height of the diagram tiles seperate for each
-                layout, classic and alternative per screen size.
-                <br />
-                Breakpoints are:
-              </p>
-              <ul>
-                <li>md: > 672px</li>
-                <li>lg > 1056px</li>
-                <li>xlg > 1312px</li>
-                <li>max > 1920px</li>
-              </ul>
               <h4 class="bx--type-productive-heading-03">
                 How to change this page
               </h4>

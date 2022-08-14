@@ -113,7 +113,7 @@
     <!-- Main row -->
     <!--prettier-ignore-->
     #if $precision == 'day' and $get_show_sum($partial_obs)
-      <div class="bx--row">
+      <div class="bx--row" data-test="sum">
         <div class="bx--col">
           <p class="stat-label">$gettext($label_sum)</p>
           <p class="stat-value">
@@ -124,7 +124,7 @@
       </div>
     #else if $precision != 'day' and $get_show_sum($partial_obs)
       #if $partial_obs == 'rain'
-        <div class="bx--row">
+        <div class="bx--row" data-test="rain-days">
           <div class="bx--col">
             <p class="stat-label">$gettext("Rain days")</p>
             <p class="stat-value">
@@ -134,7 +134,7 @@
           </div>
         </div>
       #else
-        <div class="bx--row">
+        <div class="bx--row" data-test="avg">
           <div class="bx--col">
             <p class="stat-label">$gettext($label_avg)</p>
             <p class="stat-value">
@@ -148,7 +148,7 @@
     #else
     <div class="bx--row">
       #if $get_show_min($partial_obs)
-      <div class="bx--col">
+      <div class="bx--col" data-test="min">
         <p class="stat-label">
           <!--prettier-ignore-->
           #if $precision == 'year' or $precision == 'alltime'
@@ -170,7 +170,7 @@
         </p>
       </div>
       #end if
-      <div class="bx--col">
+      <div class="bx--col" data-test="max">
         <p class="stat-label">
           <!--prettier-ignore-->
           #if $precision == 'year' or $precision == 'alltime'

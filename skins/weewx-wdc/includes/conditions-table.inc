@@ -51,7 +51,7 @@
           <div class="mobile-header">
             <div class="label">$obs.label[$skin_obs]</div>
           </div>
-          <bx-structured-list-row>
+          <bx-structured-list-row data-test="$skin_obs">
             <bx-structured-list-cell>$obs.label[$skin_obs]</bx-structured-list-cell>
             <bx-structured-list-cell>
               <!--prettier-ignore-->
@@ -136,7 +136,7 @@
         <bx-structured-list-body>
           #for $skin_obs in $DisplayOptions.get('stat_tile_observations')
             #if $getattr($current, $skin_obs).has_data and $get_show_sum($skin_obs)
-              <bx-structured-list-row>
+              <bx-structured-list-row data-test="$skin_obs">
                 <bx-structured-list-cell class="keep-cell">$obs.label[$skin_obs]</bx-structured-list-cell>
                 <bx-structured-list-cell>
                   <!--prettier-ignore-->

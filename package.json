@@ -73,7 +73,7 @@
     "deploy:local": "sudo rsync -vua ./skins/weewx-wdc/ /etc/weewx/skins/weewx-wdc/ && sudo cp -r ./bin/user/. /usr/share/weewx/user/ && sudo systemctl restart weewx && sudo /usr/share/weewx/wee_reports",
     "serve:local": "docker run -it --rm -d -p 8080:80 --name web -v /var/www/html/weewx:/usr/share/nginx/html nginx",
     "deploy:pi": "yarn run build && sudo rsync -vua ./bin/ pi@weewx:/home/pi/bin && sudo rsync -vua --exclude 'weewx-wdc/skin.conf' ./skins/ pi@weewx:/home/pi/skins",
-    "test:e2e": "yarn playwright test"
+    "test:e2e": "yarn playwright test --config playwright.config.ts"
   },
   "packageManager": "yarn@3.2.1"
 }

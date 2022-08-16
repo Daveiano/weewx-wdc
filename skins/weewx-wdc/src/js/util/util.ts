@@ -143,7 +143,6 @@ export const getMargins = (obs: string): Box => {
 };
 
 export const getAxisLeftLegendOffset = (obs: string): number => {
-  console.log(obs);
   switch (obs) {
     case "pressure":
       return -50;

@@ -1,6 +1,157 @@
+$feature-flags: (
+  enable-css-custom-properties: true,
+);
 @import "~@carbon/themes/scss/themes";
+$custom-property-prefix: "cds";
 $carbon--theme: $carbon--theme--g10;
 @include carbon--theme();
+
+bx-code-snippet,
+bx-tabs,
+bx-inline-notification,
+dds-image-with-caption,
+bx-code-snippet,
+bx-header,
+bx-btn,
+bx-tooltip,
+bx-tooltip-definition,
+bx-structured-list {
+  @include carbon--theme($carbon--theme--g10, true);
+}
+
+html.dark {
+  @include carbon--theme($carbon--theme--g90, true);
+
+  bx-code-snippet,
+  bx-tabs,
+  bx-inline-notification,
+  dds-image-with-caption,
+  bx-code-snippet,
+  bx-header,
+  bx-btn,
+  bx-tooltip,
+  bx-tooltip-definition,
+  bx-structured-list {
+    @include carbon--theme($carbon--theme--g90, true);
+  }
+
+  #footer {
+    @include carbon--theme($carbon--theme--g10, true);
+    //background-color: var(--cds-ui-05);
+  }
+
+  bx-side-nav {
+    @include carbon--theme($carbon--theme--g90, true);
+    background-color: $inverse-01;
+    color: $text-01;
+    border-color: $text-01;
+  }
+
+  bx-side-nav-menu::part(title) {
+    @include carbon--theme($carbon--theme--g90, true);
+    color: $text-01;
+  }
+  bx-side-nav-menu::part(expando-icon) {
+    @include carbon--theme($carbon--theme--g90, true);
+    fill: $text-01;
+  }
+  bx-side-nav-menu::part(expando):hover,
+  bx-side-nav-menu[active]::part(expando) {
+    @include carbon--theme($carbon--theme--g90, true);
+    background-color: $ui-01;
+  }
+  bx-side-nav-menu-item::part(title) {
+    @include carbon--theme($carbon--theme--g90, true);
+    color: $text-01;
+  }
+  bx-side-nav-menu-item::part(link):hover,
+  bx-side-nav-menu-item[active]::part(link) {
+    @include carbon--theme($carbon--theme--g90, true);
+    background-color: $ui-01;
+  }
+
+  bx-side-nav-link::part(link):hover,
+  bx-side-nav-link[active]::part(link) {
+    @include carbon--theme($carbon--theme--g90, true);
+    background-color: $ui-01;
+  }
+  bx-side-nav-link::part(title) {
+    @include carbon--theme($carbon--theme--g90, true);
+    color: $text-01;
+  }
+  bx-side-nav-link {
+    @include carbon--theme($carbon--theme--g90, true);
+    svg {
+      fill: $text-02;
+    }
+  }
+
+  bx-tooltip-definition {
+    --cds-interactive-01: var(--cds-text-02);
+    --cds-interactive-04: var(--cds-text-01);
+  }
+
+  .almanac-tile svg {
+    @include carbon--theme($carbon--theme--g90, true);
+    fill: $text-02;
+  }
+
+  .bx-ce-demo-devenv--tab-panels {
+    background: $ui-01;
+  }
+
+  div.diagram {
+    //background: $ui-02;
+    &.plotly {
+      svg.main-svg {
+        background: transparent !important;
+      }
+      g.legend {
+        rect.bg {
+          fill: transparent !important;
+        }
+      }
+      g.polarsublayer.plotbg {
+        path {
+          fill: transparent !important;
+        }
+      }
+    }
+  }
+
+  .noaa-report-link {
+    color: $link-01;
+  }
+
+  // Forecast.
+  .forecast-tile
+    .forecast
+    bx-structured-list
+    bx-structured-list-row
+    bx-structured-list-cell {
+    .temphi {
+      color: $text-02;
+    }
+    .templo {
+      color: $text-02;
+    }
+  }
+}
+
+#header-global {
+  margin-inline-start: auto;
+  display: flex;
+  bx-btn {
+    @include carbon--theme($carbon--theme--g90, true);
+    svg {
+      fill: var(--cds-icon-03);
+    }
+  }
+}
+
+.hidden {
+  display: none !important;
+}
 
 @import "~@carbon/layout/scss/breakpoint";
 @import "~@carbon/layout/scss/convert";
@@ -154,7 +305,6 @@ main.user-page {
     max-width: 40rem;
   }
   bx-code-snippet {
-    @include carbon--theme($carbon--theme--g10, true);
     margin-bottom: $spacing-05;
   }
   dds-image-with-caption {
@@ -194,9 +344,6 @@ header.section-header {
   }
 }
 
-bx-tabs {
-  @include carbon--theme($carbon--theme--g10, true);
-}
 .bx-ce-demo-devenv--tab-panels {
   flex: 1;
   padding: 1rem 1rem 0rem 1rem;
@@ -318,6 +465,7 @@ bx-tabs {
         max-width: 32px;
         display: inline-block;
         margin-right: $spacing-02;
+        fill: $text-02;
       }
       span.stat-wind-dir {
         svg {
@@ -358,9 +506,10 @@ bx-tabs {
     cursor: pointer;
     position: absolute;
     right: 0;
-    top: -#{$spacing-07};
+    top: -2rem;
     padding: $spacing-02;
     box-sizing: content-box;
+    fill: $text-02;
     &:hover {
       background: $background-active;
     }
@@ -419,6 +568,7 @@ bx-tabs {
     align-items: center;
     svg {
       margin-right: $spacing-02;
+      fill: $text-02;
     }
   }
 }
@@ -485,6 +635,7 @@ bx-tabs {
             display: block;
             width: 42px;
             height: 42px;
+            fill: $text-02;
           }
         }
         &.rain {
@@ -562,6 +713,16 @@ bx-tabs {
   font-family: carbon--font-family("mono"), monospace;
 }
 
+.diagram-tooltip {
+  background: $interactive-02;
+  box-shadow: 0 2px 6px $interactive-02;
+}
+
+.diagram text,
+.calendar-diagram text {
+  fill: $text-01 !important;
+}
+
 .windrose-tooltip {
   display: none;
   z-index: 10;
@@ -586,7 +747,6 @@ bx-tabs {
 
 #footer {
   padding: 2rem;
-  margin-top: $spacing-09;
   background-color: $background-inverse;
   color: $text-inverse;
   a {

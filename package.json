@@ -22,6 +22,7 @@
     "carbon-components-react": "7.50.0",
     "carbon-data-table-state-manager": "^1.0.3",
     "carbon-icons": "7.0.7",
+    "color": "^4.2.3",
     "d3-scale": "^4.0.2",
     "dayjs": "^1.11.3",
     "prop-types": "^15.8.1",
@@ -40,6 +41,7 @@
     "@playwright/test": "^1.24.2",
     "@types/carbon-components-react": "^7.46.1",
     "@types/carbon__icons-react": "^10.24.0",
+    "@types/color": "^3.0.3",
     "@types/d3-scale": "^4.0.2",
     "@types/plotly.js": "^2.12.1",
     "@types/react": "^18.0.8",
@@ -65,15 +67,13 @@
     "webpack-cli": "^4.10.0"
   },
   "scripts": {
-    "cleanOutput": "rm -f skins/weewx-wdc/dist/* && rm -f skins/weewx-wdc/service-worker.js",
     "lint": "eslint --ext .ts,.tsx,.js ./skins/weewx-wdc/src",
-    "dev": "yarn run cleanOutput &&  NODE_ENV=development webpack --watch",
-    "build": "yarn run cleanOutput && NODE_ENV=production webpack && mv skins/weewx-wdc/dist/service-worker.js skins/weewx-wdc/service-worker.js",
-    "build:ci": "NODE_ENV=production webpack && mv skins/weewx-wdc/dist/service-worker.js skins/weewx-wdc/service-worker.js",
+    "dev": "NODE_ENV=development webpack --watch",
+    "build": "NODE_ENV=production webpack && mv skins/weewx-wdc/dist/service-worker.js skins/weewx-wdc/service-worker.js",
     "deploy:local": "sudo rsync -vua ./skins/weewx-wdc/ /etc/weewx/skins/weewx-wdc/ && sudo cp -r ./bin/user/. /usr/share/weewx/user/ && sudo systemctl restart weewx && sudo /usr/share/weewx/wee_reports",
     "serve:local": "docker run -it --rm -d -p 8080:80 --name web -v /var/www/html/weewx:/usr/share/nginx/html nginx",
     "deploy:pi": "yarn run build && sudo rsync -vua ./bin/ pi@weewx:/home/pi/bin && sudo rsync -vua --exclude 'weewx-wdc/skin.conf' ./skins/ pi@weewx:/home/pi/skins",
-    "test:e2e": "yarn playwright test"
+    "test:e2e": "yarn playwright test --config playwright.config.ts"
   },
   "packageManager": "yarn@3.2.1"
 }

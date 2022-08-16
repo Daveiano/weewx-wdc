@@ -15,13 +15,13 @@ import path from "path";
 const config: PlaywrightTestConfig = {
   testDir: "./test/e2e-tests",
   /* Maximum time one test can run for. */
-  timeout: 30 * 1000,
+  timeout: 35 * 1000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
      * For example in `await expect(locator).toHaveText();`
      */
-    timeout: 7500,
+    timeout: 10000,
     toHaveScreenshot: {
       maxDiffPixelRatio: 0.1,
     },

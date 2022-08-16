@@ -13,9 +13,7 @@ export const TooltipLine: React.FC<TooltipPropsLine> = (
     <div
       style={{
         padding: "7px",
-        background: "rgb(57 57 57)",
         color: "white",
-        boxShadow: `0 2px 6px rgb(57 57 57)`,
         borderLeft: `5px solid ${props.point.serieColor}`,
         textAlign: "right",
       }}

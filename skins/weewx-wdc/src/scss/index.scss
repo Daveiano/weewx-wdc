@@ -35,9 +35,65 @@ html.dark {
     @include carbon--theme($carbon--theme--g90, true);
   }
 
+  #footer {
+    @include carbon--theme($carbon--theme--g10, true);
+    //background-color: var(--cds-ui-05);
+  }
+
+  bx-side-nav {
+    @include carbon--theme($carbon--theme--g90, true);
+    background-color: $inverse-01;
+    color: $text-01;
+    border-color: $text-01;
+  }
+
+  bx-side-nav-menu::part(title) {
+    @include carbon--theme($carbon--theme--g90, true);
+    color: $text-01;
+  }
+  bx-side-nav-menu::part(expando-icon) {
+    @include carbon--theme($carbon--theme--g90, true);
+    fill: $text-01;
+  }
+  bx-side-nav-menu::part(expando):hover,
+  bx-side-nav-menu[active]::part(expando) {
+    @include carbon--theme($carbon--theme--g90, true);
+    background-color: $ui-01;
+  }
+  bx-side-nav-menu-item::part(title) {
+    @include carbon--theme($carbon--theme--g90, true);
+    color: $text-01;
+  }
+  bx-side-nav-menu-item::part(link):hover,
+  bx-side-nav-menu-item[active]::part(link) {
+    @include carbon--theme($carbon--theme--g90, true);
+    background-color: $ui-01;
+  }
+
+  bx-side-nav-link::part(link):hover,
+  bx-side-nav-link[active]::part(link) {
+    @include carbon--theme($carbon--theme--g90, true);
+    background-color: $ui-01;
+  }
+  bx-side-nav-link::part(title) {
+    @include carbon--theme($carbon--theme--g90, true);
+    color: $text-01;
+  }
+  bx-side-nav-link {
+    @include carbon--theme($carbon--theme--g90, true);
+    svg {
+      fill: $text-02;
+    }
+  }
+
   bx-tooltip-definition {
     --cds-interactive-01: var(--cds-text-02);
     --cds-interactive-04: var(--cds-text-01);
+  }
+
+  .almanac-tile svg {
+    @include carbon--theme($carbon--theme--g90, true);
+    fill: $text-02;
   }
 
   .bx-ce-demo-devenv--tab-panels {
@@ -61,6 +117,10 @@ html.dark {
         }
       }
     }
+  }
+
+  .noaa-report-link {
+    color: $link-01;
   }
 
   // Forecast.

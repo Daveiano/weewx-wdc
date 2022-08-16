@@ -1,7 +1,8 @@
-import React, { FunctionComponent, useRef, useState } from "react";
+import React, { FunctionComponent, useEffect, useRef, useState } from "react";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import createPlotlyComponent from "react-plotly.js/factory";
 import { Maximize } from "../assets/maximize";
+import color from "color";
 
 import { TooltipWindrose } from "../components/tooltip-windrose";
 import { WindRoseProps } from "./types";
@@ -15,7 +16,7 @@ export const WindRoseDiagram: FunctionComponent<WindRoseProps> = (
   const hoverInfoRef = useRef<HTMLDivElement>(null);
   const hoverInfoRefFullscreen = useRef<HTMLDivElement>(null);
   const [title, setTitle] = useState("");
-  const [color, setColor] = useState("");
+  const [hoverColor, setColor] = useState("");
   const [template, setTemplate] = useState("");
   const [replacements, setReplacements] = useState({});
   const [hoverInfoPosition, setHoverInfoPosition] = useState({
@@ -23,6 +24,39 @@ export const WindRoseDiagram: FunctionComponent<WindRoseProps> = (
     left: 0,
   });
   const handle = useFullScreenHandle();
+  // @todo Use Color export from carbon, see ui-01.
+  const backgroundColorDarkModeLightness = color("#393939").lightness();
+  // @todo This adds one MutationObserver per LineDiagram. Add this to one
+  //    general component which shares the state.
+  const [darkMode, setDarkMode] = useState(
+    document.documentElement.classList.contains("dark")
+  );
+
+  const callback = (mutationsList: Array<MutationRecord>) => {
+    mutationsList.forEach((mutation) => {
+      if (
+        mutation.attributeName === "class" &&
+        (mutation.target as HTMLElement).classList.contains("dark")
+      ) {
+        setDarkMode(true);
+      } else {
+        setDarkMode(false);
+      }
+    });
+  };
+
+  useEffect(() => {
+    const mutationObserver = new MutationObserver(callback);
+    mutationObserver.observe(document.documentElement, { attributes: true });
+    return () => {
+      mutationObserver.disconnect();
+    };
+  }, []);
+
+  console.log(backgroundColorDarkModeLightness);
+  colors.map((c: string) => {
+    console.log(color(c).lightness());
+  });
 
   const windroseDiagram = (
     <Plot
@@ -58,7 +92,13 @@ export const WindRoseDiagram: FunctionComponent<WindRoseProps> = (
           },
           angularaxis: { direction: "clockwise" },
         },
-        colorway: colors,
+        colorway: darkMode
+          ? colors.map((c: string) =>
+              color(c).lightness() <= backgroundColorDarkModeLightness * 2
+                ? color(c).lighten(0.25).desaturate(0.2).hex()
+                : color(c).lighten(0.1).desaturate(0.1).hex()
+            )
+          : colors,
         yaxis: {
           range: [0, 20],
         },
@@ -127,7 +167,7 @@ export const WindRoseDiagram: FunctionComponent<WindRoseProps> = (
         }}
       >
         <TooltipWindrose
-          color={color}
+          color={hoverColor}
           template={template}
           replacements={replacements}
           title={title}
@@ -146,7 +186,7 @@ export const WindRoseDiagram: FunctionComponent<WindRoseProps> = (
           }}
         >
           <TooltipWindrose
-            color={color}
+            color={hoverColor}
             template={template}
             replacements={replacements}
             title={title}

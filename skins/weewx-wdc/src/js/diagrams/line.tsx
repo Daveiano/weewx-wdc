@@ -28,6 +28,7 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
   const small = useMediaQuery("(max-width: 672px)");
   const timeDifferenceInMonths = getTimeDifferenceInMonths(props.data[0].data);
   const handle = useFullScreenHandle();
+  // @todo Use Color export from carbon, see ui-01.
   const backgroundColorDarkModeLightness = color("#393939").lightness();
   // @todo This adds one MutationObserver per LineDiagram. Add this to one
   //    general component which shares the state.
@@ -137,19 +138,24 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
         },
       }}
       colors={
-        // @todo if area, no lighten. if color.lightness < background.lightness, lighten more, else lighten normal
+        // If area, little lighten. If color.lightness < background.lightness, lighten more, else lighten normal
         darkMode
           ? enableArea.includes(props.observation)
             ? props.color.map((c) =>
                 color(c).lightness() <= backgroundColorDarkModeLightness * 2
-                  ? color(c).lighten(0.75).hex()
+                  ? color(c).desaturate(0.1).lighten(0.75).hex()
                   : c
               )
-            : props.color.map((c) =>
-                color(c).lightness() <= backgroundColorDarkModeLightness
-                  ? color(c).lighten(10).hex()
-                  : color(c).lighten(0.25).hex()
-              )
+            : props.color.map((c) => {
+                if (color(c).red() > 90) {
+                  return color(c).desaturate(0.5).lighten(1.5).hex();
+                }
+                if (color(c).lightness() <= backgroundColorDarkModeLightness) {
+                  return color(c).lighten(10).hex();
+                }
+
+                return color(c).lighten(0.25).hex();
+              })
           : props.color
       }
       curve={getCurve(props.observation)}
@@ -195,6 +201,24 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
       yScale={getyScale(props.observation, combinedData)}
       xFormat="time:%Y/%m/%d %H:%M"
       yFormat={(value) => `${value} ${props.unit}`}
+      theme={
+        darkMode
+          ? {
+              axis: {
+                domain: {
+                  line: {
+                    stroke: "#525252",
+                  },
+                },
+              },
+              grid: {
+                line: {
+                  stroke: "#525252",
+                },
+              },
+            }
+          : {}
+      }
       {...props.nivoProps}
     />
   );

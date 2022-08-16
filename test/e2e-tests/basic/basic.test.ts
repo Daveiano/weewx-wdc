@@ -89,3 +89,20 @@ test.describe("Basic pages display", () => {
     await expect(page).toHaveScreenshot({ fullPage: true });
   });
 });
+
+test("Dark mode", async ({ page }) => {
+  await page.goto("artifacts-alternative-weewx-html/public_html/index.html");
+  await page.locator("bx-header #header-global bx-btn").click();
+  await expect(page).toHaveScreenshot({ fullPage: true });
+
+  await page.goto(
+    "artifacts-alternative-weewx-html/public_html/statistics.html"
+  );
+  await expect(page).toHaveScreenshot({ fullPage: true });
+
+  await page.goto("artifacts-classic-weewx-html/public_html/index.html");
+  await expect(page).toHaveScreenshot({ fullPage: true });
+
+  await page.goto("artifacts-classic-weewx-html/public_html/statistics.html");
+  await expect(page).toHaveScreenshot({ fullPage: true });
+});

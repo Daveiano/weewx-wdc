@@ -1,5 +1,9 @@
 {
-  "exclude": ["test"],
+  "exclude": [
+    "test",
+    "skins/weewx-wdc/dist",
+    "skins/weewx-wdc/service-worker.js"
+  ],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 

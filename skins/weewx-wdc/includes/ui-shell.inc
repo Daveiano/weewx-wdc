@@ -120,16 +120,16 @@
 <bx-side-nav aria-label="Side navigation" collapse-mode="responsive">
   <bx-side-nav-items>
     <bx-side-nav-link class="show-small" href="index.html"
-      >$gettext("Today")</bx-side-nav-link
+      ><span>$gettext("Today")</span></bx-side-nav-link
     >
     <bx-side-nav-link class="show-small" href="week.html"
-      >$gettext("Week")</bx-side-nav-link
+      ><span>$gettext("Week")</span></bx-side-nav-link
     >
     <bx-side-nav-link class="show-small" href="month.html"
-      >$gettext("Month")</bx-side-nav-link
+      ><span>$gettext("Month")</span></bx-side-nav-link
     >
     <bx-side-nav-link class="show-small" href="year.html"
-      >$gettext("Year")</bx-side-nav-link
+      ><span>$gettext("Year")</span></bx-side-nav-link
     >
     <bx-side-nav-divider class="show-small"></bx-side-nav-divider>
     <bx-side-nav-link href="celestial.html">
@@ -159,7 +159,7 @@
           height="32"
         />
       </svg>
-      $gettext("Celestial")
+      <span>$gettext("Celestial")</span>
     </bx-side-nav-link>
     <bx-side-nav-link href="statistics.html">
       <svg
@@ -189,7 +189,7 @@
           height="32"
         />
       </svg>
-      $gettext("Statistics")
+      <span>$gettext("Statistics")</span>
     </bx-side-nav-link>
     #for $static_page in $get_static_pages()
     <bx-side-nav-link href="$static_page['link']">
@@ -216,13 +216,13 @@
         />
         <rect class="cls-1" width="32" height="32" />
       </svg>
-      $gettext($static_page['title'])
+      <span>$gettext($static_page['title'])</span>
     </bx-side-nav-link>
     #end for
 
     <bx-side-nav-divider></bx-side-nav-divider>
     <bx-side-nav-link class="sidebar-heading"
-      >$gettext('Archive & NOAA Reports')</bx-side-nav-link
+      ><span>$gettext('Archive & NOAA Reports')</span></bx-side-nav-link
     >
     <!--prettier-ignore-->
     #set $archive_months = $SummaryByMonth
@@ -244,7 +244,7 @@
       <!--prettier-ignore-->
       #for $month in $months_for_year
       <bx-side-nav-menu-item href="month-${month}.html">
-        $month_string_format($month)
+        <span>$month_string_format($month)</span>
       </bx-side-nav-menu-item>
       #end for
     </bx-side-nav-menu>

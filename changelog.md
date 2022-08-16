@@ -157,3 +157,4 @@ For more info about installing and uninstalling extensions in weewx, see https:/
 # Next
 
 - Bugfix: Windchill is not translated to Windkühle in German [GH-50]
+- Added Dark mode support [GH-48]

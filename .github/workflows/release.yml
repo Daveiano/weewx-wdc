@@ -22,7 +22,7 @@ jobs:
         run: yarn install --network-timeout 1000000
 
       - name: 🚀 Build JS & SCSS
-        run: yarn run build:ci
+        run: yarn run build
 
       - name: Archive Release (zip)
         uses: thedoctor0/zip-release@master

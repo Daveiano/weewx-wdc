@@ -1,4 +1,5 @@
 <!--prettier-ignore-->
+#errorCatcher Echo
 #encoding UTF-8
 #set $planet = $label_almanac.lower()
 

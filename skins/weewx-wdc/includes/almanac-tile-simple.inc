@@ -1,4 +1,5 @@
 <!--prettier-ignore-->
+#errorCatcher Echo
 #encoding UTF-8
 
 <div class="bx--col-sm-4 bx--col-md-4 bx--col-lg-4 bx--col-xlg-4 bx--col-max-3">

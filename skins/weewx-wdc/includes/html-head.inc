@@ -1,4 +1,6 @@
 <!--prettier-ignore-->
+#errorCatcher Echo
+#encoding UTF-8
 #set $diagrams_config = $DisplayOptions.get("diagrams", {})
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />

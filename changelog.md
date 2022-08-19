@@ -154,9 +154,28 @@ For more info about installing and uninstalling extensions in weewx, see https:/
 - Added Italian translation contributed by Montefiori Luca.
 - Bugfix: Running wee_reports takes forever when there is not enough weather data [GH-47]
 
-# Next
+# 2.2.0
 
 - Bugfix: Windchill is not translated to Windkühle in German [GH-50]
 - Added Dark mode support [GH-48]
 - Added more automated testing to make the skin more robust [GH-34]
 - Added yScaleMin, yScaleMax and yScaleOffset as diagram parameters for skin.conf. [GH-49]
+
+## Changes made to skin.conf since 2.1.0:
+
+1. [yScaleMin, yScaleMax and yScaleOffset](https://github.com/Daveiano/weewx-wdc/commit/2f74e1468a080cbefa67ae20c725d25664d33895#diff-ba225fb627dcbf577d0d1fde0f18d93e8e2cf2097c37086cd28ef23e8e7bd820), also see https://github.com/Daveiano/weewx-wdc/wiki/Configuration#general
+
+```
+...
+[[[windDir]]]
+   curve = "basis"
+   lineWidth = 0
++  yScaleMin = 0
++  yScaleMax = 360
+[[[radiation]]]
+   curve = "basis"
++  yScaleOffset = 150
+...
+```
+
+# Next

@@ -24,7 +24,7 @@ html.dark {
 
   bx-code-snippet,
   bx-tabs,
-  bx-inline-notification,
+  //bx-inline-notification,
   dds-image-with-caption,
   bx-code-snippet,
   bx-header,
@@ -316,6 +316,9 @@ main.user-page {
     li > * {
       margin-bottom: 0;
     }
+  }
+  a {
+    color: $link-01;
   }
 }
 

@@ -162,12 +162,22 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
       data={props.data}
       enableArea={enableArea.includes(props.observation)}
       areaOpacity={darkMode ? 0.75 : props.observation === "wind" ? 0.5 : 0.07}
-      areaBaselineValue={
-        areaBaselineValue0.includes(props.observation)
-          ? 0
-          : Math.min(...combinedData.map((item) => item.y)) -
-            getyScaleOffset(props.observation)
-      }
+      areaBaselineValue={((): number => {
+        if (props.nivoProps.yScaleMin) {
+          return parseFloat(props.nivoProps.yScaleMin);
+        }
+
+        if (areaBaselineValue0.includes(props.observation)) {
+          return 0;
+        }
+
+        return (
+          Math.min(...combinedData.map((item) => item.y)) -
+          (props.nivoProps.yScaleOffset
+            ? parseFloat(props.nivoProps.yScaleOffset)
+            : getyScaleOffset(props.observation))
+        );
+      })()}
       enableCrosshair={true}
       enablePoints={true}
       enableSlices={props.data.length > 1 ? "x" : false}
@@ -198,7 +208,13 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
         type: "time",
         format: "%s",
       }}
-      yScale={getyScale(props.observation, combinedData)}
+      yScale={getyScale(
+        props.observation,
+        combinedData,
+        props.nivoProps.yScaleOffset,
+        props.nivoProps.yScaleMin,
+        props.nivoProps.yScaleMax
+      )}
       xFormat="time:%Y/%m/%d %H:%M"
       yFormat={(value) => `${value} ${props.unit}`}
       theme={

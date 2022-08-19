@@ -60,11 +60,17 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
         left: 55,
       }}
       maxValue={
-        Math.max(
-          ...props.data[0].data.map((item): number => (item as { y: number }).y)
-        ) + getyScaleOffset(props.observation)
+        props.nivoProps.yScaleMax
+          ? parseFloat(props.nivoProps.yScaleMax)
+          : Math.max(
+              ...props.data[0].data.map(
+                (item): number => (item as { y: number }).y
+              )
+            ) + getyScaleOffset(props.observation, props.nivoProps.yScaleOffset)
       }
-      minValue={0}
+      minValue={
+        props.nivoProps.yScaleMin ? parseFloat(props.nivoProps.yScaleMin) : 0
+      }
       keys={["y"]}
       tooltip={(point) => (
         <TooltipBar

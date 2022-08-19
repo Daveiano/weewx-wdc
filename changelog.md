@@ -158,3 +158,5 @@ For more info about installing and uninstalling extensions in weewx, see https:/
 
 - Bugfix: Windchill is not translated to Windkühle in German [GH-50]
 - Added Dark mode support [GH-48]
+- Added more automated testing to make the skin more robust [GH-34]
+- Added yScaleMin, yScaleMax and yScaleOffset as diagram parameters for skin.conf. [GH-49]

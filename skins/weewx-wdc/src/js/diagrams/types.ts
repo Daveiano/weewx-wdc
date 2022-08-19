@@ -23,6 +23,9 @@ type DiagramBaseProps = {
     enablePoints?: boolean;
     enableLabel?: boolean;
     enableCrosshair?: boolean;
+    yScaleOffset?: string;
+    yScaleMin?: string;
+    yScaleMax?: string;
   };
 };
 

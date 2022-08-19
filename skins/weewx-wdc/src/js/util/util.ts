@@ -21,7 +21,11 @@ export const areaBaselineValue0: string[] = [
   "wind",
 ];
 
-export const getyScaleOffset = (obs: string): number => {
+export const getyScaleOffset = (obs: string, yScaleOffset?: string): number => {
+  if (yScaleOffset) {
+    return parseFloat(yScaleOffset);
+  }
+
   let offset = 3;
 
   if (obs === "humidity") {
@@ -52,6 +56,10 @@ export const getyScaleOffset = (obs: string): number => {
     offset = 1;
   }
 
+  if (obs === "pressure" || obs === "barometer" || obs === "altimeter") {
+    offset = 1;
+  }
+
   if (
     (obs === "pressure" || obs === "barometer") &&
     (window as any).weewxWdcConfig.units.group_pressure === "inHg"
@@ -62,7 +70,13 @@ export const getyScaleOffset = (obs: string): number => {
   return offset;
 };
 
-export const getyScale = (obs: string, data: Series[]): ScaleSpec => {
+export const getyScale = (
+  obs: string,
+  data: Series[],
+  yScaleOffset?: string,
+  yScaleMin?: string,
+  yScaleMax?: string
+): ScaleSpec => {
   let staticMin: "auto" | number | undefined = undefined;
   let staticMax: "auto" | number | undefined = undefined;
 
@@ -91,16 +105,25 @@ export const getyScale = (obs: string, data: Series[]): ScaleSpec => {
     staticMin = 0;
   }
 
+  if (yScaleMin) {
+    staticMin = yScaleMin === "auto" ? yScaleMin : parseFloat(yScaleMin);
+  }
+  if (yScaleMax) {
+    staticMax = yScaleMax === "auto" ? yScaleMax : parseFloat(yScaleMax);
+  }
+
   return {
     type: "linear",
     min:
       typeof staticMin === "number" || typeof staticMin === "string"
         ? staticMin
-        : Math.min(...data.map((item) => item.y)) - getyScaleOffset(obs),
+        : Math.min(...data.map((item) => item.y)) -
+          (yScaleOffset ? parseFloat(yScaleOffset) : getyScaleOffset(obs)),
     max:
       typeof staticMax === "number" || typeof staticMax === "string"
         ? staticMax
-        : Math.max(...data.map((item) => item.y)) + getyScaleOffset(obs),
+        : Math.max(...data.map((item) => item.y)) +
+          (yScaleOffset ? parseFloat(yScaleOffset) : getyScaleOffset(obs)),
   };
 };
 

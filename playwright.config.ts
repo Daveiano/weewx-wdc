@@ -23,7 +23,7 @@ const config: PlaywrightTestConfig = {
      */
     timeout: 10000,
     toHaveScreenshot: {
-      maxDiffPixelRatio: 0.1,
+      maxDiffPixelRatio: 0.01,
     },
   },
   /* Run tests in files in parallel */

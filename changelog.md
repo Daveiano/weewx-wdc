@@ -179,3 +179,6 @@ For more info about installing and uninstalling extensions in weewx, see https:/
 ```
 
 # Next
+
+- Updated default yScaleOffset for radiation (from 150 to 25) and temp_min_max_avg (from 3 to 0.5).
+- Bugfix: ERROR cannot find 'dewPoint' [GH-33]

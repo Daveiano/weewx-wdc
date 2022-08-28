@@ -182,13 +182,22 @@ From Line 102:
 
 # Next
 
-- Updated default yScaleOffset for radiation (from 150 to 25) and temp_min_max_avg (from 3 to 0.5).
+- Removed default yScaleOffset for radiation and updated yScaleOffset for temp_min_max_avg (from 3 to 0.5).
 - Bugfix: ERROR cannot find 'dewPoint' [GH-33]
 - Move programmatically set yScaleMin, yScaleMax and yScaleOffset to skin.conf [GH-61]
 
 ## Changes made to skin.conf since 2.2.0:
 
 1. Updated default yScaleMin, yScaleMax and yScaleOffset for various observations ([GH-61])
+
+From Line 48:
+
+```diff
+[[[[temp_min_max_avg]]]]
+   label = "Temperature Min/Max/Avg"
+   pointSize = 3
++  yScaleOffset = 0.5
+```
 
 From Line 74:
 

@@ -49,7 +49,8 @@ diagrams.forEach((diagram) => {
     diagram.dataset.color
   ) {
     let data: Serie[] = [];
-    let nivoProps: { [index: string]: string | boolean } = {};
+    let nivoProps: { [index: string]: string | boolean; yScaleOffset: string } =
+      { yScaleOffset: "3" };
     const combined = diagram.classList.contains("combined");
     const root = createRoot(diagram);
 

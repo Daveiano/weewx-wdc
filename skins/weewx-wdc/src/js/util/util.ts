@@ -1,4 +1,4 @@
-import { ScaleSpec } from "@nivo/scales";
+import { Scale, ScaleLinearSpec } from "@nivo/scales";
 import { Box } from "@nivo/core";
 import { Series } from "../diagrams/types";
 import dayjs from "dayjs";
@@ -12,98 +12,14 @@ export const enableArea: string[] = [
   "cloudbase",
 ];
 
-export const areaBaselineValue0: string[] = [
-  "humidity",
-  "windDir",
-  "radiation",
-  "UV",
-  "cloudbase",
-  "wind",
-];
-
-export const getyScaleOffset = (obs: string, yScaleOffset?: string): number => {
-  if (yScaleOffset) {
-    return parseFloat(yScaleOffset);
-  }
-
-  let offset = 3;
-
-  if (obs === "humidity") {
-    offset = 10;
-  }
-
-  if (obs === "radiation") {
-    offset = 25;
-  }
-
-  if (obs === "cloudbase") {
-    offset = 300;
-  }
-
-  if (obs === "UV") {
-    offset = 1;
-  }
-
-  if (obs === "rainRate") {
-    offset = 0.25;
-  }
-
-  if (obs === "ET") {
-    offset = 0.02;
-  }
-
-  if (obs === "rain") {
-    offset = 1;
-  }
-
-  if (obs === "pressure" || obs === "barometer" || obs === "altimeter") {
-    offset = 1;
-  }
-
-  if (
-    (obs === "pressure" || obs === "barometer") &&
-    (window as any).weewxWdcConfig.units.group_pressure === "inHg"
-  ) {
-    offset = 0.1;
-  }
-
-  return offset;
-};
-
 export const getyScale = (
-  obs: string,
   data: Series[],
-  yScaleOffset?: string,
+  yScaleOffset: string,
   yScaleMin?: string,
   yScaleMax?: string
-): ScaleSpec => {
+): ScaleLinearSpec => {
   let staticMin: "auto" | number | undefined = undefined;
   let staticMax: "auto" | number | undefined = undefined;
-
-  if (obs === "humidity") {
-    staticMin = 0;
-    staticMax = 103;
-  }
-
-  if (obs === "windDir") {
-    staticMin = 0;
-    staticMax = 360;
-  }
-
-  if (obs === "radiation") {
-    staticMin = "auto";
-  }
-
-  if (
-    obs === "cloudbase" ||
-    obs === "UV" ||
-    obs === "rainRate" ||
-    obs === "windSpeed" ||
-    obs === "gustSpeed" ||
-    obs === "wind"
-  ) {
-    staticMin = 0;
-  }
 
   if (yScaleMin) {
     staticMin = yScaleMin === "auto" ? yScaleMin : parseFloat(yScaleMin);
@@ -117,13 +33,11 @@ export const getyScale = (
     min:
       typeof staticMin === "number" || typeof staticMin === "string"
         ? staticMin
-        : Math.min(...data.map((item) => item.y)) -
-          (yScaleOffset ? parseFloat(yScaleOffset) : getyScaleOffset(obs)),
+        : Math.min(...data.map((item) => item.y)) - parseFloat(yScaleOffset),
     max:
       typeof staticMax === "number" || typeof staticMax === "string"
         ? staticMax
-        : Math.max(...data.map((item) => item.y)) +
-          (yScaleOffset ? parseFloat(yScaleOffset) : getyScaleOffset(obs)),
+        : Math.max(...data.map((item) => item.y)) + parseFloat(yScaleOffset),
   };
 };
 

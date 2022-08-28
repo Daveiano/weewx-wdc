@@ -5,7 +5,6 @@ import { useMediaQuery } from "@react-hook/media-query";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 import { DiagramBaseProps } from "./types";
-import { getyScaleOffset } from "../util/util";
 import { TooltipBar } from "../components/tooltip-bar";
 import { Maximize } from "../assets/maximize";
 
@@ -66,7 +65,7 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
               ...props.data[0].data.map(
                 (item): number => (item as { y: number }).y
               )
-            ) + getyScaleOffset(props.observation, props.nivoProps.yScaleOffset)
+            ) + parseFloat(props.nivoProps.yScaleOffset)
       }
       minValue={
         props.nivoProps.yScaleMin ? parseFloat(props.nivoProps.yScaleMin) : 0

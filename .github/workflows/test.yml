@@ -58,7 +58,7 @@ jobs:
           path: test/test_install_report/artifacts-classic-weewx-html/
 
   playwright:
-    needs: shunit2-tests
+    needs: shunit2
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

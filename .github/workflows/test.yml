@@ -21,7 +21,7 @@ on:
       - playwright.config.ts
 
 jobs:
-  shunit2-tests:
+  shunit2:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

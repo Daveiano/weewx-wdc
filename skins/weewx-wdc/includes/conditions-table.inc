@@ -43,7 +43,7 @@
         <!--prettier-ignore-->
         <bx-structured-list-body>
       #for $skin_obs in $DisplayOptions.get('stat_tile_observations')
-        #if $getattr($current, $skin_obs).has_data and not $get_show_sum($skin_obs) and $skin_obs != 'windDir' and $skin_obs != 'windGustDir'
+        #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).has_data and not $get_show_sum($skin_obs) and $skin_obs != 'windDir' and $skin_obs != 'windGustDir'
           #set $show_wind_dir = 'windDir' in $DisplayOptions.get('stat_tile_observations', []) and $skin_obs == "windSpeed" and not $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
           #set $show_wind_dir_ordinal = 'windDir' in $DisplayOptions.get('stat_tile_observations', []) and $skin_obs == "windSpeed" and $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
           #set $show_gust_dir = 'windGustDir' in $DisplayOptions.get('stat_tile_observations', []) and $skin_obs == "windGust" and not $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
@@ -135,7 +135,7 @@
         <!--prettier-ignore-->
         <bx-structured-list-body>
           #for $skin_obs in $DisplayOptions.get('stat_tile_observations')
-            #if $getattr($current, $skin_obs).has_data and $get_show_sum($skin_obs)
+            #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).has_data and $get_show_sum($skin_obs)
               <bx-structured-list-row data-test="$skin_obs">
                 <bx-structured-list-cell class="keep-cell">$obs.label[$skin_obs]</bx-structured-list-cell>
                 <bx-structured-list-cell>

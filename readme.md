@@ -95,6 +95,8 @@ Background: The files in the src/ directory are the source files (TypeScript, SC
 
 ## Updating the skin
 
+**Note:** Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Configuration#persisting-changes-to-the-skinconf-between-updates) for help on persisting changes made to the skin.conf between updates.
+
 When updating the skin to the latest version:
 
 1. Uninstall the skin

@@ -184,6 +184,7 @@ From Line 102:
 
 - Removed default yScaleOffset for radiation and updated yScaleOffset for temp_min_max_avg (from 3 to 0.5).
 - Bugfix: ERROR cannot find 'dewPoint' [GH-33]
+- Bugfix: Latest month and year pages are missing diagrams and stat tiles [GH-63]
 - Move programmatically set yScaleMin, yScaleMax and yScaleOffset to skin.conf [GH-61]
 
 ## Changes made to skin.conf since 2.2.0:

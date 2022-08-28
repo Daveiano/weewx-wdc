@@ -78,6 +78,7 @@
       #end if
     #end for
   #else
+    <!--@todo Query month and year (and all other precisions) correctly-->
     #if $getattr($current, $skin_obs).has_data or (($skin_obs == 'windDir' or $skin_obs == 'windRose') and $current.windSpeed.has_data)
       #set global $partial_obs = $skin_obs
       #set global $diagram_index = $diagram_index

@@ -6,11 +6,9 @@ import color from "color";
 import { DiagramBaseProps } from "./types";
 import { TooltipLine } from "../components/tooltip-line";
 import {
-  getyScaleOffset,
   enableArea,
   getyScale,
   getCurve,
-  areaBaselineValue0,
   getMargins,
   getAxisLeftLegendOffset,
   getTimeDifferenceInMonths,
@@ -162,22 +160,14 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
       data={props.data}
       enableArea={enableArea.includes(props.observation)}
       areaOpacity={darkMode ? 0.75 : props.observation === "wind" ? 0.5 : 0.07}
-      areaBaselineValue={((): number => {
-        if (props.nivoProps.yScaleMin) {
-          return parseFloat(props.nivoProps.yScaleMin);
-        }
-
-        if (areaBaselineValue0.includes(props.observation)) {
-          return 0;
-        }
-
-        return (
-          Math.min(...combinedData.map((item) => item.y)) -
-          (props.nivoProps.yScaleOffset
-            ? parseFloat(props.nivoProps.yScaleOffset)
-            : getyScaleOffset(props.observation))
-        );
-      })()}
+      areaBaselineValue={
+        getyScale(
+          combinedData,
+          props.nivoProps.yScaleOffset,
+          props.nivoProps.yScaleMin,
+          props.nivoProps.yScaleMax
+        ).min
+      }
       enableCrosshair={true}
       enablePoints={true}
       enableSlices={props.data.length > 1 ? "x" : false}
@@ -209,7 +199,6 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
         format: "%s",
       }}
       yScale={getyScale(
-        props.observation,
         combinedData,
         props.nivoProps.yScaleOffset,
         props.nivoProps.yScaleMin,

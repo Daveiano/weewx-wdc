@@ -81,11 +81,21 @@ test.describe("Basic pages display", () => {
       "artifacts-alternative-weewx-html/public_html/statistics.html"
     );
     await expect(page.locator("h1")).toHaveText("All time statistics");
+    await expect(
+      page.locator(
+        ".diagram-tile[data-test='appTemp'] .value .diagram .diagram svg g path"
+      )
+    ).toBeVisible();
     await expect(page).toHaveScreenshot({ fullPage: true });
   });
   test("Classic statistics", async ({ page }) => {
     await page.goto("artifacts-classic-weewx-html/public_html/statistics.html");
     await expect(page.locator("h1")).toHaveText("All time statistics");
+    await expect(
+      page.locator(
+        ".diagram-tile[data-test='appTemp'] .value .diagram .diagram svg g path"
+      )
+    ).toBeVisible();
     await expect(page).toHaveScreenshot({ fullPage: true });
   });
 });
@@ -98,11 +108,21 @@ test("Dark mode", async ({ page }) => {
   await page.goto(
     "artifacts-alternative-weewx-html/public_html/statistics.html"
   );
+  await expect(
+    page.locator(
+      ".diagram-tile[data-test='appTemp'] .value .diagram .diagram svg g path"
+    )
+  ).toBeVisible();
   await expect(page).toHaveScreenshot({ fullPage: true });
 
   await page.goto("artifacts-classic-weewx-html/public_html/index.html");
   await expect(page).toHaveScreenshot({ fullPage: true });
 
   await page.goto("artifacts-classic-weewx-html/public_html/statistics.html");
+  await expect(
+    page.locator(
+      ".diagram-tile[data-test='appTemp'] .value .diagram .diagram svg g path"
+    )
+  ).toBeVisible();
   await expect(page).toHaveScreenshot({ fullPage: true });
 });

@@ -165,6 +165,8 @@ For more info about installing and uninstalling extensions in weewx, see https:/
 
 1. [yScaleMin, yScaleMax and yScaleOffset](https://github.com/Daveiano/weewx-wdc/commit/2f74e1468a080cbefa67ae20c725d25664d33895#diff-ba225fb627dcbf577d0d1fde0f18d93e8e2cf2097c37086cd28ef23e8e7bd820), also see https://github.com/Daveiano/weewx-wdc/wiki/Configuration#general
 
+From Line 102:
+
 ```
 ...
 [[[windDir]]]
@@ -182,3 +184,74 @@ For more info about installing and uninstalling extensions in weewx, see https:/
 
 - Updated default yScaleOffset for radiation (from 150 to 25) and temp_min_max_avg (from 3 to 0.5).
 - Bugfix: ERROR cannot find 'dewPoint' [GH-33]
+- Move programmatically set yScaleMin, yScaleMax and yScaleOffset to skin.conf [GH-61]
+
+## Changes made to skin.conf since 2.2.0:
+
+1. Updated default yScaleMin, yScaleMax and yScaleOffset for various observations ([GH-61])
+
+From Line 74:
+
+```diff
+[[[[windchill_heatindex]]]]
+   label = 'Windchill / Heatindex'
++  yScaleOffset = 0.5
+```
+
+From Line 92:
+
+```diff
+# Diagram-type specific settings.
+[[[line]]]
+   lineWidth = 2
+   pointSize = 5
+   isInteractive = True
+   enablePoints = True
+   enableCrosshair = True
++  yScaleOffset = 3
+   # @see https://github.com/plouc/nivo/blob/master/packages/line/index.d.ts#L144
+   curve = "natural"
+[[[bar]]]
+   enableLabel = False
+   isInteractive = True
++  yScaleOffset = 3
+
+# Observation specific settings
++[[[cloudbase]]]
++  yScaleMin = 0
++  yScaleOffset = 300
+[[[windDir]]]
+   curve = "basis"
+   lineWidth = 0
+   yScaleMin = 0
+   yScaleMax = 360
++[[[windSpeed]]]
++  yScaleMin = 0
++[[[windGust]]]
++  yScaleMin = 0
+[[[radiation]]]
+   curve = "basis"
+-  yScaleOffset = 150
++  yScaleMin = 0
+[[[UV]]]
+   curve = "step"
++  yScaleMin = 0
++  yScaleOffset = 1
++[[[rain]]]
++  yScaleOffset = 0.25
+[[[rainRate]]]
+   curve = "linear"
++  yScaleMin = 0
++  yScaleOffset = 0.25
++[[[outHumidity]]]
++  yScaleMin = 0
++  yScaleMax = 103
++[[[ET]]]
++  yScaleOffset = 0.02
++[[[pressure]]]
++  yScaleOffset = 1
++[[[barometer]]]
++  yScaleOffset = 1
++[[[altimeter]]]
++  yScaleOffset = 1
+```

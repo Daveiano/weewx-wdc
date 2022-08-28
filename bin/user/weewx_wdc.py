@@ -652,6 +652,9 @@ class WdcDiagramUtil(SearchList):
         )
 
         for windSpeed_data, windDir_data in zip(windSpeed.data, windDir.data):
+            if windSpeed_data.raw is None:
+                continue
+
             # Convert windSpeed to knots, get beaufort.
             windspeed_target_unit = self.unit.unit_type.windSpeed
             if windspeed_target_unit in ("km_per_hour", "km_per_hour2"):

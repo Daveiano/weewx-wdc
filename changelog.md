@@ -180,12 +180,34 @@ From Line 102:
 ...
 ```
 
-# Next
+# 2.2.1
 
 - Removed default yScaleOffset for radiation and updated yScaleOffset for temp_min_max_avg (from 3 to 0.5).
 - Bugfix: ERROR cannot find 'dewPoint' [GH-33]
 - Bugfix: Latest month and year pages are missing diagrams and stat tiles [GH-63]
-- Move programmatically set yScaleMin, yScaleMax and yScaleOffset to skin.conf [GH-61]
+- Move programmatically set yScaleMin, yScaleMax and yScaleOffset to skin.conf [GH-61], **Note:** This change reverts [GH-37]! If you are using inHg units, please update you skin.conf (Line 138 following) from
+
+  ```
+  [[[pressure]]]
+     yScaleOffset = 1
+  [[[barometer]]]
+     yScaleOffset = 1
+  [[[altimeter]]]
+     yScaleOffset = 1
+  ```
+
+  to
+
+  ```
+  [[[pressure]]]
+     yScaleOffset = 0.1
+  [[[barometer]]]
+     yScaleOffset = 0.1
+  [[[altimeter]]]
+     yScaleOffset = 0.1
+  ```
+
+  Please also have a look at the corresponding section in the [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Configuration#general).
 
 ## Changes made to skin.conf since 2.2.0:
 
@@ -265,3 +287,5 @@ From Line 92:
 +[[[altimeter]]]
 +  yScaleOffset = 1
 ```
+
+# Next

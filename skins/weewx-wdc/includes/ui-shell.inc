@@ -24,6 +24,11 @@
   </bx-header-name>
   <bx-header-nav menu-bar-label="Weewx $station.location - $current.dateTime">
     <bx-header-nav-item href="index.html">$gettext("Today")</bx-header-nav-item>
+    #if $show_yesterday
+    <bx-header-nav-item href="yesterday.html"
+      >$gettext("Yesterday")</bx-header-nav-item
+    >
+    #end if
     <bx-header-nav-item href="week.html">$gettext("Week")</bx-header-nav-item>
     <bx-header-nav-item href="month.html">$gettext("Month")</bx-header-nav-item>
     <bx-header-nav-item href="year.html">$gettext("Year")</bx-header-nav-item>
@@ -122,6 +127,11 @@
     <bx-side-nav-link class="show-small" href="index.html"
       ><span>$gettext("Today")</span></bx-side-nav-link
     >
+    #if $show_yesterday
+    <bx-side-nav-link class="show-small" href="yesterday.html"
+      ><span>$gettext("Yesterday")</span></bx-side-nav-link
+    >
+    #end if
     <bx-side-nav-link class="show-small" href="week.html"
       ><span>$gettext("Week")</span></bx-side-nav-link
     >

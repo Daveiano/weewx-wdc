@@ -1,3 +1,7 @@
+from datetime import datetime, timedelta
+from calendar import isleap
+from time import mktime
+
 from weewx.cheetahgenerator import SearchList
 from weewx.units import (
     UnitInfoHelper,
@@ -7,10 +11,10 @@ from weewx.units import (
     mps_to_knot,
 )
 from weewx.wxformulas import beaufort
-from datetime import datetime
-from calendar import isleap
+from weewx.tags import TimespanBinder
+from weeutil.weeutil import TimeSpan
 
-# from pprint import pprint
+from pprint import pprint
 
 # Copyright 2022 David Bätge
 # Distributed under the terms of the GNU Public License (GPLv3)
@@ -22,11 +26,22 @@ class WdcGeneralUtil(SearchList):
     def __init__(self, generator):
         SearchList.__init__(self, generator)
         self.skin_dict = generator.skin_dict
+
         try:
             time_format_dict = self.skin_dict["Units"]["TimeFormats"]
+            to_date_dict = self.skin_dict["CheetahGenerator"]["ToDate"]
         except KeyError:
             time_format_dict = {}
+            to_date_dict = {}
+
         self.time_format = time_format_dict
+        self.generator_to_date = to_date_dict
+
+    def show_yesterday(self):
+        if "yesterday" in self.generator_to_date:
+            return True
+
+        return False
 
     def get_time_format_dict(self):
         return self.time_format
@@ -51,9 +66,9 @@ class WdcGeneralUtil(SearchList):
             return icon_path + "humidity.svg"
 
         elif (
-            observation == "barometer"
-            or observation == "pressure"
-            or observation == "altimeter"
+                observation == "barometer"
+                or observation == "pressure"
+                or observation == "altimeter"
         ):
             return icon_path + "barometer.svg"
 
@@ -121,9 +136,9 @@ class WdcGeneralUtil(SearchList):
             return "#0099CC"
 
         if (
-            observation == "barometer"
-            or observation == "pressure"
-            or observation == "altimeter"
+                observation == "barometer"
+                or observation == "pressure"
+                or observation == "altimeter"
         ):
             return "#666666"
 
@@ -168,7 +183,7 @@ class WdcGeneralUtil(SearchList):
 
         return "#161616"
 
-    def get_time_span_from_attr(self, attr, day, week, month, year, alltime):
+    def get_time_span_from_attr(self, attr, day, week, month, year, alltime, yesterday):
         """
         Get tag for use in templates.
 
@@ -178,6 +193,7 @@ class WdcGeneralUtil(SearchList):
             week: Weekly TimeSpanBinder
             month: Monthly TimeSpanBinder
             year: Yeary TimeSpanBinder
+            yesterday: Yesterday TimeSpanBinder
 
         Returns:
             obj: TimeSpanBinder
@@ -196,6 +212,9 @@ class WdcGeneralUtil(SearchList):
 
         if attr == "alltime":
             return alltime
+
+        if attr == "yesterday":
+            return yesterday
 
     def get_static_pages(self):
         """
@@ -366,9 +385,9 @@ class WdcDiagramUtil(SearchList):
             return "wind"
 
         if (
-            observation == "barometer"
-            or observation == "pressure"
-            or observation == "altimeter"
+                observation == "barometer"
+                or observation == "pressure"
+                or observation == "altimeter"
         ):
             return "pressure"
 
@@ -408,10 +427,10 @@ class WdcDiagramUtil(SearchList):
             return combined["aggregate_type"]
 
         if (
-            not use_defaults
-            and observation in diagrams_config
-            and "aggregate_type" in diagrams_config[observation]
-            and combined is None
+                not use_defaults
+                and observation in diagrams_config
+                and "aggregate_type" in diagrams_config[observation]
+                and combined is None
         ):
             return diagrams_config[observation]["aggregate_type"]
 
@@ -419,9 +438,9 @@ class WdcDiagramUtil(SearchList):
             return "sum"
 
         if (
-            observation == "UV"
-            or observation == "windGust"
-            or observation == "rainRate"
+                observation == "UV"
+                or observation == "windGust"
+                or observation == "rainRate"
         ):
             return "max"
 
@@ -442,7 +461,7 @@ class WdcDiagramUtil(SearchList):
         alltime_start = kwargs.get("alltime_start", None)
         alltime_end = kwargs.get("alltime_end", None)
 
-        if precision == "day":
+        if precision == "day" or precision == 'yesterday':
             if observation == "ET" or observation == "rain":
                 return 7200  # 2 hours
 
@@ -529,9 +548,9 @@ class WdcDiagramUtil(SearchList):
             return 2
 
         if (
-            observation == "pressure"
-            or observation == "barometer"
-            or observation == "altimeter"
+                observation == "pressure"
+                or observation == "barometer"
+                or observation == "altimeter"
         ) and self.unit.unit_type.pressure == "inHg":
             return 3
 
@@ -854,10 +873,10 @@ class WdcStatsUtil(SearchList):
             return len(list(days))
 
         if (
-            day == "hotDays"
-            or day == "summerDays"
-            or day == "desertDays"
-            or day == "tropicalNights"
+                day == "hotDays"
+                or day == "summerDays"
+                or day == "desertDays"
+                or day == "tropicalNights"
         ):
 
             if day == "tropicalNights":
@@ -903,20 +922,20 @@ class WdcStatsUtil(SearchList):
             value = "0" if getattr(unit_type, "outTemp") == "degree_C" else "32"
 
             return (
-                self.obs.label["outTemp"]
-                + "<sub>max</sub> < "
-                + value
-                + getattr(self.unit.label, "outTemp")
+                    self.obs.label["outTemp"]
+                    + "<sub>max</sub> < "
+                    + value
+                    + getattr(self.unit.label, "outTemp")
             )
 
         if day == "frostDays":
             value = "0" if getattr(unit_type, "outTemp") == "degree_C" else "32"
 
             return (
-                self.obs.label["outTemp"]
-                + "<sub>min</sub> < "
-                + value
-                + getattr(self.unit.label, "outTemp")
+                    self.obs.label["outTemp"]
+                    + "<sub>min</sub> < "
+                    + value
+                    + getattr(self.unit.label, "outTemp")
             )
 
         if day == "stormDays":
@@ -928,20 +947,20 @@ class WdcStatsUtil(SearchList):
                 value = "17.2"
 
             return (
-                self.obs.label["windGust"]
-                + " > "
-                + value
-                + getattr(self.unit.label, "windGust")
+                    self.obs.label["windGust"]
+                    + " > "
+                    + value
+                    + getattr(self.unit.label, "windGust")
             )
 
         if day == "rainDays":
             return self.obs.label["rain"] + " > 0" + getattr(self.unit.label, "rain")
 
         if (
-            day == "hotDays"
-            or day == "summerDays"
-            or day == "desertDays"
-            or day == "tropicalNights"
+                day == "hotDays"
+                or day == "summerDays"
+                or day == "desertDays"
+                or day == "tropicalNights"
         ):
             if day == "tropicalNights":
                 value = "20" if getattr(unit_type, "outTemp") == "degree_C" else "68"
@@ -957,12 +976,12 @@ class WdcStatsUtil(SearchList):
                 aggregate_type = "max"
 
             return (
-                self.obs.label["outTemp"]
-                + "<sub>"
-                + aggregate_type
-                + "</sub> ≥ "
-                + value
-                + getattr(self.unit.label, "outTemp")
+                    self.obs.label["outTemp"]
+                    + "<sub>"
+                    + aggregate_type
+                    + "</sub> ≥ "
+                    + value
+                    + getattr(self.unit.label, "outTemp")
             )
 
     def get_calendar_color(self, obs):
@@ -977,8 +996,8 @@ class WdcStatsUtil(SearchList):
         """
         if obs == "rain":
             return ["#032c6a", "#02509d", "#1a72b7", "#4093c7", "#6bb0d7", "#9fcae3"][
-                ::-1
-            ]
+                   ::-1
+                   ]
 
         if obs == "outTemp":
             # Warming stripes colors
@@ -1070,7 +1089,7 @@ class WdcTableUtil(SearchList):
         Returns:
             int: aggregate_interval
         """
-        if precision == "day":
+        if precision == "day" or precision == "yesterday":
             return 900 * 4  # 1 hours
 
         if precision == "week":
@@ -1092,7 +1111,7 @@ class WdcTableUtil(SearchList):
         Returns:
             string: None | 'midnight'
         """
-        if precision == "day":
+        if precision == "day" or precision == 'yesterday':
             return None
 
         if precision == "week":
@@ -1200,3 +1219,37 @@ class WdcTableUtil(SearchList):
         carbon_values.sort(key=lambda item: datetime.fromisoformat(item["time"]))
 
         return carbon_values
+
+
+class Yesterday(SearchList):
+    def __init__(self, generator):
+        SearchList.__init__(self, generator)
+
+    def get_extension_list(self, timespan, db_lookup):
+        """Returns a search list extension with two additions.
+
+        Parameters:
+          timespan: An instance of weeutil.weeutil.TimeSpan. This will
+                    hold the start and stop times of the domain of
+                    valid times.
+
+          db_lookup: This is a function that, given a data binding
+                     as its only parameter, will return a database manager
+                     object.
+        """
+        yesterday_end_dt = datetime.combine(datetime.fromtimestamp(timespan.stop), datetime.min.time())
+        yesterday_end_ts = mktime(yesterday_end_dt.timetuple())
+
+        yesterday_start_dt = yesterday_end_dt - timedelta(days=1)
+        yesterday_start_ts = mktime(yesterday_start_dt.timetuple())
+
+        yesterday_stats = TimespanBinder(TimeSpan(yesterday_start_ts, yesterday_end_ts),
+                                         db_lookup,
+                                         context='day',
+                                         formatter=self.generator.formatter,
+                                         converter=self.generator.converter,
+                                         skin_dict=self.generator.skin_dict)
+
+        search_list_extension = {'yesterday': yesterday_stats}
+
+        return [search_list_extension]

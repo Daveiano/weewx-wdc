@@ -36,7 +36,7 @@
           #else
           <script>
             /* prettier-ignore */
-            var $series_name = $get_windrose_data($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $precision)
+            var $series_name = $get_windrose_data($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), $precision)
           </script>
           #end if
 

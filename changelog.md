@@ -288,4 +288,8 @@ From Line 92:
 +  yScaleOffset = 1
 ```
 
+# 2.3.0
+
+- Added (optional) Yesterdays page [GH-52]
+
 # Next

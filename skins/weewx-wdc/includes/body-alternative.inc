@@ -8,7 +8,7 @@
   <!--prettier-ignore-->
   #for $skin_obs in $DisplayOptions.get('stat_tile_observations')
     #if $skin_obs != 'windDir' and $skin_obs != 'windGustDir'
-      #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).has_data
+      #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), $skin_obs).has_data
         #set global $partial_obs = $skin_obs
         #include "includes/stat-tile.inc"
       #end if
@@ -26,6 +26,8 @@
   <header class="bx--col section-header">
     #if $precision == 'day'
       <h2>$gettext("Last 24 hours")</h2>
+    #else if $precision == 'yesterday'
+      <h2>$gettext("Yesterday")</h2>
     #else if $precision == 'week'
       <h2>$gettext("Last 7 days")</h2>
       #set $start_date_header = datetime.fromtimestamp($current.dateTime.raw) - timedelta(days=7)
@@ -68,7 +70,7 @@
   #if $skin_obs in $combined.keys()
     #set $combined_diagram = $combined[$skin_obs]
     #for $combined_obs in $combined_diagram.obs.keys()
-      #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $combined_diagram.obs[$combined_obs].observation).has_data
+      #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), $combined_diagram.obs[$combined_obs].observation).has_data
         #set global $comb_obs = $skin_obs
         #set global $combined_diagram = $combined_diagram
         #set global $diagram_index = $diagram_index
@@ -78,7 +80,7 @@
       #end if
     #end for
   #else
-    #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $skin_obs).has_data or (($skin_obs == 'windDir' or $skin_obs == 'windRose') and $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), 'windSpeed').has_data)
+    #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), $skin_obs).has_data or (($skin_obs == 'windDir' or $skin_obs == 'windRose') and $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), 'windSpeed').has_data)
       #set global $partial_obs = $skin_obs
       #set global $diagram_index = $diagram_index
       #if $skin_obs == 'windRose'

@@ -63,7 +63,7 @@ testWeeReportRunAlternative() {
     assertContains "$output" "Starting weewx reports (alternative layout)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating for all time"
-    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 44 files for report WdcReport in"
     assertContains "$output" "INFO weewx.reportengine: Copied 10 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"
@@ -80,7 +80,7 @@ testWeeReportRunClassic() {
     assertContains "$output" "Starting weewx reports (classic layout)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating for all time"
-    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 44 files for report WdcReport in"
     assertContains "$output" "INFO weewx.reportengine: Copied 10 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"
@@ -95,7 +95,7 @@ testWeeReportRunWithoutWeewxForecast() {
     assertContains "$output" "Starting weewx reports (without forecast)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating for all time"
-    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 44 files for report WdcReport in"
     assertContains "$output" "INFO weewx.reportengine: Copied 10 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"

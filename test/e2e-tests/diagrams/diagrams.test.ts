@@ -40,4 +40,14 @@ test.describe("Diagrams", () => {
       await windrose.locator(".value script").innerText()
     ).toMatchSnapshot();
   });
+
+  test("Windrose Stats page", async ({ page }) => {
+    await page.goto(
+      "artifacts-alternative-weewx-html/public_html/statistics.html"
+    );
+    const windrose = page.locator(".diagram-tile[data-test='windrose']");
+    expect(
+      await windrose.locator(".value script").innerText()
+    ).toMatchSnapshot();
+  });
 });

@@ -37,4 +37,24 @@ test.describe("Conditions table", () => {
       "81.07 cm"
     );
   });
+
+  test("Show min/max time", async ({ page }) => {
+    await page.goto("artifacts-classic-weewx-html/public_html/index.html");
+    let conditionsTable = page.locator(".obs-stat-tile");
+    let outTemp = conditionsTable.locator("[data-test='outTemp']");
+
+    let max = await outTemp
+      .locator("bx-structured-list-cell >> nth=3")
+      .innerText();
+    expect(max).toBe("21.5°C");
+
+    await page.goto("artifacts-classic-weewx-html/public_html/week.html");
+    conditionsTable = page.locator(".obs-stat-tile");
+    outTemp = conditionsTable.locator("[data-test='outTemp']");
+
+    max = await outTemp.locator("bx-structured-list-cell >> nth=3").innerText();
+    expect(max.replace(/(\r\n|\n|\r)/gm, " ").trim()).toBe(
+      "37.4°C 06/19/22 16:33:57"
+    );
+  });
 });

@@ -9,6 +9,7 @@ from weewx.units import (
     mph_to_knot,
     kph_to_knot,
     mps_to_knot,
+    ValueHelper
 )
 from weewx.wxformulas import beaufort
 from weewx.tags import TimespanBinder
@@ -19,7 +20,8 @@ from pprint import pprint
 # Copyright 2022 David Bätge
 # Distributed under the terms of the GNU Public License (GPLv3)
 
-temp_obs = ["outTemp", "inTemp", "dewpoint", "windchill", "heatindex", "appTemp"]
+temp_obs = ["outTemp", "inTemp", "dewpoint",
+            "windchill", "heatindex", "appTemp"]
 
 
 class WdcGeneralUtil(SearchList):
@@ -640,12 +642,62 @@ class WdcDiagramUtil(SearchList):
         # We use a scale of 6: <=BF1, BF2, ..., BF5, >=BF6.
         for i in range(6):
             name_prefix = "<= " if i == 0 else ">= " if i == 5 else ""
+            show_beaufort = False
+
+            if show_beaufort:
+                name = "Beaufort " + str(i + 1)
+            else:
+                # Bft 1 and lower
+                if i == 0:
+                    wind_upper_vt = self.generator.converter.convert(
+                        (3, "knot", "group_speed"))
+                    name = ValueHelper(
+                        value_t=wind_upper_vt, formatter=self.generator.formatter).format()
+                # Bft 2
+                elif i == 1:
+                    wind_lower_vt = self.generator.converter.convert(
+                        (4, "knot", "group_speed"))
+                    wind_upper_vt = self.generator.converter.convert(
+                        (6, "knot", "group_speed"))
+                    name = ValueHelper(value_t=wind_lower_vt, formatter=self.generator.formatter).format(
+                    ) + " - " + ValueHelper(value_t=wind_upper_vt, formatter=self.generator.formatter).format()
+                # Bft 3
+                elif i == 2:
+                    wind_lower_vt = self.generator.converter.convert(
+                        (7, "knot", "group_speed"))
+                    wind_upper_vt = self.generator.converter.convert(
+                        (10, "knot", "group_speed"))
+                    name = ValueHelper(value_t=wind_lower_vt, formatter=self.generator.formatter).format(
+                    ) + " - " + ValueHelper(value_t=wind_upper_vt, formatter=self.generator.formatter).format()
+                # Bft 4
+                elif i == 3:
+                    wind_lower_vt = self.generator.converter.convert(
+                        (11, "knot", "group_speed"))
+                    wind_upper_vt = self.generator.converter.convert(
+                        (16, "knot", "group_speed"))
+                    name = ValueHelper(value_t=wind_lower_vt, formatter=self.generator.formatter).format(
+                    ) + " - " + ValueHelper(value_t=wind_upper_vt, formatter=self.generator.formatter).format()
+                # Bft 5
+                elif i == 4:
+                    wind_lower_vt = self.generator.converter.convert(
+                        (17, "knot", "group_speed"))
+                    wind_upper_vt = self.generator.converter.convert(
+                        (21, "knot", "group_speed"))
+                    name = ValueHelper(value_t=wind_lower_vt, formatter=self.generator.formatter).format(
+                    ) + " - " + ValueHelper(value_t=wind_upper_vt, formatter=self.generator.formatter).format()
+                # Bft 6 and higher
+                elif i == 5:
+                    wind_lower_vt = self.generator.converter.convert(
+                        (22, "knot", "group_speed"))
+                    name = ValueHelper(
+                        value_t=wind_lower_vt, formatter=self.generator.formatter).format()
+
             windrose_data.append(
                 {
                     "r": [0] * len(ordinals),
                     "hovertemplate": "%{theta}, %{r}%",
                     "theta": ordinals,
-                    "name": name_prefix + "Beaufort " + str(i + 1),
+                    "name": name_prefix + name,
                     "type": "barpolar",
                 }
             )
@@ -818,7 +870,8 @@ class WdcStatsUtil(SearchList):
             )
 
             days = filter(
-                lambda x: x.raw is not None and x.raw < 0.0, list(day_series.data)
+                lambda x: x.raw is not None and x.raw < 0.0, list(
+                    day_series.data)
             )
 
             return len(list(days))
@@ -832,7 +885,8 @@ class WdcStatsUtil(SearchList):
             )
 
             days = filter(
-                lambda x: x.raw is not None and x.raw < 0.0, list(day_series.data)
+                lambda x: x.raw is not None and x.raw < 0.0, list(
+                    day_series.data)
             )
 
             return len(list(days))
@@ -853,7 +907,8 @@ class WdcStatsUtil(SearchList):
                 value = 17.2
 
             days = filter(
-                lambda x: x.raw is not None and x.raw >= value, list(day_series.data)
+                lambda x: x.raw is not None and x.raw >= value, list(
+                    day_series.data)
             )
 
             return len(list(days))
@@ -867,7 +922,8 @@ class WdcStatsUtil(SearchList):
             )
 
             days = filter(
-                lambda x: x.raw is not None and x.raw > 0.0, list(day_series.data)
+                lambda x: x.raw is not None and x.raw > 0.0, list(
+                    day_series.data)
             )
 
             return len(list(days))
@@ -880,16 +936,20 @@ class WdcStatsUtil(SearchList):
         ):
 
             if day == "tropicalNights":
-                value = 20.0 if getattr(unit_type, "outTemp") == "degree_C" else 68.0
+                value = 20.0 if getattr(
+                    unit_type, "outTemp") == "degree_C" else 68.0
                 aggregate_type = "min"
             if day == "summerDays":
-                value = 25.0 if getattr(unit_type, "outTemp") == "degree_C" else 77.0
+                value = 25.0 if getattr(
+                    unit_type, "outTemp") == "degree_C" else 77.0
                 aggregate_type = "max"
             if day == "hotDays":
-                value = 30.0 if getattr(unit_type, "outTemp") == "degree_C" else 86.0
+                value = 30.0 if getattr(
+                    unit_type, "outTemp") == "degree_C" else 86.0
                 aggregate_type = "max"
             if day == "desertDays":
-                value = 35.0 if getattr(unit_type, "outTemp") == "degree_C" else 95.0
+                value = 35.0 if getattr(
+                    unit_type, "outTemp") == "degree_C" else 95.0
                 aggregate_type = "max"
 
             day_series = period.outTemp.series(
@@ -900,7 +960,8 @@ class WdcStatsUtil(SearchList):
             )
 
             days = filter(
-                lambda x: x.raw is not None and x.raw >= value, list(day_series.data)
+                lambda x: x.raw is not None and x.raw >= value, list(
+                    day_series.data)
             )
 
             return len(list(days))
@@ -919,23 +980,25 @@ class WdcStatsUtil(SearchList):
             string: Day description.
         """
         if day == "iceDays":
-            value = "0" if getattr(unit_type, "outTemp") == "degree_C" else "32"
+            value = "0" if getattr(
+                unit_type, "outTemp") == "degree_C" else "32"
 
             return (
-                    self.obs.label["outTemp"]
-                    + "<sub>max</sub> < "
-                    + value
-                    + getattr(self.unit.label, "outTemp")
+                self.obs.label["outTemp"]
+                + "<sub>max</sub> < "
+                + value
+                + getattr(self.unit.label, "outTemp")
             )
 
         if day == "frostDays":
-            value = "0" if getattr(unit_type, "outTemp") == "degree_C" else "32"
+            value = "0" if getattr(
+                unit_type, "outTemp") == "degree_C" else "32"
 
             return (
-                    self.obs.label["outTemp"]
-                    + "<sub>min</sub> < "
-                    + value
-                    + getattr(self.unit.label, "outTemp")
+                self.obs.label["outTemp"]
+                + "<sub>min</sub> < "
+                + value
+                + getattr(self.unit.label, "outTemp")
             )
 
         if day == "stormDays":
@@ -947,10 +1010,10 @@ class WdcStatsUtil(SearchList):
                 value = "17.2"
 
             return (
-                    self.obs.label["windGust"]
-                    + " > "
-                    + value
-                    + getattr(self.unit.label, "windGust")
+                self.obs.label["windGust"]
+                + " > "
+                + value
+                + getattr(self.unit.label, "windGust")
             )
 
         if day == "rainDays":
@@ -963,25 +1026,29 @@ class WdcStatsUtil(SearchList):
                 or day == "tropicalNights"
         ):
             if day == "tropicalNights":
-                value = "20" if getattr(unit_type, "outTemp") == "degree_C" else "68"
+                value = "20" if getattr(
+                    unit_type, "outTemp") == "degree_C" else "68"
                 aggregate_type = "min"
             if day == "summerDays":
-                value = "25" if getattr(unit_type, "outTemp") == "degree_C" else "77"
+                value = "25" if getattr(
+                    unit_type, "outTemp") == "degree_C" else "77"
                 aggregate_type = "max"
             if day == "hotDays":
-                value = "30" if getattr(unit_type, "outTemp") == "degree_C" else "86"
+                value = "30" if getattr(
+                    unit_type, "outTemp") == "degree_C" else "86"
                 aggregate_type = "max"
             if day == "desertDays":
-                value = "35" if getattr(unit_type, "outTemp") == "degree_C" else "95"
+                value = "35" if getattr(
+                    unit_type, "outTemp") == "degree_C" else "95"
                 aggregate_type = "max"
 
             return (
-                    self.obs.label["outTemp"]
-                    + "<sub>"
-                    + aggregate_type
-                    + "</sub> ≥ "
-                    + value
-                    + getattr(self.unit.label, "outTemp")
+                self.obs.label["outTemp"]
+                + "<sub>"
+                + aggregate_type
+                + "</sub> ≥ "
+                + value
+                + getattr(self.unit.label, "outTemp")
             )
 
     def get_calendar_color(self, obs):
@@ -996,8 +1063,8 @@ class WdcStatsUtil(SearchList):
         """
         if obs == "rain":
             return ["#032c6a", "#02509d", "#1a72b7", "#4093c7", "#6bb0d7", "#9fcae3"][
-                   ::-1
-                   ]
+                ::-1
+            ]
 
         if obs == "outTemp":
             # Warming stripes colors
@@ -1042,12 +1109,14 @@ class WdcStatsUtil(SearchList):
             ).round(self.diagram_util.get_rounding("rain"))
 
             days = filter(
-                lambda x: x[1].raw > 0.0, list(zip(day_series.start, day_series.data))
+                lambda x: x[1].raw > 0.0, list(
+                    zip(day_series.start, day_series.data))
             )
             rainDays = []
 
             for day in days:
-                rainDays.append({"value": day[1].raw, "day": day[0].format("%Y-%m-%d")})
+                rainDays.append(
+                    {"value": day[1].raw, "day": day[0].format("%Y-%m-%d")})
 
             return rainDays
 
@@ -1197,7 +1266,8 @@ class WdcTableUtil(SearchList):
                     # The current series item by time.
                     cs_item = list(
                         filter(
-                            lambda x: (x["time"] == cs_time.isoformat()), carbon_values
+                            lambda x: (
+                                x["time"] == cs_time.isoformat()), carbon_values
                         )
                     )
 
@@ -1216,7 +1286,8 @@ class WdcTableUtil(SearchList):
                         carbon_values[cs_item_index] = cs_item
 
         # Sort per time
-        carbon_values.sort(key=lambda item: datetime.fromisoformat(item["time"]))
+        carbon_values.sort(
+            key=lambda item: datetime.fromisoformat(item["time"]))
 
         return carbon_values
 
@@ -1237,7 +1308,8 @@ class Yesterday(SearchList):
                      as its only parameter, will return a database manager
                      object.
         """
-        yesterday_end_dt = datetime.combine(datetime.fromtimestamp(timespan.stop), datetime.min.time())
+        yesterday_end_dt = datetime.combine(
+            datetime.fromtimestamp(timespan.stop), datetime.min.time())
         yesterday_end_ts = mktime(yesterday_end_dt.timetuple())
 
         yesterday_start_dt = yesterday_end_dt - timedelta(days=1)

@@ -2,6 +2,7 @@ import datetime
 import calendar
 import time
 
+from weewx import xtypes
 from weewx.cheetahgenerator import SearchList
 from weewx.units import (
     UnitInfoHelper,
@@ -639,7 +640,7 @@ class WdcDiagramUtil(SearchList):
         """
         Get data for rendering wind rose in JS.
 
-        period (obj): Period to use, eg. $year, month, $span
+        period (TimeSpanBinder): Period to use, eg. $year, month, $span
 
         Returns:
             list: Windrose data.
@@ -673,6 +674,14 @@ class WdcDiagramUtil(SearchList):
             time_series="start",
             time_unit="unix_epoch",
         )
+
+        # windDir = xtypes.get_series("windDir",
+        #                             TimeSpan(period.start.raw, period.end.raw),
+        #                             aggregate_type="avg",
+        #                             aggregate_interval=self.get_aggregate_interval(
+        #                                     observation="windDir", precision=precision
+        #                                 )
+        #                             )
 
         # @todo aggregate_interval=None
         windSpeed = period.windSpeed.series(

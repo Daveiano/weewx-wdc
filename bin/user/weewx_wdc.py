@@ -304,9 +304,9 @@ class WdcArchiveUtil(SearchList):
         Returns:
             str: Formatted month string.
         """
-        date_time_obj = datetime.datetime.strptime(month, "%Y-%m")
+        month_dt = datetime.datetime.strptime(month, "%Y-%m")
 
-        return date_time_obj.strftime("%B")
+        return month_dt.strftime("%B")
 
     @staticmethod
     def fake_get_report_years(first, last):
@@ -499,9 +499,9 @@ class WdcDiagramUtil(SearchList):
         if precision == "alltime":
             if alltime_start is not None and alltime_end is not None:
 
-                d1 = datetime.datetime.strptime(alltime_start, "%d.%m.%Y")
-                d2 = datetime.datetime.strptime(alltime_end, "%d.%m.%Y")
-                delta = d2 - d1
+                start_dt = datetime.datetime.strptime(alltime_start, "%d.%m.%Y")
+                end_dt = datetime.datetime.strptime(alltime_end, "%d.%m.%Y")
+                delta = end_dt - start_dt
 
                 if delta.days == 0:
                     # Edge case: code from year.
@@ -579,7 +579,7 @@ class WdcDiagramUtil(SearchList):
         Returns:
             float: A delta
         """
-        now = datetime.datetime.now()
+        now_dt = datetime.datetime.now()
 
         hour_delta = 24
 
@@ -587,10 +587,10 @@ class WdcDiagramUtil(SearchList):
             hour_delta = 24 * 7
 
         if precision == "month":
-            hour_delta = 24 * 30  # monthrange(now.year, now.month)[1]
+            hour_delta = 24 * 30  # monthrange(now_dt.year, now_dt.month)[1]
 
         if precision == "year":
-            days = 366 if calendar.isleap(now.year) else 365
+            days = 366 if calendar.isleap(now_dt.year) else 365
             hour_delta = 24 * days
 
         return hour_delta
@@ -1204,21 +1204,21 @@ class WdcTableUtil(SearchList):
 
                 for start, stop, data in zip(series.start, series.stop, series.data):
                     if precision == "alltime":
-                        cs_time = datetime.datetime.fromtimestamp(start.raw)
+                        cs_time_dt = datetime.datetime.fromtimestamp(start.raw)
                     else:
-                        cs_time = datetime.datetime.fromtimestamp(stop.raw)
+                        cs_time_dt = datetime.datetime.fromtimestamp(stop.raw)
 
                     # The current series item by time.
                     cs_item = list(
                         filter(
-                            lambda x: (x["time"] == cs_time.isoformat()), carbon_values
+                            lambda x: (x["time"] == cs_time_dt.isoformat()), carbon_values
                         )
                     )
 
                     if len(cs_item) == 0:
                         carbon_values.append(
                             {
-                                "time": cs_time.isoformat(),
+                                "time": cs_time_dt.isoformat(),
                                 observation: data.raw,
                                 "id": start.raw,
                             }

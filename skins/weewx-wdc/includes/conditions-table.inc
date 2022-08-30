@@ -13,6 +13,8 @@
 #set $label_max = $get_labels('Max', $precision)
 #set $label_avg = $get_labels('Avg', $precision)
 #set $label_totals = $get_labels('Total', $precision)
+#set $show_min_max_time = $precision == 'year' or $precision == 'alltime' or ($precision == 'day' and $to_bool($DisplayOptions.get('show_min_max_time_day', False))) or ($precision == 'yesterday' and $to_bool($DisplayOptions.get('show_min_max_time_yesterday', False))) or ($precision == 'week' and $to_bool($DisplayOptions.get('show_min_max_time_week', False))) or ($precision == 'month' and $to_bool($DisplayOptions.get('show_min_max_time_month', False)))
+#set $min_max_time_format = $get_time_format_dict['day'] if $precision == 'day' or $precision == 'yesterday' else $get_time_format_dict['stats']
 
 <div class="bx--tile obs-stat-tile">
   <div class="bx--row">
@@ -91,8 +93,8 @@
               <!--prettier-ignore-->
                 $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), $skin_obs).min
               <!--prettier-ignore-->
-              #if $precision == 'year' or $precision == 'alltime'
-                <span class="date">am $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), $skin_obs).mintime.format($get_time_format_dict['stats'])</span>
+              #if show_min_max_time
+                <span class="date">$getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), $skin_obs).mintime.format($min_max_time_format)</span>
               #end if
             </bx-structured-list-cell>
             <bx-structured-list-cell>
@@ -110,8 +112,8 @@
               #end if
 
               <!--prettier-ignore-->
-              #if $precision == 'year' or $precision == 'alltime'
-              <span class="date">am $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), $skin_obs).maxtime.format($get_time_format_dict['stats'])</span>
+              #if $show_min_max_time
+              <span class="date">$getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), $skin_obs).maxtime.format($min_max_time_format)</span>
               #end if
             </bx-structured-list-cell>
           </bx-structured-list-row>

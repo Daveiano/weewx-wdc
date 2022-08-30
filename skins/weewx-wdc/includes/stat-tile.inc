@@ -9,6 +9,8 @@
 #set $show_wind_dir_ordinal = 'windDir' in $DisplayOptions.get('stat_tile_observations', []) and $partial_obs == "windSpeed" and $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
 #set $show_gust_dir = 'windGustDir' in $DisplayOptions.get('stat_tile_observations', []) and $partial_obs == "windGust" and not $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
 #set $show_gust_dir_ordinal = 'windGustDir' in $DisplayOptions.get('stat_tile_observations', []) and $partial_obs == "windGust" and $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
+#set $show_min_max_time = $precision == 'year' or $precision == 'alltime' or ($precision == 'day' and $to_bool($DisplayOptions.get('show_min_max_time_day', False))) or ($precision == 'yesterday' and $to_bool($DisplayOptions.get('show_min_max_time_yesterday', False))) or ($precision == 'week' and $to_bool($DisplayOptions.get('show_min_max_time_week', False))) or ($precision == 'month' and $to_bool($DisplayOptions.get('show_min_max_time_month', False)))
+#set $min_max_time_format = $get_time_format_dict['day'] if $precision == 'day' or $precision == 'yesterday' else $get_time_format_dict['stats']
 
 <script
   type="module"
@@ -30,7 +32,6 @@
 
           <!--prettier-ignore-->
           <span>
-            <!--prettier-ignore-->
             #if $precision == 'day'
               $getattr($current, $partial_obs)
 
@@ -151,10 +152,10 @@
       <div class="bx--col" data-test="min">
         <p class="stat-label">
           <!--prettier-ignore-->
-          #if $precision == 'year' or $precision == 'alltime'
+          #if $show_min_max_time
           <bx-tooltip-definition
             alignment="center"
-            body-text="$getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), $partial_obs).mintime.format($get_time_format_dict['stats'])"
+            body-text="$getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), $partial_obs).mintime.format($min_max_time_format)"
             direction="top"
           >
             $gettext($label_min)
@@ -173,10 +174,10 @@
       <div class="bx--col" data-test="max">
         <p class="stat-label">
           <!--prettier-ignore-->
-          #if $precision == 'year' or $precision == 'alltime'
+          #if $show_min_max_time
           <bx-tooltip-definition
             alignment="center"
-            body-text="$getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), $partial_obs).maxtime.format($get_time_format_dict['stats'])"
+            body-text="$getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), $partial_obs).maxtime.format($min_max_time_format)"
             direction="top"
           >
             $gettext($label_max)

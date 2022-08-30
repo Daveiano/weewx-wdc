@@ -17,7 +17,7 @@ Inspired by and build with the [Carbon Design System](https://carbondesignsystem
 If you need help installing the skin, please have a look at https://github.com/Daveiano/weewx-interceptor-docker, a configured Dockerfile
 which I use as a base for my local PI installation.
 
-If you like the look and feel of the skin please consider having a look into the original [Weather Data Center](https://daveiano.github.io/weather-data-center/)
+If you like the look and feel of the skin please consider having a look into the original [Weather Data Center](https://daveiano.github.io/weather-data-center/). **If you like the skin, please consider to give it a star!**
 
 ## Key Features
 

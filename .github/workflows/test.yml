@@ -79,7 +79,7 @@ jobs:
         run: yarn install
 
       - name: install playwright deps
-        run: npx playwright install --with-deps
+        run: yarn playwright install --with-deps
 
       - name: Download alternative html
         uses: actions/download-artifact@v3

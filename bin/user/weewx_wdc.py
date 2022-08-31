@@ -733,11 +733,14 @@ class WdcDiagramUtil(SearchList):
             "windSpeed",
             TimeSpan(period.start.raw, period.end.raw),
             db_manager,
-            aggregate_type="avg",
+            aggregate_type="max",
             aggregate_interval=self.get_aggregate_interval(
                 observation="windSpeed", precision=precision
             )
         )
+
+        if precision == "day":
+            pprint(wind_speed_series[0])
 
         # TODO: Gust speeds?
         for wind_speed_data, wind_dir_data in zip(wind_speed_series[0], wind_dir_series[0]):

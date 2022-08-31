@@ -1,7 +1,8 @@
-from datetime import datetime, timedelta
-from calendar import isleap
-from time import mktime
+import datetime
+import calendar
+import time
 
+from weewx import xtypes
 from weewx.cheetahgenerator import SearchList
 from weewx.units import (
     UnitInfoHelper,
@@ -48,7 +49,8 @@ class WdcGeneralUtil(SearchList):
     def get_time_format_dict(self):
         return self.time_format
 
-    def get_icon(self, observation):
+    @staticmethod
+    def get_icon(observation):
         """
         Returns an include path for an icon based on the observation
         @see http://weewx.com/docs/sle.html
@@ -185,7 +187,8 @@ class WdcGeneralUtil(SearchList):
 
         return "#161616"
 
-    def get_time_span_from_attr(self, attr, day, week, month, year, alltime, yesterday):
+    @staticmethod
+    def get_time_span_from_attr(attr, day, week, month, year, alltime, yesterday):
         """
         Get tag for use in templates.
 
@@ -194,7 +197,8 @@ class WdcGeneralUtil(SearchList):
             day: Daily TimeSpanBinder
             week: Weekly TimeSpanBinder
             month: Monthly TimeSpanBinder
-            year: Yeary TimeSpanBinder
+            year: Yearly TimeSpanBinder
+            alltime: Alltime TimeSpanBinder
             yesterday: Yesterday TimeSpanBinder
 
         Returns:
@@ -272,9 +276,10 @@ class WdcGeneralUtil(SearchList):
 
 
 class WdcArchiveUtil(SearchList):
-    def filter_months(self, months, year):
+    @staticmethod
+    def filter_months(months, year):
         """
-        Returns a filtred list of months
+        Returns a filtered list of months
 
         Args:
             months (list): A list of months [2022-01, 2022-02]
@@ -291,7 +296,8 @@ class WdcArchiveUtil(SearchList):
 
         return months_filtered
 
-    def month_string_format(self, month):
+    @staticmethod
+    def month_string_format(month):
         """
         Returns a formatted value of a weewwx month string (2022-01)
 
@@ -301,16 +307,18 @@ class WdcArchiveUtil(SearchList):
         Returns:
             str: Formatted month string.
         """
-        date_time_obj = datetime.strptime(month, "%Y-%m")
+        month_dt = datetime.datetime.strptime(month, "%Y-%m")
 
-        return date_time_obj.strftime("%B")
+        return month_dt.strftime("%B")
 
-    def fake_get_report_years(self, first, last):
+    @staticmethod
+    def fake_get_report_years(first, last):
         """
         Returns a fake $SummaryByYear tag.
 
         Args:
-            first (datetime): Datetime of first observation.
+            first (int): Year of first observation.
+            last (int): Year of last observation
 
         Returns:
             list: [2022, 2021].
@@ -326,7 +334,8 @@ class WdcArchiveUtil(SearchList):
 
 
 class WdcCelestialUtil(SearchList):
-    def get_celestial_icon(self, observation, prop):
+    @staticmethod
+    def get_celestial_icon(observation, prop):
         """
         Returns an include path for an icon based on the observation
 
@@ -366,7 +375,8 @@ class WdcDiagramUtil(SearchList):
         self.skin_dict = generator.skin_dict
         self.general_util = WdcGeneralUtil(generator)
 
-    def get_diagram_type(self, observation):
+    @staticmethod
+    def get_diagram_type(observation):
         """
         Set e.g. "temp" for all diagrams which should be rendered as temp
         diagram (includes also heat anmd windchill).
@@ -395,7 +405,8 @@ class WdcDiagramUtil(SearchList):
 
         return observation
 
-    def get_diagram(self, observation):
+    @staticmethod
+    def get_diagram(observation):
         """
         Choose between line and bar.
 
@@ -448,7 +459,8 @@ class WdcDiagramUtil(SearchList):
 
         return "avg"
 
-    def get_aggregate_interval(self, observation, precision, *args, **kwargs):
+    @staticmethod
+    def get_aggregate_interval(observation, precision, *args, **kwargs):
         """
         aggregate_interval for observations series.
         @see https://github.com/weewx/weewx/wiki/Tags-for-series#syntax
@@ -490,9 +502,9 @@ class WdcDiagramUtil(SearchList):
         if precision == "alltime":
             if alltime_start is not None and alltime_end is not None:
 
-                d1 = datetime.strptime(alltime_start, "%d.%m.%Y")
-                d2 = datetime.strptime(alltime_end, "%d.%m.%Y")
-                delta = d2 - d1
+                start_dt = datetime.datetime.strptime(alltime_start, "%d.%m.%Y")
+                end_dt = datetime.datetime.strptime(alltime_end, "%d.%m.%Y")
+                delta = end_dt - start_dt
 
                 if delta.days == 0:
                     # Edge case: code from year.
@@ -511,7 +523,8 @@ class WdcDiagramUtil(SearchList):
 
                 return 3600 * 96  # 4 days
 
-    def get_diagram_boundary(self, precision):
+    @staticmethod
+    def get_diagram_boundary(precision):
         """
         boundary for observations series for diagrams.
 
@@ -558,7 +571,8 @@ class WdcDiagramUtil(SearchList):
 
         return 1
 
-    def get_hour_delta(self, precision):
+    @staticmethod
+    def get_hour_delta(precision):
         """
         Get delta for $span($hour_delta=$delta) call.
 
@@ -568,7 +582,7 @@ class WdcDiagramUtil(SearchList):
         Returns:
             float: A delta
         """
-        now = datetime.now()
+        now_dt = datetime.datetime.now()
 
         hour_delta = 24
 
@@ -576,15 +590,16 @@ class WdcDiagramUtil(SearchList):
             hour_delta = 24 * 7
 
         if precision == "month":
-            hour_delta = 24 * 30  # monthrange(now.year, now.month)[1]
+            hour_delta = 24 * 30  # monthrange(now_dt.year, now_dt.month)[1]
 
         if precision == "year":
-            days = 366 if isleap(now.year) else 365
+            days = 366 if calendar.isleap(now_dt.year) else 365
             hour_delta = 24 * days
 
         return hour_delta
 
-    def get_week_delta(self, precision):
+    @staticmethod
+    def get_week_delta(precision):
         """
         Get delta for $span($week_delta=$delta) call.
 
@@ -627,7 +642,7 @@ class WdcDiagramUtil(SearchList):
         """
         Get data for rendering wind rose in JS.
 
-        period (obj): Period to use, eg. $year, month, $span
+        period (TimeSpanBinder): Period to use, eg. $year, month, $span
 
         Returns:
             list: Windrose data.
@@ -712,6 +727,14 @@ class WdcDiagramUtil(SearchList):
             time_unit="unix_epoch",
         )
 
+        # windDir = xtypes.get_series("windDir",
+        #                             TimeSpan(period.start.raw, period.end.raw),
+        #                             aggregate_type="avg",
+        #                             aggregate_interval=self.get_aggregate_interval(
+        #                                     observation="windDir", precision=precision
+        #                                 )
+        #                             )
+
         # @todo aggregate_interval=None
         windSpeed = period.windSpeed.series(
             aggregate_type="max",
@@ -770,7 +793,8 @@ class WdcStatsUtil(SearchList):
         self.obs = ObsInfoHelper(generator.skin_dict)
         self.diagram_util = WdcDiagramUtil(generator)
 
-    def get_show_min(self, observation):
+    @staticmethod
+    def get_show_min(observation):
         """
         Returns if the min stats should be shown.
 
@@ -803,7 +827,8 @@ class WdcStatsUtil(SearchList):
         if observation in show_min_stat:
             return True
 
-    def get_show_sum(self, observation):
+    @staticmethod
+    def get_show_sum(observation):
         """
         Returns if the sum stats should be shown.
 
@@ -818,7 +843,8 @@ class WdcStatsUtil(SearchList):
         if observation in show_sum:
             return True
 
-    def get_show_max(self, observation):
+    @staticmethod
+    def get_show_max(observation):
         """
         Returns if the max stats should be shown.
 
@@ -833,7 +859,8 @@ class WdcStatsUtil(SearchList):
         if observation in show_max:
             return True
 
-    def get_labels(self, prop, precision):
+    @staticmethod
+    def get_labels(prop, precision):
         """
         Returns a label like "Todays Max" or "Monthly average.
 
@@ -972,8 +999,6 @@ class WdcStatsUtil(SearchList):
 
         Args:
             day (string): Eg. rainDays, hotDays.
-            unit_labels (dict): weewx $unit
-            obs_labels (obj): weewx $obs.labels
             unit_type (dict): degree_F or degree_C
 
         Returns:
@@ -1051,12 +1076,13 @@ class WdcStatsUtil(SearchList):
                 + getattr(self.unit.label, "outTemp")
             )
 
-    def get_calendar_color(self, obs):
+    @staticmethod
+    def get_calendar_color(obs):
         """
         Returns a color for use in diagram.
 
         Args:
-            observation (string): The observation
+            obs (string): The observation
 
         Returns:
             string: Color string.
@@ -1088,13 +1114,13 @@ class WdcStatsUtil(SearchList):
                 "#660105",
             ]
 
-    def get_calendar_data(self, obs, aggrgate_type, period):
+    def get_calendar_data(self, obs, aggregate_type, period):
         """
         Returns array of calendar data for use in diagram.
 
         Args:
-            observation (string): The observation
-            aggrgate_type (string): Min, max, avg.
+            obs (string): The observation
+            aggregate_type (string): Min, max, avg.
             period (obj): Period to use, eg. $year, month, $span
 
         Returns:
@@ -1102,7 +1128,7 @@ class WdcStatsUtil(SearchList):
         """
         if obs == "rain":
             day_series = period.rain.series(
-                aggregate_type=aggrgate_type,
+                aggregate_type=aggregate_type,
                 aggregate_interval="day",
                 time_series="start",
                 time_unit="unix_epoch",
@@ -1112,32 +1138,31 @@ class WdcStatsUtil(SearchList):
                 lambda x: x[1].raw > 0.0, list(
                     zip(day_series.start, day_series.data))
             )
-            rainDays = []
+            rain_days = []
 
             for day in days:
-                rainDays.append(
-                    {"value": day[1].raw, "day": day[0].format("%Y-%m-%d")})
+                rain_days.append({"value": day[1].raw, "day": day[0].format("%Y-%m-%d")})
 
-            return rainDays
+            return rain_days
 
         if obs == "outTemp":
             day_series = period.outTemp.series(
-                aggregate_type=aggrgate_type,
+                aggregate_type=aggregate_type,
                 aggregate_interval="day",
                 time_series="start",
                 time_unit="unix_epoch",
             ).round(self.diagram_util.get_rounding("outTemp"))
 
             days = list(zip(day_series.start, day_series.data))
-            tempDays = []
+            temp_days = []
 
             for day in days:
                 if day[1].raw is not None:
-                    tempDays.append(
+                    temp_days.append(
                         {"value": day[1].raw, "day": day[0].format("%Y-%m-%d")}
                     )
 
-            return tempDays
+            return temp_days
 
 
 class WdcTableUtil(SearchList):
@@ -1147,12 +1172,12 @@ class WdcTableUtil(SearchList):
         self.obs = ObsInfoHelper(generator.skin_dict)
         self.diagram_util = WdcDiagramUtil(generator)
 
-    def get_table_aggregate_interval(self, observation, precision):
+    @staticmethod
+    def get_table_aggregate_interval(precision):
         """
         aggregate_interval for observations series for tables.
 
         Args:
-            observation (string): The observation
             precision (string): Day, week, month, year, alltime
 
         Returns:
@@ -1170,7 +1195,8 @@ class WdcTableUtil(SearchList):
         if precision == "year" or precision == "alltime":
             return 3600 * 24  # 1 day
 
-    def get_table_boundary(self, precision):
+    @staticmethod
+    def get_table_boundary(precision):
         """
         boundary for observations series for tables.
 
@@ -1203,15 +1229,11 @@ class WdcTableUtil(SearchList):
         Returns:
             list: Carbon data table headers.
         """
-        carbon_headers = []
-
-        carbon_headers.append(
-            {
-                "title": "Time",
-                "id": "time",
-                "sortCycle": "tri-states-from-ascending",
-            }
-        )
+        carbon_headers = [{
+            "title": "Time",
+            "id": "time",
+            "sortCycle": "tri-states-from-ascending",
+        }]
 
         for header in obs:
             if getattr(period, header).has_data:
@@ -1249,7 +1271,7 @@ class WdcTableUtil(SearchList):
                             observation, use_defaults=True
                         ),
                         aggregate_interval=self.get_table_aggregate_interval(
-                            observation, precision
+                            precision
                         ),
                         time_series="both",
                         time_unit="unix_epoch",
@@ -1259,22 +1281,21 @@ class WdcTableUtil(SearchList):
 
                 for start, stop, data in zip(series.start, series.stop, series.data):
                     if precision == "alltime":
-                        cs_time = datetime.fromtimestamp(start.raw)
+                        cs_time_dt = datetime.datetime.fromtimestamp(start.raw)
                     else:
-                        cs_time = datetime.fromtimestamp(stop.raw)
+                        cs_time_dt = datetime.datetime.fromtimestamp(stop.raw)
 
                     # The current series item by time.
                     cs_item = list(
                         filter(
-                            lambda x: (
-                                x["time"] == cs_time.isoformat()), carbon_values
+                            lambda x: (x["time"] == cs_time_dt.isoformat()), carbon_values
                         )
                     )
 
                     if len(cs_item) == 0:
                         carbon_values.append(
                             {
-                                "time": cs_time.isoformat(),
+                                "time": cs_time_dt.isoformat(),
                                 observation: data.raw,
                                 "id": start.raw,
                             }
@@ -1286,8 +1307,7 @@ class WdcTableUtil(SearchList):
                         carbon_values[cs_item_index] = cs_item
 
         # Sort per time
-        carbon_values.sort(
-            key=lambda item: datetime.fromisoformat(item["time"]))
+        carbon_values.sort(key=lambda item: datetime.datetime.fromisoformat(item["time"]))
 
         return carbon_values
 
@@ -1308,12 +1328,11 @@ class Yesterday(SearchList):
                      as its only parameter, will return a database manager
                      object.
         """
-        yesterday_end_dt = datetime.combine(
-            datetime.fromtimestamp(timespan.stop), datetime.min.time())
-        yesterday_end_ts = mktime(yesterday_end_dt.timetuple())
+        yesterday_end_dt = datetime.datetime.combine(datetime.datetime.fromtimestamp(timespan.stop), datetime.datetime.min.time())
+        yesterday_end_ts = time.mktime(yesterday_end_dt.timetuple())
 
-        yesterday_start_dt = yesterday_end_dt - timedelta(days=1)
-        yesterday_start_ts = mktime(yesterday_start_dt.timetuple())
+        yesterday_start_dt = yesterday_end_dt - datetime.timedelta(days=1)
+        yesterday_start_ts = time.mktime(yesterday_start_dt.timetuple())
 
         yesterday_stats = TimespanBinder(TimeSpan(yesterday_start_ts, yesterday_end_ts),
                                          db_lookup,

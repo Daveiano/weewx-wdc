@@ -502,7 +502,8 @@ class WdcDiagramUtil(SearchList):
         if precision == "alltime":
             if alltime_start is not None and alltime_end is not None:
 
-                start_dt = datetime.datetime.strptime(alltime_start, "%d.%m.%Y")
+                start_dt = datetime.datetime.strptime(
+                    alltime_start, "%d.%m.%Y")
                 end_dt = datetime.datetime.strptime(alltime_end, "%d.%m.%Y")
                 delta = end_dt - start_dt
 
@@ -647,6 +648,7 @@ class WdcDiagramUtil(SearchList):
         Returns:
             list: Windrose data.
         """
+        db_manager = self.generator.db_binder.get_manager()
         ordinals = self.general_util.get_ordinates()
         windrose_data = []
 
@@ -717,66 +719,60 @@ class WdcDiagramUtil(SearchList):
                 }
             )
 
-        # @todo aggregate_interval=None
-        windDir = period.windDir.series(
+        start_wind_dir_series, stop_wind_dir_series, wind_dir_series = xtypes.get_series(
+            "windDir",
+            TimeSpan(period.start.raw, period.end.raw),
+            db_manager,
             aggregate_type="avg",
             aggregate_interval=self.get_aggregate_interval(
                 observation="windDir", precision=precision
-            ),
-            time_series="start",
-            time_unit="unix_epoch",
+            )
         )
 
-        # windDir = xtypes.get_series("windDir",
-        #                             TimeSpan(period.start.raw, period.end.raw),
-        #                             aggregate_type="avg",
-        #                             aggregate_interval=self.get_aggregate_interval(
-        #                                     observation="windDir", precision=precision
-        #                                 )
-        #                             )
-
-        # @todo aggregate_interval=None
-        windSpeed = period.windSpeed.series(
-            aggregate_type="max",
+        start_wind_speed_series, stop_wind_speed_series, wind_speed_series = xtypes.get_series(
+            "windSpeed",
+            TimeSpan(period.start.raw, period.end.raw),
+            db_manager,
+            aggregate_type="avg",
             aggregate_interval=self.get_aggregate_interval(
                 observation="windSpeed", precision=precision
-            ),
-            time_series="start",
-            time_unit="unix_epoch",
+            )
         )
 
-        for windSpeed_data, windDir_data in zip(windSpeed.data, windDir.data):
-            if windSpeed_data.raw is None:
+        # TODO: Gust speeds?
+        for wind_speed_data, wind_dir_data in zip(wind_speed_series[0], wind_dir_series[0]):
+            if wind_speed_data is None:
                 continue
 
             # Convert windSpeed to knots, get beaufort.
             windspeed_target_unit = self.unit.unit_type.windSpeed
             if windspeed_target_unit in ("km_per_hour", "km_per_hour2"):
-                windspeed_knots = kph_to_knot(windSpeed_data.raw)
+                windspeed_knots = kph_to_knot(wind_speed_data)
             elif windspeed_target_unit in ("mile_per_hour", "mile_per_hour2"):
-                windspeed_knots = mph_to_knot(windSpeed_data.raw)
+                windspeed_knots = mph_to_knot(wind_speed_data)
             elif windspeed_target_unit in ("meter_per_second", "meter_per_second2"):
-                windspeed_knots = mps_to_knot(windSpeed_data.raw)
+                windspeed_knots = mps_to_knot(wind_speed_data)
             else:
-                windspeed_knots = windSpeed_data.raw
+                windspeed_knots = wind_speed_data
 
             windspeed_beaufort = beaufort(windspeed_knots)
-            winddir_oridnal = windDir_data.ordinal_compass()
-            windrose_data_oridnal_index = ordinals.index(winddir_oridnal)
+            winddir_oridnal = self.generator.formatter.to_ordinal_compass(
+                (wind_dir_data, wind_dir_series[1], wind_dir_series[2]))
+            windrose_data_ordinal_index = ordinals.index(winddir_oridnal)
 
             # Add 1 (one part of total number of parts) to the direction and
             # beaufort matrix.
             if windspeed_beaufort is None or windspeed_beaufort <= 1:
-                windrose_data[0]["r"][windrose_data_oridnal_index] += 1
+                windrose_data[0]["r"][windrose_data_ordinal_index] += 1
             elif windspeed_beaufort <= 5:
                 windrose_data[windspeed_beaufort - 1]["r"][
-                    windrose_data_oridnal_index
+                    windrose_data_ordinal_index
                 ] += 1
             else:
-                windrose_data[5]["r"][windrose_data_oridnal_index] += 1
+                windrose_data[5]["r"][windrose_data_ordinal_index] += 1
 
         # Calculate percentages.
-        num_of_values = len(list(windSpeed.data))
+        num_of_values = len(list(wind_speed_series[0]))
         for index, data in enumerate(windrose_data):
             for p_index, percent in enumerate(data["r"]):
                 windrose_data[index]["r"][p_index] = round(
@@ -1141,7 +1137,8 @@ class WdcStatsUtil(SearchList):
             rain_days = []
 
             for day in days:
-                rain_days.append({"value": day[1].raw, "day": day[0].format("%Y-%m-%d")})
+                rain_days.append(
+                    {"value": day[1].raw, "day": day[0].format("%Y-%m-%d")})
 
             return rain_days
 
@@ -1288,7 +1285,8 @@ class WdcTableUtil(SearchList):
                     # The current series item by time.
                     cs_item = list(
                         filter(
-                            lambda x: (x["time"] == cs_time_dt.isoformat()), carbon_values
+                            lambda x: (
+                                x["time"] == cs_time_dt.isoformat()), carbon_values
                         )
                     )
 
@@ -1307,7 +1305,8 @@ class WdcTableUtil(SearchList):
                         carbon_values[cs_item_index] = cs_item
 
         # Sort per time
-        carbon_values.sort(key=lambda item: datetime.datetime.fromisoformat(item["time"]))
+        carbon_values.sort(
+            key=lambda item: datetime.datetime.fromisoformat(item["time"]))
 
         return carbon_values
 
@@ -1328,7 +1327,8 @@ class Yesterday(SearchList):
                      as its only parameter, will return a database manager
                      object.
         """
-        yesterday_end_dt = datetime.datetime.combine(datetime.datetime.fromtimestamp(timespan.stop), datetime.datetime.min.time())
+        yesterday_end_dt = datetime.datetime.combine(
+            datetime.datetime.fromtimestamp(timespan.stop), datetime.datetime.min.time())
         yesterday_end_ts = time.mktime(yesterday_end_dt.timetuple())
 
         yesterday_start_dt = yesterday_end_dt - datetime.timedelta(days=1)

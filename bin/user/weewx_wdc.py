@@ -309,6 +309,7 @@ class WdcArchiveUtil(SearchList):
 
         return month_dt.strftime("%B")
 
+    # TODO: Replace with https://groups.google.com/g/weewx-development/c/MvXZhJTTuGU.
     @staticmethod
     def fake_get_report_years(first, last):
         """
@@ -810,7 +811,7 @@ class WdcStatsUtil(SearchList):
     @staticmethod
     def get_labels(prop, precision):
         """
-        Returns a label like "Todays Max" or "Monthly average.
+        Returns a label like "Todays Max" or "Monthly average".
 
         Args:
             prop (string): Min, Max, Sum
@@ -836,6 +837,9 @@ class WdcStatsUtil(SearchList):
         Returns:
             int: Number of days.
         """
+        freezing_point = 0.0 if getattr(unit_type, "outTemp") == "degree_C" else 32.0
+
+        # TODO: Refactor.
         if day == "iceDays":
             day_series = period.outTemp.series(
                 aggregate_type="max",
@@ -845,7 +849,7 @@ class WdcStatsUtil(SearchList):
             )
 
             days = filter(
-                lambda x: x.raw is not None and x.raw < 0.0, list(day_series.data)
+                lambda x: x.raw is not None and x.raw < freezing_point, list(day_series.data)
             )
 
             return len(list(days))
@@ -859,7 +863,7 @@ class WdcStatsUtil(SearchList):
             )
 
             days = filter(
-                lambda x: x.raw is not None and x.raw < 0.0, list(day_series.data)
+                lambda x: x.raw is not None and x.raw < freezing_point, list(day_series.data)
             )
 
             return len(list(days))
@@ -1168,6 +1172,7 @@ class WdcTableUtil(SearchList):
         }]
 
         for header in obs:
+            # TODO: weewx.tags.ObservationBinder
             if getattr(period, header).has_data:
                 carbon_header = {
                     "title": self.obs.label[header],
@@ -1193,7 +1198,7 @@ class WdcTableUtil(SearchList):
         """
         carbon_values = []
 
-        # TODO: Get values directly from DB?
+        # TODO: xtypes.get_series
         for observation in obs:
             if getattr(period, observation).has_data:
                 series = (

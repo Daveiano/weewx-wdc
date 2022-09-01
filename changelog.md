@@ -291,5 +291,6 @@ From Line 92:
 # 2.3.0
 
 - Added (optional) Yesterdays page [GH-52]
+- Bugfix: Frost days and Ice days were calculated wrong when using °F
 
 # Next

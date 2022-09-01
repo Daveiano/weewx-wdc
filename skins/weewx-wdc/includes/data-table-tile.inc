@@ -16,8 +16,8 @@
           var tableRows = $get_table_rows($table_tile_observations, $yesterday, $precision);
           var tableHeaders = $jsonize($get_table_headers($table_tile_observations, $yesterday));
           #else
-          var tableRows = $get_table_rows($table_tile_observations, $span($hour_delta=$get_hour_delta($precision), $week_delta=$get_week_delta($precision), $boundary=$get_table_boundary($precision)), $precision);
-          var tableHeaders = $jsonize($get_table_headers($table_tile_observations, $span($hour_delta=$get_hour_delta($precision), $week_delta=$get_week_delta($precision), $boundary=$get_table_boundary($precision))));
+          var tableRows = $get_table_rows($table_tile_observations, $span($hour_delta=$get_hour_delta($precision), $boundary=$get_table_boundary($precision)), $precision);
+          var tableHeaders = $jsonize($get_table_headers($table_tile_observations, $span($hour_delta=$get_hour_delta($precision), $boundary=$get_table_boundary($precision))));
           #end if
 
           var tableTitle = '$gettext("All data")';

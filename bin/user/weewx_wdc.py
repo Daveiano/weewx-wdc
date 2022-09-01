@@ -1,3 +1,6 @@
+# Copyright 2022 David Bätge
+# Distributed under the terms of the GNU Public License (GPLv3)
+
 import datetime
 import calendar
 import time
@@ -16,10 +19,10 @@ from weewx.wxformulas import beaufort
 from weewx.tags import TimespanBinder
 from weeutil.weeutil import TimeSpan
 
-from pprint import pprint
-
-# Copyright 2022 David Bätge
-# Distributed under the terms of the GNU Public License (GPLv3)
+if weewx.__version__ < "4.6":
+    raise weewx.UnsupportedFeature(
+        "weewx 4.6 and newer is required, found %s" % weewx.__version__
+    )
 
 temp_obs = ["outTemp", "inTemp", "dewpoint",
             "windchill", "heatindex", "appTemp"]
@@ -371,9 +374,9 @@ class WdcDiagramUtil(SearchList):
     def __init__(self, generator):
         SearchList.__init__(self, generator)
         self.obs = ObsInfoHelper(generator.skin_dict)
-        # TODO: self.generator.formatter.unit_label_dict
         self.unit = UnitInfoHelper(generator.formatter, generator.converter)
         self.skin_dict = generator.skin_dict
+        self.config_dict = generator.config_dict
         self.general_util = WdcGeneralUtil(generator)
 
     @staticmethod
@@ -600,23 +603,6 @@ class WdcDiagramUtil(SearchList):
 
         return hour_delta
 
-    @staticmethod
-    def get_week_delta(precision):
-        """
-        Get delta for $span($week_delta=$delta) call.
-
-        TODO: Remove
-
-        Args:
-            precision (string): Day, week, month, year, alltime
-
-        Returns:
-            float: A delta
-        """
-        week_delta = 0
-
-        return week_delta
-
     def get_nivo_props(self, obs):
         """
         Get nivo props from skin.conf.
@@ -649,7 +635,8 @@ class WdcDiagramUtil(SearchList):
         Returns:
             list: Windrose data.
         """
-        db_manager = self.generator.db_binder.get_manager()
+        db_manager = self.generator.db_binder.get_manager(
+            data_binding=self.config_dict["StdArchive"]["data_binding"])
         ordinals = self.general_util.get_ordinates()
         windrose_data = []
 

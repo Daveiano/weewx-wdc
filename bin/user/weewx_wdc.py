@@ -2,7 +2,7 @@ import datetime
 import calendar
 import time
 
-from weewx import xtypes
+import weewx
 from weewx.cheetahgenerator import SearchList
 from weewx.units import (
     UnitInfoHelper,
@@ -371,6 +371,7 @@ class WdcDiagramUtil(SearchList):
     def __init__(self, generator):
         SearchList.__init__(self, generator)
         self.obs = ObsInfoHelper(generator.skin_dict)
+        # TODO: self.generator.formatter.unit_label_dict
         self.unit = UnitInfoHelper(generator.formatter, generator.converter)
         self.skin_dict = generator.skin_dict
         self.general_util = WdcGeneralUtil(generator)
@@ -719,7 +720,7 @@ class WdcDiagramUtil(SearchList):
                 }
             )
 
-        start_wind_dir_series, stop_wind_dir_series, wind_dir_series = xtypes.get_series(
+        windDir_start_vt, windDir_stop_vt, windDir_vt = weewx.xtypes.get_series(
             "windDir",
             TimeSpan(period.start.raw, period.end.raw),
             db_manager,
@@ -729,7 +730,7 @@ class WdcDiagramUtil(SearchList):
             )
         )
 
-        start_wind_speed_series, stop_wind_speed_series, wind_speed_series = xtypes.get_series(
+        windSpeed_start_vt, windSpeed_stop_vt, windSpeed_vt = weewx.xtypes.get_series(
             "windSpeed",
             TimeSpan(period.start.raw, period.end.raw),
             db_manager,
@@ -739,43 +740,40 @@ class WdcDiagramUtil(SearchList):
             )
         )
 
-        if precision == "day":
-            pprint(wind_speed_series[0])
-
         # TODO: Gust speeds?
-        for wind_speed_data, wind_dir_data in zip(wind_speed_series[0], wind_dir_series[0]):
-            if wind_speed_data is None:
+        for windSpeed, windDir in zip(windSpeed_vt[0], windDir_vt[0]):
+            if windSpeed is None:
                 continue
 
             # Convert windSpeed to knots, get beaufort.
-            windspeed_target_unit = self.unit.unit_type.windSpeed
-            if windspeed_target_unit in ("km_per_hour", "km_per_hour2"):
-                windspeed_knots = kph_to_knot(wind_speed_data)
-            elif windspeed_target_unit in ("mile_per_hour", "mile_per_hour2"):
-                windspeed_knots = mph_to_knot(wind_speed_data)
-            elif windspeed_target_unit in ("meter_per_second", "meter_per_second2"):
-                windspeed_knots = mps_to_knot(wind_speed_data)
+            windspeed_source_unit = windSpeed_vt[1]
+            if windspeed_source_unit in ("km_per_hour", "km_per_hour2"):
+                windSpeed_knots = kph_to_knot(windSpeed)
+            elif windspeed_source_unit in ("mile_per_hour", "mile_per_hour2"):
+                windSpeed_knots = mph_to_knot(windSpeed)
+            elif windspeed_source_unit in ("meter_per_second", "meter_per_second2"):
+                windSpeed_knots = mps_to_knot(windSpeed)
             else:
-                windspeed_knots = wind_speed_data
+                windSpeed_knots = windSpeed
 
-            windspeed_beaufort = beaufort(windspeed_knots)
+            windSpeed_beaufort = beaufort(windSpeed_knots)
             winddir_oridnal = self.generator.formatter.to_ordinal_compass(
-                (wind_dir_data, wind_dir_series[1], wind_dir_series[2]))
+                (windDir, windDir_vt[1], windDir_vt[2]))
             windrose_data_ordinal_index = ordinals.index(winddir_oridnal)
 
             # Add 1 (one part of total number of parts) to the direction and
             # beaufort matrix.
-            if windspeed_beaufort is None or windspeed_beaufort <= 1:
+            if windSpeed_beaufort is None or windSpeed_beaufort <= 1:
                 windrose_data[0]["r"][windrose_data_ordinal_index] += 1
-            elif windspeed_beaufort <= 5:
-                windrose_data[windspeed_beaufort - 1]["r"][
+            elif windSpeed_beaufort <= 5:
+                windrose_data[windSpeed_beaufort - 1]["r"][
                     windrose_data_ordinal_index
                 ] += 1
             else:
                 windrose_data[5]["r"][windrose_data_ordinal_index] += 1
 
         # Calculate percentages.
-        num_of_values = len(list(wind_speed_series[0]))
+        num_of_values = len(list(windSpeed_vt[0]))
         for index, data in enumerate(windrose_data):
             for p_index, percent in enumerate(data["r"]):
                 windrose_data[index]["r"][p_index] = round(

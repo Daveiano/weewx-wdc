@@ -1199,6 +1199,7 @@ class WdcTableUtil(SearchList):
         carbon_values = []
 
         # TODO: xtypes.get_series
+        # For rounding use weeutil.weeutil.rounder
         for observation in obs:
             if getattr(period, observation).has_data:
                 series = (

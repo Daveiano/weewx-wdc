@@ -647,7 +647,7 @@ class WdcDiagramUtil(SearchList):
         # We use a scale of 6: <=BF1, BF2, ..., BF5, >=BF6.
         for i in range(6):
             name_prefix = "<= " if i == 0 else ">= " if i == 5 else ""
-            show_beaufort = False
+            show_beaufort = True
 
             if show_beaufort:
                 name = "Beaufort " + str(i + 1)

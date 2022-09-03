@@ -34,18 +34,39 @@ test.describe("Diagrams", () => {
     ).toMatchSnapshot();
   });
 
+  // @todo Add test for custom "show_beafort = False".
   test("Windrose", async ({ page }) => {
-    const windrose = page.locator(".diagram-tile[data-test='windrose']");
+    let windrose = page.locator(".diagram-tile[data-test='windrose']");
     expect(
       await windrose.locator(".value script").innerText()
     ).toMatchSnapshot();
-  });
 
-  test("Windrose Stats page", async ({ page }) => {
+    // Week page.
+    await page.goto("artifacts-alternative-weewx-html/public_html/week.html");
+    windrose = page.locator(".diagram-tile[data-test='windrose']");
+    expect(
+      await windrose.locator(".value script").innerText()
+    ).toMatchSnapshot();
+
+    // Month page.
+    await page.goto("artifacts-alternative-weewx-html/public_html/month.html");
+    windrose = page.locator(".diagram-tile[data-test='windrose']");
+    expect(
+      await windrose.locator(".value script").innerText()
+    ).toMatchSnapshot();
+
+    // Year page.
+    await page.goto("artifacts-alternative-weewx-html/public_html/year.html");
+    windrose = page.locator(".diagram-tile[data-test='windrose']");
+    expect(
+      await windrose.locator(".value script").innerText()
+    ).toMatchSnapshot();
+
+    // Stats page.
     await page.goto(
       "artifacts-alternative-weewx-html/public_html/statistics.html"
     );
-    const windrose = page.locator(".diagram-tile[data-test='windrose']");
+    windrose = page.locator(".diagram-tile[data-test='windrose']");
     expect(
       await windrose.locator(".value script").innerText()
     ).toMatchSnapshot();

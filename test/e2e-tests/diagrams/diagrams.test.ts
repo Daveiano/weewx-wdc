@@ -34,7 +34,7 @@ test.describe("Diagrams", () => {
     ).toMatchSnapshot();
   });
 
-  test.only("Diagram property generation", async ({ page }) => {
+  test("Diagram property generation", async ({ page }) => {
     const combinedTemp = page.locator(
       ".diagram-tile[data-test='outTemp-outTemp-outTemp']"
     );

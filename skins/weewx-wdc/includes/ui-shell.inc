@@ -1,6 +1,7 @@
 <!--prettier-ignore-->
 #encoding UTF-8
 #errorCatcher Echo
+#import datetime
 
 <script
   type="module"
@@ -254,7 +255,7 @@
       <!--prettier-ignore-->
       #for $month in $months_for_year
       <bx-side-nav-menu-item href="month-${month}.html">
-        <span>$month_string_format($month)</span>
+        <span>$datetime.datetime.strptime($month, "%Y-%m").strftime("%B")</span>
       </bx-side-nav-menu-item>
       #end for
     </bx-side-nav-menu>

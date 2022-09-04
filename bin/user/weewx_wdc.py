@@ -232,7 +232,11 @@ class WdcGeneralUtil(SearchList):
         Returns:
             list: Static pages array
         """
-        static_templates = self.skin_dict["CheetahGenerator"]["Static"]
+        try:
+            static_templates = self.skin_dict["CheetahGenerator"]["Static"]
+        except KeyError:
+            static_templates = {}
+
         static_pages = []
 
         for static_page in static_templates:
@@ -298,21 +302,6 @@ class WdcArchiveUtil(SearchList):
                 months_filtered.append(month)
 
         return months_filtered
-
-    @staticmethod
-    def month_string_format(month):
-        """
-        Returns a formatted value of a weewwx month string (2022-01)
-
-        Args:
-            month (string): A month
-
-        Returns:
-            str: Formatted month string.
-        """
-        month_dt = datetime.datetime.strptime(month, "%Y-%m")
-
-        return month_dt.strftime("%B")
 
     @staticmethod
     def fake_get_report_years(first, last):
@@ -1126,6 +1115,7 @@ class WdcStatsUtil(SearchList):
         Returns:
             list: Calendar data.
         """
+        # TODO Use get_series.
         if obs == "rain":
             day_series = period.rain.series(
                 aggregate_type=aggregate_type,
@@ -1172,6 +1162,7 @@ class WdcTableUtil(SearchList):
         self.unit = UnitInfoHelper(generator.formatter, generator.converter)
         self.obs = ObsInfoHelper(generator.skin_dict)
         self.diagram_util = WdcDiagramUtil(generator)
+
         # Setup database manager
         binding = self.generator.config_dict["StdReport"].get(
             "data_binding", "wx_binding"

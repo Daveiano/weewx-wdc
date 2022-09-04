@@ -56,10 +56,10 @@
             >$gettext("Climatological day")</bx-structured-list-header-cell
           >
           <bx-structured-list-header-cell
-            >Number</bx-structured-list-header-cell
+            >$gettext("Number of days")</bx-structured-list-header-cell
           >
           <bx-structured-list-header-cell>
-            <span class="hide-mobile">Description</span>
+            <span class="hide-mobile">$gettext("Description")</span>
           </bx-structured-list-header-cell>
         </bx-structured-list-header-row>
       </bx-structured-list-head>

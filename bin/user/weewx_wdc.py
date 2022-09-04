@@ -17,7 +17,7 @@ from weewx.units import (
 )
 from weewx.wxformulas import beaufort
 from weewx.tags import TimespanBinder
-from weeutil.weeutil import TimeSpan
+from weeutil.weeutil import TimeSpan, rounder
 
 if weewx.__version__ < "4.6":
     raise weewx.UnsupportedFeature(
@@ -314,7 +314,6 @@ class WdcArchiveUtil(SearchList):
 
         return month_dt.strftime("%B")
 
-    # TODO: Replace with https://groups.google.com/g/weewx-development/c/MvXZhJTTuGU.
     @staticmethod
     def fake_get_report_years(first, last):
         """
@@ -465,14 +464,14 @@ class WdcDiagramUtil(SearchList):
         return "avg"
 
     @staticmethod
-    def get_aggregate_interval(observation, precision, *args, **kwargs):
+    def get_aggregate_interval(observation, context, *args, **kwargs):
         """
         aggregate_interval for observations series.
         @see https://github.com/weewx/weewx/wiki/Tags-for-series#syntax
 
         Args:
             observation (string): The observation
-            precision (string): Day, week, month, year, alltime
+            context (string): Day, week, month, year, alltime
 
         Returns:
             int: aggregate_interval
@@ -480,31 +479,31 @@ class WdcDiagramUtil(SearchList):
         alltime_start = kwargs.get("alltime_start", None)
         alltime_end = kwargs.get("alltime_end", None)
 
-        if precision == "day" or precision == 'yesterday':
+        if context == "day" or context == 'yesterday':
             if observation == "ET" or observation == "rain":
                 return 7200  # 2 hours
 
             return 1800  # 30 minutes
 
-        if precision == "week":
+        if context == "week":
             if observation == "ET" or observation == "rain":
                 return 3600 * 24  # 1 day
 
             return 900 * 8  # 2 hours
 
-        if precision == "month":
+        if context == "month":
             if observation == "ET" or observation == "rain":
                 return 3600 * 48  # 2 days
 
             return 900 * 24  # 6 hours
 
-        if precision == "year":
+        if context == "year":
             if observation == "ET" or observation == "rain":
                 return 3600 * 432  # 8 days
 
             return 3600 * 48  # 2 days
 
-        if precision == "alltime":
+        if context == "alltime":
             if alltime_start is not None and alltime_end is not None:
 
                 start_dt = datetime.datetime.strptime(
@@ -530,26 +529,26 @@ class WdcDiagramUtil(SearchList):
                 return 3600 * 96  # 4 days
 
     @staticmethod
-    def get_diagram_boundary(precision):
+    def get_diagram_boundary(context):
         """
         boundary for observations series for diagrams.
 
         Args:
-            precision (string): Day, week, month, year, alltime
+            context (string): Day, week, month, year, alltime
 
         Returns:
             string: None | 'midnight'
         """
-        if precision == "day":
+        if context == "day":
             return None
 
-        if precision == "week":
+        if context == "week":
             return None
 
-        if precision == "month":
+        if context == "month":
             return None
 
-        if precision == "year" or precision == "alltime":
+        if context == "year" or context == "alltime":
             return "midnight"
 
     def get_rounding(self, observation):
@@ -578,12 +577,12 @@ class WdcDiagramUtil(SearchList):
         return 1
 
     @staticmethod
-    def get_hour_delta(precision):
+    def get_hour_delta(context):
         """
         Get delta for $span($hour_delta=$delta) call.
 
         Args:
-            precision (string): Day, week, month, year, alltime
+            context (string): Day, week, month, year, alltime
 
         Returns:
             float: A delta
@@ -592,13 +591,13 @@ class WdcDiagramUtil(SearchList):
 
         hour_delta = 24
 
-        if precision == "week":
+        if context == "week":
             hour_delta = 24 * 7
 
-        if precision == "month":
+        if context == "month":
             hour_delta = 24 * 30  # monthrange(now_dt.year, now_dt.month)[1]
 
-        if precision == "year":
+        if context == "year":
             days = 366 if calendar.isleap(now_dt.year) else 365
             hour_delta = 24 * days
 
@@ -627,17 +626,21 @@ class WdcDiagramUtil(SearchList):
         else:
             return diagram_base_props
 
-    def get_windrose_data(self, period, precision):
+    def get_windrose_data(self, start_ts, end_ts, context):
         """
         Get data for rendering wind rose in JS.
 
-        period (TimeSpanBinder): Period to use, eg. $year, month, $span
+        start_ts (Timestamp): Start timestamp
+        end_ts (Timestamp): End timestamp
+        context (string): One of day, week, month, year
 
         Returns:
             list: Windrose data.
         """
         db_manager = self.generator.db_binder.get_manager(
-            data_binding=self.config_dict["StdArchive"]["data_binding"])
+            data_binding=self.generator.config_dict["StdReport"].get(
+                "data_binding", "wx_binding"
+            ))
         ordinals = self.general_util.get_ordinates()
         windrose_data = []
 
@@ -665,32 +668,40 @@ class WdcDiagramUtil(SearchList):
                         (4, "knot", "group_speed"))
                     wind_upper_vt = self.generator.converter.convert(
                         (6, "knot", "group_speed"))
-                    name = ValueHelper(value_t=wind_lower_vt, formatter=self.generator.formatter).format(
-                    ) + " - " + ValueHelper(value_t=wind_upper_vt, formatter=self.generator.formatter).format()
+                    name = ValueHelper(value_t=wind_lower_vt,
+                                       formatter=self.generator.formatter).format(
+                    ) + " - " + ValueHelper(value_t=wind_upper_vt,
+                                            formatter=self.generator.formatter).format()
                 # Bft 3
                 elif i == 2:
                     wind_lower_vt = self.generator.converter.convert(
                         (7, "knot", "group_speed"))
                     wind_upper_vt = self.generator.converter.convert(
                         (10, "knot", "group_speed"))
-                    name = ValueHelper(value_t=wind_lower_vt, formatter=self.generator.formatter).format(
-                    ) + " - " + ValueHelper(value_t=wind_upper_vt, formatter=self.generator.formatter).format()
+                    name = ValueHelper(value_t=wind_lower_vt,
+                                       formatter=self.generator.formatter).format(
+                    ) + " - " + ValueHelper(value_t=wind_upper_vt,
+                                            formatter=self.generator.formatter).format()
                 # Bft 4
                 elif i == 3:
                     wind_lower_vt = self.generator.converter.convert(
                         (11, "knot", "group_speed"))
                     wind_upper_vt = self.generator.converter.convert(
                         (16, "knot", "group_speed"))
-                    name = ValueHelper(value_t=wind_lower_vt, formatter=self.generator.formatter).format(
-                    ) + " - " + ValueHelper(value_t=wind_upper_vt, formatter=self.generator.formatter).format()
+                    name = ValueHelper(value_t=wind_lower_vt,
+                                       formatter=self.generator.formatter).format(
+                    ) + " - " + ValueHelper(value_t=wind_upper_vt,
+                                            formatter=self.generator.formatter).format()
                 # Bft 5
                 elif i == 4:
                     wind_lower_vt = self.generator.converter.convert(
                         (17, "knot", "group_speed"))
                     wind_upper_vt = self.generator.converter.convert(
                         (21, "knot", "group_speed"))
-                    name = ValueHelper(value_t=wind_lower_vt, formatter=self.generator.formatter).format(
-                    ) + " - " + ValueHelper(value_t=wind_upper_vt, formatter=self.generator.formatter).format()
+                    name = ValueHelper(value_t=wind_lower_vt,
+                                       formatter=self.generator.formatter).format(
+                    ) + " - " + ValueHelper(value_t=wind_upper_vt,
+                                            formatter=self.generator.formatter).format()
                 # Bft 6 and higher
                 elif i == 5:
                     wind_lower_vt = self.generator.converter.convert(
@@ -710,21 +721,21 @@ class WdcDiagramUtil(SearchList):
 
         windDir_start_vt, windDir_stop_vt, windDir_vt = weewx.xtypes.get_series(
             "windDir",
-            TimeSpan(period.start.raw, period.end.raw),
+            TimeSpan(start_ts, end_ts),
             db_manager,
             aggregate_type="avg",
             aggregate_interval=self.get_aggregate_interval(
-                observation="windDir", precision=precision
+                observation="windDir", context=context
             )
         )
 
         windSpeed_start_vt, windSpeed_stop_vt, windSpeed_vt = weewx.xtypes.get_series(
             "windSpeed",
-            TimeSpan(period.start.raw, period.end.raw),
+            TimeSpan(start_ts, end_ts),
             db_manager,
             aggregate_type="max",
             aggregate_interval=self.get_aggregate_interval(
-                observation="windSpeed", precision=precision
+                observation="windSpeed", context=context
             )
         )
 
@@ -845,21 +856,21 @@ class WdcStatsUtil(SearchList):
             return True
 
     @staticmethod
-    def get_labels(prop, precision):
+    def get_labels(prop, context):
         """
         Returns a label like "Todays Max" or "Monthly average".
 
         Args:
             prop (string): Min, Max, Sum
-            precision (string): Day, week, month, year, alltime
+            context (string): Day, week, month, year, alltime
 
         Returns:
             string: A label.
         """
-        if precision == "alltime":
+        if context == "alltime":
             return prop
 
-        return prop + " " + precision
+        return prop + " " + context
 
     def get_climatological_day(self, day, period, unit_type):
         """
@@ -873,7 +884,8 @@ class WdcStatsUtil(SearchList):
         Returns:
             int: Number of days.
         """
-        freezing_point = 0.0 if getattr(unit_type, "outTemp") == "degree_C" else 32.0
+        freezing_point = 0.0 if getattr(
+            unit_type, "outTemp") == "degree_C" else 32.0
 
         # TODO: Refactor.
         if day == "iceDays":
@@ -885,7 +897,8 @@ class WdcStatsUtil(SearchList):
             )
 
             days = filter(
-                lambda x: x.raw is not None and x.raw < freezing_point, list(day_series.data)
+                lambda x: x.raw is not None and x.raw < freezing_point, list(
+                    day_series.data)
             )
 
             return len(list(days))
@@ -899,7 +912,8 @@ class WdcStatsUtil(SearchList):
             )
 
             days = filter(
-                lambda x: x.raw is not None and x.raw < freezing_point, list(day_series.data)
+                lambda x: x.raw is not None and x.raw < freezing_point, list(
+                    day_series.data)
             )
 
             return len(list(days))
@@ -1158,60 +1172,72 @@ class WdcTableUtil(SearchList):
         self.unit = UnitInfoHelper(generator.formatter, generator.converter)
         self.obs = ObsInfoHelper(generator.skin_dict)
         self.diagram_util = WdcDiagramUtil(generator)
+        # Setup database manager
+        binding = self.generator.config_dict["StdReport"].get(
+            "data_binding", "wx_binding"
+        )
+        self.db_manager = self.generator.db_binder.get_manager(binding)
+
+        try:
+            table_obs = self.generator.skin_dict["DisplayOptions"]["table_tile_observations"]
+        except KeyError:
+            table_obs = []
+
+        self.table_obs = table_obs
 
     @staticmethod
-    def get_table_aggregate_interval(precision):
+    def get_table_aggregate_interval(context):
         """
         aggregate_interval for observations series for tables.
 
         Args:
-            precision (string): Day, week, month, year, alltime
+            context (string): Day, week, month, year, alltime
 
         Returns:
             int: aggregate_interval
         """
-        if precision == "day" or precision == "yesterday":
+        if context == "day" or context == "yesterday":
             return 900 * 4  # 1 hours
 
-        if precision == "week":
+        if context == "week":
             return 900 * 24  # 6 hours
 
-        if precision == "month":
+        if context == "month":
             return 900 * 48  # 12 hours
 
-        if precision == "year" or precision == "alltime":
+        if context == "year" or context == "alltime":
             return 3600 * 24  # 1 day
 
     @staticmethod
-    def get_table_boundary(precision):
+    def get_table_boundary(context):
         """
         boundary for observations series for tables.
 
         Args:
-            precision (string): Day, week, month, year, alltime
+            context (string): Day, week, month, year, alltime
 
         Returns:
             string: None | 'midnight'
         """
-        if precision == "day" or precision == 'yesterday':
+        if context == "day" or context == 'yesterday':
             return None
 
-        if precision == "week":
+        if context == "week":
             return None
 
-        if precision == "month":
+        if context == "month":
             return None
 
-        if precision == "year" or precision == "alltime":
+        if context == "year" or context == "alltime":
             return "midnight"
 
-    def get_table_headers(self, obs, period):
+    def get_table_headers(self, start_ts, end_ts):
         """
         Returns tableheaders for use in carbon data table.
 
         Args:
-            obs (list): $DisplayOptions.get("table_tile_..")
-            period (obj): Period to use, eg. $year, month, $span
+            start_ts (Timestamp): Start timestamp.
+            end_ts (Timestamp): End timestamp.
 
         Returns:
             list: Carbon data table headers.
@@ -1222,57 +1248,57 @@ class WdcTableUtil(SearchList):
             "sortCycle": "tri-states-from-ascending",
         }]
 
-        for header in obs:
-            # TODO: weewx.tags.ObservationBinder
-            if getattr(period, header).has_data:
+        for observation in self.table_obs:
+            if self.db_manager.has_data(observation, TimeSpan(start_ts, end_ts)):
                 carbon_header = {
-                    "title": self.obs.label[header],
-                    "small": "in " + getattr(self.unit.label, header),
-                    "id": header,
+                    "title": self.obs.label[observation],
+                    "small": "in " + getattr(self.unit.label, observation),
+                    "id": observation,
                     "sortCycle": "tri-states-from-ascending",
                 }
                 carbon_headers.append(carbon_header)
 
         return carbon_headers
 
-    def get_table_rows(self, obs, period, precision):
+    def get_table_rows(self, start_ts, end_ts, context):
         """
         Returns table values for use in carbon data table.
 
         Args:
-            obs (list): $DisplayOptions.get("table_tile_..")
-            period (obj): Period to use, eg. $year, month, $span
-            precision (string): Day, week, month, year, alltime
+            start_ts (Timestamp): Start timestamp.
+            end_ts (Timestamp): End timestamp.
+            context (string): Day, week, month, year, alltime
 
         Returns:
             list: Carbon data table rows.
         """
         carbon_values = []
 
-        # TODO: xtypes.get_series
-        # For rounding use weeutil.weeutil.rounder
-        for observation in obs:
-            if getattr(period, observation).has_data:
-                series = (
-                    getattr(period, observation)
-                    .series(
-                        aggregate_type=self.diagram_util.get_aggregate_type(
-                            observation, use_defaults=True
-                        ),
-                        aggregate_interval=self.get_table_aggregate_interval(
-                            precision
-                        ),
-                        time_series="both",
-                        time_unit="unix_epoch",
+        for observation in self.table_obs:
+            if self.db_manager.has_data(observation, TimeSpan(start_ts, end_ts)):
+                series_start_vt, series_stop_vt, observation_vt = weewx.xtypes.get_series(
+                    observation,
+                    TimeSpan(start_ts, end_ts),
+                    self.db_manager,
+                    aggregate_type=self.diagram_util.get_aggregate_type(
+                        observation, use_defaults=True
+                    ),
+                    aggregate_interval=self.get_table_aggregate_interval(
+                        context=context
                     )
-                    .round(self.diagram_util.get_rounding(observation))
                 )
 
-                for start, stop, data in zip(series.start, series.stop, series.data):
-                    if precision == "alltime":
-                        cs_time_dt = datetime.datetime.fromtimestamp(start.raw)
+                for table_start_ts, table_stop_ts, table_data in zip(
+                        series_start_vt[0],
+                        series_stop_vt[0],
+                        observation_vt[0]
+                ):
+                    if context == "alltime":
+                        cs_time_dt = datetime.datetime.fromtimestamp(
+                            table_start_ts)
                     else:
-                        cs_time_dt = datetime.datetime.fromtimestamp(stop.raw)
+                        cs_time_dt = datetime.datetime.fromtimestamp(
+                            table_stop_ts)
 
                     # The current series item by time.
                     cs_item = list(
@@ -1282,18 +1308,27 @@ class WdcTableUtil(SearchList):
                         )
                     )
 
+                    table_date_target_unit = self.generator.converter.convert((
+                        table_data,
+                        observation_vt[1],
+                        observation_vt[2])
+                    )
+
+                    table_data_rounded = rounder(table_date_target_unit[0],
+                                                 self.diagram_util.get_rounding(observation))
+
                     if len(cs_item) == 0:
                         carbon_values.append(
                             {
                                 "time": cs_time_dt.isoformat(),
-                                observation: data.raw,
-                                "id": start.raw,
+                                observation: table_data_rounded,
+                                "id": table_start_ts,
                             }
                         )
                     else:
                         cs_item = cs_item[0]
                         cs_item_index = carbon_values.index(cs_item)
-                        cs_item[observation] = data.raw if data.raw is not None else "-"
+                        cs_item[observation] = table_data_rounded if table_data_rounded is not None else "-"
                         carbon_values[cs_item_index] = cs_item
 
         # Sort per time

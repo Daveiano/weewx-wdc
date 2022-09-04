@@ -8,7 +8,7 @@
   <!--prettier-ignore-->
   #for $skin_obs in $DisplayOptions.get('stat_tile_observations')
     #if $skin_obs != 'windDir' and $skin_obs != 'windGustDir'
-      #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), $skin_obs).has_data
+      #if $getattr($get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday), $skin_obs).has_data
         #set global $partial_obs = $skin_obs
         #include "includes/stat-tile.inc"
       #end if
@@ -17,41 +17,41 @@
 </div>
 
 <!--prettier-ignore-->
-#if $precision == "day"
+#if $context == "day"
 #include "includes/forecast.inc"
 #end if
 
 <div class="bx--row">
   <!--prettier-ignore-->
   <header class="bx--col section-header">
-    #if $precision == 'day'
+    #if $context == 'day'
       <h2>$gettext("Last 24 hours")</h2>
-    #else if $precision == 'yesterday'
+    #else if $context == 'yesterday'
       <h2>$gettext("Yesterday")</h2>
-    #else if $precision == 'week'
+    #else if $context == 'week'
       <h2>$gettext("Last 7 days")</h2>
       #set $start_date_header = datetime.fromtimestamp($current.dateTime.raw) - timedelta(days=7)
       <h3>
         <!--prettier-ignore-->
         $start_date_header.strftime($get_time_format_dict['week']) - $current.dateTime.format($get_time_format_dict['week'])
       </h3>
-    #else if $precision == 'month' and not $use_parameter_month
+    #else if $context == 'month' and not $use_parameter_month
       <h2>$gettext("Last 30 days")</h2>
       #set $start_date_header = datetime.fromtimestamp($current.dateTime.raw) - timedelta(days=30)
       <h3>
         $start_date_header.strftime($get_time_format_dict['month']) - $current.dateTime.format($get_time_format_dict['month'])
       </h3>
-    #else if $precision == 'month' and $use_parameter_month
+    #else if $context == 'month' and $use_parameter_month
       <h2>$month_name $year_name</h2>
-    #else if $precision == 'year' and not $use_parameter_year
+    #else if $context == 'year' and not $use_parameter_year
       <h2>$gettext("Last 365 days")</h2>
       #set $start_date_header = datetime.fromtimestamp($current.dateTime.raw) - timedelta(days=365)
       <h3>
         $start_date_header.strftime($get_time_format_dict['year']) - $current.dateTime.format($get_time_format_dict['year'])
       </h3>
-    #else if $precision == 'year' and $use_parameter_year
+    #else if $context == 'year' and $use_parameter_year
       <h2>$year_name</h2>
-    #else if $precision == 'alltime'
+    #else if $context == 'alltime'
       <h2>$gettext("All Time")</h2>
     #end if
   </header>
@@ -70,7 +70,7 @@
   #if $skin_obs in $combined.keys()
     #set $combined_diagram = $combined[$skin_obs]
     #for $combined_obs in $combined_diagram.obs.keys()
-      #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), $combined_diagram.obs[$combined_obs].observation).has_data
+      #if $getattr($get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday), $combined_diagram.obs[$combined_obs].observation).has_data
         #set global $comb_obs = $skin_obs
         #set global $combined_diagram = $combined_diagram
         #set global $diagram_index = $diagram_index
@@ -80,7 +80,7 @@
       #end if
     #end for
   #else
-    #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), $skin_obs).has_data or (($skin_obs == 'windDir' or $skin_obs == 'windRose') and $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), 'windSpeed').has_data)
+    #if $getattr($get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday), $skin_obs).has_data or (($skin_obs == 'windDir' or $skin_obs == 'windRose') and $getattr($get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday), 'windSpeed').has_data)
       #set global $partial_obs = $skin_obs
       #set global $diagram_index = $diagram_index
       #if $skin_obs == 'windRose'

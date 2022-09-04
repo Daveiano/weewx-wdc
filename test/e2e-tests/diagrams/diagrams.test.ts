@@ -34,6 +34,60 @@ test.describe("Diagrams", () => {
     ).toMatchSnapshot();
   });
 
+  test.only("Diagram property generation", async ({ page }) => {
+    const combinedTemp = page.locator(
+      ".diagram-tile[data-test='outTemp-outTemp-outTemp']"
+    );
+    expect(
+      await combinedTemp
+        .locator(".diagram.combined")
+        .getAttribute("data-labels")
+    ).toMatchSnapshot();
+    expect(
+      await combinedTemp.locator(".diagram.combined").getAttribute("data-value")
+    ).toMatchSnapshot();
+    expect(
+      await combinedTemp.locator(".diagram.combined").getAttribute("data-color")
+    ).toMatchSnapshot();
+    expect(
+      await combinedTemp
+        .locator(".diagram.combined")
+        .getAttribute("data-diagram")
+    ).toMatchSnapshot();
+    expect(
+      await combinedTemp
+        .locator(".diagram.combined")
+        .getAttribute("data-aggregate-type")
+    ).toMatchSnapshot();
+    expect(
+      await combinedTemp
+        .locator(".diagram.combined")
+        .getAttribute("data-nivo-props")
+    ).toMatchSnapshot();
+
+    const UV = page.locator(
+      ".diagram-tile[data-test='outTemp-outTemp-outTemp']"
+    );
+    expect(
+      await UV.locator(".diagram.combined").getAttribute("data-labels")
+    ).toMatchSnapshot();
+    expect(
+      await UV.locator(".diagram.combined").getAttribute("data-value")
+    ).toMatchSnapshot();
+    expect(
+      await UV.locator(".diagram.combined").getAttribute("data-color")
+    ).toMatchSnapshot();
+    expect(
+      await UV.locator(".diagram.combined").getAttribute("data-diagram")
+    ).toMatchSnapshot();
+    expect(
+      await UV.locator(".diagram.combined").getAttribute("data-aggregate-type")
+    ).toMatchSnapshot();
+    expect(
+      await UV.locator(".diagram.combined").getAttribute("data-nivo-props")
+    ).toMatchSnapshot();
+  });
+
   // @todo Add test for custom "show_beafort = False".
   test("Windrose", async ({ page }) => {
     let windrose = page.locator(".diagram-tile[data-test='windrose']");

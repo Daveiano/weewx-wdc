@@ -46,31 +46,31 @@
             #if 'color' in $combined_diagram.obs[$combined_obs] then $series_colors.append($combined_diagram.obs[$combined_obs].color) else $series_colors.append($get_color($series_observation))#
 
           <!--prettier-ignore-->
-          #if $precision == 'month' and $use_parameter_month
+          #if $context == 'month' and $use_parameter_month
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($month, $series_observation).series(aggregate_type=$get_aggregate_type($series_observation, combined=$combined_diagram.obs[$combined_obs]), aggregate_interval=$get_aggregate_interval($series_observation, $precision, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($series_observation)).json;
+            var $series_name = $getattr($month, $series_observation).series(aggregate_type=$get_aggregate_type($series_observation, combined=$combined_diagram.obs[$combined_obs]), aggregate_interval=$get_aggregate_interval($series_observation, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($series_observation)).json;
           </script>
           <!--prettier-ignore-->
-          #else if $precision == 'year' and $use_parameter_year
+          #else if $context == 'year' and $use_parameter_year
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($year, $series_observation).series(aggregate_type=$get_aggregate_type($series_observation, combined=$combined_diagram.obs[$combined_obs]), aggregate_interval=$get_aggregate_interval($series_observation, $precision, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($series_observation)).json;
+            var $series_name = $getattr($year, $series_observation).series(aggregate_type=$get_aggregate_type($series_observation, combined=$combined_diagram.obs[$combined_obs]), aggregate_interval=$get_aggregate_interval($series_observation, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($series_observation)).json;
           </script>
-          #else if $precision == 'alltime'
+          #else if $context == 'alltime'
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($alltime, $series_observation).series(aggregate_type=$get_aggregate_type($series_observation, combined=$combined_diagram.obs[$combined_obs]), aggregate_interval=$get_aggregate_interval($series_observation, $precision, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($series_observation)).json;
+            var $series_name = $getattr($alltime, $series_observation).series(aggregate_type=$get_aggregate_type($series_observation, combined=$combined_diagram.obs[$combined_obs]), aggregate_interval=$get_aggregate_interval($series_observation, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($series_observation)).json;
           </script>
-          #else if $precision == 'yesterday'
+          #else if $context == 'yesterday'
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($yesterday, $series_observation).series(aggregate_type=$get_aggregate_type($series_observation, combined=$combined_diagram.obs[$combined_obs]), aggregate_interval=$get_aggregate_interval($series_observation, $precision, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($series_observation)).json;
+            var $series_name = $getattr($yesterday, $series_observation).series(aggregate_type=$get_aggregate_type($series_observation, combined=$combined_diagram.obs[$combined_obs]), aggregate_interval=$get_aggregate_interval($series_observation, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($series_observation)).json;
           </script>
           #else
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($span($hour_delta=$get_hour_delta($precision), $boundary=$get_diagram_boundary($precision)), $series_observation).series(aggregate_type=$get_aggregate_type($series_observation, combined=$combined_diagram.obs[$combined_obs]), aggregate_interval=$get_aggregate_interval($series_observation, $precision, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($series_observation)).json;
+            var $series_name = $getattr($span($hour_delta=$get_hour_delta($context), $boundary=$get_diagram_boundary($context)), $series_observation).series(aggregate_type=$get_aggregate_type($series_observation, combined=$combined_diagram.obs[$combined_obs]), aggregate_interval=$get_aggregate_interval($series_observation, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($series_observation)).json;
           </script>
           <!--prettier-ignore-->
           #end if
@@ -85,7 +85,7 @@
             data-unit="$getattr($unit.label, $combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation)"
             data-obs="$get_diagram_type($combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation)"
             data-diagram="$get_diagram($combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation)"
-            data-precision="$precision"
+            data-context="$context"
             data-aggregate-type="$series_aggregate_type"
             data-nivo-props="$get_nivo_props($comb_obs)"
           ></div>

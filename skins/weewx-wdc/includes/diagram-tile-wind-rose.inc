@@ -22,21 +22,22 @@
           #set $series_name = $partial_obs + 'Series' + str($diagram_index)
 
           <!--prettier-ignore-->
-          #if $precision == 'month' and $use_parameter_month
+          #if $context == 'month' and $use_parameter_month
           <script>
             /* prettier-ignore */
-            var $series_name = $get_windrose_data($month, $precision)
+            var $series_name = $get_windrose_data($month.start.raw, $month.end.raw, $context)
           </script>
           <!--prettier-ignore-->
-          #else if $precision == 'year' and $use_parameter_year
+          #else if $context == 'year' and $use_parameter_year
           <script>
             /* prettier-ignore */
-            var $series_name = $get_windrose_data($year, $precision)
+            var $series_name = $get_windrose_data($year.start.raw, $year.end.raw, $context)
           </script>
           #else
           <script>
             /* prettier-ignore */
-            var $series_name = $get_windrose_data($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime, $yesterday), $precision)
+            #set $time_span = $get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday)
+            var $series_name = $get_windrose_data($time_span.start.raw, $time_span.end.raw, $context)
           </script>
           #end if
 
@@ -48,7 +49,7 @@
             data-unit="$getattr($unit.label, $partial_obs)"
             data-obs="$get_diagram_type($partial_obs)"
             data-diagram="$get_diagram($partial_obs)"
-            data-precision="$precision"
+            data-context="$context"
             data-aggregate-type="['$get_aggregate_type($partial_obs)']"
             data-nivo-props="$get_nivo_props($partial_obs)"
           ></div>

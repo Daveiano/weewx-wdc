@@ -102,7 +102,8 @@
   >
     <script>
       /* prettier-ignore */
-      var calendarDataRain = $get_calendar_data('rain', 'sum', $get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday));
+      #set $obs_context = $get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday)
+      var calendarDataRain = $get_calendar_data('rain', 'sum', $obs_context.start.raw, $obs_context.end.raw);
     </script>
     <div
       class="calendar-diagram-clim-wrap"
@@ -124,7 +125,8 @@
   >
     <script>
       /* prettier-ignore */
-      var calendarDataTempAvg = $get_calendar_data('outTemp', 'avg', $get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday));
+      #set $obs_context = $get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday)
+      var calendarDataTempAvg = $get_calendar_data('outTemp', 'avg', $obs_context.start.raw, $obs_context.end.raw);
     </script>
     <div
       class="calendar-diagram-clim-wrap"

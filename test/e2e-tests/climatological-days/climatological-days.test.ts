@@ -34,6 +34,7 @@ test.describe("Climatological days", () => {
     await expect(rainDays).toBeVisible();
 
     await expect(rainDays).toHaveScreenshot();
+    expect(await rainDays.locator("> script").innerText()).toMatchSnapshot();
   });
 
   test("Avg outside temp", async ({ page }) => {
@@ -43,5 +44,6 @@ test.describe("Climatological days", () => {
     await expect(avgTemp).toBeVisible();
 
     await expect(avgTemp).toHaveScreenshot();
+    expect(await avgTemp.locator("> script").innerText()).toMatchSnapshot();
   });
 });

@@ -4,6 +4,7 @@
 import datetime
 import calendar
 import time
+from pprint import pprint
 
 import weewx
 from weewx.cheetahgenerator import SearchList
@@ -778,6 +779,12 @@ class WdcStatsUtil(SearchList):
         self.obs = ObsInfoHelper(generator.skin_dict)
         self.diagram_util = WdcDiagramUtil(generator)
 
+        # Setup database manager
+        binding = self.generator.config_dict["StdReport"].get(
+            "data_binding", "wx_binding"
+        )
+        self.db_manager = self.generator.db_binder.get_manager(binding)
+
     @staticmethod
     def get_show_min(observation):
         """
@@ -1103,7 +1110,7 @@ class WdcStatsUtil(SearchList):
                 "#660105",
             ]
 
-    def get_calendar_data(self, obs, aggregate_type, period):
+    def get_calendar_data(self, obs, aggregate_type, start_ts, end_ts):
         """
         Returns array of calendar data for use in diagram.
 
@@ -1115,42 +1122,51 @@ class WdcStatsUtil(SearchList):
         Returns:
             list: Calendar data.
         """
-        # TODO Use get_series.
         if obs == "rain":
-            day_series = period.rain.series(
+            rain_start_vt, rain_stop_vt, rain_vt = weewx.xtypes.get_series(
+                "rain",
+                TimeSpan(start_ts, end_ts),
+                self.db_manager,
                 aggregate_type=aggregate_type,
                 aggregate_interval="day",
-                time_series="start",
-                time_unit="unix_epoch",
-            ).round(self.diagram_util.get_rounding("rain"))
+            )
 
             days = filter(
-                lambda x: x[1].raw > 0.0, list(
-                    zip(day_series.start, day_series.data))
+                lambda x: x[1] > 0.0, list(
+                    zip(rain_start_vt[0], rain_vt[0]))
             )
             rain_days = []
 
             for day in days:
+                day_dt = datetime.datetime.fromtimestamp(day[0])
+                rain_target_unit_vt = self.generator.converter.convert(
+                    (day[1], rain_vt[1], rain_vt[2]))
                 rain_days.append(
-                    {"value": day[1].raw, "day": day[0].format("%Y-%m-%d")})
+                    {"value": rounder(rain_target_unit_vt[0], self.diagram_util.get_rounding("rain")), "day": day_dt.strftime("%Y-%m-%d")})
 
             return rain_days
 
         if obs == "outTemp":
-            day_series = period.outTemp.series(
+
+            outTemp_start_vt, outTemp_stop_vt, outTemp_vt = weewx.xtypes.get_series(
+                "outTemp",
+                TimeSpan(start_ts, end_ts),
+                self.db_manager,
                 aggregate_type=aggregate_type,
                 aggregate_interval="day",
-                time_series="start",
-                time_unit="unix_epoch",
-            ).round(self.diagram_util.get_rounding("outTemp"))
+            )
 
-            days = list(zip(day_series.start, day_series.data))
+            days = list(zip(outTemp_start_vt[0], outTemp_vt[0]))
             temp_days = []
 
             for day in days:
-                if day[1].raw is not None:
+                if day[1] is not None:
+                    day_dt = datetime.datetime.fromtimestamp(day[0])
+                    outTemp_target_unit_vt = self.generator.converter.convert(
+                        (day[1], outTemp_vt[1], outTemp_vt[2]))
                     temp_days.append(
-                        {"value": day[1].raw, "day": day[0].format("%Y-%m-%d")}
+                        {"value": rounder(outTemp_target_unit_vt[0], self.diagram_util.get_rounding(
+                            "outTemp")), "day": day_dt.strftime("%Y-%m-%d")}
                     )
 
             return temp_days

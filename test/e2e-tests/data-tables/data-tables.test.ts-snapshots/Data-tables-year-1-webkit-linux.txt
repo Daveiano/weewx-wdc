@@ -5,3 +5,4 @@
 
           var tableTitle = 'All data';
           var context = "year";
+        

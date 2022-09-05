@@ -897,8 +897,8 @@ class WdcStatsUtil(SearchList):
             )
 
             days = filter(
-                lambda outTemp: outTemp is not None and self.generator.converter.convert((outTemp, outTemp_target_unit_vt[0], outTemp_target_unit_vt[1]))[0] < freezing_point, list(
-                    outTemp_max_vt[0])
+                lambda outTemp: outTemp is not None and self.generator.converter.convert(
+                    (outTemp, outTemp_max_vt[1], outTemp_max_vt[2]))[0] < freezing_point, outTemp_max_vt[0]
             )
 
             return len(list(days))
@@ -913,14 +913,14 @@ class WdcStatsUtil(SearchList):
             )
 
             days = filter(
-                lambda outTemp: outTemp is not None and outTemp < freezing_point, list(
-                    outTemp_min_vt[0])
+                lambda outTemp: outTemp is not None and self.generator.converter.convert(
+                    (outTemp, outTemp_min_vt[1], outTemp_min_vt[2]))[0] < freezing_point, outTemp_min_vt[0]
             )
 
             return len(list(days))
 
         if day == "stormDays":
-            windGust_min_start_vt, windGust_min_stop_vt, windGust_min_vt = weewx.xtypes.get_series(
+            windGust_min_start_vt, windGust_min_stop_vt, windGust_max_vt = weewx.xtypes.get_series(
                 "windGust",
                 TimeSpan(start_ts, end_ts),
                 self.db_manager,
@@ -936,8 +936,8 @@ class WdcStatsUtil(SearchList):
                 value = 17.2
 
             days = filter(
-                lambda windGust: windGust is not None and windGust >= value, list(
-                    windGust_min_vt[0])
+                lambda windGust: windGust is not None and self.generator.converter.convert(
+                    (windGust, windGust_max_vt[1], windGust_max_vt[2]))[0] >= value, windGust_max_vt[0]
             )
 
             return len(list(days))
@@ -987,8 +987,8 @@ class WdcStatsUtil(SearchList):
             )
 
             days = filter(
-                lambda outTemp: outTemp is not None and outTemp >= value, list(
-                    outTemp_vt[0])
+                lambda outTemp: outTemp is not None and self.generator.converter.convert(
+                    (outTemp, outTemp_vt[1], outTemp_vt[2]))[0] >= value, outTemp_vt[0]
             )
 
             return len(list(days))

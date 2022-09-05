@@ -18,7 +18,7 @@ from weewx.units import (
 )
 from weewx.wxformulas import beaufort
 from weewx.tags import TimespanBinder
-from weeutil.weeutil import TimeSpan, rounder
+from weeutil.weeutil import TimeSpan, rounder, to_bool
 
 if weewx.__version__ < "4.6":
     raise weewx.UnsupportedFeature(
@@ -627,6 +627,11 @@ class WdcDiagramUtil(SearchList):
         Returns:
             list: Windrose data.
         """
+        try:
+            show_beaufort = self.generator.skin_dict["DisplayOptions"]["windRose_show_beaufort"]
+        except KeyError:
+            show_beaufort = False
+
         db_manager = self.generator.db_binder.get_manager(
             data_binding=self.generator.config_dict["StdReport"].get(
                 "data_binding", "wx_binding"
@@ -641,9 +646,8 @@ class WdcDiagramUtil(SearchList):
         # We use a scale of 6: <=BF1, BF2, ..., BF5, >=BF6.
         for i in range(6):
             name_prefix = "<= " if i == 0 else ">= " if i == 5 else ""
-            show_beaufort = True
 
-            if show_beaufort:
+            if to_bool(show_beaufort):
                 name = "Beaufort " + str(i + 1)
             else:
                 # Bft 1 and lower

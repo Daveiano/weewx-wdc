@@ -94,6 +94,7 @@ test.describe("Diagrams", () => {
     expect(
       await windrose.locator(".value script").innerText()
     ).toMatchSnapshot();
+    await expect(windrose).toHaveScreenshot();
 
     // Week page.
     await page.goto("artifacts-alternative-weewx-html/public_html/week.html");
@@ -124,5 +125,16 @@ test.describe("Diagrams", () => {
     expect(
       await windrose.locator(".value script").innerText()
     ).toMatchSnapshot();
+  });
+
+  test("Windrose with non-beaufort untis", async ({ page }) => {
+    await page.goto("artifacts-custom-weewx-html/public_html/index.html");
+
+    const windrose = page.locator(".diagram-tile[data-test='windrose']");
+    expect(
+      await windrose.locator(".value script").innerText()
+    ).toMatchSnapshot();
+
+    await expect(windrose).toHaveScreenshot();
   });
 });

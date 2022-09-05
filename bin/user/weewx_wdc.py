@@ -868,85 +868,92 @@ class WdcStatsUtil(SearchList):
 
         return prop + " " + context
 
-    def get_climatological_day(self, day, period, unit_type):
+    def get_climatological_day(self, day, start_ts, end_ts):
         """
         Return number of days in period for day parameter.
 
         Args:
             day (string): Eg. rainDays, hotDays.
-            period (obj): Period to use, eg. $year, month, $span
-            unit_type (dict): degree_F or degree_C
+            start_ts (str): Start timestamp.
+            end_ts (str): End timestamp
 
         Returns:
             int: Number of days.
         """
-        freezing_point = 0.0 if getattr(
-            unit_type, "outTemp") == "degree_C" else 32.0
+        outTemp_target_unit_vt = self.generator.converter.getTargetUnit(
+            "outTemp")
+        windGust_target_unit_vt = self.generator.converter.getTargetUnit(
+            "windGust")
+        freezing_point = 0.0 if outTemp_target_unit_vt[0] == "degree_C" else 32.0
 
         # TODO: Refactor.
         if day == "iceDays":
-            day_series = period.outTemp.series(
+            outTemp_max_start_vt, outTemp_max_stop_vt, outTemp_max_vt = weewx.xtypes.get_series(
+                "outTemp",
+                TimeSpan(start_ts, end_ts),
+                self.db_manager,
                 aggregate_type="max",
-                aggregate_interval="day",
-                time_series="start",
-                time_unit="unix_epoch",
+                aggregate_interval="day"
             )
 
             days = filter(
-                lambda x: x.raw is not None and x.raw < freezing_point, list(
-                    day_series.data)
+                lambda outTemp: outTemp is not None and self.generator.converter.convert((outTemp, outTemp_target_unit_vt[0], outTemp_target_unit_vt[1]))[0] < freezing_point, list(
+                    outTemp_max_vt[0])
             )
 
             return len(list(days))
 
         if day == "frostDays":
-            day_series = period.outTemp.series(
+            outTemp_min_start_vt, outTemp_min_stop_vt, outTemp_min_vt = weewx.xtypes.get_series(
+                "outTemp",
+                TimeSpan(start_ts, end_ts),
+                self.db_manager,
                 aggregate_type="min",
-                aggregate_interval="day",
-                time_series="start",
-                time_unit="unix_epoch",
+                aggregate_interval="day"
             )
 
             days = filter(
-                lambda x: x.raw is not None and x.raw < freezing_point, list(
-                    day_series.data)
+                lambda outTemp: outTemp is not None and outTemp < freezing_point, list(
+                    outTemp_min_vt[0])
             )
 
             return len(list(days))
 
         if day == "stormDays":
-            day_series = period.windGust.series(
+            windGust_min_start_vt, windGust_min_stop_vt, windGust_min_vt = weewx.xtypes.get_series(
+                "windGust",
+                TimeSpan(start_ts, end_ts),
+                self.db_manager,
                 aggregate_type="max",
-                aggregate_interval="day",
-                time_series="start",
-                time_unit="unix_epoch",
+                aggregate_interval="day"
             )
 
-            if getattr(self.unit.label, "windGust") == " km/h":
+            if windGust_target_unit_vt[0] in ("km_per_hour", "km_per_hour2"):
                 value = 62.0
-            if getattr(self.unit.label, "windGust") == " mph":
+            if windGust_target_unit_vt[0] in ("mile_per_hour", "mile_per_hour2"):
                 value = 38.5
-            if getattr(self.unit.label, "windGust") == " m/s":
+            if windGust_target_unit_vt[0] in ("meter_per_second", "meter_per_second2"):
                 value = 17.2
 
             days = filter(
-                lambda x: x.raw is not None and x.raw >= value, list(
-                    day_series.data)
+                lambda windGust: windGust is not None and windGust >= value, list(
+                    windGust_min_vt[0])
             )
 
             return len(list(days))
 
         if day == "rainDays":
-            day_series = period.rain.series(
+            rain_sum_start_vt, rain_sum_stop_vt, rain_sum_vt = weewx.xtypes.get_series(
+                "rain",
+                TimeSpan(start_ts, end_ts),
+                self.db_manager,
                 aggregate_type="sum",
-                aggregate_interval="day",
-                time_series="start",
-                time_unit="unix_epoch",
+                aggregate_interval="day"
             )
 
             days = filter(
-                lambda x: x.raw is not None and x.raw > 0.0, list(
-                    day_series.data)
+                lambda rain: rain is not None and rain > 0.0, list(
+                    rain_sum_vt[0])
             )
 
             return len(list(days))
@@ -959,50 +966,50 @@ class WdcStatsUtil(SearchList):
         ):
 
             if day == "tropicalNights":
-                value = 20.0 if getattr(
-                    unit_type, "outTemp") == "degree_C" else 68.0
+                value = 20.0 if outTemp_target_unit_vt[0] == "degree_C" else 68.0
                 aggregate_type = "min"
             if day == "summerDays":
-                value = 25.0 if getattr(
-                    unit_type, "outTemp") == "degree_C" else 77.0
+                value = 25.0 if outTemp_target_unit_vt[0] == "degree_C" else 77.0
                 aggregate_type = "max"
             if day == "hotDays":
-                value = 30.0 if getattr(
-                    unit_type, "outTemp") == "degree_C" else 86.0
+                value = 30.0 if outTemp_target_unit_vt[0] == "degree_C" else 86.0
                 aggregate_type = "max"
             if day == "desertDays":
-                value = 35.0 if getattr(
-                    unit_type, "outTemp") == "degree_C" else 95.0
+                value = 35.0 if outTemp_target_unit_vt[0] == "degree_C" else 95.0
                 aggregate_type = "max"
 
-            day_series = period.outTemp.series(
+            outTemp_start_vt, outTemp_stop_vt, outTemp_vt = weewx.xtypes.get_series(
+                "outTemp",
+                TimeSpan(start_ts, end_ts),
+                self.db_manager,
                 aggregate_type=aggregate_type,
-                aggregate_interval="day",
-                time_series="start",
-                time_unit="unix_epoch",
+                aggregate_interval="day"
             )
 
             days = filter(
-                lambda x: x.raw is not None and x.raw >= value, list(
-                    day_series.data)
+                lambda outTemp: outTemp is not None and outTemp >= value, list(
+                    outTemp_vt[0])
             )
 
             return len(list(days))
 
-    def get_climatological_day_description(self, day, unit_type):
+    def get_climatological_day_description(self, day):
         """
         Return description of day.
 
         Args:
             day (string): Eg. rainDays, hotDays.
-            unit_type (dict): degree_F or degree_C
 
         Returns:
             string: Day description.
         """
+        outTemp_target_unit_vt = self.generator.converter.getTargetUnit(
+            "outTemp")
+        windGust_target_unit_vt = self.generator.converter.getTargetUnit(
+            "windGust")
+
         if day == "iceDays":
-            value = "0" if getattr(
-                unit_type, "outTemp") == "degree_C" else "32"
+            value = "0" if outTemp_target_unit_vt[0] == "degree_C" else "32"
 
             return (
                 self.obs.label["outTemp"]
@@ -1012,8 +1019,7 @@ class WdcStatsUtil(SearchList):
             )
 
         if day == "frostDays":
-            value = "0" if getattr(
-                unit_type, "outTemp") == "degree_C" else "32"
+            value = "0" if outTemp_target_unit_vt[0] == "degree_C" else "32"
 
             return (
                 self.obs.label["outTemp"]
@@ -1023,11 +1029,11 @@ class WdcStatsUtil(SearchList):
             )
 
         if day == "stormDays":
-            if getattr(self.unit.label, "windGust") == " km/h":
+            if windGust_target_unit_vt[0] == "km_per_hour":
                 value = "62"
-            if getattr(self.unit.label, "windGust") == " mph":
+            if windGust_target_unit_vt[0] == "mile_per_hour":
                 value = "38.5"
-            if getattr(self.unit.label, "windGust") == " m/s":
+            if windGust_target_unit_vt[0] == "meter_per_second":
                 value = "17.2"
 
             return (
@@ -1047,20 +1053,16 @@ class WdcStatsUtil(SearchList):
                 or day == "tropicalNights"
         ):
             if day == "tropicalNights":
-                value = "20" if getattr(
-                    unit_type, "outTemp") == "degree_C" else "68"
+                value = "20" if outTemp_target_unit_vt[0] == "degree_C" else "68"
                 aggregate_type = "min"
             if day == "summerDays":
-                value = "25" if getattr(
-                    unit_type, "outTemp") == "degree_C" else "77"
+                value = "25" if outTemp_target_unit_vt[0] == "degree_C" else "77"
                 aggregate_type = "max"
             if day == "hotDays":
-                value = "30" if getattr(
-                    unit_type, "outTemp") == "degree_C" else "86"
+                value = "30" if outTemp_target_unit_vt[0] == "degree_C" else "86"
                 aggregate_type = "max"
             if day == "desertDays":
-                value = "35" if getattr(
-                    unit_type, "outTemp") == "degree_C" else "95"
+                value = "35" if outTemp_target_unit_vt[0] == "degree_C" else "95"
                 aggregate_type = "max"
 
             return (

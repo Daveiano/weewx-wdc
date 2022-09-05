@@ -69,7 +69,8 @@
           <bx-structured-list-cell>$gettext($clim_day)</bx-structured-list-cell>
           <bx-structured-list-cell>
             <!--prettier-ignore-->
-            $get_climatological_day($clim_day, $get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday), $unit.unit_type)
+            #set $time_span = $get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday)
+            $get_climatological_day($clim_day, $time_span.start.raw, $time_span.end.raw)
           </bx-structured-list-cell>
           <bx-structured-list-cell>
             <div data-floating-menu-container style="position: relative">
@@ -77,14 +78,14 @@
                 <bx-tooltip-body>
                   <p>
                     <!--prettier-ignore-->
-                    $get_climatological_day_description($clim_day, $unit.unit_type)
+                    $get_climatological_day_description($clim_day)
                   </p>
                 </bx-tooltip-body>
               </bx-tooltip>
             </div>
             <span>
               <!--prettier-ignore-->
-              $get_climatological_day_description($clim_day, $unit.unit_type)
+              $get_climatological_day_description($clim_day)
             </span>
           </bx-structured-list-cell>
         </bx-structured-list-row>

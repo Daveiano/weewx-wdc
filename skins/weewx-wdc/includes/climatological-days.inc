@@ -20,7 +20,7 @@
 <bx-tabs trigger-content="Select an item" value="table" type="container">
   <bx-tab id="tab-table" target="panel-table" value="table">Table</bx-tab>
   <!--prettier-ignore-->
-  #if $getattr($get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday), 'rain').has_data
+  #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'rain').has_data
   <bx-tab
     id="tab-diagram-rain"
     target="panel-diagram-rain"
@@ -30,7 +30,7 @@
   </bx-tab>
   #end if
   <!--prettier-ignore-->
-  #if $getattr($get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday), 'outTemp').has_data
+  #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'outTemp').has_data
   <bx-tab
     id="tab-diagram-temp-avg"
     target="panel-diagram-temp-avg"
@@ -69,7 +69,7 @@
           <bx-structured-list-cell>$gettext($clim_day)</bx-structured-list-cell>
           <bx-structured-list-cell>
             <!--prettier-ignore-->
-            #set $time_span = $get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday)
+            #set $time_span = $get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday)
             $get_climatological_day($clim_day, $time_span.start.raw, $time_span.end.raw)
           </bx-structured-list-cell>
           <bx-structured-list-cell>
@@ -94,7 +94,7 @@
     </bx-structured-list>
   </div>
   <!--prettier-ignore-->
-  #if $getattr($get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday), 'rain').has_data
+  #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'rain').has_data
   <div
     id="panel-diagram-rain"
     role="tabpanel"
@@ -103,7 +103,7 @@
   >
     <script>
       /* prettier-ignore */
-      #set $obs_context = $get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday)
+      #set $obs_context = $get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday)
       var calendarDataRain = $get_calendar_data('rain', 'sum', $obs_context.start.raw, $obs_context.end.raw);
     </script>
     <div
@@ -117,7 +117,7 @@
   </div>
   #end if
   <!--prettier-ignore-->
-  #if $getattr($get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday), 'outTemp').has_data
+  #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'outTemp').has_data
   <div
     id="panel-diagram-temp-avg"
     role="tabpanel"
@@ -126,7 +126,7 @@
   >
     <script>
       /* prettier-ignore */
-      #set $obs_context = $get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday)
+      #set $obs_context = $get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday)
       var calendarDataTempAvg = $get_calendar_data('outTemp', 'avg', $obs_context.start.raw, $obs_context.end.raw);
     </script>
     <div

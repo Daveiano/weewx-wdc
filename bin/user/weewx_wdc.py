@@ -192,12 +192,12 @@ class WdcGeneralUtil(SearchList):
         return "#161616"
 
     @staticmethod
-    def get_time_span_from_attr(attr, day, week, month, year, alltime, yesterday):
+    def get_time_span_from_context(context, day, week, month, year, alltime, yesterday):
         """
         Get tag for use in templates.
 
         Args:
-            attr (string): The time range
+            context (string): The time range
             day: Daily TimeSpanBinder
             week: Weekly TimeSpanBinder
             month: Monthly TimeSpanBinder
@@ -208,22 +208,22 @@ class WdcGeneralUtil(SearchList):
         Returns:
             obj: TimeSpanBinder
         """
-        if attr == "day":
+        if context == "day":
             return day
 
-        if attr == "week":
+        if context == "week":
             return week
 
-        if attr == "month":
+        if context == "month":
             return month
 
-        if attr == "year":
+        if context == "year":
             return year
 
-        if attr == "alltime":
+        if context == "alltime":
             return alltime
 
-        if attr == "yesterday":
+        if context == "yesterday":
             return yesterday
 
     def get_static_pages(self):
@@ -890,7 +890,6 @@ class WdcStatsUtil(SearchList):
             "windGust")
         freezing_point = 0.0 if outTemp_target_unit_vt[0] == "degree_C" else 32.0
 
-        # TODO: Refactor.
         if day == "iceDays":
             outTemp_max_start_vt, outTemp_max_stop_vt, outTemp_max_vt = weewx.xtypes.get_series(
                 "outTemp",
@@ -1153,7 +1152,6 @@ class WdcStatsUtil(SearchList):
             return rain_days
 
         if obs == "outTemp":
-
             outTemp_start_vt, outTemp_stop_vt, outTemp_vt = weewx.xtypes.get_series(
                 "outTemp",
                 TimeSpan(start_ts, end_ts),

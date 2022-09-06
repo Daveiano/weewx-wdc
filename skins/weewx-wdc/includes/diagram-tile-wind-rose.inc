@@ -36,7 +36,7 @@
           #else
           <script>
             /* prettier-ignore */
-            #set $time_span = $get_time_span_from_attr($context, $day, $week, $month, $year, $alltime, $yesterday)
+            #set $time_span = $get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday)
             var $series_name = $get_windrose_data($time_span.start.raw, $time_span.end.raw, $context)
           </script>
           #end if

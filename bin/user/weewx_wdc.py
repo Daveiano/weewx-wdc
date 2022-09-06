@@ -653,15 +653,15 @@ class WdcDiagramUtil(SearchList):
                 # Bft 1 and lower
                 if i == 0:
                     wind_upper_vt = self.generator.converter.convert(
-                        (3, "knot", "group_speed"))
+                        (5, "km_per_hour", "group_speed"))
                     name = ValueHelper(
                         value_t=wind_upper_vt, formatter=self.generator.formatter).format()
                 # Bft 2
                 elif i == 1:
                     wind_lower_vt = self.generator.converter.convert(
-                        (4, "knot", "group_speed"))
+                        (6, "km_per_hour", "group_speed"))
                     wind_upper_vt = self.generator.converter.convert(
-                        (6, "knot", "group_speed"))
+                        (11, "km_per_hour", "group_speed"))
                     name = ValueHelper(value_t=wind_lower_vt,
                                        formatter=self.generator.formatter).format(
                     ) + " - " + ValueHelper(value_t=wind_upper_vt,
@@ -669,9 +669,9 @@ class WdcDiagramUtil(SearchList):
                 # Bft 3
                 elif i == 2:
                     wind_lower_vt = self.generator.converter.convert(
-                        (7, "knot", "group_speed"))
+                        (12, "km_per_hour", "group_speed"))
                     wind_upper_vt = self.generator.converter.convert(
-                        (10, "knot", "group_speed"))
+                        (19, "km_per_hour", "group_speed"))
                     name = ValueHelper(value_t=wind_lower_vt,
                                        formatter=self.generator.formatter).format(
                     ) + " - " + ValueHelper(value_t=wind_upper_vt,
@@ -679,9 +679,9 @@ class WdcDiagramUtil(SearchList):
                 # Bft 4
                 elif i == 3:
                     wind_lower_vt = self.generator.converter.convert(
-                        (11, "knot", "group_speed"))
+                        (20, "km_per_hour", "group_speed"))
                     wind_upper_vt = self.generator.converter.convert(
-                        (16, "knot", "group_speed"))
+                        (28, "km_per_hour", "group_speed"))
                     name = ValueHelper(value_t=wind_lower_vt,
                                        formatter=self.generator.formatter).format(
                     ) + " - " + ValueHelper(value_t=wind_upper_vt,
@@ -689,9 +689,9 @@ class WdcDiagramUtil(SearchList):
                 # Bft 5
                 elif i == 4:
                     wind_lower_vt = self.generator.converter.convert(
-                        (17, "knot", "group_speed"))
+                        (29, "km_per_hour", "group_speed"))
                     wind_upper_vt = self.generator.converter.convert(
-                        (21, "knot", "group_speed"))
+                        (38, "km_per_hour", "group_speed"))
                     name = ValueHelper(value_t=wind_lower_vt,
                                        formatter=self.generator.formatter).format(
                     ) + " - " + ValueHelper(value_t=wind_upper_vt,
@@ -699,7 +699,7 @@ class WdcDiagramUtil(SearchList):
                 # Bft 6 and higher
                 elif i == 5:
                     wind_lower_vt = self.generator.converter.convert(
-                        (22, "knot", "group_speed"))
+                        (39, "km_per_hour", "group_speed"))
                     name = ValueHelper(
                         value_t=wind_lower_vt, formatter=self.generator.formatter).format()
 

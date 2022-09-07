@@ -453,8 +453,7 @@ class WdcDiagramUtil(SearchList):
 
         return "avg"
 
-    @staticmethod
-    def get_aggregate_interval(observation, context, *args, **kwargs):
+    def get_aggregate_interval(self, observation, context, *args, **kwargs):
         """
         aggregate_interval for observations series.
         @see https://github.com/weewx/weewx/wiki/Tags-for-series#syntax
@@ -466,10 +465,37 @@ class WdcDiagramUtil(SearchList):
         Returns:
             int: aggregate_interval
         """
+        diagrams_config = self.skin_dict["DisplayOptions"]["diagrams"]
         alltime_start = kwargs.get("alltime_start", None)
         alltime_end = kwargs.get("alltime_end", None)
 
-        if context == "day" or context == 'yesterday':
+        if context == "yesterday":
+            context = "day"
+
+        # First, check if something is configured via skin.conf.
+        context_dict = self.generator.skin_dict["DisplayOptions"]["diagrams"].get(
+            context, {})
+        try:
+            aggregate_interval_context = context_dict.get(
+                "aggregate_interval", False)
+        except KeyError:
+            aggregate_interval_context = False
+
+        try:
+            aggregate_interval_observation = context_dict[observation].get(
+                "aggregate_interval", False)
+        except KeyError:
+            aggregate_interval_observation = False
+
+        if aggregate_interval_observation:
+            print(aggregate_interval_observation)
+            return aggregate_interval_observation
+
+        if aggregate_interval_context:
+            return aggregate_interval_context
+
+        # Then, use defaults.
+        if context == "day":
             if observation == "ET" or observation == "rain":
                 return 7200  # 2 hours
 

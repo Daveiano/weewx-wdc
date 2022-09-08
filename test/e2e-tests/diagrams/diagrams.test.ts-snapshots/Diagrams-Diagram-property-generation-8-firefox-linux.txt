@@ -1,1 +1,0 @@
-['outTempSeries00', 'outTempSeries01', 'outTempSeries02']

@@ -1,6 +1,7 @@
 <!--prettier-ignore-->
 #encoding UTF-8
 #errorCatcher Echo
+#set $table_tile_observations = $DisplayOptions.get("table_tile_observations")
 
 <div class="bx--col">
   <div class="bx--tile data-table-tile">
@@ -8,20 +9,16 @@
       <div class="bx--col">
         <script>
           /*prettier-ignore*/
-          #if $context == 'alltime'
-          var tableRows = $get_table_rows($alltime.start.raw, $alltime.end.raw, $context);
-          var tableHeaders = $jsonize($get_table_headers($alltime.start.raw, $alltime.end.raw));
-          #else if $context == 'yesterday'
-          var tableRows = $get_table_rows($yesterday.start.raw, $yesterday.end.raw, $context);
-          var tableHeaders = $jsonize($get_table_headers($yesterday.start.raw, $yesterday.end.raw));
+          #if $precision == 'alltime'
+          var tableRows = $get_table_rows($table_tile_observations, $alltime, $precision);
+          var tableHeaders = $jsonize($get_table_headers($table_tile_observations, $alltime));
           #else
-          #set $time_span = $span($hour_delta=$get_hour_delta($context), $boundary=$get_table_boundary($context))
-          var tableRows = $get_table_rows($time_span.start.raw, $time_span.end.raw, $context);
-          var tableHeaders = $jsonize($get_table_headers($time_span.start.raw, $time_span.end.raw));
+          var tableRows = $get_table_rows($table_tile_observations, $span($hour_delta=$get_hour_delta($precision), $week_delta=$get_week_delta($precision), $boundary=$get_table_boundary($precision)), $precision);
+          var tableHeaders = $jsonize($get_table_headers($table_tile_observations, $span($hour_delta=$get_hour_delta($precision), $week_delta=$get_week_delta($precision), $boundary=$get_table_boundary($precision))));
           #end if
 
           var tableTitle = '$gettext("All data")';
-          var context = "$context";
+          var precision = "$precision";
         </script>
         <div class="table"></div>
       </div>

@@ -38,7 +38,6 @@ class BasicInstaller(ExtensionInstaller):
                     "skins/weewx-wdc",
                     [
                         "skins/weewx-wdc/index.html.tmpl",
-                        "skins/weewx-wdc/yesterday.html.tmpl",
                         "skins/weewx-wdc/week.html.tmpl",
                         "skins/weewx-wdc/month.html.tmpl",
                         "skins/weewx-wdc/month-%Y-%m.html.tmpl",

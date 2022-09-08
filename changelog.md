@@ -294,5 +294,126 @@ From Line 92:
 - Added (optional) Yesterdays page. [GH-52]
 - (Optional) Show date/time when the min / max was reached on the index, yesterday, week and month page. [GH-53]
 - Bugfix: Frost days and Ice days were calculated wrong when using `degree_F` (°F)
+- Make aggregate_interval configurable for charts / tables [GH-55]
+
+**Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Configuration) for inforamtion on how to configure the new features.**
+
+## Changes made to skin.conf since 2.2.1:
+
+1. Line 45, Custom min/max date/time display, see [GH-53].
+
+```diff
+diagram_tile_winddir_ordinal = True
++show_min_max_time_day = False
++show_min_max_time_yesterday = False
++show_min_max_time_week = False
++show_min_max_time_month = False
+windRose_colors = "#f3cec9", "#e7a4b6", "#cd7eaf", "#a262a9", "#6f4d96", "#3d3b72"
+```
+
+2. Line 52, custom data tables aggregate_interval, see [GH-55]
+
+```diff
++[[tables]]
++   [[[day]]]
++      aggregate_interval = 3600  # 1 hour
++   [[[week]]]
++      aggregate_interval = 21600  # 6 hours
++   [[[month]]]
++      aggregate_interval = 43200  # 12 hours
++   [[[year]]]
++      aggregate_interval = 86400  # 1 day
++   [[[alltime]]]
++      aggregate_interval = 86400  # 1 day
+```
+
+3. Exposed more previously static `aggregate_type`s on diagrams.
+
+```diff
+# Observation specific settings.
+[[[windGust]]]
++   aggregate_type = "max"
+   yScaleMin = 0
+[[[radiation]]]
+   curve = "basis"
+   yScaleMin = 0
+[[[UV]]]
++   aggregate_type = "max"
+   curve = "step"
+   yScaleMin = 0
+   yScaleOffset = 1
+[[[rain]]]
++   aggregate_type = "sum"
+   yScaleOffset = 0.25
+[[[rainRate]]]
++   aggregate_type = "max"
+   curve = "linear"
+   yScaleMin = 0
+   yScaleOffset = 0.25
+[[[outHumidity]]]
+   yScaleMin = 0
+   yScaleMax = 103
+[[[ET]]]
++   aggregate_type = "sum"
+   yScaleOffset = 0.02
+```
+
+4. Line 172, added context specific `aggregate_interval` for diagrams [GH-55]
+
+```diff
++# Context specific settings, alltime: if not set, will be calculated.
++[[[day]]]
++   aggregate_interval = 1800 # 30 minutes
++   [[[[ET]]]]
++         aggregate_interval = 7200  # 2 hours
++   [[[[rain]]]]
++         aggregate_interval = 7200  # 2 hours
++
++[[[week]]]
++   aggregate_interval = 7200  # 2 hours
++   [[[[ET]]]]
++         aggregate_interval = 86400  # 1 day
++   [[[[rain]]]]
++         aggregate_interval = 86400  # 1 day
++
++[[[month]]]
++   aggregate_interval = 21600  # 6 hours
++   [[[[ET]]]]
++         aggregate_interval = 172800  # 2 days
++   [[[[rain]]]]
++         aggregate_interval = 172800  # 2 days
++
++[[[year]]]
++   aggregate_interval = 172800  # 2 days
++   [[[[ET]]]]
++         aggregate_interval = 1555200  # 8 days
++   [[[[rain]]]]
++         aggregate_interval = 1555200  # 8 days
+```
+
+5. Added yesterday Search List Extension [GH-52]
+
+Line 218:
+
+```diff
+[CheetahGenerator]
+    encoding = html_entities
+    search_list_extensions = user.weewx_wdc.WdcGeneralUtil, user.weewx_wdc.WdcStatsUtil, user.weewx_wdc.WdcDiagramUtil, user.weewx_wdc.WdcCelestialUtil, user.weewx_wdc.WdcArchiveUtil, user.weewx_wdc.WdcTableUtil,
++    user.weewx_wdc.Yesterday
+```
+
+Line 246:
+
+```diff
+[[ToDate]]
+   [[[day]]]
+      template = index.html.tmpl
+
++   #[[[yesterday]]]
++   #    template = yesterday.html.tmpl
+
+   [[[week]]]
+      template = week.html.tmpl
+```
 
 # Next

@@ -290,7 +290,7 @@ From Line 92:
 
 # 2.3.0
 
-- (Optional) Change wind speed unit from beaufort to km/h, mph, m/s or knots. [GH-51]
+- (Optional) Change wind speed unit from beaufort to km/h, mph, m/s or knots in windrose. [GH-51]
 - Added (optional) Yesterdays page. [GH-52]
 - (Optional) Show date/time when the min / max was reached on the index, yesterday, week and month page. [GH-53]
 - Bugfix: Frost days and Ice days were calculated wrong when using `degree_F` (°F)

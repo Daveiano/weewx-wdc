@@ -12,8 +12,9 @@ EXPOSE 9877
 COPY src/install-input.txt /tmp/
 COPY src/start.sh /start.sh
 COPY src/start-classic.sh /start-classic.sh
+COPY src/start-custom.sh /start-custom.sh
 COPY src/start-without-forecast.sh /start-without-forecast.sh
-RUN chmod +x /start.sh && chmod +x /start-classic.sh && chmod +x /start-without-forecast.sh
+RUN chmod +x /start.sh && chmod +x /start-classic.sh && chmod +x /start-without-forecast.sh && chmod +x /start-custom.sh
 
 # @see https://blog.nuvotex.de/running-syslog-in-a-container/
 RUN apt-get update &&\
@@ -52,6 +53,7 @@ RUN bin/wee_extension --install /tmp/weewx-interceptor.zip &&\
     bin/wee_config --reconfigure --driver=user.interceptor --no-prompt
 
 COPY src/skin.conf ./skins/weewx-wdc/
+COPY src/skin-custom.conf ./skins/weewx-wdc/
 
 RUN sed -i -e 's/device_type = acurite-bridge/device_type = ecowitt-client\n    port = 9877\n    address = 0.0.0.0/g' weewx.conf &&\
     sed -i -z -e 's/skin = Seasons\n        enable = true/skin = Seasons\n        enable = false/g' weewx.conf &&\

@@ -1,6 +1,7 @@
 <!--prettier-ignore-->
 #encoding UTF-8
 #errorCatcher Echo
+#import datetime
 
 <script
   type="module"
@@ -24,6 +25,11 @@
   </bx-header-name>
   <bx-header-nav menu-bar-label="Weewx $station.location - $current.dateTime">
     <bx-header-nav-item href="index.html">$gettext("Today")</bx-header-nav-item>
+    #if $show_yesterday
+    <bx-header-nav-item href="yesterday.html"
+      >$gettext("Yesterday")</bx-header-nav-item
+    >
+    #end if
     <bx-header-nav-item href="week.html">$gettext("Week")</bx-header-nav-item>
     <bx-header-nav-item href="month.html">$gettext("Month")</bx-header-nav-item>
     <bx-header-nav-item href="year.html">$gettext("Year")</bx-header-nav-item>
@@ -122,6 +128,11 @@
     <bx-side-nav-link class="show-small" href="index.html"
       ><span>$gettext("Today")</span></bx-side-nav-link
     >
+    #if $show_yesterday
+    <bx-side-nav-link class="show-small" href="yesterday.html"
+      ><span>$gettext("Yesterday")</span></bx-side-nav-link
+    >
+    #end if
     <bx-side-nav-link class="show-small" href="week.html"
       ><span>$gettext("Week")</span></bx-side-nav-link
     >
@@ -244,7 +255,7 @@
       <!--prettier-ignore-->
       #for $month in $months_for_year
       <bx-side-nav-menu-item href="month-${month}.html">
-        <span>$month_string_format($month)</span>
+        <span>$datetime.datetime.strptime($month, "%Y-%m").strftime("%B")</span>
       </bx-side-nav-menu-item>
       #end for
     </bx-side-nav-menu>

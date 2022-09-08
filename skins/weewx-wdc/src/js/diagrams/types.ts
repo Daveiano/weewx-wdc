@@ -1,6 +1,6 @@
 import type { Serie } from "@nivo/line";
 
-type context = "day" | "week" | "month" | "year" | "alltime";
+type precision = "day" | "week" | "month" | "year" | "alltime";
 
 type CalendarDiagramBaseProps = {
   color: string[];
@@ -15,7 +15,7 @@ type DiagramBaseProps = {
   unit?: string;
   data: Serie[];
   observation: string;
-  context: context;
+  precision: precision;
   nivoProps: {
     lineWidth?: number;
     pointSize?: number;
@@ -41,7 +41,7 @@ interface Series {
 export {
   CalendarDiagramBaseProps,
   DiagramBaseProps,
-  context,
+  precision,
   Series,
   WindRoseProps,
 };

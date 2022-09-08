@@ -58,7 +58,7 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
   let format = "%H:%M";
   let tickValues = "every 3 hours";
 
-  switch (props.context) {
+  switch (props.precision) {
     case "week":
       format = "%d.%m";
       tickValues = "every 1 days";

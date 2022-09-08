@@ -20,7 +20,7 @@
 <bx-tabs trigger-content="Select an item" value="table" type="container">
   <bx-tab id="tab-table" target="panel-table" value="table">Table</bx-tab>
   <!--prettier-ignore-->
-  #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'rain').has_data
+  #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), 'rain').has_data
   <bx-tab
     id="tab-diagram-rain"
     target="panel-diagram-rain"
@@ -30,7 +30,7 @@
   </bx-tab>
   #end if
   <!--prettier-ignore-->
-  #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'outTemp').has_data
+  #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), 'outTemp').has_data
   <bx-tab
     id="tab-diagram-temp-avg"
     target="panel-diagram-temp-avg"
@@ -56,10 +56,10 @@
             >$gettext("Climatological day")</bx-structured-list-header-cell
           >
           <bx-structured-list-header-cell
-            >$gettext("Number of days")</bx-structured-list-header-cell
+            >Number</bx-structured-list-header-cell
           >
           <bx-structured-list-header-cell>
-            <span class="hide-mobile">$gettext("Description")</span>
+            <span class="hide-mobile">Description</span>
           </bx-structured-list-header-cell>
         </bx-structured-list-header-row>
       </bx-structured-list-head>
@@ -69,8 +69,7 @@
           <bx-structured-list-cell>$gettext($clim_day)</bx-structured-list-cell>
           <bx-structured-list-cell>
             <!--prettier-ignore-->
-            #set $time_span = $get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday)
-            $get_climatological_day($clim_day, $time_span.start.raw, $time_span.end.raw)
+            $get_climatological_day($clim_day, $get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), $unit.unit_type)
           </bx-structured-list-cell>
           <bx-structured-list-cell>
             <div data-floating-menu-container style="position: relative">
@@ -78,14 +77,14 @@
                 <bx-tooltip-body>
                   <p>
                     <!--prettier-ignore-->
-                    $get_climatological_day_description($clim_day)
+                    $get_climatological_day_description($clim_day, $unit.unit_type)
                   </p>
                 </bx-tooltip-body>
               </bx-tooltip>
             </div>
             <span>
               <!--prettier-ignore-->
-              $get_climatological_day_description($clim_day)
+              $get_climatological_day_description($clim_day, $unit.unit_type)
             </span>
           </bx-structured-list-cell>
         </bx-structured-list-row>
@@ -94,7 +93,7 @@
     </bx-structured-list>
   </div>
   <!--prettier-ignore-->
-  #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'rain').has_data
+  #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), 'rain').has_data
   <div
     id="panel-diagram-rain"
     role="tabpanel"
@@ -103,8 +102,7 @@
   >
     <script>
       /* prettier-ignore */
-      #set $obs_context = $get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday)
-      var calendarDataRain = $get_calendar_data('rain', 'sum', $obs_context.start.raw, $obs_context.end.raw);
+      var calendarDataRain = $get_calendar_data('rain', 'sum', $get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime));
     </script>
     <div
       class="calendar-diagram-clim-wrap"
@@ -117,7 +115,7 @@
   </div>
   #end if
   <!--prettier-ignore-->
-  #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'outTemp').has_data
+  #if $getattr($get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime), 'outTemp').has_data
   <div
     id="panel-diagram-temp-avg"
     role="tabpanel"
@@ -126,8 +124,7 @@
   >
     <script>
       /* prettier-ignore */
-      #set $obs_context = $get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday)
-      var calendarDataTempAvg = $get_calendar_data('outTemp', 'avg', $obs_context.start.raw, $obs_context.end.raw);
+      var calendarDataTempAvg = $get_calendar_data('outTemp', 'avg', $get_time_span_from_attr($precision, $day, $week, $month, $year, $alltime));
     </script>
     <div
       class="calendar-diagram-clim-wrap"

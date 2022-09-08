@@ -15,7 +15,7 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
   const handle = useFullScreenHandle();
   let dateFormat = "HH:mm";
 
-  switch (props.context) {
+  switch (props.precision) {
     case "week":
       dateFormat = "DD.MM";
       break;
@@ -32,7 +32,7 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
     <ResponsiveBar
       axisBottom={{
         format: (value) => dayjs.unix(value).format(dateFormat),
-        tickSize: props.context === "day" ? 2 : 0,
+        tickSize: props.precision === "day" ? 2 : 0,
         tickPadding: 5,
         tickRotation: -65,
       }}

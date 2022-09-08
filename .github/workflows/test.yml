@@ -2,7 +2,7 @@ name: Tests
 
 on:
   push:
-    branches: [1.x, 2.x, 2.*.x]
+    branches: [1.x, 2.x, 2.**]
     paths:
       - "**.py"
       - skins/**
@@ -11,7 +11,7 @@ on:
       - package.json
       - playwright.config.ts
   pull_request:
-    branches: [1.x, 2.x, 2.*.x]
+    branches: [1.x, 2.x]
     paths:
       - "**.py"
       - skins/**
@@ -57,12 +57,6 @@ jobs:
           name: artifacts-classic-weewx-html
           path: test/test_install_report/artifacts-classic-weewx-html/
 
-      - name: Upload custom html
-        uses: actions/upload-artifact@v3
-        with:
-          name: artifacts-custom-weewx-html
-          path: test/test_install_report/artifacts-custom-weewx-html/
-
   playwright:
     needs: shunit2
     runs-on: ubuntu-latest
@@ -79,7 +73,7 @@ jobs:
         run: yarn install
 
       - name: install playwright deps
-        run: yarn playwright install --with-deps
+        run: npx playwright install --with-deps
 
       - name: Download alternative html
         uses: actions/download-artifact@v3
@@ -92,12 +86,6 @@ jobs:
         with:
           name: artifacts-classic-weewx-html
           path: test/e2e-tests/artifacts-classic-weewx-html
-
-      - name: Download custom html
-        uses: actions/download-artifact@v3
-        with:
-          name: artifacts-custom-weewx-html
-          path: test/e2e-tests/artifacts-custom-weewx-html
 
       - name: Run playwright tests
         run: yarn run test:e2e

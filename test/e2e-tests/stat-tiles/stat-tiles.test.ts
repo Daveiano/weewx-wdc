@@ -37,38 +37,4 @@ test.describe("Stat tiles", () => {
     );
     await expect(radiation.locator("[data-test='min']")).toHaveCount(0);
   });
-
-  test("Show min/max time", async ({ page }) => {
-    await page.goto("artifacts-alternative-weewx-html/public_html/index.html");
-    let outTemp = page.locator(".stat-tile[data-test='outTemp']");
-    await expect(outTemp.locator("[data-test='max'] .stat-value")).toHaveText(
-      "21.5°C"
-    );
-    // No tooltip present.
-    await expect(outTemp.locator("[data-test='max'] .stat-label")).toHaveText(
-      "Todays Max"
-    );
-    await expect(
-      outTemp.locator("[data-test='max'] .stat-label bx-tooltip-definition")
-    ).toHaveCount(0);
-
-    await page.goto("artifacts-custom-weewx-html/public_html/index.html");
-    outTemp = page.locator(".stat-tile[data-test='outTemp']");
-    await expect(outTemp.locator("[data-test='max'] .stat-value")).toHaveText(
-      "21.5°C"
-    );
-    // Tooltip present.
-    await expect(outTemp.locator("[data-test='max'] .stat-label")).toHaveText(
-      "Todays Max"
-    );
-    await expect(
-      outTemp.locator("[data-test='max'] .stat-label bx-tooltip-definition")
-    ).toHaveCount(1);
-
-    const maxTime = await outTemp
-      .locator("[data-test='max'] .stat-label bx-tooltip-definition")
-      .getAttribute("body-text");
-
-    expect(maxTime).toBe("07:23:05");
-  });
 });

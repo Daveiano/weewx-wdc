@@ -137,4 +137,22 @@ test.describe("Diagrams", () => {
 
     await expect(windrose).toHaveScreenshot();
   });
+
+  test("Custom aggregate_interval", async ({ page }) => {
+    await page.goto("artifacts-custom-weewx-html/public_html/index.html");
+    const cloudbase = page.locator(".diagram-tile[data-test='cloudbase']");
+    expect(
+      await cloudbase.locator(".value script").innerText()
+    ).toMatchSnapshot();
+
+    await page.goto("artifacts-custom-weewx-html/public_html/week.html");
+    const rain = page.locator(".diagram-tile[data-test='rain']");
+    expect(await rain.locator(".value script").innerText()).toMatchSnapshot();
+
+    await page.goto("artifacts-custom-weewx-html/public_html/year.html");
+    const windDir = page.locator(".diagram-tile[data-test='windDir']");
+    expect(
+      await windDir.locator(".value script").innerText()
+    ).toMatchSnapshot();
+  });
 });

@@ -38,4 +38,16 @@ test.describe("Data tables", () => {
       await page.locator(".data-table-tile script").innerText()
     ).toMatchSnapshot();
   });
+
+  test("Custom aggregate_interval", async ({ page }) => {
+    await page.goto("artifacts-custom-weewx-html/public_html/index.html");
+    expect(
+      await page.locator(".data-table-tile script").innerText()
+    ).toMatchSnapshot();
+
+    await page.goto("artifacts-custom-weewx-html/public_html/year.html");
+    expect(
+      await page.locator(".data-table-tile script").innerText()
+    ).toMatchSnapshot();
+  });
 });

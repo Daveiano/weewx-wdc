@@ -18,7 +18,7 @@ from weewx.units import (
 )
 from weewx.wxformulas import beaufort
 from weewx.tags import TimespanBinder
-from weeutil.weeutil import TimeSpan, rounder, to_bool
+from weeutil.weeutil import TimeSpan, rounder, to_bool, to_int
 
 if weewx.__version__ < "4.6":
     raise weewx.UnsupportedFeature(
@@ -430,7 +430,7 @@ class WdcDiagramUtil(SearchList):
         combined = kwargs.get("combined", None)
         diagrams_config = self.skin_dict["DisplayOptions"]["diagrams"]
 
-        if combined is not None and "aggregate_type" in combined:
+        if combined is not None and "aggregate_type" in combined and not use_defaults:
             return combined["aggregate_type"]
 
         if (
@@ -465,7 +465,6 @@ class WdcDiagramUtil(SearchList):
         Returns:
             int: aggregate_interval
         """
-        diagrams_config = self.skin_dict["DisplayOptions"]["diagrams"]
         alltime_start = kwargs.get("alltime_start", None)
         alltime_end = kwargs.get("alltime_end", None)
 
@@ -488,7 +487,6 @@ class WdcDiagramUtil(SearchList):
             aggregate_interval_observation = False
 
         if aggregate_interval_observation:
-            print(aggregate_interval_observation)
             return aggregate_interval_observation
 
         if aggregate_interval_context:
@@ -544,8 +542,7 @@ class WdcDiagramUtil(SearchList):
 
                 return 3600 * 96  # 4 days
 
-    @staticmethod
-    def get_diagram_boundary(context):
+    def get_diagram_boundary(self, context):
         """
         boundary for observations series for diagrams.
 
@@ -555,17 +552,22 @@ class WdcDiagramUtil(SearchList):
         Returns:
             string: None | 'midnight'
         """
-        if context == "day":
-            return None
+        try:
+            aggregate_interval_s = self.generator.skin_dict[
+                "DisplayOptions"]["diagrams"][context]["aggregate_interval"]
+            return "midnight" if (to_int(aggregate_interval_s) / 60 / 60) % 24 == 0 else None
+        except KeyError:
+            if context == "day":
+                return None
 
-        if context == "week":
-            return None
+            if context == "week":
+                return None
 
-        if context == "month":
-            return None
+            if context == "month":
+                return None
 
-        if context == "year" or context == "alltime":
-            return "midnight"
+            if context == "year" or context == "alltime":
+                return "midnight"
 
     def get_rounding(self, observation):
         """
@@ -1215,15 +1217,12 @@ class WdcTableUtil(SearchList):
         )
         self.db_manager = self.generator.db_binder.get_manager(binding)
 
-        try:
-            table_obs = self.generator.skin_dict["DisplayOptions"]["table_tile_observations"]
-        except KeyError:
-            table_obs = []
+        self.table_obs = self.generator.skin_dict["DisplayOptions"].get(
+            "table_tile_observations", {})
+        self.table_options = self.generator.skin_dict["DisplayOptions"].get("tables", {
+        })
 
-        self.table_obs = table_obs
-
-    @staticmethod
-    def get_table_aggregate_interval(context):
+    def get_table_aggregate_interval(self, context):
         """
         aggregate_interval for observations series for tables.
 
@@ -1233,20 +1232,25 @@ class WdcTableUtil(SearchList):
         Returns:
             int: aggregate_interval
         """
-        if context == "day" or context == "yesterday":
-            return 900 * 4  # 1 hours
+        if context == "yesterday":
+            context = "day"
 
-        if context == "week":
-            return 900 * 24  # 6 hours
+        try:
+            return self.table_options[context]["aggregate_interval"]
+        except KeyError:
+            if context == "day":
+                return 900 * 4  # 1 hours
 
-        if context == "month":
-            return 900 * 48  # 12 hours
+            if context == "week":
+                return 900 * 24  # 6 hours
 
-        if context == "year" or context == "alltime":
-            return 3600 * 24  # 1 day
+            if context == "month":
+                return 900 * 48  # 12 hours
 
-    @staticmethod
-    def get_table_boundary(context):
+            if context == "year" or context == "alltime":
+                return 3600 * 24  # 1 day
+
+    def get_table_boundary(self, context):
         """
         boundary for observations series for tables.
 
@@ -1256,17 +1260,25 @@ class WdcTableUtil(SearchList):
         Returns:
             string: None | 'midnight'
         """
-        if context == "day" or context == 'yesterday':
-            return None
+        if context == "yesterday":
+            context = "day"
 
-        if context == "week":
-            return None
+        try:
+            aggregate_interval_s = to_int(
+                self.table_options[context]["aggregate_interval"])
+            return "midnight" if (aggregate_interval_s / 60 / 60) % 24 == 0 else None
+        except KeyError:
+            if context == "day":
+                return None
 
-        if context == "month":
-            return None
+            if context == "week":
+                return None
 
-        if context == "year" or context == "alltime":
-            return "midnight"
+            if context == "month":
+                return None
+
+            if context == "year" or context == "alltime":
+                return "midnight"
 
     def get_table_headers(self, start_ts, end_ts):
         """

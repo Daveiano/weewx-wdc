@@ -1,0 +1,127 @@
+<!--prettier-ignore-->
+#errorCatcher Echo
+#encoding UTF-8
+
+<!DOCTYPE html>
+<html lang="$lang">
+  <head>
+    #include "includes/html-head.inc"
+    <title>$station.location - $gettext("DWD")</title>
+    <script
+      type="module"
+      src="https://1.www.s81c.com/common/carbon-for-ibm-dotcom/version/v1.19.0/image-with-caption.min.js"
+    ></script>
+    <style>
+      dds-image-with-caption {
+        max-width: 100%;
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+    </style>
+  </head>
+
+  <body class="theme-$DisplayOptions.get('layout', 'alternative')">
+    #include "includes/ui-shell.inc"
+
+    <main>
+      <section class="main bx--content">
+        <div class="bx--grid bx--grid--full-width">
+          <div class="bx--row">
+            <header class="bx--col page-header">
+              <h1>Vorhersage vom Deutschen Wetterdienst</h1>
+            </header>
+          </div>
+
+          <!--prettier-ignore-->
+          #if $to_bool($Extras['weewx-DWD']['show_text_forecast'])
+          #set $VHDL = $Extras['weewx-DWD']['text_forecast_VHDL']
+          #set $dwd_link = $Extras['weewx-DWD']['dwd_link']
+          <div class="bx--row" style="margin-bottom: 1.5rem">
+            <div class="bx--col">
+              <!--prettier-ignore-->
+              <div class="bx--tile">
+                #for $day in [50, 51, 52, 53]
+                  #if os.path.exists("dwd/VHDL" + str($day) + "_" + $VHDL + "_LATEST.html")
+                    <p>
+                    #include raw "dwd/VHDL" + str($day) + "_" + $VHDL + "_LATEST.html"
+                    </p>
+                  #end if
+                #end for
+
+                <br />
+
+                #if os.path.exists("dwd/VHDL54_DWLG_LATEST.html")
+                <p>
+                  #include raw "dwd/VHDL54_DWLG_LATEST.html"
+                </p>
+                #end if
+
+                <p style="text-align: right;">
+                    [Quelle:
+                    <a
+                    href="$dwd_link"
+                    target="_blank"
+                    >DWD</a
+                    >]
+                </p>
+              </div>
+            </div>
+          </div>
+          #end if
+
+          <div class="bx--row">
+            <!--prettier-ignore-->
+            #if $to_bool($Extras['weewx-DWD']['show_pressure_map'])
+            <div
+              class="bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-6 bx--col-max-6"
+            >
+              <div class="bx--tile">
+                <dds-image-with-caption
+                  default-src="dwd/bwk_bodendruck_na_ana.png"
+                  heading="Analyse- und Prognosekarten Europa"
+                  alt="Luftdruckkarte Europa/Nordatlantik"
+                  title="Analyse- und Prognosekarten Europa"
+                  lightbox="false"
+                >
+                  <dds-image-item
+                    media="(min-wiidth:320px)"
+                    href="dwd/bwk_bodendruck_na_ana.png"
+                  >
+                  </dds-image-item>
+                </dds-image-with-caption>
+              </div>
+            </div>
+            #end if
+
+            <!--prettier-ignore-->
+            #if $to_bool($Extras['weewx-DWD']['show_warning_map'])
+            <div
+              class="bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-6 bx--col-max-6"
+            >
+              <div class="bx--tile">
+                <dds-image-with-caption
+                  default-src="dwd/SchilderLZ.jpg"
+                  heading="Wetterwarnungen"
+                  alt="Wetterwarnungen"
+                  title="Wetterwarnungen"
+                  lightbox="false"
+                >
+                  <dds-image-item
+                    media="(min-wiidth:320px)"
+                    href="dwd/SchilderLZ.jpg"
+                  >
+                  </dds-image-item>
+                </dds-image-with-caption>
+              </div>
+            </div>
+            #end if
+          </div>
+        </div>
+      </section>
+    </main>
+
+    #include "includes/footer.inc"
+
+    <script src="dist/main.js" defer></script>
+  </body>
+</html>

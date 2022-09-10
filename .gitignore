@@ -14,6 +14,7 @@ node_modules
 skins/weewx-wdc/dist
 skins/weewx-wdc/service-worker.js
 skins/weewx-wdc/service-worker.js.map
+skins/weewx-wdc/dwd
 
 # Tests
 test/test_install_report/src/weewx-wdc.zip

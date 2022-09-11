@@ -282,6 +282,18 @@ class WdcGeneralUtil(SearchList):
 
         return ordinate_names
 
+    def get_dwd_warnings(self):
+        """
+        Get the configured warn regions for weewx-DWD from weewx.conf.
+        """
+        try:
+            dwd_warnings = self.generator.config_dict["DeutscherWetterdienst"]["warning"]
+            return {**dwd_warnings.get("counties", {}), **dwd_warnings.get("cities", {})}
+
+        # todo Log info.
+        except KeyError:
+            return {}
+
 
 class WdcArchiveUtil(SearchList):
     @staticmethod

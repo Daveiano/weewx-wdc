@@ -50,9 +50,9 @@
 
                 <br />
 
-                #if os.path.exists("dwd/VHDL54_DWLG_LATEST.html")
+                #if os.path.exists("dwd/VHDL54_" + $VHDL + "_LATEST.html")
                 <p>
-                  #include raw "dwd/VHDL54_DWLG_LATEST.html"
+                  #include raw "dwd/VHDL54_" + $VHDL + "_LATEST.html"
                 </p>
                 #end if
 
@@ -69,7 +69,14 @@
           </div>
           #end if
 
-          <div class="bx--row">
+          <div class="bx--row" style="margin-bottom: 1.5rem">
+            <div
+              class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-12 bx--col-max-12"
+            >
+              <header class="bx--col section-header">
+                <h2>Aktuelle Bodendruck- und Warnkarte</h2>
+              </header>
+            </div>
             <!--prettier-ignore-->
             #if $to_bool($Extras['weewx-DWD']['show_pressure_map'])
             <div
@@ -115,6 +122,65 @@
               </div>
             </div>
             #end if
+          </div>
+
+          <div class="bx--row" style="margin-bottom: 1.5rem">
+            <div
+              class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-12 bx--col-max-12"
+            >
+              <header class="bx--col section-header">
+                <h2>Wetterwarnungen</h2>
+              </header>
+            </div>
+
+            <!--prettier-ignore-->
+            #for $region, $region_key in $get_dwd_warnings.items()
+            #if os.path.exists("dwd/warn-" + $region_key + ".inc")
+            <div
+              class="bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-6 bx--col-max-6"
+            >
+              <!--prettier-ignore-->
+              <div class="bx--tile" style="margin-bottom: 1.5rem">
+                <header class="section-header" style="margin-top: 0; margin-bottom: 1rem">
+                  <h3>$region</h3>
+                </header>
+                #include raw "dwd/warn-" + $region_key + ".inc"
+                <div class="dwd-warning">
+                  <script>
+                    var warningdata_$region_key = #include raw "dwd/warn-" + $region_key + ".json"
+                  </script>
+                </div>
+              </div>
+            </div>
+            <!--prettier-ignore-->
+            #end if
+            #end for
+          </div>
+
+          <div class="bx--row" style="margin-bottom: 1.5rem">
+            <div
+              class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-12 bx--col-max-12"
+            >
+              <header class="bx--col section-header">
+                <h2>TEST</h2>
+              </header>
+            </div>
+            <div class="col-sm-6">
+              <p style="font-size: 110%">Wetterwarnungen</p>
+              #include raw "dwd/warn-RG.inc"
+            </div>
+            <div class="col-sm-6">
+              <p style="font-size: 110%">Wetterwarnungen</p>
+              #include raw "dwd/warn-DD.inc"
+            </div>
+            <div class="col-sm-8">
+              <p style="font-size: 110%">Wettervorhersage</p>
+              #include raw "dwd/forecast-O461.inc"
+            </div>
+            <div class="col-sm-8">
+              <p style="font-size: 110%">Wettervorhersage</p>
+              #include raw "dwd/forecast-O461-hourly.inc"
+            </div>
           </div>
         </div>
       </section>

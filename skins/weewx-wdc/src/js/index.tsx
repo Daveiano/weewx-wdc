@@ -10,6 +10,7 @@ import { CalendarDiagram } from "./diagrams/calendar";
 
 import "./../scss/index.scss";
 import { WindRoseDiagram } from "./diagrams/windrose";
+import { DWDWarning } from "./components/dwd-warning";
 
 const calendarDiagrams = document.querySelectorAll(
   "div.calendar-diagram-clim-wrap"
@@ -182,3 +183,17 @@ if (table) {
     />
   );
 }
+
+const dwdWarnings = document.querySelectorAll("div.dwd-warning");
+
+dwdWarnings.forEach((warning) => {
+  if (warning instanceof HTMLElement && warning.dataset.region) {
+    const root = createRoot(warning);
+
+    root.render(
+      <DWDWarning
+        warnings={(window as any)[`warningdata_${warning.dataset.region}`]}
+      />
+    );
+  }
+});

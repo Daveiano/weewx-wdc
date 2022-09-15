@@ -136,6 +136,13 @@ html.dark {
       color: $text-02;
     }
   }
+
+  .forecast-tile,
+  .dwd-forecast {
+    a {
+      color: $link-01;
+    }
+  }
 }
 
 #header-global {
@@ -259,7 +266,8 @@ bx-header-name {
   }
 }
 
-bx-structured-list-cell {
+bx-structured-list-cell,
+.bx--structured-list-td {
   padding: 0.5rem 0.5rem 0.5rem;
 }
 
@@ -612,45 +620,6 @@ header.section-header {
     .issued {
       @include carbon--type-style("helper-text-01");
     }
-    bx-structured-list {
-      margin-bottom: -4rem;
-      display: block;
-      bx-structured-list-body {
-        bx-structured-list-cell[class*="index"] {
-          font-family: carbon--font-family("mono"), monospace;
-        }
-      }
-      bx-structured-list-row {
-        bx-structured-list-cell {
-          sub {
-            @include carbon--type-style("helper-text-01");
-          }
-          .temphi {
-            color: #d5202a;
-          }
-          .templo {
-            color: #0053ae;
-          }
-          .unit-label {
-            @include carbon--type-style("helper-text-01");
-          }
-          svg {
-            display: block;
-            width: 42px;
-            height: 42px;
-            fill: $text-02;
-          }
-        }
-        &.rain {
-          svg {
-            width: 32px;
-            height: 32px;
-            margin-top: $spacing-02;
-            margin-bottom: $spacing-02;
-          }
-        }
-      }
-    }
     & ~ .forecast {
       margin-top: $spacing-06;
     }
@@ -667,6 +636,63 @@ header.section-header {
         }
       }
     }
+  }
+}
+
+bx-structured-list.forecast-list,
+.dwd-forecast .bx--structured-list {
+  display: block;
+  margin-bottom: -4rem;
+  bx-structured-list-body,
+  .bx--structured-list-tbody {
+    bx-structured-list-cell[class*="index"],
+    .bx--structured-list-td[class*="index"] {
+      font-family: carbon--font-family("mono"), monospace;
+    }
+  }
+  bx-structured-list-row,
+  .bx--structured-list-row {
+    bx-structured-list-cell,
+    .bx--structured-list-td {
+      sub {
+        @include carbon--type-style("helper-text-01");
+      }
+      .temphi {
+        color: #d5202a;
+      }
+      .templo {
+        color: #0053ae;
+      }
+      .unit-label {
+        @include carbon--type-style("helper-text-01");
+      }
+      svg,
+      img {
+        display: block;
+        width: 42px;
+        height: 42px;
+        fill: $text-02;
+      }
+    }
+    &.rain {
+      svg {
+        width: 32px;
+        height: 32px;
+        margin-top: $spacing-02;
+        margin-bottom: $spacing-02;
+      }
+    }
+  }
+}
+
+.dwd-forecast {
+  .bx--structured-list {
+    display: table;
+    margin-bottom: 0;
+  }
+  .bx--content-switcher {
+    border: 1px solid $text-02;
+    border-radius: 0.25rem;
   }
 }
 

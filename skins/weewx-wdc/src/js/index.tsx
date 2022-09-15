@@ -11,6 +11,7 @@ import { CalendarDiagram } from "./diagrams/calendar";
 import "./../scss/index.scss";
 import { WindRoseDiagram } from "./diagrams/windrose";
 import { DWDWarning } from "./components/dwd-warning";
+import { DWDForecast } from "./components/dwd-forecast";
 
 const calendarDiagrams = document.querySelectorAll(
   "div.calendar-diagram-clim-wrap"
@@ -197,3 +198,13 @@ dwdWarnings.forEach((warning) => {
     );
   }
 });
+
+const dwdForecast = document.querySelector("div.dwd-forecast");
+
+if (dwdForecast) {
+  const root = createRoot(dwdForecast);
+
+  root.render(
+    <DWDForecast context="day" data={(window as any).dwdForecastData} />
+  );
+}

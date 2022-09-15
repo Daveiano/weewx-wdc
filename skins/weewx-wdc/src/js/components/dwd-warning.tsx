@@ -31,7 +31,6 @@ const warningLinks: { [key: string]: string } = {
 export const DWDWarning: React.FC<DWDWarnings> = (
   props: DWDWarnings
 ): React.ReactElement => {
-  console.log(props.warnings);
   if (props.warnings.length > 0) {
     return (
       <>

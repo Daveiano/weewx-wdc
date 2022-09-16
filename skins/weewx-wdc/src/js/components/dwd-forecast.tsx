@@ -19,13 +19,28 @@ type ForecastDaily = {
   FFavg: number; // Wind speed
   Neffavg: number; // CLoud Cover
   PPPPavg: number; // Pressure
-  RSunD?: number; // Sun duration
+  RSunD?: number; // Sunshine duration
   RR1c: number; // Precipitation
   Tdmin: number; // Dewpoint min
   Tdmax: number; // Dewpoint max
   TTTmax: number; // Temp max
   TTTmin: number; // Temp min
-  Rd10?: number; // POP > 1.0 mm
+  Rd10?: number; // POP > 1.0mm 24h
+  icon: string;
+  icontitle: string;
+};
+
+type ForecastHourly = {
+  DD: number; // Wind dir
+  FF: number; // Wind speed
+  Neff: number; // CLoud Cover
+  PPPP: number; // Pressure
+  R101: number; // POP > 0.1mm 1h
+  RR1c: number; // Precipitation
+  SunD1: number; // Sunshine duration in s for last 1h
+  Td: number; // Dew point
+  TTT: number; // Temp
+  timestamp: number; // Unix time
   icon: string;
   icontitle: string;
 };
@@ -37,6 +52,7 @@ interface DWDForecastProps {
     IssueTimeISO: string;
     Issuer: string;
     ForecastDaily: ForecastDaily[];
+    ForecastHourly: ForecastHourly[];
     coordinates: number[];
     id: string;
     name: string;
@@ -44,6 +60,7 @@ interface DWDForecastProps {
 }
 
 const options = (window as any).weewxWdcConfig.dwdForecastTable;
+const iconPath = (window as any).weewxWdcConfig.dwdIconPath;
 
 const dirToStr = (d: number) => {
   const directions = ["N", "NO", "O", "SO", "S", "SW", "W", "NW"];
@@ -51,21 +68,15 @@ const dirToStr = (d: number) => {
   return `${directions[(d / 45) | 0]}`;
 };
 
-// @todo show_legend
 // @todo Document de-only
 export const DWDForecast: React.FC<DWDForecastProps> = (
   props: DWDForecastProps
 ): React.ReactElement => {
   const [context, setContext] = useState(props.context);
 
-  const data = props.data.ForecastDaily;
-
-  console.log(props.data);
-  console.log(data);
-
   return (
     <>
-      <div className="bx--row">
+      <div className="bx--row" style={{ marginBottom: "1rem" }}>
         <div className="bx--col-sm-4 bx--col-md-8 bx--col-lg-10 bx--col-xlg-10 bx--col-max-10">
           <h3 className="bx--type-expressive-heading-03">
             Vorhersage für {props.data.name.charAt(0)}
@@ -75,9 +86,12 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
 
         {options.show_hourly == true && (
           <div className="bx--col-sm-4 bx--col-md-8 bx--col-lg-2 bx--col-xlg-2 bx--col-max-2">
-            <ContentSwitcher onChange={console.log} size="sm">
-              <Switch name={"daily"} text="Täglich" />
-              <Switch name={"hourly"} text="Stündlich" />
+            <ContentSwitcher
+              onChange={(data: any) => setContext(data.name)}
+              size="sm"
+            >
+              <Switch name={"day"} text="Täglich" />
+              <Switch name={"hour"} text="Stündlich" />
             </ContentSwitcher>
           </div>
         )}
@@ -86,36 +100,82 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
       <StructuredListWrapper
         ariaLabel="Wettervorhersage vom DWD"
         className="forecast-list"
+        style={
+          context === "hour" ? { display: "block", overflowX: "auto" } : {}
+        }
       >
-        {options.show_legend == true && (
-          <StructuredListHead>
-            <StructuredListRow head tabIndex={0}>
-              <StructuredListCell head></StructuredListCell>
-              {data.map((day, index) => {
-                return (
-                  <StructuredListCell key={index} head>
-                    {day.weekdayshortname}, <br /> {day.day}
-                  </StructuredListCell>
-                );
-              })}
-            </StructuredListRow>
-          </StructuredListHead>
-        )}
+        <StructuredListHead>
+          <StructuredListRow head tabIndex={0}>
+            <StructuredListCell head></StructuredListCell>
+            {context === "day" ? (
+              <>
+                {props.data.ForecastDaily.map((day, index) => {
+                  return (
+                    <StructuredListCell key={index} head>
+                      {day.weekdayshortname}, <br /> {day.day}
+                    </StructuredListCell>
+                  );
+                })}
+              </>
+            ) : (
+              <>
+                {props.data.ForecastHourly.map((day, index) => {
+                  return (
+                    <StructuredListCell
+                      key={index}
+                      head
+                      style={{ minWidth: "100px" }}
+                    >
+                      {dayjs.unix(day.timestamp).format("HH:mm") === "00:00" ||
+                      index === 0 ? (
+                        <>
+                          <span style={{ fontWeight: "200" }}>
+                            {dayjs.unix(day.timestamp).format("DD.MM.YYYY")}
+                          </span>
+                        </>
+                      ) : null}
+                      <br /> {dayjs.unix(day.timestamp).format("HH:mm")}
+                    </StructuredListCell>
+                  );
+                })}
+              </>
+            )}
+          </StructuredListRow>
+        </StructuredListHead>
+
         <StructuredListBody>
           {options.show_outlook && (
             <StructuredListRow tabIndex={0}>
               <StructuredListCell></StructuredListCell>
-              {data.map((day, index) => {
-                return (
-                  <StructuredListCell
-                    className="index"
-                    key={index}
-                    style={{ paddingBottom: "1rem" }}
-                  >
-                    <img src={day.icon} title={day.icontitle} />
-                  </StructuredListCell>
-                );
-              })}
+              {context === "day" ? (
+                <>
+                  {props.data.ForecastDaily.map((day, index) => {
+                    return (
+                      <StructuredListCell
+                        className="index"
+                        key={index}
+                        style={{ paddingBottom: "1rem" }}
+                      >
+                        <img src={day.icon} title={day.icontitle} />
+                      </StructuredListCell>
+                    );
+                  })}
+                </>
+              ) : (
+                <>
+                  {props.data.ForecastHourly.map((hour, index) => {
+                    return (
+                      <StructuredListCell
+                        className="index"
+                        key={index}
+                        style={{ paddingBottom: "1rem" }}
+                      >
+                        <img src={hour.icon} title={hour.icontitle} />
+                      </StructuredListCell>
+                    );
+                  })}
+                </>
+              )}
             </StructuredListRow>
           )}
 
@@ -125,23 +185,43 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                 Temp <br />
                 <span className="unit-label">in °C</span>
               </StructuredListCell>
-              {data.map((day, index) => {
-                return (
-                  <StructuredListCell className="index" key={index}>
-                    {Intl.NumberFormat("de-DE", {
-                      //style: "unit",
-                      //unit: "celsius",
-                      minimumFractionDigits: 1,
-                      maximumFractionDigits: 1,
-                    }).format(day.TTTmax)}
-                    <br />
-                    {Intl.NumberFormat("de-DE", {
-                      minimumFractionDigits: 1,
-                      maximumFractionDigits: 1,
-                    }).format(day.TTTmin)}
-                  </StructuredListCell>
-                );
-              })}
+
+              {context === "day" ? (
+                <>
+                  {props.data.ForecastDaily.map((day, index) => {
+                    return (
+                      <StructuredListCell className="index" key={index}>
+                        {Intl.NumberFormat("de-DE", {
+                          //style: "unit",
+                          //unit: "celsius",
+                          minimumFractionDigits: 1,
+                          maximumFractionDigits: 1,
+                        }).format(day.TTTmax)}
+                        <br />
+                        {Intl.NumberFormat("de-DE", {
+                          minimumFractionDigits: 1,
+                          maximumFractionDigits: 1,
+                        }).format(day.TTTmin)}
+                      </StructuredListCell>
+                    );
+                  })}
+                </>
+              ) : (
+                <>
+                  {props.data.ForecastHourly.map((hour, index) => {
+                    return (
+                      <StructuredListCell className="index" key={index}>
+                        {Intl.NumberFormat("de-DE", {
+                          //style: "unit",
+                          //unit: "celsius",
+                          minimumFractionDigits: 1,
+                          maximumFractionDigits: 1,
+                        }).format(hour.TTT)}
+                      </StructuredListCell>
+                    );
+                  })}
+                </>
+              )}
             </StructuredListRow>
           )}
 
@@ -151,21 +231,38 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                 Taupunkt <br />
                 <span className="unit-label">in °C</span>
               </StructuredListCell>
-              {data.map((day, index) => {
-                return (
-                  <StructuredListCell className="index" key={index}>
-                    {Intl.NumberFormat("de-DE", {
-                      minimumFractionDigits: 1,
-                      maximumFractionDigits: 1,
-                    }).format(day.Tdmax)}
-                    <br />
-                    {Intl.NumberFormat("de-DE", {
-                      minimumFractionDigits: 1,
-                      maximumFractionDigits: 1,
-                    }).format(day.Tdmin)}
-                  </StructuredListCell>
-                );
-              })}
+              {context === "day" ? (
+                <>
+                  {props.data.ForecastDaily.map((day, index) => {
+                    return (
+                      <StructuredListCell className="index" key={index}>
+                        {Intl.NumberFormat("de-DE", {
+                          minimumFractionDigits: 1,
+                          maximumFractionDigits: 1,
+                        }).format(day.Tdmax)}
+                        <br />
+                        {Intl.NumberFormat("de-DE", {
+                          minimumFractionDigits: 1,
+                          maximumFractionDigits: 1,
+                        }).format(day.Tdmin)}
+                      </StructuredListCell>
+                    );
+                  })}
+                </>
+              ) : (
+                <>
+                  {props.data.ForecastHourly.map((day, index) => {
+                    return (
+                      <StructuredListCell className="index" key={index}>
+                        {Intl.NumberFormat("de-DE", {
+                          minimumFractionDigits: 1,
+                          maximumFractionDigits: 1,
+                        }).format(day.Td)}
+                      </StructuredListCell>
+                    );
+                  })}
+                </>
+              )}
             </StructuredListRow>
           )}
 
@@ -175,17 +272,35 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                 Luftdruck <br />
                 <span className="unit-label">in mbar</span>
               </StructuredListCell>
-              {data.map((day, index) => {
-                return (
-                  <StructuredListCell className="index" key={index}>
-                    {Intl.NumberFormat("de-DE", {
-                      minimumFractionDigits: 0,
-                      maximumFractionDigits: 0,
-                      useGrouping: false,
-                    }).format(day.PPPPavg)}
-                  </StructuredListCell>
-                );
-              })}
+              {context === "day" ? (
+                <>
+                  {props.data.ForecastDaily.map((day, index) => {
+                    return (
+                      <StructuredListCell className="index" key={index}>
+                        {Intl.NumberFormat("de-DE", {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 0,
+                          useGrouping: false,
+                        }).format(day.PPPPavg)}
+                      </StructuredListCell>
+                    );
+                  })}
+                </>
+              ) : (
+                <>
+                  {props.data.ForecastHourly.map((day, index) => {
+                    return (
+                      <StructuredListCell className="index" key={index}>
+                        {Intl.NumberFormat("de-DE", {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 0,
+                          useGrouping: false,
+                        }).format(day.PPPP)}
+                      </StructuredListCell>
+                    );
+                  })}
+                </>
+              )}
             </StructuredListRow>
           )}
 
@@ -195,17 +310,35 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                 Wind <br />
                 <span className="unit-label">in km/h</span>
               </StructuredListCell>
-              {data.map((day, index) => {
-                return (
-                  <StructuredListCell className="index" key={index}>
-                    {Intl.NumberFormat("de-DE", {
-                      minimumFractionDigits: 0,
-                      maximumFractionDigits: 0,
-                    }).format(day.FFavg)}
-                    <br /> {dirToStr(day.DDavg)}
-                  </StructuredListCell>
-                );
-              })}
+              {context === "day" ? (
+                <>
+                  {props.data.ForecastDaily.map((day, index) => {
+                    return (
+                      <StructuredListCell className="index" key={index}>
+                        {Intl.NumberFormat("de-DE", {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 0,
+                        }).format(day.FFavg)}
+                        <br /> {dirToStr(day.DDavg)}
+                      </StructuredListCell>
+                    );
+                  })}
+                </>
+              ) : (
+                <>
+                  {props.data.ForecastHourly.map((hour, index) => {
+                    return (
+                      <StructuredListCell className="index" key={index}>
+                        {Intl.NumberFormat("de-DE", {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 0,
+                        }).format(hour.FF)}
+                        <br /> {dirToStr(hour.DD)}
+                      </StructuredListCell>
+                    );
+                  })}
+                </>
+              )}
             </StructuredListRow>
           )}
 
@@ -215,13 +348,25 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                 Niderschlagswahrscheinlichkeit <br />
                 <span className="unit-label">in %</span>
               </StructuredListCell>
-              {data.map((day, index) => {
-                return (
-                  <StructuredListCell className="index" key={index}>
-                    {day.Rd10 ? <>{day.Rd10}</> : "-"}
-                  </StructuredListCell>
-                );
-              })}
+              {context === "day" ? (
+                <>
+                  {props.data.ForecastDaily.map((day, index) => {
+                    return (
+                      <StructuredListCell className="index" key={index}>
+                        {day.Rd10 ? <>{day.Rd10}</> : "-"}
+                      </StructuredListCell>
+                    );
+                  })}
+                </>
+              ) : (
+                <>
+                  {props.data.ForecastHourly.map((hour, index) => (
+                    <StructuredListCell className="index" key={index}>
+                      {hour.R101}
+                    </StructuredListCell>
+                  ))}
+                </>
+              )}
             </StructuredListRow>
           )}
 
@@ -231,16 +376,33 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                 Niederschlag <br />
                 <span className="unit-label">in mm</span>
               </StructuredListCell>
-              {data.map((day, index) => {
-                return (
-                  <StructuredListCell className="index" key={index}>
-                    {Intl.NumberFormat("de-DE", {
-                      minimumFractionDigits: 0,
-                      maximumFractionDigits: 0,
-                    }).format(day.RR1c)}
-                  </StructuredListCell>
-                );
-              })}
+              {context === "day" ? (
+                <>
+                  {props.data.ForecastDaily.map((day, index) => {
+                    return (
+                      <StructuredListCell className="index" key={index}>
+                        {Intl.NumberFormat("de-DE", {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 0,
+                        }).format(day.RR1c)}
+                      </StructuredListCell>
+                    );
+                  })}
+                </>
+              ) : (
+                <>
+                  {props.data.ForecastHourly.map((hour, index) => {
+                    return (
+                      <StructuredListCell className="index" key={index}>
+                        {Intl.NumberFormat("de-DE", {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 0,
+                        }).format(hour.RR1c)}
+                      </StructuredListCell>
+                    );
+                  })}
+                </>
+              )}
             </StructuredListRow>
           )}
 
@@ -250,16 +412,33 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                 Bewölkung <br />
                 <span className="unit-label">in %</span>
               </StructuredListCell>
-              {data.map((day, index) => {
-                return (
-                  <StructuredListCell className="index" key={index}>
-                    {Intl.NumberFormat("de-DE", {
-                      minimumFractionDigits: 0,
-                      maximumFractionDigits: 0,
-                    }).format(day.Neffavg)}
-                  </StructuredListCell>
-                );
-              })}
+              {context === "day" ? (
+                <>
+                  {props.data.ForecastDaily.map((day, index) => {
+                    return (
+                      <StructuredListCell className="index" key={index}>
+                        {Intl.NumberFormat("de-DE", {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 0,
+                        }).format(day.Neffavg)}
+                      </StructuredListCell>
+                    );
+                  })}
+                </>
+              ) : (
+                <>
+                  {props.data.ForecastHourly.map((day, index) => {
+                    return (
+                      <StructuredListCell className="index" key={index}>
+                        {Intl.NumberFormat("de-DE", {
+                          minimumFractionDigits: 0,
+                          maximumFractionDigits: 0,
+                        }).format(day.Neff)}
+                      </StructuredListCell>
+                    );
+                  })}
+                </>
+              )}
             </StructuredListRow>
           )}
 
@@ -269,22 +448,41 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                 Rel. Sonnenscheindauer <br />
                 <span className="unit-label">in %</span>
               </StructuredListCell>
-              {data.map((day, index) => {
-                return (
-                  <StructuredListCell className="index" key={index}>
-                    {day.RSunD ? (
-                      <>
-                        {Intl.NumberFormat("de-DE", {
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 0,
-                        }).format(day.RSunD)}
-                      </>
-                    ) : (
-                      <>-</>
-                    )}
-                  </StructuredListCell>
-                );
-              })}
+              {context === "day" ? (
+                <>
+                  {props.data.ForecastDaily.map((day, index) => (
+                    <StructuredListCell className="index" key={index}>
+                      {day.RSunD ? (
+                        <>
+                          {Intl.NumberFormat("de-DE", {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                          }).format(day.RSunD)}
+                        </>
+                      ) : (
+                        <>-</>
+                      )}
+                    </StructuredListCell>
+                  ))}
+                </>
+              ) : (
+                <>
+                  {props.data.ForecastHourly.map((hour, index) => (
+                    <StructuredListCell className="index" key={index}>
+                      {hour.SunD1 ? (
+                        <>
+                          {Intl.NumberFormat("de-DE", {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                          }).format(hour.SunD1 / 36)}
+                        </>
+                      ) : (
+                        <>-</>
+                      )}
+                    </StructuredListCell>
+                  ))}
+                </>
+              )}
             </StructuredListRow>
           )}
         </StructuredListBody>

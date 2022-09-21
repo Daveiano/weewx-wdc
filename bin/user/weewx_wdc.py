@@ -294,6 +294,32 @@ class WdcGeneralUtil(SearchList):
         except KeyError:
             return {}
 
+    def get_dwd_forecast(self, obs):
+        """
+        Get dwd forecast series.
+
+        Args:
+            obs (string): The data_type.
+        """
+        binding = self.generator.skin_dict["Extras"]["weewx-DWD"]["forecast_diagram"].get(
+            "data_binding", "dwd_binding"
+        )
+        db_manager = self.generator.db_binder.get_manager(binding)
+
+        # Now
+        start_ts = time.time()
+        # Now + 11 days
+        end_dt = datetime.date.today() + datetime.timedelta(days=11)
+        end_ts = time.mktime(end_dt.timetuple())
+
+        dwd_start_vt, dwd_stop_vt, dwd_vt = weewx.xtypes.get_series(
+            obs,
+            TimeSpan(start_ts, end_ts),
+            db_manager
+        )
+
+        return (zip(dwd_start_vt[0], dwd_stop_vt[0], rounder(dwd_vt[0], WdcDiagramUtil.get_rounding(self, obs))))
+
 
 class WdcArchiveUtil(SearchList):
     @staticmethod

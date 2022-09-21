@@ -13,6 +13,7 @@ import {
 
 // Obs definitions DWD: https://opendata.dwd.de/weather/lib/MetElementDefinition.xml
 type ForecastDaily = {
+  timestamp: number;
   day: string;
   weekdayshortname: string;
   DDavg: number; // Wind dir
@@ -109,7 +110,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
             <StructuredListCell head></StructuredListCell>
             {context === "day" ? (
               <>
-                {props.data.ForecastDaily.map((day, index) => {
+                {props.data.ForecastDaily.filter(
+                  (item) => item.timestamp >= dayjs().startOf("day").unix()
+                ).map((day, index) => {
                   return (
                     <StructuredListCell key={index} head>
                       {day.weekdayshortname}, <br /> {day.day}
@@ -119,7 +122,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
               </>
             ) : (
               <>
-                {props.data.ForecastHourly.map((day, index) => {
+                {props.data.ForecastHourly.filter(
+                  (item) => item.timestamp >= Math.floor(Date.now() / 1000)
+                ).map((day, index) => {
                   return (
                     <StructuredListCell
                       key={index}
@@ -149,7 +154,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
               <StructuredListCell></StructuredListCell>
               {context === "day" ? (
                 <>
-                  {props.data.ForecastDaily.map((day, index) => {
+                  {props.data.ForecastDaily.filter(
+                    (item) => item.timestamp >= dayjs().startOf("day").unix()
+                  ).map((day, index) => {
                     return (
                       <StructuredListCell
                         className="index"
@@ -163,7 +170,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                 </>
               ) : (
                 <>
-                  {props.data.ForecastHourly.map((hour, index) => {
+                  {props.data.ForecastHourly.filter(
+                    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
+                  ).map((hour, index) => {
                     return (
                       <StructuredListCell
                         className="index"
@@ -188,7 +197,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
 
               {context === "day" ? (
                 <>
-                  {props.data.ForecastDaily.map((day, index) => {
+                  {props.data.ForecastDaily.filter(
+                    (item) => item.timestamp >= dayjs().startOf("day").unix()
+                  ).map((day, index) => {
                     return (
                       <StructuredListCell className="index" key={index}>
                         {Intl.NumberFormat("de-DE", {
@@ -208,7 +219,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                 </>
               ) : (
                 <>
-                  {props.data.ForecastHourly.map((hour, index) => {
+                  {props.data.ForecastHourly.filter(
+                    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
+                  ).map((hour, index) => {
                     return (
                       <StructuredListCell className="index" key={index}>
                         {Intl.NumberFormat("de-DE", {
@@ -233,7 +246,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
               </StructuredListCell>
               {context === "day" ? (
                 <>
-                  {props.data.ForecastDaily.map((day, index) => {
+                  {props.data.ForecastDaily.filter(
+                    (item) => item.timestamp >= dayjs().startOf("day").unix()
+                  ).map((day, index) => {
                     return (
                       <StructuredListCell className="index" key={index}>
                         {Intl.NumberFormat("de-DE", {
@@ -251,7 +266,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                 </>
               ) : (
                 <>
-                  {props.data.ForecastHourly.map((day, index) => {
+                  {props.data.ForecastHourly.filter(
+                    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
+                  ).map((day, index) => {
                     return (
                       <StructuredListCell className="index" key={index}>
                         {Intl.NumberFormat("de-DE", {
@@ -274,7 +291,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
               </StructuredListCell>
               {context === "day" ? (
                 <>
-                  {props.data.ForecastDaily.map((day, index) => {
+                  {props.data.ForecastDaily.filter(
+                    (item) => item.timestamp >= dayjs().startOf("day").unix()
+                  ).map((day, index) => {
                     return (
                       <StructuredListCell className="index" key={index}>
                         {Intl.NumberFormat("de-DE", {
@@ -288,7 +307,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                 </>
               ) : (
                 <>
-                  {props.data.ForecastHourly.map((day, index) => {
+                  {props.data.ForecastHourly.filter(
+                    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
+                  ).map((day, index) => {
                     return (
                       <StructuredListCell className="index" key={index}>
                         {Intl.NumberFormat("de-DE", {
@@ -312,7 +333,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
               </StructuredListCell>
               {context === "day" ? (
                 <>
-                  {props.data.ForecastDaily.map((day, index) => {
+                  {props.data.ForecastDaily.filter(
+                    (item) => item.timestamp >= dayjs().startOf("day").unix()
+                  ).map((day, index) => {
                     return (
                       <StructuredListCell className="index" key={index}>
                         {Intl.NumberFormat("de-DE", {
@@ -326,7 +349,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                 </>
               ) : (
                 <>
-                  {props.data.ForecastHourly.map((hour, index) => {
+                  {props.data.ForecastHourly.filter(
+                    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
+                  ).map((hour, index) => {
                     return (
                       <StructuredListCell className="index" key={index}>
                         {Intl.NumberFormat("de-DE", {
@@ -350,7 +375,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
               </StructuredListCell>
               {context === "day" ? (
                 <>
-                  {props.data.ForecastDaily.map((day, index) => {
+                  {props.data.ForecastDaily.filter(
+                    (item) => item.timestamp >= dayjs().startOf("day").unix()
+                  ).map((day, index) => {
                     return (
                       <StructuredListCell className="index" key={index}>
                         {day.Rd10 ? <>{day.Rd10}</> : "-"}
@@ -360,7 +387,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                 </>
               ) : (
                 <>
-                  {props.data.ForecastHourly.map((hour, index) => (
+                  {props.data.ForecastHourly.filter(
+                    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
+                  ).map((hour, index) => (
                     <StructuredListCell className="index" key={index}>
                       {hour.R101}
                     </StructuredListCell>
@@ -378,7 +407,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
               </StructuredListCell>
               {context === "day" ? (
                 <>
-                  {props.data.ForecastDaily.map((day, index) => {
+                  {props.data.ForecastDaily.filter(
+                    (item) => item.timestamp >= dayjs().startOf("day").unix()
+                  ).map((day, index) => {
                     return (
                       <StructuredListCell className="index" key={index}>
                         {Intl.NumberFormat("de-DE", {
@@ -391,7 +422,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                 </>
               ) : (
                 <>
-                  {props.data.ForecastHourly.map((hour, index) => {
+                  {props.data.ForecastHourly.filter(
+                    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
+                  ).map((hour, index) => {
                     return (
                       <StructuredListCell className="index" key={index}>
                         {Intl.NumberFormat("de-DE", {
@@ -414,7 +447,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
               </StructuredListCell>
               {context === "day" ? (
                 <>
-                  {props.data.ForecastDaily.map((day, index) => {
+                  {props.data.ForecastDaily.filter(
+                    (item) => item.timestamp >= dayjs().startOf("day").unix()
+                  ).map((day, index) => {
                     return (
                       <StructuredListCell className="index" key={index}>
                         {Intl.NumberFormat("de-DE", {
@@ -427,7 +462,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                 </>
               ) : (
                 <>
-                  {props.data.ForecastHourly.map((day, index) => {
+                  {props.data.ForecastHourly.filter(
+                    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
+                  ).map((day, index) => {
                     return (
                       <StructuredListCell className="index" key={index}>
                         {Intl.NumberFormat("de-DE", {
@@ -450,7 +487,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
               </StructuredListCell>
               {context === "day" ? (
                 <>
-                  {props.data.ForecastDaily.map((day, index) => (
+                  {props.data.ForecastDaily.filter(
+                    (item) => item.timestamp >= dayjs().startOf("day").unix()
+                  ).map((day, index) => (
                     <StructuredListCell className="index" key={index}>
                       {day.RSunD ? (
                         <>
@@ -467,7 +506,9 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                 </>
               ) : (
                 <>
-                  {props.data.ForecastHourly.map((hour, index) => (
+                  {props.data.ForecastHourly.filter(
+                    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
+                  ).map((hour, index) => (
                     <StructuredListCell className="index" key={index}>
                       {hour.SunD1 ? (
                         <>

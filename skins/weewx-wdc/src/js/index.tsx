@@ -137,7 +137,6 @@ diagrams.forEach((diagram) => {
 });
 
 const plotlyDiagrams = document.querySelectorAll("div.diagram.plotly");
-
 plotlyDiagrams.forEach((plotyDiagram) => {
   const root = createRoot(plotyDiagram);
 

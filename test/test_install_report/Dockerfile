@@ -18,7 +18,7 @@ RUN chmod +x /start.sh && chmod +x /start-classic.sh && chmod +x /start-without-
 
 # @see https://blog.nuvotex.de/running-syslog-in-a-container/
 RUN apt-get update &&\
-    apt-get install -q -y --no-install-recommends rsyslog=8.1901.0-1+deb10u1 &&\
+    apt-get install -q -y --no-install-recommends rsyslog=8.1901.0-1+deb10u2 &&\
     apt-get clean &&\
     rm -rf /var/lib/apt/lists/*
 

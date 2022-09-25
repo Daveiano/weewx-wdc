@@ -687,9 +687,25 @@ bx-structured-list.forecast-list,
 }
 
 .dwd-forecast {
+  overflow: hidden;
+  @include carbon--breakpoint-down(lg) {
+    h3 {
+      margin-bottom: $spacing-06;
+    }
+  }
   .bx--structured-list {
-    display: table;
     margin-bottom: 0;
+    display: table;
+    // Legend max-width for first child.
+    .bx--structured-list-tbody {
+      .bx--structured-list-row {
+        .bx--structured-list-td:first-child {
+          max-width: 8rem;
+          white-space: initial;
+          padding-right: 1.5rem;
+        }
+      }
+    }
   }
   .bx--content-switcher {
     border: 1px solid $text-02;

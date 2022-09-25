@@ -74,11 +74,30 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
   props: DWDForecastProps
 ): React.ReactElement => {
   const [context, setContext] = useState(props.context);
+  const index = window.location.pathname.includes("index.html");
+  const switcherClassNames = index
+    ? "bx--col-sm-4 bx--col-md-8 bx--col-lg-4 bx--col-xlg-4 bx--col-max-4"
+    : "bx--col-sm-4 bx--col-md-8 bx--col-lg-4 bx--col-xlg-2 bx--col-max-2";
+  const headerClassNames = index
+    ? "bx--col-sm-4 bx--col-md-8 bx--col-lg-8 bx--col-xlg-8 bx--col-max-8"
+    : "bx--col-sm-4 bx--col-md-8 bx--col-lg-8 bx--col-xlg-10 bx--col-max-10";
+
+  let forecastDaily = props.data.ForecastDaily.filter(
+    (item) => item.timestamp >= dayjs().startOf("day").unix()
+  );
+
+  const forecastHourly = props.data.ForecastHourly.filter(
+    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
+  );
+
+  if (index) {
+    forecastDaily = forecastDaily.slice(0, 5);
+  }
 
   return (
-    <>
+    <div className={`${context} ${index ? "index" : ""}`}>
       <div className="bx--row" style={{ marginBottom: "1rem" }}>
-        <div className="bx--col-sm-4 bx--col-md-8 bx--col-lg-10 bx--col-xlg-10 bx--col-max-10">
+        <div className={headerClassNames}>
           <h3 className="bx--type-expressive-heading-03">
             Vorhersage für {props.data.name.charAt(0)}
             {props.data.name.toLowerCase().slice(1)}
@@ -86,7 +105,7 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
         </div>
 
         {options.show_hourly == true && (
-          <div className="bx--col-sm-4 bx--col-md-8 bx--col-lg-2 bx--col-xlg-2 bx--col-max-2">
+          <div className={switcherClassNames}>
             <ContentSwitcher
               onChange={(data: any) => setContext(data.name)}
               size="sm"
@@ -98,436 +117,398 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
         )}
       </div>
 
-      <StructuredListWrapper
-        ariaLabel="Wettervorhersage vom DWD"
-        className="forecast-list"
-        style={
-          context === "hour" ? { display: "block", overflowX: "auto" } : {}
-        }
+      <div
+        style={{ display: "block", whiteSpace: "nowrap", overflowX: "auto" }}
       >
-        <StructuredListHead>
-          <StructuredListRow head tabIndex={0}>
-            <StructuredListCell head></StructuredListCell>
-            {context === "day" ? (
-              <>
-                {props.data.ForecastDaily.filter(
-                  (item) => item.timestamp >= dayjs().startOf("day").unix()
-                ).map((day, index) => {
-                  return (
-                    <StructuredListCell key={index} head>
-                      {day.weekdayshortname}, <br /> {day.day}
-                    </StructuredListCell>
-                  );
-                })}
-              </>
-            ) : (
-              <>
-                {props.data.ForecastHourly.filter(
-                  (item) => item.timestamp >= Math.floor(Date.now() / 1000)
-                ).map((day, index) => {
-                  return (
-                    <StructuredListCell
-                      key={index}
-                      head
-                      style={{ minWidth: "100px" }}
-                    >
-                      {dayjs.unix(day.timestamp).format("HH:mm") === "00:00" ||
-                      index === 0 ? (
-                        <>
-                          <span style={{ fontWeight: "200" }}>
-                            {dayjs.unix(day.timestamp).format("DD.MM.YYYY")}
-                          </span>
-                        </>
-                      ) : null}
-                      <br /> {dayjs.unix(day.timestamp).format("HH:mm")}
-                    </StructuredListCell>
-                  );
-                })}
-              </>
+        <StructuredListWrapper
+          ariaLabel="Wettervorhersage vom DWD"
+          className="forecast-list"
+        >
+          <StructuredListHead>
+            <StructuredListRow head tabIndex={0}>
+              <StructuredListCell head></StructuredListCell>
+              {context === "day" ? (
+                <>
+                  {forecastDaily.map((day, index) => {
+                    return (
+                      <StructuredListCell key={index} head>
+                        {day.weekdayshortname}, <br /> {day.day}
+                      </StructuredListCell>
+                    );
+                  })}
+                </>
+              ) : (
+                <>
+                  {forecastHourly.map((day, index) => {
+                    return (
+                      <StructuredListCell
+                        key={index}
+                        head
+                        style={{ minWidth: "100px" }}
+                      >
+                        {dayjs.unix(day.timestamp).format("HH:mm") ===
+                          "00:00" || index === 0 ? (
+                          <>
+                            <span style={{ fontWeight: "200" }}>
+                              {dayjs.unix(day.timestamp).format("DD.MM.YYYY")}
+                            </span>
+                          </>
+                        ) : null}
+                        <br /> {dayjs.unix(day.timestamp).format("HH:mm")}
+                      </StructuredListCell>
+                    );
+                  })}
+                </>
+              )}
+            </StructuredListRow>
+          </StructuredListHead>
+
+          <StructuredListBody>
+            {options.show_outlook && (
+              <StructuredListRow tabIndex={0}>
+                <StructuredListCell></StructuredListCell>
+                {context === "day" ? (
+                  <>
+                    {forecastDaily.map((day, index) => {
+                      return (
+                        <StructuredListCell
+                          className="index"
+                          key={index}
+                          style={{ paddingBottom: "1rem" }}
+                        >
+                          <img src={day.icon} title={day.icontitle} />
+                        </StructuredListCell>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <>
+                    {forecastHourly.map((hour, index) => {
+                      return (
+                        <StructuredListCell
+                          className="index"
+                          key={index}
+                          style={{ paddingBottom: "1rem" }}
+                        >
+                          <img src={hour.icon} title={hour.icontitle} />
+                        </StructuredListCell>
+                      );
+                    })}
+                  </>
+                )}
+              </StructuredListRow>
             )}
-          </StructuredListRow>
-        </StructuredListHead>
 
-        <StructuredListBody>
-          {options.show_outlook && (
-            <StructuredListRow tabIndex={0}>
-              <StructuredListCell></StructuredListCell>
-              {context === "day" ? (
-                <>
-                  {props.data.ForecastDaily.filter(
-                    (item) => item.timestamp >= dayjs().startOf("day").unix()
-                  ).map((day, index) => {
-                    return (
-                      <StructuredListCell
-                        className="index"
-                        key={index}
-                        style={{ paddingBottom: "1rem" }}
-                      >
-                        <img src={day.icon} title={day.icontitle} />
-                      </StructuredListCell>
-                    );
-                  })}
-                </>
-              ) : (
-                <>
-                  {props.data.ForecastHourly.filter(
-                    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
-                  ).map((hour, index) => {
-                    return (
-                      <StructuredListCell
-                        className="index"
-                        key={index}
-                        style={{ paddingBottom: "1rem" }}
-                      >
-                        <img src={hour.icon} title={hour.icontitle} />
-                      </StructuredListCell>
-                    );
-                  })}
-                </>
-              )}
-            </StructuredListRow>
-          )}
+            {options.show_temp == true && (
+              <StructuredListRow tabIndex={0}>
+                <StructuredListCell>
+                  Temp <br />
+                  <span className="unit-label">in °C</span>
+                </StructuredListCell>
 
-          {options.show_temp == true && (
-            <StructuredListRow tabIndex={0}>
-              <StructuredListCell>
-                Temp <br />
-                <span className="unit-label">in °C</span>
-              </StructuredListCell>
+                {context === "day" ? (
+                  <>
+                    {forecastDaily.map((day, index) => {
+                      return (
+                        <StructuredListCell className="index" key={index}>
+                          {Intl.NumberFormat("de-DE", {
+                            //style: "unit",
+                            //unit: "celsius",
+                            minimumFractionDigits: 1,
+                            maximumFractionDigits: 1,
+                          }).format(day.TTTmax)}
+                          <br />
+                          {Intl.NumberFormat("de-DE", {
+                            minimumFractionDigits: 1,
+                            maximumFractionDigits: 1,
+                          }).format(day.TTTmin)}
+                        </StructuredListCell>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <>
+                    {forecastHourly.map((hour, index) => {
+                      return (
+                        <StructuredListCell className="index" key={index}>
+                          {Intl.NumberFormat("de-DE", {
+                            //style: "unit",
+                            //unit: "celsius",
+                            minimumFractionDigits: 1,
+                            maximumFractionDigits: 1,
+                          }).format(hour.TTT)}
+                        </StructuredListCell>
+                      );
+                    })}
+                  </>
+                )}
+              </StructuredListRow>
+            )}
 
-              {context === "day" ? (
-                <>
-                  {props.data.ForecastDaily.filter(
-                    (item) => item.timestamp >= dayjs().startOf("day").unix()
-                  ).map((day, index) => {
-                    return (
-                      <StructuredListCell className="index" key={index}>
-                        {Intl.NumberFormat("de-DE", {
-                          //style: "unit",
-                          //unit: "celsius",
-                          minimumFractionDigits: 1,
-                          maximumFractionDigits: 1,
-                        }).format(day.TTTmax)}
-                        <br />
-                        {Intl.NumberFormat("de-DE", {
-                          minimumFractionDigits: 1,
-                          maximumFractionDigits: 1,
-                        }).format(day.TTTmin)}
-                      </StructuredListCell>
-                    );
-                  })}
-                </>
-              ) : (
-                <>
-                  {props.data.ForecastHourly.filter(
-                    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
-                  ).map((hour, index) => {
-                    return (
-                      <StructuredListCell className="index" key={index}>
-                        {Intl.NumberFormat("de-DE", {
-                          //style: "unit",
-                          //unit: "celsius",
-                          minimumFractionDigits: 1,
-                          maximumFractionDigits: 1,
-                        }).format(hour.TTT)}
-                      </StructuredListCell>
-                    );
-                  })}
-                </>
-              )}
-            </StructuredListRow>
-          )}
+            {options.show_dewpoint == true && (
+              <StructuredListRow tabIndex={0}>
+                <StructuredListCell>
+                  Taupunkt <br />
+                  <span className="unit-label">in °C</span>
+                </StructuredListCell>
+                {context === "day" ? (
+                  <>
+                    {forecastDaily.map((day, index) => {
+                      return (
+                        <StructuredListCell className="index" key={index}>
+                          {Intl.NumberFormat("de-DE", {
+                            minimumFractionDigits: 1,
+                            maximumFractionDigits: 1,
+                          }).format(day.Tdmax)}
+                          <br />
+                          {Intl.NumberFormat("de-DE", {
+                            minimumFractionDigits: 1,
+                            maximumFractionDigits: 1,
+                          }).format(day.Tdmin)}
+                        </StructuredListCell>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <>
+                    {forecastHourly.map((day, index) => {
+                      return (
+                        <StructuredListCell className="index" key={index}>
+                          {Intl.NumberFormat("de-DE", {
+                            minimumFractionDigits: 1,
+                            maximumFractionDigits: 1,
+                          }).format(day.Td)}
+                        </StructuredListCell>
+                      );
+                    })}
+                  </>
+                )}
+              </StructuredListRow>
+            )}
 
-          {options.show_dewpoint == true && (
-            <StructuredListRow tabIndex={0}>
-              <StructuredListCell>
-                Taupunkt <br />
-                <span className="unit-label">in °C</span>
-              </StructuredListCell>
-              {context === "day" ? (
-                <>
-                  {props.data.ForecastDaily.filter(
-                    (item) => item.timestamp >= dayjs().startOf("day").unix()
-                  ).map((day, index) => {
-                    return (
-                      <StructuredListCell className="index" key={index}>
-                        {Intl.NumberFormat("de-DE", {
-                          minimumFractionDigits: 1,
-                          maximumFractionDigits: 1,
-                        }).format(day.Tdmax)}
-                        <br />
-                        {Intl.NumberFormat("de-DE", {
-                          minimumFractionDigits: 1,
-                          maximumFractionDigits: 1,
-                        }).format(day.Tdmin)}
-                      </StructuredListCell>
-                    );
-                  })}
-                </>
-              ) : (
-                <>
-                  {props.data.ForecastHourly.filter(
-                    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
-                  ).map((day, index) => {
-                    return (
-                      <StructuredListCell className="index" key={index}>
-                        {Intl.NumberFormat("de-DE", {
-                          minimumFractionDigits: 1,
-                          maximumFractionDigits: 1,
-                        }).format(day.Td)}
-                      </StructuredListCell>
-                    );
-                  })}
-                </>
-              )}
-            </StructuredListRow>
-          )}
-
-          {options.show_pressure == true && (
-            <StructuredListRow tabIndex={0}>
-              <StructuredListCell>
-                Luftdruck <br />
-                <span className="unit-label">in mbar</span>
-              </StructuredListCell>
-              {context === "day" ? (
-                <>
-                  {props.data.ForecastDaily.filter(
-                    (item) => item.timestamp >= dayjs().startOf("day").unix()
-                  ).map((day, index) => {
-                    return (
-                      <StructuredListCell className="index" key={index}>
-                        {Intl.NumberFormat("de-DE", {
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 0,
-                          useGrouping: false,
-                        }).format(day.PPPPavg)}
-                      </StructuredListCell>
-                    );
-                  })}
-                </>
-              ) : (
-                <>
-                  {props.data.ForecastHourly.filter(
-                    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
-                  ).map((day, index) => {
-                    return (
-                      <StructuredListCell className="index" key={index}>
-                        {Intl.NumberFormat("de-DE", {
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 0,
-                          useGrouping: false,
-                        }).format(day.PPPP)}
-                      </StructuredListCell>
-                    );
-                  })}
-                </>
-              )}
-            </StructuredListRow>
-          )}
-
-          {options.show_wind == true && (
-            <StructuredListRow tabIndex={0}>
-              <StructuredListCell>
-                Wind <br />
-                <span className="unit-label">in km/h</span>
-              </StructuredListCell>
-              {context === "day" ? (
-                <>
-                  {props.data.ForecastDaily.filter(
-                    (item) => item.timestamp >= dayjs().startOf("day").unix()
-                  ).map((day, index) => {
-                    return (
-                      <StructuredListCell className="index" key={index}>
-                        {Intl.NumberFormat("de-DE", {
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 0,
-                        }).format(day.FFavg)}
-                        <br /> {dirToStr(day.DDavg)}
-                      </StructuredListCell>
-                    );
-                  })}
-                </>
-              ) : (
-                <>
-                  {props.data.ForecastHourly.filter(
-                    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
-                  ).map((hour, index) => {
-                    return (
-                      <StructuredListCell className="index" key={index}>
-                        {Intl.NumberFormat("de-DE", {
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 0,
-                        }).format(hour.FF)}
-                        <br /> {dirToStr(hour.DD)}
-                      </StructuredListCell>
-                    );
-                  })}
-                </>
-              )}
-            </StructuredListRow>
-          )}
-
-          {options.show_pop == true && (
-            <StructuredListRow tabIndex={0}>
-              <StructuredListCell>
-                Niderschlagswahrscheinlichkeit <br />
-                <span className="unit-label">in %</span>
-              </StructuredListCell>
-              {context === "day" ? (
-                <>
-                  {props.data.ForecastDaily.filter(
-                    (item) => item.timestamp >= dayjs().startOf("day").unix()
-                  ).map((day, index) => {
-                    return (
-                      <StructuredListCell className="index" key={index}>
-                        {day.Rd10 ? <>{day.Rd10}</> : "-"}
-                      </StructuredListCell>
-                    );
-                  })}
-                </>
-              ) : (
-                <>
-                  {props.data.ForecastHourly.filter(
-                    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
-                  ).map((hour, index) => (
-                    <StructuredListCell className="index" key={index}>
-                      {hour.R101}
-                    </StructuredListCell>
-                  ))}
-                </>
-              )}
-            </StructuredListRow>
-          )}
-
-          {options.show_precip == true && (
-            <StructuredListRow tabIndex={0}>
-              <StructuredListCell>
-                Niederschlag <br />
-                <span className="unit-label">in mm</span>
-              </StructuredListCell>
-              {context === "day" ? (
-                <>
-                  {props.data.ForecastDaily.filter(
-                    (item) => item.timestamp >= dayjs().startOf("day").unix()
-                  ).map((day, index) => {
-                    return (
-                      <StructuredListCell className="index" key={index}>
-                        {Intl.NumberFormat("de-DE", {
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 0,
-                        }).format(day.RR1c)}
-                      </StructuredListCell>
-                    );
-                  })}
-                </>
-              ) : (
-                <>
-                  {props.data.ForecastHourly.filter(
-                    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
-                  ).map((hour, index) => {
-                    return (
-                      <StructuredListCell className="index" key={index}>
-                        {Intl.NumberFormat("de-DE", {
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 0,
-                        }).format(hour.RR1c)}
-                      </StructuredListCell>
-                    );
-                  })}
-                </>
-              )}
-            </StructuredListRow>
-          )}
-
-          {options.show_cloud_cover == true && (
-            <StructuredListRow tabIndex={0}>
-              <StructuredListCell>
-                Bewölkung <br />
-                <span className="unit-label">in %</span>
-              </StructuredListCell>
-              {context === "day" ? (
-                <>
-                  {props.data.ForecastDaily.filter(
-                    (item) => item.timestamp >= dayjs().startOf("day").unix()
-                  ).map((day, index) => {
-                    return (
-                      <StructuredListCell className="index" key={index}>
-                        {Intl.NumberFormat("de-DE", {
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 0,
-                        }).format(day.Neffavg)}
-                      </StructuredListCell>
-                    );
-                  })}
-                </>
-              ) : (
-                <>
-                  {props.data.ForecastHourly.filter(
-                    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
-                  ).map((day, index) => {
-                    return (
-                      <StructuredListCell className="index" key={index}>
-                        {Intl.NumberFormat("de-DE", {
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 0,
-                        }).format(day.Neff)}
-                      </StructuredListCell>
-                    );
-                  })}
-                </>
-              )}
-            </StructuredListRow>
-          )}
-
-          {options.show_sun_dur == true && (
-            <StructuredListRow tabIndex={0}>
-              <StructuredListCell>
-                Rel. Sonnenscheindauer <br />
-                <span className="unit-label">in %</span>
-              </StructuredListCell>
-              {context === "day" ? (
-                <>
-                  {props.data.ForecastDaily.filter(
-                    (item) => item.timestamp >= dayjs().startOf("day").unix()
-                  ).map((day, index) => (
-                    <StructuredListCell className="index" key={index}>
-                      {day.RSunD ? (
-                        <>
+            {options.show_pressure == true && (
+              <StructuredListRow tabIndex={0}>
+                <StructuredListCell>
+                  Luftdruck <br />
+                  <span className="unit-label">in mbar</span>
+                </StructuredListCell>
+                {context === "day" ? (
+                  <>
+                    {forecastDaily.map((day, index) => {
+                      return (
+                        <StructuredListCell className="index" key={index}>
                           {Intl.NumberFormat("de-DE", {
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 0,
-                          }).format(day.RSunD)}
-                        </>
-                      ) : (
-                        <>-</>
-                      )}
-                    </StructuredListCell>
-                  ))}
-                </>
-              ) : (
-                <>
-                  {props.data.ForecastHourly.filter(
-                    (item) => item.timestamp >= Math.floor(Date.now() / 1000)
-                  ).map((hour, index) => (
-                    <StructuredListCell className="index" key={index}>
-                      {hour.SunD1 ? (
-                        <>
+                            useGrouping: false,
+                          }).format(day.PPPPavg)}
+                        </StructuredListCell>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <>
+                    {forecastHourly.map((day, index) => {
+                      return (
+                        <StructuredListCell className="index" key={index}>
                           {Intl.NumberFormat("de-DE", {
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 0,
-                          }).format(hour.SunD1 / 36)}
-                        </>
-                      ) : (
-                        <>-</>
-                      )}
-                    </StructuredListCell>
-                  ))}
-                </>
-              )}
-            </StructuredListRow>
-          )}
-        </StructuredListBody>
-      </StructuredListWrapper>
+                            useGrouping: false,
+                          }).format(day.PPPP)}
+                        </StructuredListCell>
+                      );
+                    })}
+                  </>
+                )}
+              </StructuredListRow>
+            )}
+
+            {options.show_wind == true && (
+              <StructuredListRow tabIndex={0}>
+                <StructuredListCell>
+                  Wind <br />
+                  <span className="unit-label">in km/h</span>
+                </StructuredListCell>
+                {context === "day" ? (
+                  <>
+                    {forecastDaily.map((day, index) => {
+                      return (
+                        <StructuredListCell className="index" key={index}>
+                          {Intl.NumberFormat("de-DE", {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                          }).format(day.FFavg)}
+                          <br /> {dirToStr(day.DDavg)}
+                        </StructuredListCell>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <>
+                    {forecastHourly.map((hour, index) => {
+                      return (
+                        <StructuredListCell className="index" key={index}>
+                          {Intl.NumberFormat("de-DE", {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                          }).format(hour.FF)}
+                          <br /> {dirToStr(hour.DD)}
+                        </StructuredListCell>
+                      );
+                    })}
+                  </>
+                )}
+              </StructuredListRow>
+            )}
+
+            {options.show_pop == true && (
+              <StructuredListRow tabIndex={0}>
+                <StructuredListCell>
+                  Niederschlags&shy;wahr&shy;scheinlich&shy;keit <br />
+                  <span className="unit-label">in %</span>
+                </StructuredListCell>
+                {context === "day" ? (
+                  <>
+                    {forecastDaily.map((day, index) => {
+                      return (
+                        <StructuredListCell className="index" key={index}>
+                          {day.Rd10 ? <>{day.Rd10}</> : "-"}
+                        </StructuredListCell>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <>
+                    {forecastHourly.map((hour, index) => (
+                      <StructuredListCell className="index" key={index}>
+                        {hour.R101}
+                      </StructuredListCell>
+                    ))}
+                  </>
+                )}
+              </StructuredListRow>
+            )}
+
+            {options.show_precip == true && (
+              <StructuredListRow tabIndex={0}>
+                <StructuredListCell>
+                  Niederschlag <br />
+                  <span className="unit-label">in mm</span>
+                </StructuredListCell>
+                {context === "day" ? (
+                  <>
+                    {forecastDaily.map((day, index) => {
+                      return (
+                        <StructuredListCell className="index" key={index}>
+                          {Intl.NumberFormat("de-DE", {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                          }).format(day.RR1c)}
+                        </StructuredListCell>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <>
+                    {forecastHourly.map((hour, index) => {
+                      return (
+                        <StructuredListCell className="index" key={index}>
+                          {Intl.NumberFormat("de-DE", {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                          }).format(hour.RR1c)}
+                        </StructuredListCell>
+                      );
+                    })}
+                  </>
+                )}
+              </StructuredListRow>
+            )}
+
+            {options.show_cloud_cover == true && (
+              <StructuredListRow tabIndex={0}>
+                <StructuredListCell>
+                  Bewölkung <br />
+                  <span className="unit-label">in %</span>
+                </StructuredListCell>
+                {context === "day" ? (
+                  <>
+                    {forecastDaily.map((day, index) => {
+                      return (
+                        <StructuredListCell className="index" key={index}>
+                          {Intl.NumberFormat("de-DE", {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                          }).format(day.Neffavg)}
+                        </StructuredListCell>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <>
+                    {forecastHourly.map((day, index) => {
+                      return (
+                        <StructuredListCell className="index" key={index}>
+                          {Intl.NumberFormat("de-DE", {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                          }).format(day.Neff)}
+                        </StructuredListCell>
+                      );
+                    })}
+                  </>
+                )}
+              </StructuredListRow>
+            )}
+
+            {options.show_sun_dur == true && (
+              <StructuredListRow tabIndex={0}>
+                <StructuredListCell>
+                  Rel. Sonnen&shy;schein&shy;dauer <br />
+                  <span className="unit-label">in %</span>
+                </StructuredListCell>
+                {context === "day" ? (
+                  <>
+                    {forecastDaily.map((day, index) => (
+                      <StructuredListCell className="index" key={index}>
+                        {day.RSunD ? (
+                          <>
+                            {Intl.NumberFormat("de-DE", {
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 0,
+                            }).format(day.RSunD)}
+                          </>
+                        ) : (
+                          <>-</>
+                        )}
+                      </StructuredListCell>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    {forecastHourly.map((hour, index) => (
+                      <StructuredListCell className="index" key={index}>
+                        {hour.SunD1 ? (
+                          <>
+                            {Intl.NumberFormat("de-DE", {
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 0,
+                            }).format(hour.SunD1 / 36)}
+                          </>
+                        ) : (
+                          <>-</>
+                        )}
+                      </StructuredListCell>
+                    ))}
+                  </>
+                )}
+              </StructuredListRow>
+            )}
+          </StructuredListBody>
+        </StructuredListWrapper>
+      </div>
+
       <div className="bx--type-helper-text-01" style={{ marginTop: "0.5rem" }}>
         Vorhersage vom{" "}
         <a href="https://www.dwd.de" target="_blank">
@@ -544,6 +525,6 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
         </a>
         : {props.data.id}. Stationsname: {props.data.name}.
       </div>
-    </>
+    </div>
   );
 };

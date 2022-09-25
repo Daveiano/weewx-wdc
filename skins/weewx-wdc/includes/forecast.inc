@@ -4,17 +4,16 @@
 #set $forecast_source = $Extras.forecast_table_settings.source
 #set $forecast_zambretti_active = True if $varExists('forecast.zambretti') and $to_bool($Extras['forecast_zambretti']['enable']) else False
 #set $forecat_table_active = True if $varExists('forecast') and len($forecast.weather_periods($forecast_source)) > 0 else False
+#set $dwd_forecast = True if 'weewx-DWD' in $Extras and $to_bool($Extras['weewx-DWD']['show_forecast']) else False
 
-#if ($varExists('forecast') and ($forecast_zambretti_active or $forecat_table_active)) or 'radar_img' in $Extras
+#if ($varExists('forecast') and ($forecast_zambretti_active or $forecat_table_active)) or 'radar_img' in $Extras or $dwd_forecast
 <!--prettier-ignore-->
-#set $only_radar = True if not $varExists('forecast') and 'radar_img' in $Extras else False
-#set $only_forecast = True if $varExists('forecast') and not 'radar_img' in $Extras else False
 
 <div class="bx--row">
   <header class="bx--col section-header">
     <h2>
       <!--prettier-ignore-->
-      #if $varExists('forecast')
+      #if $varExists('forecast') or $dwd_forecast
         $gettext("Forecast")
       #end if
       #if $varExists('forecast') and 'radar_img' in $Extras
@@ -30,7 +29,7 @@
   <div class="bx--col">
     <div class="bx--row">
       <!--prettier-ignore-->
-      #if $varExists('forecast')
+      #if $varExists('forecast') or $dwd_forecast
       #set forecast_tile_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-8"
       #if $DisplayOptions.get('layout', 'alternative') == 'classic'
         #set forecast_tile_classes = "bx--col-sm-4 bx--col-md-12 bx--col-lg-12 bx--col-xlg-12 bx--col-max-12"
@@ -50,10 +49,21 @@
             </p>
           </div>
           #end if
+          <!--prettier-ignore-->
+          #if $varExists('forecast')
           <div class="forecast">
             <!--prettier-ignore-->
             #include "includes/forecast-table.inc"
           </div>
+          #end if
+          <!--prettier-ignore-->
+          #if $dwd_forecast
+          <div class="dwd-forecast">
+            <script>
+              var dwdForecastData = #include raw "dwd/forecast-" + $Extras['weewx-DWD']['mosmix_id'] + ".json"
+            </script>
+          </div>
+          #end if
         </div>
       </div>
       #end if

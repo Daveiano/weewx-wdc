@@ -144,6 +144,14 @@ html.dark {
       color: $link-01;
     }
   }
+
+  .dwd-forecast {
+    .carbon-icons {
+      img {
+        filter: invert(0.8);
+      }
+    }
+  }
 }
 
 #header-global {
@@ -710,6 +718,13 @@ bx-structured-list.forecast-list,
   .bx--content-switcher {
     border: 1px solid $text-02;
     border-radius: 0.25rem;
+  }
+}
+
+.dwd-warning {
+  img {
+    max-width: 100%;
+    height: auto;
   }
 }
 

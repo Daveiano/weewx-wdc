@@ -37,10 +37,10 @@ export const DWDWarning: React.FC<DWDWarnings> = (
         {props.warnings.map((warning, index) => (
           <div key={index}>
             <header className="bx--row" style={{ marginBottom: "0.75rem" }}>
-              <div className="bx--col-sm-4 bx--col-md-8 bx--col-lg-4 bx--col-xlg-4 bx--col-max-1">
+              <div className="bx--col-sm-1 bx--col-md-1 bx--col-lg-2 bx--col-xlg-2 bx--col-max-1">
                 <img src={warning.icon} />
               </div>
-              <div className="bx--col-sm-4 bx--col-md-8 bx--col-lg-8 bx--col-xlg-8 bx--col-max-11">
+              <div className="bx--col-sm-3 bx--col-md-7 bx--col-lg-10 bx--col-xlg-10 bx--col-max-11">
                 <h4 className="bx--type-productive-heading-02">
                   {warning.headline}
                 </h4>

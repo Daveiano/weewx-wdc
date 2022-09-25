@@ -16,7 +16,7 @@
       #if $varExists('forecast') or $dwd_forecast
         $gettext("Forecast")
       #end if
-      #if $varExists('forecast') and 'radar_img' in $Extras
+      #if ($varExists('forecast') or $dwd_forecast) and 'radar_img' in $Extras
        &
       #end if
       #if 'radar_img' in $Extras

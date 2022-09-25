@@ -95,7 +95,11 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
   }
 
   return (
-    <div className={`${context} ${index ? "index" : ""}`}>
+    <div
+      className={`${context} ${index ? "index" : ""} ${
+        options.carbon_icons ? "carbon-icons" : ""
+      }`}
+    >
       <div className="bx--row" style={{ marginBottom: "1rem" }}>
         <div className={headerClassNames}>
           <h3 className="bx--type-expressive-heading-03">
@@ -176,7 +180,14 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                           key={index}
                           style={{ paddingBottom: "1rem" }}
                         >
-                          <img src={day.icon} title={day.icontitle} />
+                          <img
+                            src={
+                              options.carbon_icons
+                                ? day.icon.replace("png", "svg")
+                                : day.icon
+                            }
+                            title={day.icontitle}
+                          />
                         </StructuredListCell>
                       );
                     })}
@@ -190,7 +201,14 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                           key={index}
                           style={{ paddingBottom: "1rem" }}
                         >
-                          <img src={hour.icon} title={hour.icontitle} />
+                          <img
+                            src={
+                              options.carbon_icons
+                                ? hour.icon.replace("png", "svg")
+                                : hour.icon
+                            }
+                            title={hour.icontitle}
+                          />
                         </StructuredListCell>
                       );
                     })}

@@ -160,27 +160,43 @@
               </header>
             </div>
 
+            #set $warning_index = 0
             <!--prettier-ignore-->
-            #for $region, $region_key in $get_dwd_warnings.items()
-            #if os.path.exists("dwd/warn-" + $region_key + ".json")
             <div
               class="bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-6 bx--col-max-6"
             >
+              #for $region, $region_key in $get_dwd_warnings.items()
+              #if os.path.exists("dwd/warn-" + $region_key + ".json") and ($warning_index % 2) == 0
+
+                <!--prettier-ignore-->
+                #set global $region = $region
+                #set global $region_key = $region_key
+                #include "includes/dwd-warning.inc"
+
               <!--prettier-ignore-->
-              <div class="bx--tile" style="margin-bottom: 1.5rem">
-                <header class="section-header" style="margin-top: 0; margin-bottom: 1rem">
-                  <h3>$region</h3>
-                </header>
-                <div class="dwd-warning" data-region="$region_key">
-                  <script>
-                    var warningdata_$region_key = #include raw "dwd/warn-" + $region_key + ".json"
-                  </script>
-                </div>
-              </div>
+              #end if
+              #set $warning_index = $warning_index + 1
+              #end for
             </div>
+
+            #set $warning_index = 0
             <!--prettier-ignore-->
-            #end if
-            #end for
+            <div
+              class="bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-6 bx--col-max-6"
+            >
+              #for $region, $region_key in $get_dwd_warnings.items()
+              #if os.path.exists("dwd/warn-" + $region_key + ".json") and ($warning_index % 2) != 0
+
+                <!--prettier-ignore-->
+                #set global $region = $region
+                #set global $region_key = $region_key
+                #include "includes/dwd-warning.inc"
+
+              <!--prettier-ignore-->
+              #end if
+              #set $warning_index = $warning_index + 1
+              #end for
+            </div>
           </div>
           #end if
         </div>

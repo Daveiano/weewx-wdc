@@ -17,7 +17,7 @@ Inspired by and build with the [Carbon Design System](https://carbondesignsystem
 If you need help installing the skin, please have a look at https://github.com/Daveiano/weewx-interceptor-docker, a configured Dockerfile
 which I use as a base for my local PI installation.
 
-If you like the look and feel of the skin please consider having a look into the original [Weather Data Center](https://daveiano.github.io/weather-data-center/). **If you like the skin, please consider to give it a star!**
+If you like the look and feel of the skin please consider having a look at the original [Weather Data Center](https://daveiano.github.io/weather-data-center/). **If you like the skin, please consider giving it a star!**
 
 ## Key Features
 
@@ -33,6 +33,7 @@ If you like the look and feel of the skin please consider having a look into the
 - Climatological days
 - Calendar charts for rain days and average day temperature
 - Support for [weewx-forecast](https://github.com/chaunceygardiner/weewx-forecast)
+- Support for [weewx-dwd](https://github.com/roe-dl/weewx-DWD)
 - User-generated "About page"
 - Classic and alternative layout
 - Windrose chart

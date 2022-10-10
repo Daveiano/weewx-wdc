@@ -97,7 +97,7 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
   return (
     <div
       className={`${context} ${index ? "index" : ""} ${
-        options.carbon_icons ? "carbon-icons" : ""
+        parseInt(options.carbon_icons) ? "carbon-icons" : ""
       }`}
     >
       <div className="bx--row" style={{ marginBottom: "1rem" }}>
@@ -182,7 +182,7 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                         >
                           <img
                             src={
-                              options.carbon_icons
+                              parseInt(options.carbon_icons)
                                 ? day.icon.replace("png", "svg")
                                 : day.icon
                             }
@@ -203,7 +203,7 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
                         >
                           <img
                             src={
-                              options.carbon_icons
+                              parseInt(options.carbon_icons)
                                 ? hour.icon.replace("png", "svg")
                                 : hour.icon
                             }

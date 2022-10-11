@@ -185,7 +185,6 @@ if (table) {
 }
 
 const dwdWarnings = document.querySelectorAll("div.dwd-warning");
-
 dwdWarnings.forEach((warning) => {
   if (warning instanceof HTMLElement && warning.dataset.region) {
     const root = createRoot(warning);
@@ -199,7 +198,6 @@ dwdWarnings.forEach((warning) => {
 });
 
 const dwdForecast = document.querySelector("div.dwd-forecast");
-
 if (dwdForecast) {
   const root = createRoot(dwdForecast);
 

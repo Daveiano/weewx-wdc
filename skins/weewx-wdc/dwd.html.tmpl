@@ -70,7 +70,7 @@
           #end if
 
           <!--prettier-ignore-->
-          #if $to_bool($Extras['weewx-DWD']['show_forecast'])
+          #if $to_bool($Extras['weewx-DWD']['show_forecast']) and os.path.exists("dwd/forecast-" + $Extras['weewx-DWD']['mosmix_id'] + ".json")
           <div class="bx--row" style="margin-bottom: 1.5rem">
             <div class="bx--col">
               <div class="bx--tile">

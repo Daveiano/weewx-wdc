@@ -4,7 +4,7 @@
 #set $forecast_source = $Extras.forecast_table_settings.source
 #set $forecast_zambretti_active = True if $varExists('forecast.zambretti') and $to_bool($Extras['forecast_zambretti']['enable']) else False
 #set $forecat_table_active = True if $varExists('forecast') and len($forecast.weather_periods($forecast_source)) > 0 else False
-#set $dwd_forecast = True if 'weewx-DWD' in $Extras and $to_bool($Extras['weewx-DWD']['show_forecast']) else False
+#set $dwd_forecast = True if 'weewx-DWD' in $Extras and $to_bool($Extras['weewx-DWD']['show_forecast']) and os.path.exists("dwd/forecast-" + $Extras['weewx-DWD']['mosmix_id'] + ".json") else False
 
 #if ($varExists('forecast') and ($forecast_zambretti_active or $forecat_table_active)) or 'radar_img' in $Extras or $dwd_forecast
 <!--prettier-ignore-->

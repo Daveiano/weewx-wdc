@@ -1423,38 +1423,3 @@ class WdcTableUtil(SearchList):
             key=lambda item: datetime.datetime.fromisoformat(item["time"]))
 
         return carbon_values
-
-
-class Yesterday(SearchList):
-    def __init__(self, generator):
-        SearchList.__init__(self, generator)
-
-    def get_extension_list(self, timespan, db_lookup):
-        """Returns a search list extension with two additions.
-
-        Parameters:
-          timespan: An instance of weeutil.weeutil.TimeSpan. This will
-                    hold the start and stop times of the domain of
-                    valid times.
-
-          db_lookup: This is a function that, given a data binding
-                     as its only parameter, will return a database manager
-                     object.
-        """
-        yesterday_end_dt = datetime.datetime.combine(
-            datetime.datetime.fromtimestamp(timespan.stop), datetime.datetime.min.time())
-        yesterday_end_ts = time.mktime(yesterday_end_dt.timetuple())
-
-        yesterday_start_dt = yesterday_end_dt - datetime.timedelta(days=1)
-        yesterday_start_ts = time.mktime(yesterday_start_dt.timetuple())
-
-        yesterday_stats = TimespanBinder(TimeSpan(yesterday_start_ts, yesterday_end_ts),
-                                         db_lookup,
-                                         context='day',
-                                         formatter=self.generator.formatter,
-                                         converter=self.generator.converter,
-                                         skin_dict=self.generator.skin_dict)
-
-        search_list_extension = {'yesterday': yesterday_stats}
-
-        return [search_list_extension]

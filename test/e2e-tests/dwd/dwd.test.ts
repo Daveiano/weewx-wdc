@@ -8,7 +8,7 @@ test.describe("DWD", () => {
   test("Front page forecast", async ({ page }) => {
     const forecast = page.locator(".dwd-forecast");
     expect(await forecast.locator("h3").innerText()).toBe(
-      "Vorhersage für Pulsnitz"
+      "Forecast for Pulsnitz"
     );
 
     expect(await forecast.locator("role=columnheader").count()).toBe(6);
@@ -47,11 +47,6 @@ test.describe("DWD", () => {
 
     await page.screenshot({
       path: "test/e2e-tests/dwd/dwd-page.png",
-      fullPage: true,
-    });
-
-    await expect(page).toHaveScreenshot({
-      maxDiffPixelRatio: 0.3,
       fullPage: true,
     });
   });

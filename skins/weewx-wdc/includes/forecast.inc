@@ -20,7 +20,7 @@
        &
       #end if
       #if 'radar_img' in $Extras
-        $gettext("Recent radar")
+        $gettext($Extras.get("radar_heading", "Recent radar"))
       #end if
     </h2>
   </header>

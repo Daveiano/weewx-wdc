@@ -62,6 +62,7 @@ interface DWDForecastProps {
 
 const options = (window as any).weewxWdcConfig.dwdForecastTable;
 const iconPath = (window as any).weewxWdcConfig.dwdIconPath;
+const translations = (window as any).weewxWdcConfig.translations;
 
 const dirToStr = (d: number) => {
   const directions = ["N", "NO", "O", "SO", "S", "SW", "W", "NW"];
@@ -103,7 +104,7 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
       <div className="bx--row" style={{ marginBottom: "1rem" }}>
         <div className={headerClassNames}>
           <h3 className="bx--type-expressive-heading-03">
-            Vorhersage für {props.data.name.charAt(0)}
+            {translations.Forecast_for} {props.data.name.charAt(0)}
             {props.data.name.toLowerCase().slice(1)}
           </h3>
         </div>
@@ -114,8 +115,14 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
               onChange={(data: any) => setContext(data.name)}
               size="sm"
             >
-              <Switch name={"day"} text="Täglich" />
-              <Switch name={"hour"} text="Stündlich" />
+              <Switch
+                name={"day"}
+                text={translations.Daily.replace("&#228;", "ä")}
+              />
+              <Switch
+                name={"hour"}
+                text={translations.Hourly.replace("&#252;", "ü")}
+              />
             </ContentSwitcher>
           </div>
         )}
@@ -266,7 +273,7 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
             {options.show_dewpoint == true && (
               <StructuredListRow tabIndex={0}>
                 <StructuredListCell>
-                  Taupunkt <br />
+                  {translations.obs_dew_point} <br />
                   <span className="unit-label">in °C</span>
                 </StructuredListCell>
                 {context === "day" ? (
@@ -307,7 +314,7 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
             {options.show_pressure == true && (
               <StructuredListRow tabIndex={0}>
                 <StructuredListCell>
-                  Luftdruck <br />
+                  {translations.obs_barometer} <br />
                   <span className="unit-label">in mbar</span>
                 </StructuredListCell>
                 {context === "day" ? (
@@ -345,7 +352,7 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
             {options.show_wind == true && (
               <StructuredListRow tabIndex={0}>
                 <StructuredListCell>
-                  Wind <br />
+                  {translations.obs_wind_speed} <br />
                   <span className="unit-label">in km/h</span>
                 </StructuredListCell>
                 {context === "day" ? (
@@ -383,7 +390,7 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
             {options.show_pop == true && (
               <StructuredListRow tabIndex={0}>
                 <StructuredListCell>
-                  Niederschlags&shy;wahr&shy;scheinlich&shy;keit <br />
+                  {translations.POP} <br />
                   <span className="unit-label">in %</span>
                 </StructuredListCell>
                 {context === "day" ? (
@@ -411,7 +418,7 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
             {options.show_precip == true && (
               <StructuredListRow tabIndex={0}>
                 <StructuredListCell>
-                  Niederschlag <br />
+                  {translations.obs_precipitation} <br />
                   <span className="unit-label">in mm</span>
                 </StructuredListCell>
                 {context === "day" ? (
@@ -447,7 +454,7 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
             {options.show_cloud_cover == true && (
               <StructuredListRow tabIndex={0}>
                 <StructuredListCell>
-                  Bewölkung <br />
+                  {translations.obs_cloud_cover} <br />
                   <span className="unit-label">in %</span>
                 </StructuredListCell>
                 {context === "day" ? (
@@ -483,7 +490,7 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
             {options.show_sun_dur == true && (
               <StructuredListRow tabIndex={0}>
                 <StructuredListCell>
-                  Rel. Sonnen&shy;schein&shy;dauer <br />
+                  {translations.obs_sunshine_dur} <br />
                   <span className="unit-label">in %</span>
                 </StructuredListCell>
                 {context === "day" ? (
@@ -528,20 +535,20 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
       </div>
 
       <div className="bx--type-helper-text-01" style={{ marginTop: "0.5rem" }}>
-        Vorhersage vom{" "}
+        {translations.Forecast_from}{" "}
         <a href="https://www.dwd.de" target="_blank">
           DWD
         </a>
-        . Angefordert am{" "}
-        {dayjs(props.data.IssueTimeISO).format("DD.MM.YYYY HH:mm")}, für
-        geocode={props.data.coordinates[0]}, {props.data.coordinates[1]}. Mosmix{" "}
+        . {translations.Issued_on}{" "}
+        {dayjs(props.data.IssueTimeISO).format("DD.MM.YYYY HH:mm")}, geocode=
+        {props.data.coordinates[0]}, {props.data.coordinates[1]}. Mosmix{" "}
         <a
           target="_blank"
           href="https://www.dwd.de/DE/leistungen/met_verfahren_mosmix/mosmix_stationskatalog.cfg?view=nasPublication&nn=16102"
         >
           Stations ID
         </a>
-        : {props.data.id}. Stationsname: {props.data.name}.
+        : {props.data.id}. {translations.Station_name}: {props.data.name}.
       </div>
     </div>
   );

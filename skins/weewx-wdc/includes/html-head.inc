@@ -1,6 +1,7 @@
 <!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
+#import html
 #set $diagrams_config = $DisplayOptions.get("diagrams", {})
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -46,7 +47,23 @@
     ordinalCompass: $get_ordinates,
     windRoseColors: $jsonize($DisplayOptions.get('windRose_colors', ["rgb(243, 206, 201)", "#e7a4b6", "#cd7eaf", "#a262a9", "#6f4d96", "#3d3b72"])),
     units: $unit.unit_type_dict,
-    dwdForecastTable: $dwdForecastTable
+    dwdForecastTable: $dwdForecastTable,
+    translations: {
+      "Daily": "$gettext('Daily')",
+      "Hourly": "$gettext('Hourly')",
+      "Forecast_for": "$gettext('Forecast for')",
+      "Forecast_from": "$gettext('Forecast from')",
+      "Issued_on": "$gettext('Issued on')",
+      "Station_name": "$gettext('Station name')",
+      "POP": "$gettext('Probability of precipitation')",
+      "obs_cloud_cover": "$gettext('Cloud cover')",
+      "obs_sunshine_dur": "$gettext('Rel. Sunshine duration')",
+      "obs_dew_point": "$obs.label['dewpoint']",
+      "obs_barometer": "$obs.label['barometer']",
+      "obs_wind_speed": "$obs.label['windSpeed']",
+      "obs_precipitation": "$gettext('Precipitation')",
+
+    }
   };
 </script>
 

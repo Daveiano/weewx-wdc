@@ -23,9 +23,22 @@ interface DWDWarnings {
   warnings: DWDWarningType[];
 }
 
-// @todo Add all counties!
 const warningLinks: { [key: string]: string } = {
+  SN: "https://www.dwd.de/DE/wetter/warnungen_aktuell/warnlagebericht/sachsen/warnlage_sac_node.html",
+  TH: "https://www.dwd.de/DE/wetter/warnungen_aktuell/warnlagebericht/thueringen/warnlage_thu_node.html",
+  SA: "https://www.dwd.de/DE/wetter/warnungen_aktuell/warnlagebericht/sachen_anhalt/warnlage_saa_node.html",
+  BB: "https://www.dwd.de/DE/wetter/warnungen_aktuell/warnlagebericht/berlin_brandenburg/warnlage_bb_node.html",
   MV: "https://www.dwd.de/DE/wetter/warnungen_aktuell/warnlagebericht/mecklenburg_vorpommern/warnlage_mv_node.html",
+  NS: "https://www.dwd.de/DE/wetter/warnungen_aktuell/warnlagebericht/niedersachsen_bremen/warnlage_nds_node.html",
+  HB: "https://www.dwd.de/DE/wetter/warnungen_aktuell/warnlagebericht/niedersachsen_bremen/warnlage_nds_node.html",
+  HE: "https://www.dwd.de/DE/wetter/warnungen_aktuell/warnlagebericht/hessen/warnlage_hes_node.html",
+  NRW: "https://www.dwd.de/DE/wetter/warnungen_aktuell/warnlagebericht/nordrhein_westfalen/warnlage_nrw_node.html",
+  BY: "https://www.dwd.de/DE/wetter/warnungen_aktuell/warnlagebericht/bayern/warnlage_bay_node.html",
+  SH: "https://www.dwd.de/DE/wetter/warnungen_aktuell/warnlagebericht/schleswig_holstein_hamburg/warnlage_shh_node.html",
+  HH: "https://www.dwd.de/DE/wetter/warnungen_aktuell/warnlagebericht/schleswig_holstein_hamburg/warnlage_shh_node.html",
+  RP: "https://www.dwd.de/DE/wetter/warnungen_aktuell/warnlagebericht/rheinland-pfalz_saarland/warnlage_rps_node.html",
+  SL: "https://www.dwd.de/DE/wetter/warnungen_aktuell/warnlagebericht/rheinland-pfalz_saarland/warnlage_rps_node.html",
+  BW: "https://www.dwd.de/DE/wetter/warnungen_aktuell/warnlagebericht/baden-wuerttemberg/warnlage_baw_node.html",
 };
 
 export const DWDWarning: React.FC<DWDWarnings> = (
@@ -59,9 +72,11 @@ export const DWDWarning: React.FC<DWDWarnings> = (
             >
               {warning.description}
             </p>
-            <TooltipDefinition tooltipText={warning.instruction}>
-              Verhaltenshinweise
-            </TooltipDefinition>
+            {warning.instruction ? (
+              <TooltipDefinition tooltipText={warning.instruction}>
+                Verhaltenshinweise
+              </TooltipDefinition>
+            ) : null}
           </div>
         ))}
         <p className="bx--type-helper-text-01" style={{ paddingTop: "0.5rem" }}>

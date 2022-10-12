@@ -50,7 +50,7 @@
           </div>
           #end if
           <!--prettier-ignore-->
-          #if $varExists('forecast')
+          #if $varExists('forecast') and not $dwd_forecast
           <div class="forecast">
             <!--prettier-ignore-->
             #include "includes/forecast-table.inc"
@@ -58,7 +58,7 @@
           #end if
           <!--prettier-ignore-->
           #if $dwd_forecast
-          <div class="dwd-forecast">
+          <div class="dwd-forecast forecast">
             <script>
               var dwdForecastData = #include raw "dwd/forecast-" + $Extras['weewx-DWD']['mosmix_id'] + ".json"
             </script>

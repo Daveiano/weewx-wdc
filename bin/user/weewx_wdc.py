@@ -4,7 +4,8 @@
 import datetime
 import calendar
 import time
-from pprint import pprint
+import os
+import json
 
 import weewx
 from weewx.cheetahgenerator import SearchList
@@ -281,6 +282,83 @@ class WdcGeneralUtil(SearchList):
             ordinate_names = default_ordinate_names
 
         return ordinate_names
+
+    def dwd_warning_has_warning(self, region_key):
+        """
+        Check if a given warning is empty.
+
+        Args:
+            region_key (string): The region key
+
+        Returns:
+            bool: True if a warning exists, False otherwise.
+        """
+        if not os.path.exists("dwd/warn-" + region_key + ".json"):
+            return False
+
+        with open("dwd/warn-" + region_key + ".json", "r") as warn_file:
+            data = json.load(warn_file)
+
+        if len(data) == 0:
+            return False
+
+        return True
+
+    def get_dwd_warning_region_name(self, region_key):
+        """
+        Get the name of a given region.
+
+        Args:
+            region_key (string): The region key
+
+        Returns:
+            str: The region name
+        """
+        if not os.path.exists("dwd/warn-" + region_key + ".json"):
+            return ""
+
+        with open("dwd/warn-" + region_key + ".json", "r") as warn_file:
+            data = json.load(warn_file)
+
+            return data[0]["regionName"]
+
+    def get_dwd_warnings(self):
+        """
+        Get the configured warn regions for weewx-DWD from weewx.conf.
+        """
+        try:
+            dwd_warnings = self.generator.config_dict["DeutscherWetterdienst"]["warning"]
+            return {**dwd_warnings.get("counties", {}), **dwd_warnings.get("cities", {})}
+
+        # todo Log info.
+        except KeyError:
+            return {}
+
+    def get_dwd_forecast(self, obs):
+        """
+        Get dwd forecast series.
+
+        Args:
+            obs (string): The data_type.
+        """
+        binding = self.generator.skin_dict["Extras"]["weewx-DWD"]["forecast_diagram"].get(
+            "data_binding", "dwd_binding"
+        )
+        db_manager = self.generator.db_binder.get_manager(binding)
+
+        # Now
+        start_ts = time.time()
+        # Now + 11 days
+        end_dt = datetime.date.today() + datetime.timedelta(days=11)
+        end_ts = time.mktime(end_dt.timetuple())
+
+        dwd_start_vt, dwd_stop_vt, dwd_vt = weewx.xtypes.get_series(
+            obs,
+            TimeSpan(start_ts, end_ts),
+            db_manager
+        )
+
+        return (zip(dwd_start_vt[0], dwd_stop_vt[0], rounder(dwd_vt[0], WdcDiagramUtil.get_rounding(self, obs))))
 
 
 class WdcArchiveUtil(SearchList):

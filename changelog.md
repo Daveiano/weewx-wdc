@@ -290,13 +290,16 @@ From Line 92:
 
 # 2.3.0
 
+# TODO Add wiki links.
+
 - (Optional) Change wind speed unit from beaufort to km/h, mph, m/s or knots in windrose. [GH-51]
 - Added (optional) Yesterdays page. [GH-52]
 - (Optional) Show date/time when the min / max was reached on the index, yesterday, week and month page. [GH-53]
 - Bugfix: Frost days and Ice days were calculated wrong when using `degree_F` (°F)
 - Make aggregate_interval configurable for charts / tables [GH-55]
+- Added support for [weewx-DWD](https://github.com/roe-dl/weewx-DWD) [GH-25], for more Information please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Support-for-weewx-DWD)
 
-**Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Configuration) for inforamtion on how to configure the new features.**
+**Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Configuration) for information on how to configure the new features.**
 
 ## Changes made to skin.conf since 2.2.1:
 
@@ -414,6 +417,48 @@ Line 246:
 
    [[[week]]]
       template = week.html.tmpl
+```
+
+6. Added support for [weewx-DWD](https://github.com/roe-dl/weewx-DWD) [GH-25]
+
+Line 39:
+
+```diff
++#[[weewx-DWD]]
++    #   show_text_forecast = True
++    #   text_forecast_VHDL = DWLG
++    #   dwd_link = https://www.dwd.de/DE/wetter/wetterundklima_vorort/sachsen/sac_node.html
++    #   show_pressure_map = True
++    #   show_warning_map = True
++    #   show_text_warnings = True
++    #   show_warnings_on_front = XXX
++    #   show_forecast = True
++    #   mosmix_id = XXXX
++    #   [[[forecast_table_settings]]]
++    #       show_hourly = 1
++    #       show_date = 1
++    #       show_outlook = 1
++    #       show_temp = 1
++    #       show_dewpoint = 1
++    #       show_pressure = 1
++    #       show_wind= 1
++    #       show_pop = 1
++    #       show_precip = 1
++    #       show_cloud_cover = 1
++    #       show_sun_dur = 1
++    #       carbon_icons = 0
+```
+
+Line 290:
+
+```diff
+[[Static]]
+   #[[[about]]]
+      #template = about.html.tmpl
+      #title = About
++   #[[[DWD]]]
++      #template = dwd.html.tmpl
++      #title = Vorhersage vom DWD
 ```
 
 # Next

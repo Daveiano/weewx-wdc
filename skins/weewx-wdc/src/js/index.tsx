@@ -10,6 +10,8 @@ import { CalendarDiagram } from "./diagrams/calendar";
 
 import "./../scss/index.scss";
 import { WindRoseDiagram } from "./diagrams/windrose";
+import { DWDWarning } from "./components/dwd-warning";
+import { DWDForecast } from "./components/dwd-forecast";
 
 const calendarDiagrams = document.querySelectorAll(
   "div.calendar-diagram-clim-wrap"
@@ -135,7 +137,6 @@ diagrams.forEach((diagram) => {
 });
 
 const plotlyDiagrams = document.querySelectorAll("div.diagram.plotly");
-
 plotlyDiagrams.forEach((plotyDiagram) => {
   const root = createRoot(plotyDiagram);
 
@@ -180,5 +181,27 @@ if (table) {
           : "YYYY/MM/DD HH:mm"
       }
     />
+  );
+}
+
+const dwdWarnings = document.querySelectorAll("div.dwd-warning");
+dwdWarnings.forEach((warning) => {
+  if (warning instanceof HTMLElement && warning.dataset.region) {
+    const root = createRoot(warning);
+
+    root.render(
+      <DWDWarning
+        warnings={(window as any)[`warningdata_${warning.dataset.region}`]}
+      />
+    );
+  }
+});
+
+const dwdForecast = document.querySelector("div.dwd-forecast");
+if (dwdForecast) {
+  const root = createRoot(dwdForecast);
+
+  root.render(
+    <DWDForecast context="day" data={(window as any).dwdForecastData} />
   );
 }

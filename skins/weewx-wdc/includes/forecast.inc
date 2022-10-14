@@ -5,6 +5,8 @@
 #set $forecast_zambretti_active = True if $varExists('forecast.zambretti') and $to_bool($Extras['forecast_zambretti']['enable']) else False
 #set $forecat_table_active = True if $varExists('forecast') and len($forecast.weather_periods($forecast_source)) > 0 else False
 #set $dwd_forecast = True if 'weewx-DWD' in $Extras and $to_bool($Extras['weewx-DWD']['show_forecast']) and os.path.exists("dwd/forecast-" + $Extras['weewx-DWD']['mosmix_id'] + ".json") else False
+#set $warn_region_front = $Extras['weewx-DWD']['show_warnings_on_front'] if 'weewx-DWD' in $Extras and 'show_warnings_on_front' in $Extras['weewx-DWD'] else False
+#set $show_warn = True if $to_bool($warn_region_front) and $dwd_warning_has_warning($warn_region_front) else False
 
 #if ($varExists('forecast') and ($forecast_zambretti_active or $forecat_table_active)) or 'radar_img' in $Extras or $dwd_forecast
 <!--prettier-ignore-->
@@ -68,12 +70,19 @@
       </div>
       #end if
       <!--prettier-ignore-->
-      #if 'radar_img' in $Extras
+      #if 'radar_img' in $Extras or $show_warn
       #set radar_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-4"
       #if $DisplayOptions.get('layout', 'alternative') == 'classic'
         #set radar_classes = "bx--col-sm-4 bx--col-md-12 bx--col-lg-12 bx--col-xlg-12 bx--col-max-12"
       #end if
       <div class="$radar_classes">
+        <!--prettier-ignore-->
+        #if $show_warn
+          #set global $region = $get_dwd_warning_region_name($warn_region_front)
+          #set global $region_key = $warn_region_front
+          #include "includes/dwd-warning.inc"
+        #end if
+        #if 'radar_img' in $Extras
         <div class="bx--tile tile-radar-forecast">
           <!--prettier-ignore-->
           #if 'radar_url' in $Extras
@@ -85,6 +94,7 @@
           <!--prettier-ignore-->
           #end if
         </div>
+        #end if
       </div>
       #end if
     </div>

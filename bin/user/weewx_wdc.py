@@ -4,7 +4,8 @@
 import datetime
 import calendar
 import time
-from pprint import pprint
+import os
+import json
 
 import weewx
 from weewx.cheetahgenerator import SearchList
@@ -281,6 +282,45 @@ class WdcGeneralUtil(SearchList):
             ordinate_names = default_ordinate_names
 
         return ordinate_names
+
+    def dwd_warning_has_warning(self, region_key):
+        """
+        Check if a given warning is empty.
+
+        Args:
+            region_key (string): The region key
+
+        Returns:
+            bool: True if a warning exists, False otherwise.
+        """
+        if not os.path.exists("dwd/warn-" + region_key + ".json"):
+            return False
+
+        with open("dwd/warn-" + region_key + ".json", "r") as warn_file:
+            data = json.load(warn_file)
+
+        if len(data) == 0:
+            return False
+
+        return True
+
+    def get_dwd_warning_region_name(self, region_key):
+        """
+        Get the name of a given region.
+
+        Args:
+            region_key (string): The region key
+
+        Returns:
+            str: The region name
+        """
+        if not os.path.exists("dwd/warn-" + region_key + ".json"):
+            return ""
+
+        with open("dwd/warn-" + region_key + ".json", "r") as warn_file:
+            data = json.load(warn_file)
+
+            return data[0]["regionName"]
 
     def get_dwd_warnings(self):
         """

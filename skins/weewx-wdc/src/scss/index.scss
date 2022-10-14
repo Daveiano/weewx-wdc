@@ -723,8 +723,14 @@ bx-structured-list.forecast-list,
 
 .dwd-warning {
   img {
-    max-width: 100%;
-    height: auto;
+    max-width: 50px;
+    width: 50px;
+    margin-right: $spacing-03;
+    height: 50px;
+    flex: 1 0 0;
+  }
+  .warning-header {
+    flex: 1 1 0;
   }
 }
 

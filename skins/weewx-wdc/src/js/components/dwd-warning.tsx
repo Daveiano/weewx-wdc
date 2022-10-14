@@ -51,19 +51,19 @@ export const DWDWarning: React.FC<DWDWarnings> = (
           <div key={index}>
             <header className="bx--row" style={{ marginBottom: "0.75rem" }}>
               <div
-                className="bx--col-sm-1 bx--col-md-1 bx--col-lg-2 bx--col-xlg-2 bx--col-max-1"
-                style={{ paddingLeft: "0.5rem" }}
+                className="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-12 bx--col-max-12"
+                style={{ display: "flex", flexWrap: "wrap" }}
               >
                 <img src={warning.icon} />
-              </div>
-              <div className="bx--col-sm-3 bx--col-md-7 bx--col-lg-10 bx--col-xlg-10 bx--col-max-11">
-                <h4 className="bx--type-productive-heading-02">
-                  {warning.headline}
-                </h4>
-                <p className="bx--type-helper-text-02">
-                  gültig von {dayjs(warning.start).format("DD.MM.YYYY HH:mm")}{" "}
-                  bis {dayjs(warning.end).format("DD.MM.YYYY HH:mm")}
-                </p>
+                <div className="warning-header">
+                  <h4 className="bx--type-productive-heading-02">
+                    {warning.headline}
+                  </h4>
+                  <p className="bx--type-helper-text-02">
+                    gültig von {dayjs(warning.start).format("DD.MM.YYYY HH:mm")}{" "}
+                    bis {dayjs(warning.end).format("DD.MM.YYYY HH:mm")}
+                  </p>
+                </div>
               </div>
             </header>
             <p

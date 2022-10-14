@@ -1228,7 +1228,8 @@ class WdcStatsUtil(SearchList):
         Args:
             obs (string): The observation
             aggregate_type (string): Min, max, avg.
-            period (obj): Period to use, eg. $year, month, $span
+            start_ts (int): Start timestamp.
+            end_ts (int): End timestamp.
 
         Returns:
             list: Calendar data.
@@ -1243,7 +1244,7 @@ class WdcStatsUtil(SearchList):
             )
 
             days = filter(
-                lambda x: x[1] > 0.0, list(
+                lambda x: (x[1] is not None and x[1] > 0.0), list(
                     zip(rain_start_vt[0], rain_vt[0]))
             )
             rain_days = []

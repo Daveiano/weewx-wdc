@@ -297,9 +297,9 @@ From Line 92:
 - (Optional) Show date/time when the min / max was reached on the index, yesterday, week and month page. [GH-53]
 - Bugfix: Frost days and Ice days were calculated wrong when using `degree_F` (°F)
 - Make aggregate_interval configurable for charts / tables [GH-55]
-- Added support for [weewx-DWD](https://github.com/roe-dl/weewx-DWD) [GH-25]
+- Added support for [weewx-DWD](https://github.com/roe-dl/weewx-DWD) [GH-25], for more Information please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Support-for-weewx-DWD)
 
-**Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Configuration) for inforamtion on how to configure the new features.**
+**Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Configuration) for information on how to configure the new features.**
 
 ## Changes made to skin.conf since 2.2.1:
 

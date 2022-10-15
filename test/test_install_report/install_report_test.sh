@@ -114,6 +114,23 @@ testWeeReportRunCustom() {
     assertNotContains "$output" "Ignoring template"
 }
 
+testWeeReportRunDWD() {
+    docker run --entrypoint "/start-dwd.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunDWD.txt 2>&1
+    docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-dwd-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
+    docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
+
+    output=$(cat "$DIR"/artifacts/testWeeReportRunDWD.txt)
+
+    assertContains "$output" "Starting weewx reports (weewx-DWD)"
+    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Generating for all time"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 13 files to /home/weewx/public_html"
+
+    assertNotContains "$output" "failed with exception"
+    assertNotContains "$output" "Ignoring template"
+}
+
 testWeeReportRunWithoutWeewxForecast() {
     docker run --entrypoint "/start-without-forecast.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunWithoutWeewxForecast.txt 2>&1
 

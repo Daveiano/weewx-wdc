@@ -2,7 +2,7 @@ name: Tests
 
 on:
   push:
-    branches: [1.x, 2.x, 2.**]
+    branches: [1.x, 2.x, 2.*.x]
     paths:
       - "**.py"
       - skins/**
@@ -11,7 +11,7 @@ on:
       - package.json
       - playwright.config.ts
   pull_request:
-    branches: [1.x, 2.x]
+    branches: [1.x, 2.x, 2.*.x]
     paths:
       - "**.py"
       - skins/**
@@ -85,7 +85,7 @@ jobs:
         run: yarn install
 
       - name: install playwright deps
-        run: npx playwright install --with-deps
+        run: yarn playwright install --with-deps
 
       - name: Download alternative html
         uses: actions/download-artifact@v3

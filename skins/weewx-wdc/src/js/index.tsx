@@ -5,7 +5,7 @@ import type { Serie } from "@nivo/line";
 import { CarbonDataTableStateManager } from "carbon-data-table-state-manager";
 import { BarDiagram } from "./diagrams/bar";
 import { LineDiagram } from "./diagrams/line";
-import type { precision, Series } from "./diagrams/types";
+import type { context, Series } from "./diagrams/types";
 import { CalendarDiagram } from "./diagrams/calendar";
 
 import "./../scss/index.scss";
@@ -47,7 +47,7 @@ diagrams.forEach((diagram) => {
     diagram.dataset.labels &&
     diagram.dataset.aggregateType &&
     diagram.dataset.obs &&
-    diagram.dataset.precision &&
+    diagram.dataset.context &&
     diagram.dataset.color
   ) {
     let data: Serie[] = [];
@@ -116,7 +116,7 @@ diagrams.forEach((diagram) => {
             unit={diagram.dataset.unit}
             data={data}
             observation={diagram.dataset.obs}
-            precision={diagram.dataset.precision as precision}
+            context={diagram.dataset.context as context}
             nivoProps={nivoProps}
           />
         );
@@ -128,7 +128,7 @@ diagrams.forEach((diagram) => {
             unit={diagram.dataset.unit}
             data={data}
             observation={diagram.dataset.obs}
-            precision={diagram.dataset.precision as precision}
+            context={diagram.dataset.context as context}
             nivoProps={nivoProps}
           />
         );
@@ -158,7 +158,7 @@ if (table) {
   const tableTitle = (window as any).tableTitle;
   // @todo Could be in a global config obj,
   // @see window.weewxWdcConfig in html-head.inc.
-  const precision = (window as any).precision;
+  const context = (window as any).context;
 
   const root = createRoot(table);
 
@@ -167,7 +167,7 @@ if (table) {
       columns={tableHeaders}
       rows={tableRows}
       start={0}
-      pageSize={precision === "alltime" || precision == "year" ? 20 : 10}
+      pageSize={context === "alltime" || context == "year" ? 20 : 10}
       pageSizes={[10, 20, 50, 100, 200, 500]}
       sortInfo={{
         columnId: "time",
@@ -176,7 +176,7 @@ if (table) {
       size="short"
       title={tableTitle}
       dateFormat={
-        precision === "alltime" || precision == "year"
+        context === "alltime" || context == "year"
           ? "YYYY/MM/DD"
           : "YYYY/MM/DD HH:mm"
       }

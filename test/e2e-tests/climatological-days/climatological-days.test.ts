@@ -15,16 +15,65 @@ test.describe("Climatological days", () => {
     await expect(
       rainDays.locator("bx-structured-list-cell >> nth=1")
     ).toHaveText("208");
-
-    const stormDays = table.locator("[data-test='stormDays']");
     await expect(
-      stormDays.locator("bx-structured-list-cell >> nth=1")
-    ).toHaveText("1");
+      rainDays.locator("bx-structured-list-cell >> nth=2")
+    ).toHaveText(/Rain > 0 cm/);
+
+    const summerDays = table.locator("[data-test='summerDays']");
+    await expect(
+      summerDays.locator("bx-structured-list-cell >> nth=1")
+    ).toHaveText("59");
+    await expect(
+      summerDays.locator("bx-structured-list-cell >> nth=2")
+    ).toHaveText(/Outside Temperaturemax ≥ 25°C/);
 
     const hotDays = table.locator("[data-test='hotDays']");
     await expect(
       hotDays.locator("bx-structured-list-cell >> nth=1")
     ).toHaveText("6");
+    await expect(
+      hotDays.locator("bx-structured-list-cell >> nth=2")
+    ).toHaveText(/Outside Temperaturemax ≥ 30°C/);
+
+    const desertDays = table.locator("[data-test='desertDays']");
+    await expect(
+      desertDays.locator("bx-structured-list-cell >> nth=1")
+    ).toHaveText("1");
+    await expect(
+      desertDays.locator("bx-structured-list-cell >> nth=2")
+    ).toHaveText(/Outside Temperaturemax ≥ 35°C/);
+
+    const tropicalNights = table.locator("[data-test='tropicalNights']");
+    await expect(
+      tropicalNights.locator("bx-structured-list-cell >> nth=1")
+    ).toHaveText("5");
+    await expect(
+      tropicalNights.locator("bx-structured-list-cell >> nth=2")
+    ).toHaveText(/Outside Temperaturemin ≥ 20°C/);
+
+    const stormDays = table.locator("[data-test='stormDays']");
+    await expect(
+      stormDays.locator("bx-structured-list-cell >> nth=1")
+    ).toHaveText("1");
+    await expect(
+      stormDays.locator("bx-structured-list-cell >> nth=2")
+    ).toHaveText(/Gust Speed > 62 km\/h/);
+
+    const iceDays = table.locator("[data-test='iceDays']");
+    await expect(
+      iceDays.locator("bx-structured-list-cell >> nth=1")
+    ).toHaveText("5");
+    await expect(
+      iceDays.locator("bx-structured-list-cell >> nth=2")
+    ).toHaveText(/Outside Temperaturemax < 0°C/);
+
+    const frostDays = table.locator("[data-test='frostDays']");
+    await expect(
+      frostDays.locator("bx-structured-list-cell >> nth=1")
+    ).toHaveText("86");
+    await expect(
+      frostDays.locator("bx-structured-list-cell >> nth=2")
+    ).toHaveText(/Outside Temperaturemin < 0°C/);
   });
 
   test("Rain days", async ({ page }) => {
@@ -34,6 +83,7 @@ test.describe("Climatological days", () => {
     await expect(rainDays).toBeVisible();
 
     await expect(rainDays).toHaveScreenshot();
+    expect(await rainDays.locator("> script").innerText()).toMatchSnapshot();
   });
 
   test("Avg outside temp", async ({ page }) => {
@@ -43,5 +93,6 @@ test.describe("Climatological days", () => {
     await expect(avgTemp).toBeVisible();
 
     await expect(avgTemp).toHaveScreenshot();
+    expect(await avgTemp.locator("> script").innerText()).toMatchSnapshot();
   });
 });

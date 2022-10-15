@@ -1,0 +1,44 @@
+<!--prettier-ignore-->
+#errorCatcher Echo
+#encoding UTF-8
+#attr $context = 'yesterday'
+#attr $use_parameter_month = False
+#attr $use_parameter_year = False
+
+<!DOCTYPE html>
+<html lang="$lang">
+  <head>
+    #include "includes/html-head.inc"
+    <title>$station.location - $gettext("Yesterdays Weather Conditions")</title>
+  </head>
+
+  <body class="theme-$DisplayOptions.get('layout', 'alternative')">
+    #include "includes/ui-shell.inc"
+
+    <main>
+      <section class="main bx--content">
+        <div class="bx--grid bx--grid--full-width">
+          <div class="bx--row">
+            <header class="bx--col page-header">
+              <h1>$gettext("Yesterdays Weather Conditions")</h1>
+              <h2>
+                $yesterday.dateTime.format($get_time_format_dict['month'])
+              </h2>
+            </header>
+          </div>
+
+          <!--prettier-ignore-->
+          #if $DisplayOptions.get('layout', 'alternative') == 'alternative'
+            #include 'includes/body-alternative.inc'
+          #else
+            #include 'includes/body-classic.inc'
+          #end if
+        </div>
+      </section>
+    </main>
+
+    #include "includes/footer.inc"
+
+    <script src="dist/main.js" defer></script>
+  </body>
+</html>

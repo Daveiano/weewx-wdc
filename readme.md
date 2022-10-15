@@ -17,7 +17,7 @@ Inspired by and build with the [Carbon Design System](https://carbondesignsystem
 If you need help installing the skin, please have a look at https://github.com/Daveiano/weewx-interceptor-docker, a configured Dockerfile
 which I use as a base for my local PI installation.
 
-If you like the look and feel of the skin please consider having a look into the original [Weather Data Center](https://daveiano.github.io/weather-data-center/). **If you like the skin, please consider to give it a star!**
+If you like the look and feel of the skin please consider having a look at the original [Weather Data Center](https://daveiano.github.io/weather-data-center/). **If you like the skin, please consider giving it a star!**
 
 ## Key Features
 
@@ -33,6 +33,7 @@ If you like the look and feel of the skin please consider having a look into the
 - Climatological days
 - Calendar charts for rain days and average day temperature
 - Support for [weewx-forecast](https://github.com/chaunceygardiner/weewx-forecast)
+- Support for [weewx-dwd](https://github.com/roe-dl/weewx-DWD)
 - User-generated "About page"
 - Classic and alternative layout
 - Windrose chart
@@ -70,7 +71,7 @@ If you like the look and feel of the skin please consider having a look into the
 1. Download the [latest version](https://github.com/Daveiano/weewx-wdc/releases)
 
 ```
-wget -O "/tmp/weewx-wdc.zip" https://github.com/Daveiano/weewx-wdc/releases/download/v2.2.1/weewx-wdc-v2.2.1.zip
+wget -O "/tmp/weewx-wdc.zip" https://github.com/Daveiano/weewx-wdc/releases/download/v2.3.0/weewx-wdc-v2.3.0.zip
 ```
 
 2. Create a new folder and unzip to that folder
@@ -88,7 +89,7 @@ unzip /tmp/weewx-wdc.zip -d /tmp/weewx-wdc/
 
 For help, please have a look at the [official weewx documentation](https://weewx.com/docs/utilities.htm#wee_extension_utility).
 
-**Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v2.2.1/weewx-wdc-v2.2.1.zip.
+**Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v2.3.0/weewx-wdc-v2.3.0.zip.
 Don't download the repository directly and don't use the GitHub generated zip and tar.gz archives that come alongside the release. Always use the zip archive named **weewx-wdc-vX.X.X.zip**
 
 Background: The files in the src/ directory are the source files (TypeScript, SCSS). When creating a release, these source files get transformed and optimized, and the output location of these transformed files is the location which matches the location in the install.py script. The weewx-wdc-vX.X.X.zip should contain all these transformed files (like service-worker.js or main.css), but if you download the current state of the repo, these files are not included and this will throw multiple `FileNotFoundError` errors while installing. For manual building of these files, see [Development](#development).

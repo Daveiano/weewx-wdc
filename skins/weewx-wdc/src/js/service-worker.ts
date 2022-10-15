@@ -74,7 +74,10 @@ registerRoute(
 // Cache images with a Cache First strategy
 registerRoute(
   // Check to see if the request's destination is style for an image
-  ({ request }) => request.destination === "image",
+  ({ request }) =>
+    request.destination === "image" &&
+    !request.url.includes("dwd/SchilderLZ.jpg") &&
+    !request.url.includes("dwd/bwk_bodendruck"),
   // Use a Cache First caching strategy
   new CacheFirst({
     // Put all cached files in a cache named 'images'

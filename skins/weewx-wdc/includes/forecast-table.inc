@@ -113,7 +113,7 @@
 
 <h3>$gettext($forecast_source)</h3>
 
-<bx-structured-list>
+<bx-structured-list class="forecast-list">
   <bx-structured-list-head>
     #if $show_day or $show_date
     <bx-structured-list-header-row>

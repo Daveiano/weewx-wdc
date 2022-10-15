@@ -22,6 +22,16 @@ oneTimeSetUp() {
         sleep 1
         mkdir "$DIR"/artifacts-classic-weewx-html
     fi
+    if ! [ -d "$DIR"/artifacts-custom-weewx-html ] ; then
+        echo Creating artifacts-custom-weewx-html directory...
+        sleep 1
+        mkdir "$DIR"/artifacts-custom-weewx-html
+    fi
+    if ! [ -d "$DIR"/artifacts-dwd-weewx-html ] ; then
+        echo Creating artifacts-dwd-weewx-html directory...
+        sleep 1
+        mkdir "$DIR"/artifacts-dwd-weewx-html
+    fi
 }
 
 testBundling() {
@@ -63,7 +73,7 @@ testWeeReportRunAlternative() {
     assertContains "$output" "Starting weewx reports (alternative layout)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating for all time"
-    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 44 files for report WdcReport in"
     assertContains "$output" "INFO weewx.reportengine: Copied 10 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"
@@ -80,8 +90,42 @@ testWeeReportRunClassic() {
     assertContains "$output" "Starting weewx reports (classic layout)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating for all time"
-    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 44 files for report WdcReport in"
     assertContains "$output" "INFO weewx.reportengine: Copied 10 files to /home/weewx/public_html"
+
+    assertNotContains "$output" "failed with exception"
+    assertNotContains "$output" "Ignoring template"
+}
+
+testWeeReportRunCustom() {
+    docker run --entrypoint "/start-custom.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunCustom.txt 2>&1
+    docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-custom-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
+    docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
+
+    output=$(cat "$DIR"/artifacts/testWeeReportRunCustom.txt)
+
+    assertContains "$output" "Starting weewx reports (Alternative layout with customisations)"
+    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Generating for all time"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 44 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 10 files to /home/weewx/public_html"
+
+    assertNotContains "$output" "failed with exception"
+    assertNotContains "$output" "Ignoring template"
+}
+
+testWeeReportRunDWD() {
+    docker run --entrypoint "/start-dwd.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunDWD.txt 2>&1
+    docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-dwd-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
+    docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
+
+    output=$(cat "$DIR"/artifacts/testWeeReportRunDWD.txt)
+
+    assertContains "$output" "Starting weewx reports (weewx-DWD)"
+    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Generating for all time"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 13 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"
@@ -95,7 +139,7 @@ testWeeReportRunWithoutWeewxForecast() {
     assertContains "$output" "Starting weewx reports (without forecast)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating for all time"
-    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 44 files for report WdcReport in"
     assertContains "$output" "INFO weewx.reportengine: Copied 10 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"

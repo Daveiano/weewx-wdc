@@ -57,6 +57,18 @@ jobs:
           name: artifacts-classic-weewx-html
           path: test/test_install_report/artifacts-classic-weewx-html/
 
+      - name: Upload custom html
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts-custom-weewx-html
+          path: test/test_install_report/artifacts-custom-weewx-html/
+
+      - name: Upload weewx-DWD html
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts-dwd-weewx-html
+          path: test/test_install_report/artifacts-dwd-weewx-html/
+
   playwright:
     needs: shunit2
     runs-on: ubuntu-latest
@@ -86,6 +98,18 @@ jobs:
         with:
           name: artifacts-classic-weewx-html
           path: test/e2e-tests/artifacts-classic-weewx-html
+
+      - name: Download custom html
+        uses: actions/download-artifact@v3
+        with:
+          name: artifacts-custom-weewx-html
+          path: test/e2e-tests/artifacts-custom-weewx-html
+
+      - name: Download weewx-dwd html
+        uses: actions/download-artifact@v3
+        with:
+          name: artifacts-dwd-weewx-html
+          path: test/e2e-tests/artifacts-dwd-weewx-html
 
       - name: Run playwright tests
         run: yarn run test:e2e

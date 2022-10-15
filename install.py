@@ -11,7 +11,7 @@ def loader():
 class BasicInstaller(ExtensionInstaller):
     def __init__(self):
         super(BasicInstaller, self).__init__(
-            version="2.2.1",
+            version="2.3.0",
             name="weewx-wdc",
             description="Weather Data Center skin for weewx.",
             author="David Baetge",
@@ -40,6 +40,7 @@ class BasicInstaller(ExtensionInstaller):
                         "skins/weewx-wdc/index.html.tmpl",
                         "skins/weewx-wdc/week.html.tmpl",
                         "skins/weewx-wdc/month.html.tmpl",
+                        "skins/weewx-wdc/dwd.html.tmpl",
                         "skins/weewx-wdc/month-%Y-%m.html.tmpl",
                         "skins/weewx-wdc/NOAA/NOAA-%Y-%m.txt.tmpl",
                         "skins/weewx-wdc/year.html.tmpl",
@@ -72,6 +73,8 @@ class BasicInstaller(ExtensionInstaller):
                         "skins/weewx-wdc/includes/data-table-tile.inc",
                         "skins/weewx-wdc/includes/diagram-tile.inc",
                         "skins/weewx-wdc/includes/diagram-tile-wind-rose.inc",
+                        "skins/weewx-wdc/includes/dwd-forecast.inc",
+                        "skins/weewx-wdc/includes/dwd-warning.inc",
                         "skins/weewx-wdc/includes/stat-tile.inc",
                         "skins/weewx-wdc/includes/conditions-table.inc",
                         "skins/weewx-wdc/includes/climatological-days.inc",

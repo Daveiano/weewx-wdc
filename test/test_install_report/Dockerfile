@@ -12,12 +12,18 @@ EXPOSE 9877
 COPY src/install-input.txt /tmp/
 COPY src/start.sh /start.sh
 COPY src/start-classic.sh /start-classic.sh
+COPY src/start-custom.sh /start-custom.sh
+COPY src/start-dwd.sh /start-dwd.sh
 COPY src/start-without-forecast.sh /start-without-forecast.sh
-RUN chmod +x /start.sh && chmod +x /start-classic.sh && chmod +x /start-without-forecast.sh
+RUN chmod +x /start.sh &&\
+    chmod +x /start-classic.sh &&\
+    chmod +x /start-without-forecast.sh &&\
+    chmod +x /start-custom.sh &&\
+    chmod +x /start-dwd.sh
 
 # @see https://blog.nuvotex.de/running-syslog-in-a-container/
 RUN apt-get update &&\
-    apt-get install -q -y --no-install-recommends rsyslog=8.1901.0-1+deb10u1 &&\
+    apt-get install -q -y --no-install-recommends rsyslog=8.1901.0-1+deb10u2 python3-configobj python3-requests &&\
     apt-get clean &&\
     rm -rf /var/lib/apt/lists/*
 
@@ -52,6 +58,9 @@ RUN bin/wee_extension --install /tmp/weewx-interceptor.zip &&\
     bin/wee_config --reconfigure --driver=user.interceptor --no-prompt
 
 COPY src/skin.conf ./skins/weewx-wdc/
+COPY src/skin-custom.conf ./skins/weewx-wdc/
+COPY src/skin-dwd.conf ./skins/weewx-wdc/
+COPY src/weewx-dwd.conf ./skins/weewx-wdc/
 
 RUN sed -i -e 's/device_type = acurite-bridge/device_type = ecowitt-client\n    port = 9877\n    address = 0.0.0.0/g' weewx.conf &&\
     sed -i -z -e 's/skin = Seasons\n        enable = true/skin = Seasons\n        enable = false/g' weewx.conf &&\

@@ -288,4 +288,167 @@ From Line 92:
 +  yScaleOffset = 1
 ```
 
+# 2.3.0
+
+- (Optional) Change wind speed unit from beaufort to km/h, mph, m/s or knots in windrose. [GH-51]
+- Added (optional) Yesterdays page. [GH-52]
+- (Optional) Show date/time when the min / max was reached on the index, yesterday, week and month page. [GH-53]
+- Make aggregate_interval configurable for charts / tables [GH-55]
+- Added support for [weewx-DWD](https://github.com/roe-dl/weewx-DWD) [GH-25], for more Information please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Support-for-weewx-DWD)
+- Bugfix: Frost days and Ice days were calculated wrong when using `degree_F` (°F)
+- Bugfix: Errors when NULL values in archive_day_outtemp or archive_day_rain [GH-77], by @hoetzgit
+
+**Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Configuration) for information on how to configure the new features.**
+
+## Changes made to skin.conf since 2.2.1:
+
+1. Line 71, Custom min/max date/time display, see [GH-53].
+
+```diff
+diagram_tile_winddir_ordinal = True
++show_min_max_time_day = False
++show_min_max_time_yesterday = False
++show_min_max_time_week = False
++show_min_max_time_month = False
+windRose_colors = "#f3cec9", "#e7a4b6", "#cd7eaf", "#a262a9", "#6f4d96", "#3d3b72"
+```
+
+2. Line 78, custom data tables aggregate_interval, see [GH-55]
+
+```diff
++[[tables]]
++   [[[day]]]
++      aggregate_interval = 3600  # 1 hour
++   [[[week]]]
++      aggregate_interval = 21600  # 6 hours
++   [[[month]]]
++      aggregate_interval = 43200  # 12 hours
++   [[[year]]]
++      aggregate_interval = 86400  # 1 day
++   [[[alltime]]]
++      aggregate_interval = 86400  # 1 day
+```
+
+3. Exposed more previously static `aggregate_type`s on diagrams.
+
+```diff
+# Observation specific settings.
+[[[windGust]]]
++   aggregate_type = "max"
+   yScaleMin = 0
+[[[radiation]]]
+   curve = "basis"
+   yScaleMin = 0
+[[[UV]]]
++   aggregate_type = "max"
+   curve = "step"
+   yScaleMin = 0
+   yScaleOffset = 1
+[[[rain]]]
++   aggregate_type = "sum"
+   yScaleOffset = 0.25
+[[[rainRate]]]
++   aggregate_type = "max"
+   curve = "linear"
+   yScaleMin = 0
+   yScaleOffset = 0.25
+[[[outHumidity]]]
+   yScaleMin = 0
+   yScaleMax = 103
+[[[ET]]]
++   aggregate_type = "sum"
+   yScaleOffset = 0.02
+```
+
+4. Line 196, added context specific `aggregate_interval` for diagrams [GH-55]
+
+```diff
++# Context specific settings, alltime: if not set, will be calculated.
++[[[day]]]
++   aggregate_interval = 1800 # 30 minutes
++   [[[[ET]]]]
++         aggregate_interval = 7200  # 2 hours
++   [[[[rain]]]]
++         aggregate_interval = 7200  # 2 hours
++
++[[[week]]]
++   aggregate_interval = 7200  # 2 hours
++   [[[[ET]]]]
++         aggregate_interval = 86400  # 1 day
++   [[[[rain]]]]
++         aggregate_interval = 86400  # 1 day
++
++[[[month]]]
++   aggregate_interval = 21600  # 6 hours
++   [[[[ET]]]]
++         aggregate_interval = 172800  # 2 days
++   [[[[rain]]]]
++         aggregate_interval = 172800  # 2 days
++
++[[[year]]]
++   aggregate_interval = 172800  # 2 days
++   [[[[ET]]]]
++         aggregate_interval = 1555200  # 8 days
++   [[[[rain]]]]
++         aggregate_interval = 1555200  # 8 days
+```
+
+5. Added yesterday page [GH-52]
+
+Line 270:
+
+```diff
+[[ToDate]]
+   [[[day]]]
+      template = index.html.tmpl
+
++   #[[[yesterday]]]
++   #    template = yesterday.html.tmpl
+
+   [[[week]]]
+      template = week.html.tmpl
+```
+
+1. Added support for [weewx-DWD](https://github.com/roe-dl/weewx-DWD) [GH-25]
+
+Line 39:
+
+```diff
++#[[weewx-DWD]]
++    #   show_text_forecast = True
++    #   text_forecast_VHDL = DWLG
++    #   dwd_link = https://www.dwd.de/DE/wetter/wetterundklima_vorort/sachsen/sac_node.html
++    #   show_pressure_map = True
++    #   show_warning_map = True
++    #   show_text_warnings = True
++    #   show_warnings_on_front = XXX
++    #   show_forecast = True
++    #   mosmix_id = XXXX
++    #   [[[forecast_table_settings]]]
++    #       show_hourly = 1
++    #       show_date = 1
++    #       show_outlook = 1
++    #       show_temp = 1
++    #       show_dewpoint = 1
++    #       show_pressure = 1
++    #       show_wind= 1
++    #       show_pop = 1
++    #       show_precip = 1
++    #       show_cloud_cover = 1
++    #       show_sun_dur = 1
++    #       carbon_icons = 0
+```
+
+Line 290:
+
+```diff
+[[Static]]
+   #[[[about]]]
+      #template = about.html.tmpl
+      #title = About
++   #[[[DWD]]]
++      #template = dwd.html.tmpl
++      #title = Vorhersage vom DWD
+```
+
 # Next

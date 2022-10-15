@@ -290,8 +290,6 @@ From Line 92:
 
 # 2.3.0
 
-# TODO Add wiki links.
-
 - (Optional) Change wind speed unit from beaufort to km/h, mph, m/s or knots in windrose. [GH-51]
 - Added (optional) Yesterdays page. [GH-52]
 - (Optional) Show date/time when the min / max was reached on the index, yesterday, week and month page. [GH-53]
@@ -304,7 +302,7 @@ From Line 92:
 
 ## Changes made to skin.conf since 2.2.1:
 
-1. Line 45, Custom min/max date/time display, see [GH-53].
+1. Line 71, Custom min/max date/time display, see [GH-53].
 
 ```diff
 diagram_tile_winddir_ordinal = True
@@ -315,7 +313,7 @@ diagram_tile_winddir_ordinal = True
 windRose_colors = "#f3cec9", "#e7a4b6", "#cd7eaf", "#a262a9", "#6f4d96", "#3d3b72"
 ```
 
-2. Line 52, custom data tables aggregate_interval, see [GH-55]
+2. Line 78, custom data tables aggregate_interval, see [GH-55]
 
 ```diff
 +[[tables]]
@@ -362,7 +360,7 @@ windRose_colors = "#f3cec9", "#e7a4b6", "#cd7eaf", "#a262a9", "#6f4d96", "#3d3b7
    yScaleOffset = 0.02
 ```
 
-4. Line 172, added context specific `aggregate_interval` for diagrams [GH-55]
+4. Line 196, added context specific `aggregate_interval` for diagrams [GH-55]
 
 ```diff
 +# Context specific settings, alltime: if not set, will be calculated.
@@ -395,18 +393,9 @@ windRose_colors = "#f3cec9", "#e7a4b6", "#cd7eaf", "#a262a9", "#6f4d96", "#3d3b7
 +         aggregate_interval = 1555200  # 8 days
 ```
 
-5. Added yesterday Search List Extension [GH-52]
+5. Added yesterday page [GH-52]
 
-Line 218:
-
-```diff
-[CheetahGenerator]
-    encoding = html_entities
-    search_list_extensions = user.weewx_wdc.WdcGeneralUtil, user.weewx_wdc.WdcStatsUtil, user.weewx_wdc.WdcDiagramUtil, user.weewx_wdc.WdcCelestialUtil, user.weewx_wdc.WdcArchiveUtil, user.weewx_wdc.WdcTableUtil,
-+    user.weewx_wdc.Yesterday
-```
-
-Line 246:
+Line 270:
 
 ```diff
 [[ToDate]]
@@ -420,7 +409,7 @@ Line 246:
       template = week.html.tmpl
 ```
 
-6. Added support for [weewx-DWD](https://github.com/roe-dl/weewx-DWD) [GH-25]
+1. Added support for [weewx-DWD](https://github.com/roe-dl/weewx-DWD) [GH-25]
 
 Line 39:
 

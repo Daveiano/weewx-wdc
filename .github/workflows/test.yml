@@ -9,6 +9,7 @@ on:
       - bin/**
       - test/**
       - package.json
+      - yarn.lock
       - playwright.config.ts
   pull_request:
     branches: [1.x, 2.x, 2.*.x]
@@ -18,6 +19,7 @@ on:
       - bin/**
       - test/**
       - package.json
+      - yarn.lock
       - playwright.config.ts
 
 jobs:

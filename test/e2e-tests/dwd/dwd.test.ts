@@ -8,7 +8,10 @@ test.describe("DWD", () => {
   test("Front page forecast", async ({ page }) => {
     const forecast = page.locator(".dwd-forecast");
     expect(await forecast.locator("h3").innerText()).toBe(
-      "Forecast for Pulsnitz"
+      "Wettervorhersage für Pulsnitz"
+    );
+    expect(await forecast.locator("data-test=dwd-pop-label").innerText()).toBe(
+      "Niederschlags­wahr­scheinlich­keit"
     );
 
     expect(await forecast.locator("role=columnheader").count()).toBe(6);
@@ -44,6 +47,10 @@ test.describe("DWD", () => {
       // Triggers a navigation after a timeout.
       page.locator("bx-side-nav").locator("role=listitem").nth(2).click(),
     ]);
+
+    await expect(
+      page.locator("dds-image-with-caption[heading='Wetterwarnungen']")
+    ).toHaveAttribute("default-src", "dwd/SchilderLZ.jpg");
 
     await page.screenshot({
       path: "test/e2e-tests/dwd/dwd-page.png",

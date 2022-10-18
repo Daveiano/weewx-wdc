@@ -60,7 +60,7 @@
       "obs_sunshine_dur": "$gettext('Rel. Sunshine duration')",
       "obs_dew_point": "$obs.label['dewpoint']",
       "obs_barometer": "$obs.label['barometer']",
-      "obs_wind_speed": "$obs.label['windSpeed']",
+      "obs_wind_speed": "$gettext('Wind Speed')",
       "obs_precipitation": "$gettext('Precipitation')",
 
     }

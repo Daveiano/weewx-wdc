@@ -11,7 +11,8 @@ service rsyslog start
 echo 'Starting weewx reports (weewx-DWD)'
 
 mv "${WEEWX_HOME}"/skins/weewx-wdc/skin-dwd.conf "${WEEWX_HOME}"/skins/weewx-wdc/skin.conf
-cat "${WEEWX_HOME}"/skins/weewx-wdc/weewx-dwd.conf >> /home/weewx/weewx.conf
+cat "${WEEWX_HOME}"/skins/weewx-wdc/weewx-dwd.conf >> "${WEEWX_HOME}"/weewx.conf
+sed -i -z -e "s|lang = en|lang = de|g" "${WEEWX_HOME}"/weewx.conf
 
 # weewx-DWD installieren.
 cd /tmp && wget -nv -O "weewx-dwd.zip" "https://github.com/roe-dl/weewx-DWD/archive/refs/heads/master.zip"

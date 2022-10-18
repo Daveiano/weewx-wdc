@@ -103,10 +103,14 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
     >
       <div className="bx--row" style={{ marginBottom: "1rem" }}>
         <div className={headerClassNames}>
-          <h3 className="bx--type-expressive-heading-03">
-            {translations.Forecast_for} {props.data.name.charAt(0)}
-            {props.data.name.toLowerCase().slice(1)}
-          </h3>
+          <h3
+            className="bx--type-expressive-heading-03"
+            dangerouslySetInnerHTML={{
+              __html: `${translations.Forecast_for} ${props.data.name.charAt(
+                0
+              )}${props.data.name.toLowerCase().slice(1)}`,
+            }}
+          />
         </div>
 
         {options.show_hourly == true && (
@@ -273,7 +277,12 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
             {options.show_dewpoint == true && (
               <StructuredListRow tabIndex={0}>
                 <StructuredListCell>
-                  {translations.obs_dew_point} <br />
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: translations.obs_dew_point,
+                    }}
+                  ></span>
+                  <br />
                   <span className="unit-label">in °C</span>
                 </StructuredListCell>
                 {context === "day" ? (
@@ -314,7 +323,12 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
             {options.show_pressure == true && (
               <StructuredListRow tabIndex={0}>
                 <StructuredListCell>
-                  {translations.obs_barometer} <br />
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: translations.obs_barometer,
+                    }}
+                  ></span>
+                  <br />
                   <span className="unit-label">in mbar</span>
                 </StructuredListCell>
                 {context === "day" ? (
@@ -352,7 +366,12 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
             {options.show_wind == true && (
               <StructuredListRow tabIndex={0}>
                 <StructuredListCell>
-                  {translations.obs_wind_speed} <br />
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: translations.obs_wind_speed,
+                    }}
+                  ></span>
+                  <br />
                   <span className="unit-label">in km/h</span>
                 </StructuredListCell>
                 {context === "day" ? (
@@ -390,7 +409,12 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
             {options.show_pop == true && (
               <StructuredListRow tabIndex={0}>
                 <StructuredListCell>
-                  {translations.POP} <br />
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: translations.POP,
+                    }}
+                  ></span>
+                  <br />
                   <span className="unit-label">in %</span>
                 </StructuredListCell>
                 {context === "day" ? (
@@ -418,7 +442,12 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
             {options.show_precip == true && (
               <StructuredListRow tabIndex={0}>
                 <StructuredListCell>
-                  {translations.obs_precipitation} <br />
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: translations.obs_precipitation,
+                    }}
+                  ></span>
+                  <br />
                   <span className="unit-label">in mm</span>
                 </StructuredListCell>
                 {context === "day" ? (
@@ -454,7 +483,12 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
             {options.show_cloud_cover == true && (
               <StructuredListRow tabIndex={0}>
                 <StructuredListCell>
-                  {translations.obs_cloud_cover} <br />
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: translations.obs_cloud_cover,
+                    }}
+                  ></span>
+                  <br />
                   <span className="unit-label">in %</span>
                 </StructuredListCell>
                 {context === "day" ? (
@@ -490,7 +524,12 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
             {options.show_sun_dur == true && (
               <StructuredListRow tabIndex={0}>
                 <StructuredListCell>
-                  {translations.obs_sunshine_dur} <br />
+                  <span
+                    dangerouslySetInnerHTML={{
+                      __html: translations.obs_sunshine_dur,
+                    }}
+                  ></span>
+                  <br />
                   <span className="unit-label">in %</span>
                 </StructuredListCell>
                 {context === "day" ? (
@@ -535,11 +574,20 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
       </div>
 
       <div className="bx--type-helper-text-01" style={{ marginTop: "0.5rem" }}>
-        {translations.Forecast_from}{" "}
+        <span
+          dangerouslySetInnerHTML={{
+            __html: translations.Forecast_from,
+          }}
+        ></span>{" "}
         <a href="https://www.dwd.de" target="_blank">
           DWD
         </a>
-        . {translations.Issued_on}{" "}
+        .{" "}
+        <span
+          dangerouslySetInnerHTML={{
+            __html: translations.Issued_on,
+          }}
+        ></span>{" "}
         {dayjs(props.data.IssueTimeISO).format("DD.MM.YYYY HH:mm")}, geocode=
         {props.data.coordinates[0]}, {props.data.coordinates[1]}. Mosmix{" "}
         <a
@@ -548,7 +596,13 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
         >
           Stations ID
         </a>
-        : {props.data.id}. {translations.Station_name}: {props.data.name}.
+        : {props.data.id}.{" "}
+        <span
+          dangerouslySetInnerHTML={{
+            __html: translations.Station_name,
+          }}
+        ></span>
+        : {props.data.name}.
       </div>
     </div>
   );

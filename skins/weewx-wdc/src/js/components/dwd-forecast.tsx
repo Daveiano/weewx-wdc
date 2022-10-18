@@ -410,6 +410,7 @@ export const DWDForecast: React.FC<DWDForecastProps> = (
               <StructuredListRow tabIndex={0}>
                 <StructuredListCell>
                   <span
+                    data-test="dwd-pop-label"
                     dangerouslySetInnerHTML={{
                       __html: translations.POP,
                     }}

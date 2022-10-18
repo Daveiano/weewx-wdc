@@ -7,9 +7,9 @@
     <div class="bx--row">
       <div class="bx--col-sm-12 bx--col-lg-6">
         <p>
-          $gettext("Weewx uptime"): $station.uptime<br />
+          $gettext("WeeWX uptime"): $station.uptime<br />
           $gettext("Server uptime"): $station.os_uptime<br />
-          $gettext("Weewx version"): $station.version $gettext("with") $station.hardware<br />
+          $gettext("WeeWX version"): $station.version $gettext("with") $station.hardware<br />
           $gettext("Skin"): $SKIN_NAME $SKIN_VERSION
         </p>
       </div>

@@ -9,7 +9,7 @@
         <p>
           $gettext("Weewx uptime"): $station.uptime<br />
           $gettext("Server uptime"): $station.os_uptime<br />
-          weewx $station.version with $station.hardware<br />
+          $gettext("Weewx version"): $station.version $gettext("with") $station.hardware<br />
           $gettext("Skin"): $SKIN_NAME $SKIN_VERSION
         </p>
       </div>

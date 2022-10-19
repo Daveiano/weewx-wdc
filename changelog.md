@@ -451,4 +451,9 @@ Line 290:
 +      #title = Vorhersage vom DWD
 ```
 
+# 2.3.1
+
+- Bugfixes for weewx-DWD Support [GH-81]: Make static `SchilderLZ.jpg` configurable, fixed various encoding issues for DE (Umlaute, `&shy;`)
+- Using the gettext function for "WeeWX version" in footer.inc [GH-83]
+
 # Next

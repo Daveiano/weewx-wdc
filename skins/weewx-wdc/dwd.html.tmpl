@@ -1,6 +1,7 @@
 <!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
+#import datetime
 
 <!DOCTYPE html>
 <html lang="$lang">
@@ -40,21 +41,19 @@
             <div class="bx--col">
               <!--prettier-ignore-->
               <div class="bx--tile">
-                #for $day in [50, 51, 52, 53]
+                #set $today = datetime.date.today()
+                #set $headings = {54: 'Aktuelle Wetterlage', 50: 'Heute', 51: 'Morgen', 52: ($today + datetime.timedelta(days=2)).strftime("%A"), 53: ($today + datetime.timedelta(days=3)).strftime("%A")}
+                #for $day in [54, 50, 51, 52, 53]
                   #if os.path.exists("dwd/VHDL" + str($day) + "_" + $VHDL + "_LATEST.html")
+                    <h4 class="bx--type-productive-heading-02">$headings[$day]</h4>
                     <p>
                     #include raw "dwd/VHDL" + str($day) + "_" + $VHDL + "_LATEST.html"
                     </p>
+                    #if $day != 53
+                      <br />
+                    #end if
                   #end if
                 #end for
-
-                <br />
-
-                #if os.path.exists("dwd/VHDL54_" + $VHDL + "_LATEST.html")
-                <p>
-                  #include raw "dwd/VHDL54_" + $VHDL + "_LATEST.html"
-                </p>
-                #end if
 
                 <p style="text-align: right;">
                     [Quelle:

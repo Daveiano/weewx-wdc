@@ -453,7 +453,7 @@ Line 290:
 
 # 2.3.1
 
-- Bugfixes for weewx-DWD Support [GH-81]: Make static `SchilderLZ.jpg` configurable, fixed various encoding issues for DE (Umlaute, `&shy;`)
+- Bugfixes for weewx-DWD Support [GH-81]: Make static `SchilderLZ.jpg` configurable, fixed various encoding issues for DE (Umlaute, `&shy;`). Added gettext/pgettext to headings/texts to make it easier to change for the user.
 - Using the gettext function for "WeeWX version" in footer.inc [GH-83]
 
 # Next

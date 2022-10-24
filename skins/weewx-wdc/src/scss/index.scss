@@ -732,6 +732,9 @@ bx-structured-list.forecast-list,
   .warning-header {
     flex: 1 1 0;
   }
+  .dwd-warning-row + .dwd-warning-row {
+    margin-top: $spacing-06;
+  }
 }
 
 .almanac-tile {

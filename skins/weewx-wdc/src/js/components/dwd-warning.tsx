@@ -41,6 +41,8 @@ const warningLinks: { [key: string]: string } = {
   BW: "https://www.dwd.de/DE/wetter/warnungen_aktuell/warnlagebericht/baden-wuerttemberg/warnlage_baw_node.html",
 };
 
+const translations = (window as any).weewxWdcConfig.translations;
+
 export const DWDWarning: React.FC<DWDWarnings> = (
   props: DWDWarnings
 ): React.ReactElement => {
@@ -48,7 +50,7 @@ export const DWDWarning: React.FC<DWDWarnings> = (
     return (
       <>
         {props.warnings.map((warning, index) => (
-          <div key={index}>
+          <div key={index} className="dwd-warning-row">
             <header className="bx--row" style={{ marginBottom: "0.75rem" }}>
               <div
                 className="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-12 bx--col-max-12"
@@ -74,13 +76,13 @@ export const DWDWarning: React.FC<DWDWarnings> = (
             </p>
             {warning.instruction ? (
               <TooltipDefinition tooltipText={warning.instruction}>
-                Verhaltenshinweise
+                {translations.Verhaltenshinweise}
               </TooltipDefinition>
             ) : null}
           </div>
         ))}
         <p className="bx--type-helper-text-01" style={{ paddingTop: "0.5rem" }}>
-          Quelle:{" "}
+          {translations.source}:{" "}
           <a href={warningLinks[props.warnings[0].stateShort]} target="_blank">
             DWD
           </a>
@@ -89,5 +91,5 @@ export const DWDWarning: React.FC<DWDWarnings> = (
     );
   }
 
-  return <p>zur Zeit keine Warnungen</p>;
+  return <p dangerouslySetInnerHTML={{ __html: translations.no_warnings }} />;
 };

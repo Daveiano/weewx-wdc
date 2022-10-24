@@ -29,7 +29,7 @@
         <div class="bx--grid bx--grid--full-width">
           <div class="bx--row">
             <header class="bx--col page-header">
-              <h1>Vorhersage vom Deutschen Wetterdienst</h1>
+              <h1>$gettext("Vorhersage vom Deutschen Wetterdienst")</h1>
             </header>
           </div>
 
@@ -42,7 +42,7 @@
               <!--prettier-ignore-->
               <div class="bx--tile">
                 #set $today = datetime.date.today()
-                #set $headings = {54: 'Aktuelle Wetterlage', 50: 'Heute', 51: 'Morgen', 52: ($today + datetime.timedelta(days=2)).strftime("%A"), 53: ($today + datetime.timedelta(days=3)).strftime("%A")}
+                #set $headings = {54: $pgettext("DWD", "Current Weather Conditions"), 50: $pgettext("DWD", "Today"), 51: $pgettext("DWD", "Tomorrow"), 52: $pgettext("DWD", ($today + datetime.timedelta(days=2)).strftime("%A")), 53: $pgettext("DWD", ($today + datetime.timedelta(days=3)).strftime("%A"))}
                 #for $day in [54, 50, 51, 52, 53]
                   #if os.path.exists("dwd/VHDL" + str($day) + "_" + $VHDL + "_LATEST.html")
                     <h4 class="bx--type-productive-heading-02">$headings[$day]</h4>
@@ -56,7 +56,7 @@
                 #end for
 
                 <p style="text-align: right;">
-                    [Quelle:
+                    [$gettext('Source'):
                     <a
                     href="$dwd_link"
                     target="_blank"
@@ -97,7 +97,7 @@
               class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-12 bx--col-max-12"
             >
               <header class="bx--col section-header">
-                <h2>Aktuelle Bodendruck- und Warnkarte</h2>
+                <h2>$gettext("Aktuelle Bodendruck- und Warnkarte")</h2>
               </header>
             </div>
             <!--prettier-ignore-->
@@ -108,9 +108,9 @@
               <div class="bx--tile">
                 <dds-image-with-caption
                   default-src="dwd/bwk_bodendruck_na_ana.png"
-                  heading="Analyse- und Prognosekarten Europa"
-                  alt="Luftdruckkarte Europa/Nordatlantik"
-                  title="Analyse- und Prognosekarten Europa"
+                  heading='$gettext("Analyse- und Prognosekarten Europa")'
+                  alt='$gettext("Analyse- und Prognosekarten Europa")'
+                  title='$gettext("Analyse- und Prognosekarten Europa")'
                   lightbox="false"
                 >
                   <dds-image-item
@@ -131,9 +131,9 @@
               <div class="bx--tile">
                 <dds-image-with-caption
                   default-src="dwd/$Extras['weewx-DWD']['warning_map_filename']"
-                  heading="Wetterwarnungen"
-                  alt="Wetterwarnungen"
-                  title="Wetterwarnungen"
+                  heading='$gettext("Wetterwarnungen")'
+                  alt='$gettext("Wetterwarnungen")'
+                  title='$gettext("Wetterwarnungen")'
                   lightbox="false"
                 >
                   <dds-image-item
@@ -155,7 +155,7 @@
               class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-12 bx--col-max-12"
             >
               <header class="bx--col section-header">
-                <h2>Wetterwarnungen</h2>
+                <h2>$gettext("Wetterwarnungen")</h2>
               </header>
             </div>
 

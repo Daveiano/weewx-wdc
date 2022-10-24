@@ -62,6 +62,9 @@
       "obs_barometer": "$obs.label['barometer']",
       "obs_wind_speed": "$gettext('Wind Speed')",
       "obs_precipitation": "$gettext('Precipitation')",
+      "no_warnings": "$gettext('zur Zeit keine Warnungen')",
+      "Verhaltenshinweise": "$gettext('Verhaltenshinweise')",
+      "source": "$gettext('Source')",
 
     }
   };

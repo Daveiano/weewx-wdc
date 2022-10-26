@@ -453,7 +453,41 @@ Line 290:
 
 # 2.3.1
 
-- Bugfixes for weewx-DWD Support [GH-81]: Make static `SchilderLZ.jpg` configurable, fixed various encoding issues for DE (Umlaute, `&shy;`). Added gettext/pgettext to headings/texts to make it easier to change for the user.
+**This is a minor Bugfix release which you will likely only need to install if you use weewx-DWD. Besides that, only a tiny Bugfix is included: [GH-83]**
+
+- Bugfixes for weewx-DWD Support [GH-81]: Make static `SchilderLZ.jpg` configurable, fixed various encoding issues for DE (Umlaute, `&shy;`).
+- Restructured DWD Text forecast, Added gettext/pgettext to headings/texts to make it easier to change for the user. [GH-86]
 - Using the gettext function for "WeeWX version" in footer.inc [GH-83]
+
+## Changes made to skin.conf since 2.3.0:
+
+Line 39 following:
+
+```diff
+#[[weewx-DWD]]
+    #   show_text_forecast = True
+    #   text_forecast_VHDL = DWLG
+    #   dwd_link = https://www.dwd.de/DE/wetter/wetterundklima_vorort/sachsen/sac_node.html
+    #   show_pressure_map = True
+    #   show_warning_map = True
++   #   warning_map_filename = 'SchilderLZ.jpg'
+    #   show_text_warnings = True
+    #   show_warnings_on_front = XXX
+    #   show_forecast = True
+    #   mosmix_id = XXXX
+    #   [[[forecast_table_settings]]]
+    #       show_hourly = 1
+    #       show_date = 1
+    #       show_outlook = 1
+    #       show_temp = 1
+    #       show_dewpoint = 1
+    #       show_pressure = 1
+    #       show_wind= 1
+    #       show_pop = 1
+    #       show_precip = 1
+    #       show_cloud_cover = 1
+    #       show_sun_dur = 1
+    #       carbon_icons = 0
+```
 
 # Next

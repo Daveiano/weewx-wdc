@@ -45,6 +45,20 @@ class WdcGeneralUtil(SearchList):
         self.time_format = time_format_dict
         self.generator_to_date = to_date_dict
 
+    def get_base_path(self, path):
+        """
+        Get the base path + a given path.
+
+        Args:
+            path (string): The path
+
+        Returns:
+            str: The base path
+        """
+        base_path = self.skin_dict["Extras"].get("base_path", "./")
+
+        return base_path + path
+
     def show_yesterday(self):
         if "yesterday" in self.generator_to_date:
             return True

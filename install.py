@@ -42,6 +42,7 @@ class BasicInstaller(ExtensionInstaller):
                         "skins/weewx-wdc/week.html.tmpl",
                         "skins/weewx-wdc/month.html.tmpl",
                         "skins/weewx-wdc/dwd.html.tmpl",
+                        "skins/weewx-wdc/day-archive/day-%Y-%m-%d.html.tmpl",
                         "skins/weewx-wdc/month-%Y-%m.html.tmpl",
                         "skins/weewx-wdc/NOAA/NOAA-%Y-%m.txt.tmpl",
                         "skins/weewx-wdc/year.html.tmpl",

@@ -1,6 +1,7 @@
 <!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
+#import datetime
 #attr $context = 'day'
 #attr $use_parameter_month = False
 #attr $use_parameter_year = False
@@ -9,7 +10,7 @@
 <html lang="$lang">
   <head>
     #include "includes/html-head.inc"
-    <title>$station.location - $gettext("Current Weather Conditions")</title>
+    <title>$station.location - $gettext("Archive")</title>
   </head>
 
   <body class="theme-$DisplayOptions.get('layout', 'alternative')">
@@ -20,9 +21,26 @@
         <div class="bx--grid bx--grid--full-width">
           <div class="bx--row">
             <header class="bx--col page-header">
-              <h1>$gettext("Current Weather Conditions")</h1>
-              <h2>$current.dateTime</h2>
+              <h1>$gettext("Archive")</h1>
+              <h2>
+                $datetime.datetime.fromtimestamp($day.dateTime.raw).strftime($get_time_format_dict['daily_archive'])
+              </h2>
             </header>
+          </div>
+
+          <!--prettier-ignore-->
+          <div class="bx--row" style="margin-bottom: 2rem;">
+            <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6">
+              #set $archive_days = $get_archive_days_array($alltime.dateTime.raw, $latest.dateTime.raw, $get_time_format_dict['daily_archive'])
+              <script>
+                var archive_days = $jsonize($archive_days);
+                var archive_date_time = {
+                  format: "$get_time_format_dict['daily_archive']",
+                  now: "$datetime.datetime.fromtimestamp($current.dateTime.raw).strftime($get_time_format_dict['daily_archive'])",
+                }
+              </script>
+              <div class="statistics-day-select"></div>
+            </div>
           </div>
 
           <!--prettier-ignore-->
@@ -37,6 +55,6 @@
 
     #include "includes/footer.inc"
 
-    <script src="$get_base_path('dist/main.js')" defer></script>
+    <script src="$get_base_path(path='dist/main.js')" defer></script>
   </body>
 </html>

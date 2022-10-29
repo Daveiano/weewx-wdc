@@ -955,6 +955,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/he@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "@types/he@npm:1.1.2"
+  checksum: 71e9786c35330a2003a7692d5dc4f70946e4c45486f84d7a5792360c6c234cd34bf53421856de40a2c4bead9c21a805c309d72d012467f46bb2cce0571a9ba08
+  languageName: node
+  linkType: hard
+
 "@types/http-cache-semantics@npm:*":
   version: 4.0.1
   resolution: "@types/http-cache-semantics@npm:4.0.1"
@@ -3074,6 +3081,15 @@ __metadata:
   dependencies:
     function-bind: ^1.1.1
   checksum: b9ad53d53be4af90ce5d1c38331e712522417d017d5ef1ebd0507e07c2fbad8686fffb8e12ddecd4c39ca9b9b47431afbb975b8abf7f3c3b82c98e9aad052792
+  languageName: node
+  linkType: hard
+
+"he@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "he@npm:1.2.0"
+  bin:
+    he: bin/he
+  checksum: 3d4d6babccccd79c5c5a3f929a68af33360d6445587d628087f39a965079d84f18ce9c3d3f917ee1e3978916fc833bb8b29377c3b403f919426f91bc6965e7a7
   languageName: node
   linkType: hard
 
@@ -5326,6 +5342,7 @@ __metadata:
     "@types/carbon__icons-react": ^10.24.0
     "@types/color": ^3.0.3
     "@types/d3-scale": ^4.0.2
+    "@types/he": ^1.1.2
     "@types/plotly.js": ^2.12.1
     "@types/react": ^18.0.8
     "@types/react-dom": ^18.0.3
@@ -5342,6 +5359,7 @@ __metadata:
     dayjs: ^1.11.3
     eslint: ^8.14.0
     eslint-config-prettier: ^8.5.0
+    he: ^1.2.0
     mini-css-extract-plugin: ^2.6.1
     postcss-loader: ^7.0.1
     prettier: 2.6.2

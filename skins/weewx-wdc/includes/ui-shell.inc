@@ -18,28 +18,28 @@
     button-label-active="Close menu"
     button-label-inactive="Open menu"
   ></bx-header-menu-button>
-  <bx-header-name href="$get_base_path('index.html')" prefix="">
+  <bx-header-name href="$get_base_path(path='index.html')" prefix="">
     <!--prettier-ignore-->
     #include "includes/icons/wdc.svg"
     <span part="prefix" class="bx--header__name--prefix">WeeWX</span>
     $station.location
   </bx-header-name>
   <bx-header-nav menu-bar-label="Weewx $station.location - $current.dateTime">
-    <bx-header-nav-item href="$get_base_path('index.html')"
+    <bx-header-nav-item href="$get_base_path(path='index.html')"
       >$gettext("Today")</bx-header-nav-item
     >
     #if $show_yesterday
-    <bx-header-nav-item href="$get_base_path('yesterday.html')"
+    <bx-header-nav-item href="$get_base_path(path='yesterday.html')"
       >$gettext("Yesterday")</bx-header-nav-item
     >
     #end if
-    <bx-header-nav-item href="$get_base_path('week.html')"
+    <bx-header-nav-item href="$get_base_path(path='week.html')"
       >$gettext("Week")</bx-header-nav-item
     >
-    <bx-header-nav-item href="$get_base_path('month.html')"
+    <bx-header-nav-item href="$get_base_path(path='month.html')"
       >$gettext("Month")</bx-header-nav-item
     >
-    <bx-header-nav-item href="$get_base_path('year.html')"
+    <bx-header-nav-item href="$get_base_path(path='year.html')"
       >$gettext("Year")</bx-header-nav-item
     >
   </bx-header-nav>
@@ -134,25 +134,31 @@
 </bx-header>
 <bx-side-nav aria-label="Side navigation" collapse-mode="responsive">
   <bx-side-nav-items>
-    <bx-side-nav-link class="show-small" href="$get_base_path('index.html')"
+    <bx-side-nav-link
+      class="show-small"
+      href="$get_base_path(path='index.html')"
       ><span>$gettext("Today")</span></bx-side-nav-link
     >
     #if $show_yesterday
-    <bx-side-nav-link class="show-small" href="$get_base_path('yesterday.html')"
+    <bx-side-nav-link
+      class="show-small"
+      href="$get_base_path(path='yesterday.html')"
       ><span>$gettext("Yesterday")</span></bx-side-nav-link
     >
     #end if
-    <bx-side-nav-link class="show-small" href="$get_base_path('week.html')"
+    <bx-side-nav-link class="show-small" href="$get_base_path(path='week.html')"
       ><span>$gettext("Week")</span></bx-side-nav-link
     >
-    <bx-side-nav-link class="show-small" href="$get_base_path('month.html')"
+    <bx-side-nav-link
+      class="show-small"
+      href="$get_base_path(path='month.html')"
       ><span>$gettext("Month")</span></bx-side-nav-link
     >
-    <bx-side-nav-link class="show-small" href="$get_base_path('year.html')"
+    <bx-side-nav-link class="show-small" href="$get_base_path(path='year.html')"
       ><span>$gettext("Year")</span></bx-side-nav-link
     >
     <bx-side-nav-divider class="show-small"></bx-side-nav-divider>
-    <bx-side-nav-link href="$get_base_path('celestial.html')">
+    <bx-side-nav-link href="$get_base_path(path='celestial.html')">
       <svg
         slot="title-icon"
         xmlns="http://www.w3.org/2000/svg"
@@ -181,7 +187,7 @@
       </svg>
       <span>$gettext("Celestial")</span>
     </bx-side-nav-link>
-    <bx-side-nav-link href="$get_base_path('statistics.html')">
+    <bx-side-nav-link href="$get_base_path(path='statistics.html')">
       <svg
         slot="title-icon"
         width="16"
@@ -212,7 +218,7 @@
       <span>$gettext("Statistics")</span>
     </bx-side-nav-link>
     #for $static_page in $get_static_pages()
-    <bx-side-nav-link href="$get_base_path($static_page['link'])">
+    <bx-side-nav-link href="$get_base_path(path=$static_page['link'])">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         slot="title-icon"
@@ -252,7 +258,7 @@
     <bx-side-nav-menu title="$gettext('Years')">
       #for $year in $SummaryByYear
       <bx-side-nav-menu-item
-        href="$get_base_path('year-' + $str(year) + '.html')"
+        href="$get_base_path(path='year-' + $str(year) + '.html')"
       >
         <b>$year</b>
       </bx-side-nav-menu-item>
@@ -265,7 +271,7 @@
     <bx-side-nav-menu title="${year}">
       <!--prettier-ignore-->
       #for $month in $months_for_year
-      <bx-side-nav-menu-item href="$get_base_path('month-' + $str(month) + '.html')">
+      <bx-side-nav-menu-item href="$get_base_path(path='month-' + $str(month) + '.html')">
         <span>$datetime.datetime.strptime($month, "%Y-%m").strftime("%B")</span>
       </bx-side-nav-menu-item>
       #end for
@@ -283,17 +289,17 @@
 
   bxSideNavLinks.forEach((element) => {
     const isFront =
-      element.getAttribute("href").includes("index.html") ||
+      (element.getAttribute("href") &&
+        element.getAttribute("href").includes("index.html")) ||
       window.location.pathname === "/";
-
-    console.log("/" + element.getAttribute("href"));
 
     if (
       isFront ||
-      window.location.pathname.includes(
-        // Remove leading slash.
-        element.getAttribute("href").replace(/^\/+/, "")
-      )
+      (element.getAttribute("href") &&
+        window.location.pathname.includes(
+          // Remove leading slash.
+          element.getAttribute("href").replace(/^\/+/, "")
+        ))
     ) {
       element.setAttribute("active", true);
     }

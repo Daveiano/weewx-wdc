@@ -34,7 +34,7 @@
                 var archive_days = $jsonize($archive_days);
                 var archive_date_time = {
                   format: "$get_time_format_dict['daily_archive']",
-                  now: "$datetime.datetime.fromtimestamp($current.dateTime.raw).strftime($get_time_format_dict['daily_archive'])",
+                  now: "$datetime.datetime.fromtimestamp($latest.dateTime.raw).strftime($get_time_format_dict['daily_archive'])",
                 }
               </script>
               <div class="statistics-day-select"></div>

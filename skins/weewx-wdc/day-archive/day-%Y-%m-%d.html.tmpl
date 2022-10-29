@@ -31,11 +31,12 @@
           <!--prettier-ignore-->
           <div class="bx--row" style="margin-bottom: 2rem;">
             <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6">
+              #set $archive_days = $get_archive_days_array($alltime.dateTime.raw, $latest.dateTime.raw, $get_time_format_dict['daily_archive'])
               <script>
                 var archive_days = $jsonize($archive_days);
                 var archive_date_time = {
                   format: "$get_time_format_dict['daily_archive']",
-                  now: "$datetime.datetime.fromtimestamp($current.dateTime.raw).strftime($get_time_format_dict['daily_archive'])",
+                  now: "$datetime.datetime.fromtimestamp($latest.dateTime.raw).strftime($get_time_format_dict['daily_archive'])",
                 }
               </script>
               <div class="statistics-day-select"></div>

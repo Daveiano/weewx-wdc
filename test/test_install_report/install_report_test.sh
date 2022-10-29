@@ -104,7 +104,7 @@ testWeeReportRunCustom() {
 
     assertContains "$output" "Starting weewx reports (Alternative layout with customisations)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
-    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 520 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 521 files for report WdcReport in"
     assertContains "$output" "INFO weewx.reportengine: Copied 10 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"

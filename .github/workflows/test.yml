@@ -2,7 +2,7 @@ name: Tests
 
 on:
   push:
-    branches: [1.x, 2.x, 2.*.x]
+    branches: [1.x, 2.x, 2.*.x, 3.x]
     paths:
       - "**.py"
       - skins/**
@@ -12,7 +12,7 @@ on:
       - yarn.lock
       - playwright.config.ts
   pull_request:
-    branches: [1.x, 2.x, 2.*.x]
+    branches: [1.x, 2.x, 2.*.x, 3.x]
     paths:
       - "**.py"
       - skins/**

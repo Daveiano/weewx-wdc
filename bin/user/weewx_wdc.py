@@ -394,6 +394,8 @@ class WdcArchiveUtil(SearchList):
             list: Array of days
         """
         days = []
+        print(start_ts)
+        print(end_ts)
         start_date = datetime.datetime.fromtimestamp(start_ts)
         end_date = datetime.datetime.fromtimestamp(end_ts)
 

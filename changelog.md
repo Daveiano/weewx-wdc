@@ -491,3 +491,20 @@ Line 39 following:
 ```
 
 # Next
+
+- Added `yScaleMin = 0` to combined wind diagram. [GH-90]
+
+## Changes made to skin.conf since 2.3.1
+
+Line 133:
+
+```diff
+[[[[wind]]]]
+    label = 'Wind speed / Gust speed'
++   yScaleMin = 0
+    [[[[[obs]]]]]
+        [[[[[[speed]]]]]]
+            observation = "windSpeed"
+        [[[[[[gust]]]]]]
+            observation = "windGust"
+```

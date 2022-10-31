@@ -380,6 +380,18 @@ class WdcGeneralUtil(SearchList):
 
 
 class WdcArchiveUtil(SearchList):
+    def get_day_archive_enabled(self):
+        """
+        Get day archive enabled.
+
+        Returns:
+            bool|string: Value of day template if day archive is enabled, False otherwise.
+        """
+        try:
+            return self.generator.skin_dict["CheetahGenerator"]["SummaryByDay"]["summary_day"]["template"]
+        except KeyError:
+            return False
+
     @staticmethod
     def get_archive_days_array(start_ts, end_ts, date_format):
         """

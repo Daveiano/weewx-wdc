@@ -58,9 +58,10 @@ test.describe("Stat tiles", () => {
       "21.5°C"
     );
     // Tooltip present.
-    await expect(outTemp.locator("[data-test='max'] .stat-label")).toHaveText(
-      "Todays Max"
-    );
+    await expect(
+      outTemp.locator("[data-test='max'] .stat-label")
+    ).toContainText("Todays Max");
+
     await expect(
       outTemp.locator("[data-test='max'] .stat-label bx-tooltip-definition")
     ).toHaveCount(1);

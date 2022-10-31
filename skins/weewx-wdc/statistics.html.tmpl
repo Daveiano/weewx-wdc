@@ -29,7 +29,7 @@
           <!--prettier-ignore-->
           #if $get_day_archive_enabled()
           <!--prettier-ignore-->
-          <div class="bx--row" style="margin-bottom: 2rem;">
+          <div class="bx--row" style="margin-bottom: 2rem;" data-test="statistics-day-select">
             <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6">
               #set $archive_days = $get_archive_days_array($alltime.dateTime.raw, $current.dateTime.raw, $get_time_format_dict['daily_archive'])
               <script>

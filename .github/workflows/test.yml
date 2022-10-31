@@ -26,7 +26,7 @@ jobs:
   shunit2:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup node
         uses: actions/setup-node@v2
@@ -40,7 +40,7 @@ jobs:
       - name: Set custom run basePath
         run: |
           echo ${GITHUB_WORKSPACE}/test/e2e-tests/artifacts-custom-weewx-html/public_html/ \
-          sed -i -z -e "s|base_path = \/home\/dba\/dev\/weewx-wdc\/test\/e2e-tests\/artifacts-custom-weewx-html\/public_html/|base_path = ${GITHUB_WORKSPACE}\/test\/e2e-tests\/artifacts-custom-weewx-html\/public_html\/|g" ${GITHUB_WORKSPACE}/test/test_install_report/src/skin-custom.conf \
+          sed -i -z "s|base_path = \/home\/dba\/dev\/weewx-wdc\/test\/e2e-tests\/artifacts-custom-weewx-html\/public_html/|base_path = ${GITHUB_WORKSPACE}\/test\/e2e-tests\/artifacts-custom-weewx-html\/public_html\/|g" test/test_install_report/src/skin-custom.conf \
           echo $(cat test/test_install_report/src/skin-custom.conf)
 
       - name: Run shunit2 tests

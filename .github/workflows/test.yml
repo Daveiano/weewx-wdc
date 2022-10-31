@@ -40,8 +40,8 @@ jobs:
       - name: Set custom run basePath
         run: |
           echo ${GITHUB_WORKSPACE}/test/e2e-tests/artifacts-custom-weewx-html/public_html/ \
-          sed -i -z -e "s|base_path = /home/dba/dev/weewx-wdc/test/e2e-tests/artifacts-custom-weewx-html/public_html/|base_path = ${GITHUB_WORKSPACE}/test/e2e-tests/artifacts-custom-weewx-html/public_html/|g" test/test_install_report/src/skin-custom.conf \
-          cat test/test_install_report/src/skin-custom.conf
+          sed -i -z -e "s|base_path = \/home\/dba\/dev\/weewx-wdc\/test\/e2e-tests\/artifacts-custom-weewx-html\/public_html/|base_path = ${GITHUB_WORKSPACE}\/test\/e2e-tests\/artifacts-custom-weewx-html\/public_html\/|g" test/test_install_report/src/skin-custom.conf \
+          echo $(cat test/test_install_report/src/skin-custom.conf)
 
       - name: Run shunit2 tests
         run: ./test/run_tests.sh

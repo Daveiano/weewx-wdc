@@ -24,8 +24,10 @@
 <div class="bx--row">
   <!--prettier-ignore-->
   <header class="bx--col section-header">
-    #if $context == 'day'
+    #if $context == 'day' and not $daily_archive
       <h2>$gettext("Last 24 hours")</h2>
+    #else if $context == 'day' and $daily_archive
+      <h2>$day.dateTime.format($get_time_format_dict['daily_archive'])</h2>
     #else if $context == 'yesterday'
       <h2>$gettext("Yesterday")</h2>
     #else if $context == 'week'

@@ -2,6 +2,7 @@
 #errorCatcher Echo
 #encoding UTF-8
 #attr $context = 'day'
+#attr $daily_archive = False
 #attr $use_parameter_month = False
 #attr $use_parameter_year = False
 
@@ -37,6 +38,6 @@
 
     #include "includes/footer.inc"
 
-    <script src="dist/main.js" defer></script>
+    <script src="$get_base_path(path='dist/main.js')" defer></script>
   </body>
 </html>

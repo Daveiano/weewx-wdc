@@ -45,6 +45,24 @@ class WdcGeneralUtil(SearchList):
         self.time_format = time_format_dict
         self.generator_to_date = to_date_dict
 
+    def get_base_path(self, *args, **kwargs):
+        """
+        Get the base path + a given path.
+
+        Args:
+            path (string): The path
+
+        Returns:
+            str: The base path
+        """
+        path = kwargs.get("path", None)
+        base_path = self.skin_dict["Extras"].get("base_path", "/")
+
+        if path is None:
+            return base_path
+
+        return base_path + path
+
     def show_yesterday(self):
         if "yesterday" in self.generator_to_date:
             return True
@@ -362,6 +380,48 @@ class WdcGeneralUtil(SearchList):
 
 
 class WdcArchiveUtil(SearchList):
+    def get_day_archive_enabled(self):
+        """
+        Get day archive enabled.
+
+        Returns:
+            bool|string: Value of day template if day archive is enabled, False otherwise.
+        """
+        try:
+            return self.generator.skin_dict["CheetahGenerator"]["SummaryByDay"]["summary_day"]["template"]
+        except KeyError:
+            return False
+
+    @staticmethod
+    def get_archive_days_array(start_ts, end_ts, date_format):
+        """
+        Get an array of days between two timestamps.
+
+        Args:
+            start_ts (int): The start timestamp
+            end_ts (int): The end timestamp
+            date_format (string): The date format
+
+        Returns:
+            list: Array of days
+        """
+        days = []
+        start_date = datetime.datetime.fromtimestamp(start_ts)
+        end_date = datetime.datetime.fromtimestamp(end_ts)
+
+        for n in range(int((end_date - start_date).days) + 1):
+            days.append(
+                {
+                    "date": (start_date + datetime.timedelta(n)).strftime(date_format),
+                    "timestamp": int(
+                        time.mktime(
+                            (start_date + datetime.timedelta(n)).timetuple())
+                    ),
+                }
+            )
+
+        return days
+
     @staticmethod
     def filter_months(months, year):
         """

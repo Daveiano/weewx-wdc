@@ -508,3 +508,50 @@ Line 133:
         [[[[[[gust]]]]]]
             observation = "windGust"
 ```
+
+# 3.0.0
+
+- Show weather data for a specific day [GH-67]
+
+**Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki) for information on how to configure the new features.**
+
+## Changes made to skin.conf since X.X.X
+
+Line 6:
+
+```diff
+[Extras]
++   # If weewx is installed in some sub-folder of your web server,
++   # please specify the path here.
++   base_path = /
+```
+
+Line 246:
+
+```diff
+[CheetahGenerator]
+    encoding = html_entities
+    search_list_extensions = user.weewx_wdc.WdcGeneralUtil, user.weewx_wdc.WdcStatsUtil, user.weewx_wdc.WdcDiagramUtil, user.weewx_wdc.WdcCelestialUtil, user.weewx_wdc.WdcArchiveUtil, user.weewx_wdc.WdcTableUtil
+
++   #[[SummaryByDay]]
++   #    [[[summary_day]]]
++   #        template = day-archive/day-%Y-%m-%d.html.tmpl
+```
+
+Line 309:
+
+```diff
+[Units]
+    [[TimeFormats]]
+        # @see https://weewx.com/docs/customizing.htm#Units_TimeFormats
+        day        = %X
+        week       = %x
+        month      = %x
+        year       = %x
+        rainyear   = %x
+        current    = %x %X
+        ephem_day  = %X
+        ephem_year = %x
+        stats      = %x %X
++       daily_archive = %Y-%m-%d
+```

@@ -11,29 +11,37 @@
   window.WebComponents.root = "node_modules/@webcomponents/webcomponentsjs/";
 </script> -->
 #if 'windRose' in $DisplayOptions.get('diagram_tile_observations', [])
-<script src="plotly-custom-build.min.js" defer></script>
+<script src="$get_base_path(path='plotly-custom-build.min.js')" defer></script>
 #end if
 <link
-  href="dist/main.css"
+  href="$get_base_path(path='dist/main.css')"
   rel="preload"
   as="style"
   onload="this.onload=null;this.rel='stylesheet'"
 />
-<noscript><link rel="stylesheet" href="dist/main.css" /></noscript>
-<link rel="icon" type="image/x-icon" href="favicon.ico" />
+<noscript
+  ><link rel="stylesheet" href="$get_base_path(path='dist/main.css')"
+/></noscript>
+<link
+  rel="icon"
+  type="image/x-icon"
+  href="$get_base_path(path='favicon.ico')"
+/>
 <meta
   name="description"
   content='Weewx $station.location - $gettext("Station Description")'
 />
-<link rel="manifest" href="manifest.json" />
+<link rel="manifest" href="$get_base_path(path='manifest.json')" />
 <meta name="theme-color" content="#161616" />
-<link rel="apple-touch-icon" href="icon-192x192.png" />
+<link rel="apple-touch-icon" href="$get_base_path(path='icon-192x192.png')" />
 <script>
   // Check that service workers are supported
   if ("serviceWorker" in navigator) {
     // Use the window load event to keep the page load performant
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("service-worker.js");
+      navigator.serviceWorker.register(
+        "$get_base_path(path='service-worker.js')"
+      );
     });
   }
 </script>
@@ -48,6 +56,7 @@
     windRoseColors: $jsonize($DisplayOptions.get('windRose_colors', ["rgb(243, 206, 201)", "#e7a4b6", "#cd7eaf", "#a262a9", "#6f4d96", "#3d3b72"])),
     units: $unit.unit_type_dict,
     dwdForecastTable: $dwdForecastTable,
+    basePath: "$get_base_path()",
     translations: {
       "Daily": "$gettext('Daily')",
       "Hourly": "$gettext('Hourly')",
@@ -65,7 +74,10 @@
       "no_warnings": "$gettext('zur Zeit keine Warnungen')",
       "Verhaltenshinweise": "$gettext('Verhaltenshinweise')",
       "source": "$gettext('Source')",
-
+      "Select_a_day": "$gettext('Select a day')",
+      "Archive_day": "$gettext('Archive day')",
+      "stats_helper_text": "$gettext('Choose a day to view a statistics page. You can also filter/search for a date by start typing, eg:')",
+      "Format_is": "$gettext('Format is')",
     }
   };
 </script>

@@ -26,16 +26,24 @@ jobs:
   shunit2:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "14"
           cache: "yarn"
 
       - name: Install yarn and dependecies
         run: yarn install
+
+      - name: Set custom run basePath
+        env:
+          CUSTOM_BASE_PATH: "${{ github.workspace }}/test/e2e-tests/artifacts-custom-weewx-html/public_html/"
+        run: |
+          echo "$CUSTOM_BASE_PATH"
+          sed -i -z "s|base_path = \/home\/dba\/dev\/weewx-wdc\/test\/e2e-tests\/artifacts-custom-weewx-html\/public_html/|base_path = \"${CUSTOM_BASE_PATH}\"|g" test/test_install_report/src/skin-custom.conf
+          echo $(cat test/test_install_report/src/skin-custom.conf)
 
       - name: Run shunit2 tests
         run: ./test/run_tests.sh
@@ -75,10 +83,10 @@ jobs:
     needs: shunit2
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: 🔨 Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "14"
           cache: "yarn"

@@ -7,6 +7,7 @@ import { BarDiagram } from "./diagrams/bar";
 import { LineDiagram } from "./diagrams/line";
 import type { context, Series } from "./diagrams/types";
 import { CalendarDiagram } from "./diagrams/calendar";
+import { StatisticsSelect } from "./components/statistics-select";
 
 import "./../scss/index.scss";
 import { WindRoseDiagram } from "./diagrams/windrose";
@@ -182,6 +183,13 @@ if (table) {
       }
     />
   );
+}
+
+const statsSelect = document.querySelector("div.statistics-day-select");
+if (statsSelect) {
+  const root = createRoot(statsSelect);
+
+  root.render(<StatisticsSelect items={(window as any).archive_days} />);
 }
 
 const dwdWarnings = document.querySelectorAll("div.dwd-warning");

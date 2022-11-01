@@ -1,6 +1,7 @@
 <!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
+#import datetime
 #attr $context = 'alltime'
 #attr $use_parameter_month = False
 #attr $use_parameter_year = False
@@ -26,6 +27,24 @@
           </div>
 
           <!--prettier-ignore-->
+          #if $get_day_archive_enabled()
+          <!--prettier-ignore-->
+          <div class="bx--row" style="margin-bottom: 2rem;" data-test="statistics-day-select">
+            <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6">
+              #set $archive_days = $get_archive_days_array($alltime.dateTime.raw, $current.dateTime.raw, $get_time_format_dict['daily_archive'])
+              <script>
+                var archive_days = $jsonize($archive_days);
+                var archive_date_time = {
+                  format: "$get_time_format_dict['daily_archive']",
+                  now: "$datetime.datetime.fromtimestamp($latest.dateTime.raw).strftime($get_time_format_dict['daily_archive'])",
+                }
+              </script>
+              <div class="statistics-day-select"></div>
+            </div>
+          </div>
+          #end if
+
+          <!--prettier-ignore-->
           #if len($DisplayOptions.get('climatological_days', [])) > 0
           <div class="bx--row">
             <div class="bx--col">
@@ -47,6 +66,6 @@
 
     #include "includes/footer.inc"
 
-    <script src="dist/main.js" defer></script>
+    <script src="$get_base_path(path='dist/main.js')" defer></script>
   </body>
 </html>

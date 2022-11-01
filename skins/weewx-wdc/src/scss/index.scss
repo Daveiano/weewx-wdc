@@ -737,6 +737,44 @@ bx-structured-list.forecast-list,
   }
 }
 
+.statistics-day-select {
+  .bx--list-box__field {
+    button {
+      box-sizing: border-box;
+      padding: 0;
+      border: 0;
+      margin: 0;
+      font-family: inherit;
+      font-size: 100%;
+      vertical-align: baseline;
+      display: inline-block;
+      padding: 0;
+      border: 0;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background: 0 0;
+      cursor: pointer;
+      text-align: start;
+      position: absolute;
+      right: 1rem;
+      display: flex;
+      width: 1.5rem;
+      height: 2.25rem;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      outline: none;
+      svg {
+        fill: var(--cds-icon-primary, #161616);
+      }
+      & + button {
+        right: 2.5rem;
+      }
+    }
+  }
+}
+
 .almanac-tile {
   margin-bottom: $spacing-05;
   .label {

@@ -130,6 +130,8 @@ test.describe("Diagrams", () => {
   test("Windrose with non-beaufort untis", async ({ page }) => {
     await page.goto("artifacts-custom-weewx-html/public_html/index.html");
 
+    console.log(page.url());
+
     const windrose = page.locator(".diagram-tile[data-test='windrose']");
     expect(
       await windrose.locator(".value script").innerText()

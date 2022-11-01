@@ -699,15 +699,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:^1.24.2":
-  version: 1.24.2
-  resolution: "@playwright/test@npm:1.24.2"
+"@playwright/test@npm:latest":
+  version: 1.27.1
+  resolution: "@playwright/test@npm:1.27.1"
   dependencies:
     "@types/node": "*"
-    playwright-core: 1.24.2
+    playwright-core: 1.27.1
   bin:
     playwright: cli.js
-  checksum: 3d24ae59572977a6ad4ef20efbfa029ed3cce45707496838729ff0b6df4d5526e7caa3f24cbbe02a42762fd7c997444fd5fd241f3e49578b320603d29b0cd370
+  checksum: 92f219a78c21da03c6599d92c313c914e73cc374306366130fb3bd4701555179394ec5a3000d9375ce59f5a03c00f20d1ddaae50c85583ce475e17795a622699
   languageName: node
   linkType: hard
 
@@ -952,6 +952,13 @@ __metadata:
   version: 0.0.51
   resolution: "@types/estree@npm:0.0.51"
   checksum: e56a3bcf759fd9185e992e7fdb3c6a5f81e8ff120e871641607581fb3728d16c811702a7d40fa5f869b7f7b4437ab6a87eb8d98ffafeee51e85bbe955932a189
+  languageName: node
+  linkType: hard
+
+"@types/he@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "@types/he@npm:1.1.2"
+  checksum: 71e9786c35330a2003a7692d5dc4f70946e4c45486f84d7a5792360c6c234cd34bf53421856de40a2c4bead9c21a805c309d72d012467f46bb2cce0571a9ba08
   languageName: node
   linkType: hard
 
@@ -3077,6 +3084,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"he@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "he@npm:1.2.0"
+  bin:
+    he: bin/he
+  checksum: 3d4d6babccccd79c5c5a3f929a68af33360d6445587d628087f39a965079d84f18ce9c3d3f917ee1e3978916fc833bb8b29377c3b403f919426f91bc6965e7a7
+  languageName: node
+  linkType: hard
+
 "http-cache-semantics@npm:^4.0.0, http-cache-semantics@npm:^4.1.0":
   version: 4.1.0
   resolution: "http-cache-semantics@npm:4.1.0"
@@ -4104,12 +4120,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright-core@npm:1.24.2":
-  version: 1.24.2
-  resolution: "playwright-core@npm:1.24.2"
+"playwright-core@npm:1.27.1":
+  version: 1.27.1
+  resolution: "playwright-core@npm:1.27.1"
   bin:
     playwright: cli.js
-  checksum: b52f9b0cf61c03bb616de889ddbbe88b66ed68c556d3ef1f1148d1a832fa6edec9132cd8aa28e63926b05629fafa78ba419ce0412da91e97e135e66376b457f7
+  checksum: fd65d3eb29978e0e7a755158625e8922a66ca9d599b7c24ddf920822b261d81c51a5964ef8e0e5ed9b2b12dc64541c5949b6a898d965e107f43261964e8c29a0
   languageName: node
   linkType: hard
 
@@ -5320,12 +5336,13 @@ __metadata:
     "@nivo/calendar": ^0.79.1
     "@nivo/core": ^0.79.0
     "@nivo/line": ^0.79.1
-    "@playwright/test": ^1.24.2
+    "@playwright/test": latest
     "@react-hook/media-query": ^1.1.1
     "@types/carbon-components-react": ^7.46.1
     "@types/carbon__icons-react": ^10.24.0
     "@types/color": ^3.0.3
     "@types/d3-scale": ^4.0.2
+    "@types/he": ^1.1.2
     "@types/plotly.js": ^2.12.1
     "@types/react": ^18.0.8
     "@types/react-dom": ^18.0.3
@@ -5342,6 +5359,7 @@ __metadata:
     dayjs: ^1.11.3
     eslint: ^8.14.0
     eslint-config-prettier: ^8.5.0
+    he: ^1.2.0
     mini-css-extract-plugin: ^2.6.1
     postcss-loader: ^7.0.1
     prettier: 2.6.2

@@ -56,7 +56,7 @@ class WdcGeneralUtil(SearchList):
             str: The base path
         """
         path = kwargs.get("path", None)
-        base_path = self.skin_dict["Extras"].get("base_path", "./")
+        base_path = self.skin_dict["Extras"].get("base_path", "/")
 
         if path is None:
             return base_path

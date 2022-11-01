@@ -523,7 +523,7 @@ Line 6:
 [Extras]
 +   # If weewx is installed in some sub-folder of your web server,
 +   # please specify the path here.
-+   base_path = ./
++   base_path = /
 ```
 
 Line 246:

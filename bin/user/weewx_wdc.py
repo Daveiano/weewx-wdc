@@ -598,13 +598,14 @@ class WdcDiagramUtil(SearchList):
 
         return "line"
 
-    def get_aggregate_type(self, observation, *args, **kwargs):
+    def get_aggregate_type(self, observation, context, *args, **kwargs):
         """
         aggregate_type for observations series.
         @see https://github.com/weewx/weewx/wiki/Tags-for-series#syntax
 
         Args:
             observation (string): The observation
+            context (string): The context
 
         Returns:
             string: aggregate_type
@@ -613,6 +614,14 @@ class WdcDiagramUtil(SearchList):
         combined = kwargs.get("combined", None)
         diagrams_config = self.skin_dict["DisplayOptions"]["diagrams"]
 
+        try:
+            aggregate_type = search_up(diagrams_config[context]["observations"][observation], "aggregate_type", None)
+        except KeyError:
+            aggregate_type = None
+
+        if aggregate_type is not None:
+            return aggregate_type
+
         if combined is not None and "aggregate_type" in combined and not use_defaults:
             return combined["aggregate_type"]
 
@@ -620,7 +629,6 @@ class WdcDiagramUtil(SearchList):
                 not use_defaults
                 and observation in diagrams_config
                 and "aggregate_type" in diagrams_config[observation]
-                and combined is None
         ):
             return diagrams_config[observation]["aggregate_type"]
 
@@ -797,25 +805,36 @@ class WdcDiagramUtil(SearchList):
 
         return hour_delta
 
-    def get_nivo_props(self, obs):
+    def get_diagram_props(self, obs, context):
         """
         Get nivo props from skin.conf.
 
         Args:
             obs (string): Observation
+            context (string): Day, week, month, year, alltime
 
         Returns:
             dict: Nivo props.
         """
+        if context == "yesterday":
+            context = "day"
+
         diagrams_config = self.skin_dict["DisplayOptions"]["diagrams"]
         diagram_base_props = diagrams_config[self.get_diagram(obs)]
 
+        diagram_context_props = accumulateLeaves(diagrams_config[context]['observations'][obs], max_level=3)
+
         if obs in diagrams_config:
-            return {**diagram_base_props, **diagrams_config[obs]}
+            return {
+                **diagram_base_props,
+                **diagrams_config[obs],
+                **diagram_context_props
+            }
         elif obs in diagrams_config["combined_observations"]:
             return {
                 **diagram_base_props,
                 **diagrams_config["combined_observations"][obs],
+                **diagram_context_props
             }
         else:
             return diagram_base_props
@@ -1507,7 +1526,7 @@ class WdcTableUtil(SearchList):
                     TimeSpan(start_ts, end_ts),
                     self.db_manager,
                     aggregate_type=self.diagram_util.get_aggregate_type(
-                        observation, use_defaults=True
+                        observation, context, use_defaults=True
                     ),
                     aggregate_interval=self.get_table_aggregate_interval(
                         context=context

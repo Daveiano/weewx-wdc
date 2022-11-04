@@ -1,1 +1,1 @@
-{'lineWidth': '2', 'pointSize': '5', 'isInteractive': 'True', 'enablePoints': 'True', 'enableCrosshair': 'True', 'yScaleOffset': '1', 'curve': 'step', 'aggregate_type': 'max', 'yScaleMin': '0'}
+{'lineWidth': '2', 'pointSize': '5', 'isInteractive': 'True', 'enablePoints': 'True', 'enableCrosshair': 'True', 'yScaleOffset': '1', 'curve': 'step', 'aggregate_type': 'max', 'yScaleMin': '0', 'aggregate_interval': '1800'}

@@ -50,8 +50,8 @@
             data-obs="$get_diagram_type($partial_obs)"
             data-diagram="$get_diagram($partial_obs)"
             data-context="$context"
-            data-aggregate-type="['$get_aggregate_type($partial_obs)']"
-            data-nivo-props="$get_nivo_props($partial_obs)"
+            data-aggregate-type="['$get_aggregate_type($partial_obs, $context)']"
+            data-nivo-props="$get_diagram_props($partial_obs, $context)"
           ></div>
         </div>
       </div>

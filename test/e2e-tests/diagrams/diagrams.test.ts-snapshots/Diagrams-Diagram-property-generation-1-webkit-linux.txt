@@ -1,1 +1,1 @@
-['Outside Temperature', 'Outside Temperature', 'Outside Temperature']
+['UV Index']

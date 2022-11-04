@@ -20,6 +20,7 @@ from weewx.units import (
 from weewx.wxformulas import beaufort
 from weewx.tags import TimespanBinder
 from weeutil.weeutil import TimeSpan, rounder, to_bool, to_int
+from weeutil.config import search_up, accumulateLeaves
 
 if weewx.__version__ < "4.6":
     raise weewx.UnsupportedFeature(
@@ -71,6 +72,50 @@ class WdcGeneralUtil(SearchList):
 
     def get_time_format_dict(self):
         return self.time_format
+
+    def get_windrose_enabled(self):
+        """
+        Check if the windrose is enabled.
+
+        Returns:
+            bool: True if the windrose is enabled, False otherwise.
+        """
+        try:
+            windrose_day_enabled = False
+            if "windRose" in self.skin_dict["DisplayOptions"]["diagrams"]["day"]["observations"]:
+                windrose_day_enabled = True
+        except KeyError:
+            windrose_day_enabled = False
+
+        try:
+            windrose_week_enabled = False
+            if "windRose" in self.skin_dict["DisplayOptions"]["diagrams"]["week"]["observations"]:
+                windrose_week_enabled = True
+        except KeyError:
+            windrose_week_enabled = False
+
+        try:
+            windrose_month_enabled = False
+            if "windRose" in self.skin_dict["DisplayOptions"]["diagrams"]["month"]["observations"]:
+                windrose_month_enabled = True
+        except KeyError:
+            windrose_month_enabled = False
+
+        try:
+            windrose_year_enabled = False
+            if "windRose" in self.skin_dict["DisplayOptions"]["diagrams"]["year"]["observations"]:
+                windrose_year_enabled = True
+        except KeyError:
+            windrose_year_enabled = False
+
+        try:
+            windrose_alltime_enabled = False
+            if "windRose" in self.skin_dict["DisplayOptions"]["diagrams"]["alltime"]["observations"]:
+                windrose_alltime_enabled = True
+        except KeyError:
+            windrose_alltime_enabled = False
+
+        return windrose_day_enabled or windrose_week_enabled or windrose_month_enabled or windrose_year_enabled or windrose_alltime_enabled
 
     @staticmethod
     def get_icon(observation):
@@ -613,26 +658,19 @@ class WdcDiagramUtil(SearchList):
         context_dict = self.generator.skin_dict["DisplayOptions"]["diagrams"].get(
             context, {})
         try:
-            aggregate_interval_context = context_dict.get(
-                "aggregate_interval", False)
+            aggregate_interval = search_up(context_dict['observations'][observation], 'aggregate_interval')
         except KeyError:
-            aggregate_interval_context = False
+            aggregate_interval = search_up(context_dict, 'aggregate_interval', False)
+        except AttributeError:
+            aggregate_interval = False
 
-        try:
-            aggregate_interval_observation = context_dict[observation].get(
-                "aggregate_interval", False)
-        except KeyError:
-            aggregate_interval_observation = False
-
-        if aggregate_interval_observation:
-            return aggregate_interval_observation
-
-        if aggregate_interval_context:
-            return aggregate_interval_context
+        if aggregate_interval:
+            return aggregate_interval
 
         # Then, use defaults.
         if context == "day":
             if observation == "ET" or observation == "rain":
+                print('Komisch')
                 return 7200  # 2 hours
 
             return 1800  # 30 minutes

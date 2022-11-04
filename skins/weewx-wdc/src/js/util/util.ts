@@ -3,15 +3,6 @@ import { Box } from "@nivo/core";
 import { Series } from "../diagrams/types";
 import dayjs from "dayjs";
 
-export const enableArea: string[] = [
-  "humidity",
-  "pressure",
-  "wind",
-  "radiation",
-  "UV",
-  "cloudbase",
-];
-
 export const getyScale = (
   data: Series[],
   yScaleOffset: string,

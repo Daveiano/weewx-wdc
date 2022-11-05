@@ -590,6 +590,8 @@ class WdcDiagramUtil(SearchList):
     @staticmethod
     def get_diagram_type(observation):
         """
+        TODO: Remove.
+
         Set e.g. "temp" for all diagrams which should be rendered as temp
         diagram (includes also heat anmd windchill).
 
@@ -617,8 +619,7 @@ class WdcDiagramUtil(SearchList):
 
         return observation
 
-    @staticmethod
-    def get_diagram(observation):
+    def get_diagram(self, observation):
         """
         Choose between line and bar.
 
@@ -628,6 +629,12 @@ class WdcDiagramUtil(SearchList):
         Returns:
             str: A diagram string
         """
+        try:
+            type = self.skin_dict["DisplayOptions"]["diagrams"][observation]["type"]
+            return type
+        except KeyError:
+            pass
+
         if observation == "rain" or observation == "ET":
             return "bar"
 

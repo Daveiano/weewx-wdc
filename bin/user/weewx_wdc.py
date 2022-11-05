@@ -189,17 +189,52 @@ class WdcGeneralUtil(SearchList):
         elif "Humid" in observation:
             return icon_path + "humidity.svg"
 
-    def get_color(self, observation):
+    def get_color(self, observation, context, *args, **kwargs):
         """
         Color settings for observations.
 
         Args:
             observation (string): The observation
+            context (string): The context
 
         Returns:
             str: A color string
         """
         diagrams_config = self.skin_dict["DisplayOptions"]["diagrams"]
+
+        combined = kwargs.get("combined", False)
+        combined_obs = kwargs.get("combined_obs", None)
+        combined_obs_key = kwargs.get("combined_obs_key", None)
+
+        try:
+            color = search_up(diagrams_config[context]["observations"][observation], "color", None)
+            if color is not None:
+                return color
+        except KeyError:
+            try:
+                color = search_up(diagrams_config[context], "color", None)
+                if color is not None:
+                    return color
+            except KeyError:
+                color = None
+
+        # For combined diagrams, observation = temp_min_max_avg
+        # and combined_obs = outTemp, combined_obs_key = outTemp_max
+        if combined and combined_obs_key is not None and combined_obs is not None:
+            try:
+                color = search_up(diagrams_config[context]["observations"][combined_obs], "color", None)
+                if color is not None:
+                    return color
+            except KeyError:
+                try:
+                    color = search_up(diagrams_config["combined_observations"][observation]["obs"][combined_obs_key], "color", None)
+                    if color is not None:
+                        return color
+                except KeyError:
+                    color = None
+
+        if color is not None:
+            return color
 
         if observation in diagrams_config and "color" in diagrams_config[observation]:
             return diagrams_config[observation]["color"]

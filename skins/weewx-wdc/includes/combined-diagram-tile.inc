@@ -43,7 +43,7 @@
             #silent $series_names.append($series_name)
             #silent $series_labels.append($obs.label[$series_observation])
             #silent $series_aggregate_type.append($get_aggregate_type($series_observation, $context, combined=$combined_diagram.obs[$combined_obs]))
-            #if 'color' in $combined_diagram.obs[$combined_obs] then $series_colors.append($combined_diagram.obs[$combined_obs].color) else $series_colors.append($get_color($series_observation))#
+            #silent $series_colors.append($get_color($comb_obs, $context, combined=True, combined_obs_key=$combined_obs, combined_obs=$series_observation))
 
           <!--prettier-ignore-->
           #if $context == 'month' and $use_parameter_month

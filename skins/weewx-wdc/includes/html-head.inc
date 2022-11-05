@@ -10,7 +10,7 @@
   window.WebComponents = window.WebComponents || {};
   window.WebComponents.root = "node_modules/@webcomponents/webcomponentsjs/";
 </script> -->
-#if 'windRose' in $DisplayOptions.get('diagram_tile_observations', [])
+#if $get_windrose_enabled()
 <script src="$get_base_path(path='plotly-custom-build.min.js')" defer></script>
 #end if
 <link

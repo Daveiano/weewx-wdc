@@ -5,7 +5,7 @@ import type { Serie } from "@nivo/line";
 import { CarbonDataTableStateManager } from "carbon-data-table-state-manager";
 import { BarDiagram } from "./diagrams/bar";
 import { LineDiagram } from "./diagrams/line";
-import type { context, Series } from "./diagrams/types";
+import type { context, DiagramBaseProps, Series } from "./diagrams/types";
 import { CalendarDiagram } from "./diagrams/calendar";
 import { StatisticsSelect } from "./components/statistics-select";
 
@@ -52,8 +52,7 @@ diagrams.forEach((diagram) => {
     diagram.dataset.color
   ) {
     let data: Serie[] = [];
-    let nivoProps: { [index: string]: string | boolean; yScaleOffset: string } =
-      { yScaleOffset: "3" };
+    let nivoProps: any = {};
     const combined = diagram.classList.contains("combined");
     const root = createRoot(diagram);
 

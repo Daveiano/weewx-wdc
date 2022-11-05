@@ -20,6 +20,7 @@ from weewx.units import (
 from weewx.wxformulas import beaufort
 from weewx.tags import TimespanBinder
 from weeutil.weeutil import TimeSpan, rounder, to_bool, to_int
+from weeutil.config import search_up, accumulateLeaves
 
 if weewx.__version__ < "4.6":
     raise weewx.UnsupportedFeature(
@@ -71,6 +72,50 @@ class WdcGeneralUtil(SearchList):
 
     def get_time_format_dict(self):
         return self.time_format
+
+    def get_windrose_enabled(self):
+        """
+        Check if the windrose is enabled.
+
+        Returns:
+            bool: True if the windrose is enabled, False otherwise.
+        """
+        try:
+            windrose_day_enabled = False
+            if "windRose" in self.skin_dict["DisplayOptions"]["diagrams"]["day"]["observations"]:
+                windrose_day_enabled = True
+        except KeyError:
+            windrose_day_enabled = False
+
+        try:
+            windrose_week_enabled = False
+            if "windRose" in self.skin_dict["DisplayOptions"]["diagrams"]["week"]["observations"]:
+                windrose_week_enabled = True
+        except KeyError:
+            windrose_week_enabled = False
+
+        try:
+            windrose_month_enabled = False
+            if "windRose" in self.skin_dict["DisplayOptions"]["diagrams"]["month"]["observations"]:
+                windrose_month_enabled = True
+        except KeyError:
+            windrose_month_enabled = False
+
+        try:
+            windrose_year_enabled = False
+            if "windRose" in self.skin_dict["DisplayOptions"]["diagrams"]["year"]["observations"]:
+                windrose_year_enabled = True
+        except KeyError:
+            windrose_year_enabled = False
+
+        try:
+            windrose_alltime_enabled = False
+            if "windRose" in self.skin_dict["DisplayOptions"]["diagrams"]["alltime"]["observations"]:
+                windrose_alltime_enabled = True
+        except KeyError:
+            windrose_alltime_enabled = False
+
+        return windrose_day_enabled or windrose_week_enabled or windrose_month_enabled or windrose_year_enabled or windrose_alltime_enabled
 
     @staticmethod
     def get_icon(observation):
@@ -144,17 +189,52 @@ class WdcGeneralUtil(SearchList):
         elif "Humid" in observation:
             return icon_path + "humidity.svg"
 
-    def get_color(self, observation):
+    def get_color(self, observation, context, *args, **kwargs):
         """
         Color settings for observations.
 
         Args:
             observation (string): The observation
+            context (string): The context
 
         Returns:
             str: A color string
         """
         diagrams_config = self.skin_dict["DisplayOptions"]["diagrams"]
+
+        combined = kwargs.get("combined", False)
+        combined_obs = kwargs.get("combined_obs", None)
+        combined_obs_key = kwargs.get("combined_obs_key", None)
+
+        try:
+            color = search_up(diagrams_config[context]["observations"][observation], "color", None)
+            if color is not None:
+                return color
+        except KeyError:
+            try:
+                color = search_up(diagrams_config[context], "color", None)
+                if color is not None:
+                    return color
+            except KeyError:
+                color = None
+
+        # For combined diagrams, observation = temp_min_max_avg
+        # and combined_obs = outTemp, combined_obs_key = outTemp_max
+        if combined and combined_obs_key is not None and combined_obs is not None:
+            try:
+                color = search_up(diagrams_config[context]["observations"][combined_obs], "color", None)
+                if color is not None:
+                    return color
+            except KeyError:
+                try:
+                    color = search_up(diagrams_config["combined_observations"][observation]["obs"][combined_obs_key], "color", None)
+                    if color is not None:
+                        return color
+                except KeyError:
+                    color = None
+
+        if color is not None:
+            return color
 
         if observation in diagrams_config and "color" in diagrams_config[observation]:
             return diagrams_config[observation]["color"]
@@ -510,6 +590,8 @@ class WdcDiagramUtil(SearchList):
     @staticmethod
     def get_diagram_type(observation):
         """
+        TODO: Remove.
+
         Set e.g. "temp" for all diagrams which should be rendered as temp
         diagram (includes also heat anmd windchill).
 
@@ -537,8 +619,7 @@ class WdcDiagramUtil(SearchList):
 
         return observation
 
-    @staticmethod
-    def get_diagram(observation):
+    def get_diagram(self, observation):
         """
         Choose between line and bar.
 
@@ -548,18 +629,25 @@ class WdcDiagramUtil(SearchList):
         Returns:
             str: A diagram string
         """
+        try:
+            type = self.skin_dict["DisplayOptions"]["diagrams"][observation]["type"]
+            return type
+        except KeyError:
+            pass
+
         if observation == "rain" or observation == "ET":
             return "bar"
 
         return "line"
 
-    def get_aggregate_type(self, observation, *args, **kwargs):
+    def get_aggregate_type(self, observation, context, *args, **kwargs):
         """
         aggregate_type for observations series.
         @see https://github.com/weewx/weewx/wiki/Tags-for-series#syntax
 
         Args:
             observation (string): The observation
+            context (string): The context
 
         Returns:
             string: aggregate_type
@@ -568,6 +656,14 @@ class WdcDiagramUtil(SearchList):
         combined = kwargs.get("combined", None)
         diagrams_config = self.skin_dict["DisplayOptions"]["diagrams"]
 
+        try:
+            aggregate_type = search_up(diagrams_config[context]["observations"][observation], "aggregate_type", None)
+        except KeyError:
+            aggregate_type = None
+
+        if aggregate_type is not None:
+            return aggregate_type
+
         if combined is not None and "aggregate_type" in combined and not use_defaults:
             return combined["aggregate_type"]
 
@@ -575,7 +671,6 @@ class WdcDiagramUtil(SearchList):
                 not use_defaults
                 and observation in diagrams_config
                 and "aggregate_type" in diagrams_config[observation]
-                and combined is None
         ):
             return diagrams_config[observation]["aggregate_type"]
 
@@ -613,26 +708,19 @@ class WdcDiagramUtil(SearchList):
         context_dict = self.generator.skin_dict["DisplayOptions"]["diagrams"].get(
             context, {})
         try:
-            aggregate_interval_context = context_dict.get(
-                "aggregate_interval", False)
+            aggregate_interval = search_up(context_dict['observations'][observation], 'aggregate_interval')
         except KeyError:
-            aggregate_interval_context = False
+            aggregate_interval = search_up(context_dict, 'aggregate_interval', False)
+        except AttributeError:
+            aggregate_interval = False
 
-        try:
-            aggregate_interval_observation = context_dict[observation].get(
-                "aggregate_interval", False)
-        except KeyError:
-            aggregate_interval_observation = False
-
-        if aggregate_interval_observation:
-            return aggregate_interval_observation
-
-        if aggregate_interval_context:
-            return aggregate_interval_context
+        if aggregate_interval:
+            return aggregate_interval
 
         # Then, use defaults.
         if context == "day":
             if observation == "ET" or observation == "rain":
+                print('Komisch')
                 return 7200  # 2 hours
 
             return 1800  # 30 minutes
@@ -759,25 +847,36 @@ class WdcDiagramUtil(SearchList):
 
         return hour_delta
 
-    def get_nivo_props(self, obs):
+    def get_diagram_props(self, obs, context):
         """
         Get nivo props from skin.conf.
 
         Args:
             obs (string): Observation
+            context (string): Day, week, month, year, alltime
 
         Returns:
             dict: Nivo props.
         """
+        if context == "yesterday":
+            context = "day"
+
         diagrams_config = self.skin_dict["DisplayOptions"]["diagrams"]
         diagram_base_props = diagrams_config[self.get_diagram(obs)]
 
+        diagram_context_props = accumulateLeaves(diagrams_config[context]['observations'][obs], max_level=3)
+
         if obs in diagrams_config:
-            return {**diagram_base_props, **diagrams_config[obs]}
+            return {
+                **diagram_base_props,
+                **diagrams_config[obs],
+                **diagram_context_props
+            }
         elif obs in diagrams_config["combined_observations"]:
             return {
                 **diagram_base_props,
                 **diagrams_config["combined_observations"][obs],
+                **diagram_context_props
             }
         else:
             return diagram_base_props
@@ -1469,7 +1568,7 @@ class WdcTableUtil(SearchList):
                     TimeSpan(start_ts, end_ts),
                     self.db_manager,
                     aggregate_type=self.diagram_util.get_aggregate_type(
-                        observation, use_defaults=True
+                        observation, context, use_defaults=True
                     ),
                     aggregate_interval=self.get_table_aggregate_interval(
                         context=context

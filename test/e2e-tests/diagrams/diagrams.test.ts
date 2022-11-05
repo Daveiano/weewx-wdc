@@ -35,6 +35,30 @@ test.describe("Diagrams", () => {
   });
 
   test("Diagram property generation", async ({ page }) => {
+    const UV = page.locator(".diagram-tile[data-test='UV']");
+    expect(
+      await UV.locator(".value > .diagram").getAttribute("data-labels")
+    ).toMatchSnapshot();
+    expect(
+      await UV.locator(".value > .diagram").getAttribute("data-value")
+    ).toMatchSnapshot();
+    expect(
+      await UV.locator(".value > .diagram").getAttribute("data-color")
+    ).toMatchSnapshot();
+    expect(
+      await UV.locator(".value > .diagram").getAttribute("data-diagram")
+    ).toMatchSnapshot();
+    expect(
+      await UV.locator(".value > .diagram").getAttribute("data-aggregate-type")
+    ).toMatchSnapshot();
+    expect(
+      await UV.locator(".value > .diagram").getAttribute("data-nivo-props")
+    ).toMatchSnapshot();
+
+    await page.goto(
+      "artifacts-alternative-weewx-html/public_html/statistics.html"
+    );
+
     const combinedTemp = page.locator(
       ".diagram-tile[data-test='outTemp-outTemp-outTemp']"
     );
@@ -63,28 +87,6 @@ test.describe("Diagrams", () => {
       await combinedTemp
         .locator(".diagram.combined")
         .getAttribute("data-nivo-props")
-    ).toMatchSnapshot();
-
-    const UV = page.locator(
-      ".diagram-tile[data-test='outTemp-outTemp-outTemp']"
-    );
-    expect(
-      await UV.locator(".diagram.combined").getAttribute("data-labels")
-    ).toMatchSnapshot();
-    expect(
-      await UV.locator(".diagram.combined").getAttribute("data-value")
-    ).toMatchSnapshot();
-    expect(
-      await UV.locator(".diagram.combined").getAttribute("data-color")
-    ).toMatchSnapshot();
-    expect(
-      await UV.locator(".diagram.combined").getAttribute("data-diagram")
-    ).toMatchSnapshot();
-    expect(
-      await UV.locator(".diagram.combined").getAttribute("data-aggregate-type")
-    ).toMatchSnapshot();
-    expect(
-      await UV.locator(".diagram.combined").getAttribute("data-nivo-props")
     ).toMatchSnapshot();
   });
 
@@ -129,8 +131,6 @@ test.describe("Diagrams", () => {
 
   test("Windrose with non-beaufort untis", async ({ page }) => {
     await page.goto("artifacts-custom-weewx-html/public_html/index.html");
-
-    console.log(page.url());
 
     const windrose = page.locator(".diagram-tile[data-test='windrose']");
     expect(

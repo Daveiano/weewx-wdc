@@ -6,7 +6,6 @@ import color from "color";
 import { DiagramBaseProps } from "./types";
 import { TooltipLine } from "../components/tooltip-line";
 import {
-  enableArea,
   getyScale,
   getCurve,
   getMargins,
@@ -138,7 +137,7 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
       colors={
         // If area, little lighten. If color.lightness < background.lightness, lighten more, else lighten normal
         darkMode
-          ? enableArea.includes(props.observation)
+          ? props.nivoProps.enableArea
             ? props.color.map((c) =>
                 color(c).lightness() <= backgroundColorDarkModeLightness * 2
                   ? color(c).desaturate(0.1).lighten(0.75).hex()
@@ -156,10 +155,9 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
               })
           : props.color
       }
-      curve={getCurve(props.observation)}
+      //curve={getCurve(props.observation)}
       data={props.data}
-      enableArea={enableArea.includes(props.observation)}
-      areaOpacity={darkMode ? 0.75 : props.observation === "wind" ? 0.5 : 0.07}
+      //enableArea={props.nivoProps.enableArea}
       areaBaselineValue={
         getyScale(
           combinedData,
@@ -225,6 +223,13 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
           : {}
       }
       {...props.nivoProps}
+      areaOpacity={
+        darkMode
+          ? 0.75
+          : props.nivoProps.areaOpacity
+          ? props.nivoProps.areaOpacity
+          : 0.07
+      }
     />
   );
 

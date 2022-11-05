@@ -21,7 +21,7 @@
       #set $series_name = $dwd_observation + 'Series' + 'dwd'
       #silent $series_labels.append($obs.label[$dwd_observation])
       #silent $series_names.append($series_name)
-      #silent $series_colors.append($get_color($dwd_observation))
+      #silent $series_colors.append($get_color($dwd_observation, $context))
       <script>
         /* prettier-ignore */
         var $series_name = $jsonize($get_dwd_forecast($dwd_observation))

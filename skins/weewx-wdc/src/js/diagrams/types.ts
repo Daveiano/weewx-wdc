@@ -17,9 +17,11 @@ type DiagramBaseProps = {
   observation: string;
   context: context;
   nivoProps: {
+    areaOpacity?: number;
     lineWidth?: number;
     pointSize?: number;
     isInteractive?: boolean;
+    enableArea: boolean;
     enablePoints?: boolean;
     enableLabel?: boolean;
     enableCrosshair?: boolean;

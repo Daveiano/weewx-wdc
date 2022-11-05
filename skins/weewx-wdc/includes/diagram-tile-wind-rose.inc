@@ -44,14 +44,14 @@
           <div
             class="diagram plotly windrose"
             data-labels="['$obs.label[$partial_obs]']"
-            data-color="['$get_color($partial_obs)']"
+            data-color="['$get_color($partial_obs, $context)']"
             data-value="$series_name"
             data-unit="$getattr($unit.label, $partial_obs)"
             data-obs="$get_diagram_type($partial_obs)"
             data-diagram="$get_diagram($partial_obs)"
             data-context="$context"
-            data-aggregate-type="['$get_aggregate_type($partial_obs)']"
-            data-nivo-props="$get_nivo_props($partial_obs)"
+            data-aggregate-type="['$get_aggregate_type($partial_obs, $context)']"
+            data-nivo-props="$get_diagram_props($partial_obs, $context)"
           ></div>
         </div>
       </div>

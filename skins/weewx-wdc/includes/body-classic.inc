@@ -19,13 +19,15 @@
     <div class="bx--row">
     <!-- prettier-ignore -->
     #set $diagram_index = 0
+    #set $context_for_diagrams = $context if $context != 'yesterday' else 'day'
+    #set $diagram_context_config = $DisplayOptions.get("diagrams", {}).get($context_for_diagrams, {}).get('observations', {})
     #if "combined_observations" in $diagrams_config
       #set $combined = $diagrams_config.combined_observations
     #else
       #set $combined = {}
     #end if
 
-    #for $skin_obs in $DisplayOptions.get('diagram_tile_observations')
+    #for $skin_obs in $diagram_context_config
       #if $skin_obs in $combined.keys()
         #set $combined_diagram = $combined[$skin_obs]
         #for $combined_obs in $combined_diagram.obs.keys()

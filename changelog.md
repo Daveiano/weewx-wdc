@@ -512,10 +512,299 @@ Line 133:
 # 3.0.0
 
 - Show weather data for a specific day [GH-67]
+- Make diagrams configurable per context (per period) / Refactor diagrams configuration [GH-73], diagrams can now be configured per context, eg. day, week or month. Per default, the day and week pages do not include the `outTemp` min/max/avg diagram anymore.
 
 **Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki) for information on how to configure the new features.**
 
 ## Changes made to skin.conf since X.X.X
+
+Line 70:
+
+```diff
+     stat_tile_observations = outTemp, outHumidity, barometer, windSpeed, windDir, windGust, windGustDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
+-    diagram_tile_observations = temp_min_max_avg, tempdew, outHumidity, barometer, windchill_heatindex, wind, windDir, windRose, rain, rainRate, snowDepth, UV, ET, radiation, cloudbase, appTemp
+     stat_tile_winddir_ordinal = True
+     diagram_tile_winddir_ordinal = True
+     show_min_max_time_day = False
+```
+
+Line 96:
+
+```diff
+      [[diagrams]]
+         [[[combined_observations]]]
+            ...
+            [[[[tempdew]]]]
+                label = 'Temperature / Dewpoint'
+                [[[[[obs]]]]]
+                    [[[[[[temp]]]]]]
+                        observation = "outTemp"
+                    [[[[[[dew]]]]]]
+                        observation = "dewpoint"
++                        color = "#5F9EA0"
+
+             ...
+             [[[[wind]]]]
+                 label = 'Wind speed / Gust speed'
+                 yScaleMin = 0
++                enableArea = True
++                areaOpacity = 0.5
+                 [[[[[obs]]]]]
+                     [[[[[[speed]]]]]]
+                         observation = "windSpeed"
++                        color = "#ffc000"
+                     [[[[[[gust]]]]]]
+                         observation = "windGust"
++                        color = "#666666"
+
+         # Diagram-type specific settings.
+         [[[line]]]
+             lineWidth = 2
+             pointSize = 5
+             isInteractive = True
+             enablePoints = True
+             enableCrosshair = True
+             yScaleOffset = 3
++            enableArea = False
++            areaOpacity = 0.07
+             # @see https://github.com/plouc/nivo/blob/master/packages/line/index.d.ts#L144
+             curve = "natural"
+         [[[bar]]]
+             enableLabel = False
+             isInteractive = True
+             yScaleOffset = 3
+
+         # Observation specific settings.
+-        [[[cloudbase]]]
++        [[[outTemp]]]
++            type = line
++            color = "#8B0000"
++        [[[dewpoint]]]
++            type = line
++            color = "#5F9EA0"
++        [[[outHumidity]]]
+             yScaleMin = 0
+-            yScaleOffset = 300
++            yScaleMax = 103
++            type = line
++            enableArea = True
++            color = "#0099CC"
++        [[[pressure]]]
++            yScaleOffset = 1
++            type = line
++            enableArea = True
++            color = "#666666"
++        [[[barometer]]]
++            yScaleOffset = 1
++            type = line
++            enableArea = True
++            color = "#666666"
++        [[[altimeter]]]
++            yScaleOffset = 1
++            type = line
++            enableArea = True
++            color = "#666666"
++        [[[windchill]]]
++            type = line
++            color = "#0099CC"
++        [[[heatindex]]]
++            type = line
++            color = "#610000"
+         [[[windDir]]]
+             curve = "basis"
+             lineWidth = 0
+             yScaleMin = 0
+             yScaleMax = 360
++            type = line
++            color = "#161616"
+         [[[windSpeed]]]
+             yScaleMin = 0
++            type = line
++            enableArea = True
++            color = "#ffc000"
+         [[[windGust]]]
+             aggregate_type = "max"
+             yScaleMin = 0
+-        [[[radiation]]]
+-            curve = "basis"
+-            yScaleMin = 0
+-        [[[UV]]]
+-            aggregate_type = "max"
+-            curve = "step"
+-            yScaleMin = 0
+-            yScaleOffset = 1
++            type = line
++            enableArea = True
++            color = "#666666"
+         [[[rain]]]
+             aggregate_type = "sum"
+             yScaleOffset = 0.25
++            type = bar
++            color = "#0198E1"
+         [[[rainRate]]]
+             aggregate_type = "max"
+             curve = "linear"
+             yScaleMin = 0
+             yScaleOffset = 0.25
+-        [[[outHumidity]]]
++            type = line
++            color = "#0a6794"
++        [[[UV]]]
++            aggregate_type = "max"
++            curve = "step"
+             yScaleMin = 0
+-            yScaleMax = 103
++            yScaleOffset = 1
++            type = line
++            enableArea = True
++            color = "#e61919"
+         [[[ET]]]
+             aggregate_type = "sum"
+             yScaleOffset = 0.02
+-        [[[pressure]]]
+-            yScaleOffset = 1
+-        [[[barometer]]]
+-            yScaleOffset = 1
+-        [[[altimeter]]]
+-            yScaleOffset = 1
+-
+-        # Context specific settings, alltime: if not set, will be calculated.
++            type = bar
++            color = "#E97451"
++        [[[radiation]]]
++            curve = "basis"
++            yScaleMin = 0
++            type = line
++            enableArea = True
++            color = "#ff8c00"
++        [[[cloudbase]]]
++            yScaleMin = 0
++            yScaleOffset = 300
++            type = line
++            enableArea = True
++            color = "#92b6f0"
++        [[[appTemp]]]
++            type = line
++            color = "#C41E3A"
++
++        # Context specific settings, alltime: if aggregate_interval is not set,
++        # it will be calculated.
+         [[[day]]]
+             aggregate_interval = 1800 # 30 minutes
+-            [[[[ET]]]]
+-                aggregate_interval = 7200  # 2 hours
+-            [[[[rain]]]]
+-                aggregate_interval = 7200  # 2 hours
++            [[[[observations]]]]
++                [[[[[tempdew]]]]]
++                [[[[[outHumidity]]]]]
++                [[[[[barometer]]]]]
++                [[[[[windchill_heatindex]]]]]
++                [[[[[wind]]]]]
++                [[[[[windDir]]]]]
++                [[[[[windRose]]]]]
++                [[[[[rain]]]]]
++                    aggregate_interval = 7200  # 2 hours
++                [[[[[rainRate]]]]]
++                [[[[[UV]]]]]
++                [[[[[ET]]]]]
++                    aggregate_interval = 7200  # 2 hours
++                [[[[[radiation]]]]]
++                [[[[[cloudbase]]]]]
++                [[[[[appTemp]]]]]
+
+         [[[week]]]
+             aggregate_interval = 7200  # 2 hours
+-            [[[[ET]]]]
+-                aggregate_interval = 86400  # 1 day
+-            [[[[rain]]]]
+-                aggregate_interval = 86400  # 1 day
++            [[[[observations]]]]
++                [[[[[tempdew]]]]]
++                [[[[[outHumidity]]]]]
++                [[[[[barometer]]]]]
++                [[[[[windchill_heatindex]]]]]
++                [[[[[wind]]]]]
++                [[[[[windDir]]]]]
++                [[[[[windRose]]]]]
++                [[[[[rain]]]]]
++                    aggregate_interval = 86400  # 1 day
++                [[[[[rainRate]]]]]
++                [[[[[UV]]]]]
++                [[[[[ET]]]]]
++                    aggregate_interval = 86400  # 1 day
++                [[[[[radiation]]]]]
++                [[[[[cloudbase]]]]]
++                [[[[[appTemp]]]]]
+
+         [[[month]]]
+             aggregate_interval = 21600  # 6 hours
+-            [[[[ET]]]]
+-                aggregate_interval = 172800  # 2 days
+-            [[[[rain]]]]
+-                aggregate_interval = 172800  # 2 days
++            [[[[observations]]]]
++                [[[[[temp_min_max_avg]]]]]
++                [[[[[tempdew]]]]]
++                [[[[[outHumidity]]]]]
++                [[[[[barometer]]]]]
++                [[[[[windchill_heatindex]]]]]
++                [[[[[wind]]]]]
++                [[[[[windDir]]]]]
++                [[[[[windRose]]]]]
++                [[[[[rain]]]]]
++                    aggregate_interval = 172800  # 2 days
++                [[[[[rainRate]]]]]
++                [[[[[UV]]]]]
++                [[[[[ET]]]]]
++                    aggregate_interval = 172800  # 2 days
++                [[[[[radiation]]]]]
++                [[[[[cloudbase]]]]]
++                [[[[[appTemp]]]]]
+
+         [[[year]]]
+             aggregate_interval = 172800  # 2 days
+-            [[[[ET]]]]
+-                aggregate_interval = 1555200  # 8 days
+-            [[[[rain]]]]
+-                aggregate_interval = 1555200  # 8 days
++            [[[[observations]]]]
++                [[[[[temp_min_max_avg]]]]]
++                [[[[[tempdew]]]]]
++                [[[[[outHumidity]]]]]
++                [[[[[barometer]]]]]
++                [[[[[windchill_heatindex]]]]]
++                [[[[[wind]]]]]
++                [[[[[windDir]]]]]
++                [[[[[windRose]]]]]
++                [[[[[rain]]]]]
++                    aggregate_interval = 1555200  # 8 days
++                [[[[[rainRate]]]]]
++                [[[[[UV]]]]]
++                [[[[[ET]]]]]
++                    aggregate_interval = 1555200  # 8 days
++                [[[[[radiation]]]]]
++                [[[[[cloudbase]]]]]
++                [[[[[appTemp]]]]]
++
++        [[[alltime]]]
++            [[[[observations]]]]
++                [[[[[temp_min_max_avg]]]]]
++                [[[[[tempdew]]]]]
++                [[[[[outHumidity]]]]]
++                [[[[[barometer]]]]]
++                [[[[[windchill_heatindex]]]]]
++                [[[[[wind]]]]]
++                [[[[[windDir]]]]]
++                [[[[[windRose]]]]]
++                [[[[[rain]]]]]
++                [[[[[rainRate]]]]]
++                [[[[[UV]]]]]
++                [[[[[ET]]]]]
++                [[[[[radiation]]]]]
++                [[[[[cloudbase]]]]]
++                [[[[[appTemp]]]]]
+```
 
 Line 6:
 

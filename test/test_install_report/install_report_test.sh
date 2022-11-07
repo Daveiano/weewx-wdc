@@ -136,6 +136,7 @@ testWeeReportRunWithoutWeewxForecast() {
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 44 files for report WdcReport in"
     assertContains "$output" "INFO weewx.reportengine: Copied 10 files to /home/weewx/public_html"
+    assertContains "$output" "DEBUG user.weewx_wdc: weewx-forecast extension is not installed. Not providing any forecast data."
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"

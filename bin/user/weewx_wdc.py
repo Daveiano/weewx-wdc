@@ -8,6 +8,12 @@ import os
 import json
 
 import weewx
+
+if weewx.__version__ < "4.6":
+    raise weewx.UnsupportedFeature(
+        "weewx 4.6 and newer is required, found %s" % weewx.__version__
+    )
+
 from weewx.cheetahgenerator import SearchList
 from weewx.units import (
     UnitInfoHelper,
@@ -22,10 +28,36 @@ from weewx.tags import TimespanBinder
 from weeutil.weeutil import TimeSpan, rounder, to_bool, to_int
 from weeutil.config import search_up, accumulateLeaves
 
-if weewx.__version__ < "4.6":
-    raise weewx.UnsupportedFeature(
-        "weewx 4.6 and newer is required, found %s" % weewx.__version__
-    )
+
+try:
+    import weeutil.logger
+    import logging
+
+    log = logging.getLogger(__name__)
+
+    def logdbg(msg):
+        log.debug(msg)
+
+    def loginf(msg):
+        log.info(msg)
+
+    def logerr(msg):
+        log.error(msg)
+
+except ImportError:
+    import syslog
+
+    def logmsg(level, msg):
+        syslog.syslog(level, F'jas: {msg}')
+
+    def logdbg(msg):
+        logmsg(syslog.LOG_DEBUG, msg)
+
+    def loginf(msg):
+        logmsg(syslog.LOG_INFO, msg)
+
+    def logerr(msg):
+        logmsg(syslog.LOG_ERR, msg)
 
 temp_obs = ["outTemp", "inTemp", "dewpoint",
             "windchill", "heatindex", "appTemp"]
@@ -207,7 +239,8 @@ class WdcGeneralUtil(SearchList):
         combined_obs_key = kwargs.get("combined_obs_key", None)
 
         try:
-            color = search_up(diagrams_config[context]["observations"][observation], "color", None)
+            color = search_up(
+                diagrams_config[context]["observations"][observation], "color", None)
             if color is not None:
                 return color
         except KeyError:
@@ -222,12 +255,14 @@ class WdcGeneralUtil(SearchList):
         # and combined_obs = outTemp, combined_obs_key = outTemp_max
         if combined and combined_obs_key is not None and combined_obs is not None:
             try:
-                color = search_up(diagrams_config[context]["observations"][combined_obs], "color", None)
+                color = search_up(
+                    diagrams_config[context]["observations"][combined_obs], "color", None)
                 if color is not None:
                     return color
             except KeyError:
                 try:
-                    color = search_up(diagrams_config["combined_observations"][observation]["obs"][combined_obs_key], "color", None)
+                    color = search_up(
+                        diagrams_config["combined_observations"][observation]["obs"][combined_obs_key], "color", None)
                     if color is not None:
                         return color
                 except KeyError:
@@ -657,7 +692,8 @@ class WdcDiagramUtil(SearchList):
         diagrams_config = self.skin_dict["DisplayOptions"]["diagrams"]
 
         try:
-            aggregate_type = search_up(diagrams_config[context]["observations"][observation], "aggregate_type", None)
+            aggregate_type = search_up(
+                diagrams_config[context]["observations"][observation], "aggregate_type", None)
         except KeyError:
             aggregate_type = None
 
@@ -708,9 +744,11 @@ class WdcDiagramUtil(SearchList):
         context_dict = self.generator.skin_dict["DisplayOptions"]["diagrams"].get(
             context, {})
         try:
-            aggregate_interval = search_up(context_dict['observations'][observation], 'aggregate_interval')
+            aggregate_interval = search_up(
+                context_dict['observations'][observation], 'aggregate_interval')
         except KeyError:
-            aggregate_interval = search_up(context_dict, 'aggregate_interval', False)
+            aggregate_interval = search_up(
+                context_dict, 'aggregate_interval', False)
         except AttributeError:
             aggregate_interval = False
 
@@ -864,7 +902,8 @@ class WdcDiagramUtil(SearchList):
         diagrams_config = self.skin_dict["DisplayOptions"]["diagrams"]
         diagram_base_props = diagrams_config[self.get_diagram(obs)]
 
-        diagram_context_props = accumulateLeaves(diagrams_config[context]['observations'][obs], max_level=3)
+        diagram_context_props = accumulateLeaves(
+            diagrams_config[context]['observations'][obs], max_level=3)
 
         if obs in diagrams_config:
             return {
@@ -1623,3 +1662,73 @@ class WdcTableUtil(SearchList):
             key=lambda item: datetime.datetime.fromisoformat(item["time"]))
 
         return carbon_values
+
+
+class WdcForecastUtil(SearchList):
+    def __init__(self, generator):
+        try:
+            from user.forecast import ForecastVariables
+
+            SearchList.__init__(self, generator)
+            self.forecast = ForecastVariables(generator)
+            self.forecast_source = generator.skin_dict.get("Extras")[
+                "forecast_table_settings"
+            ]["source"]
+
+        except ImportError:
+            logdbg(
+                "weewx-forecast extension is not installed. Not providing any forecast data.")
+
+    # TODO: obvis
+    # TODO: windGust & windChar is None
+    def get_day_icon(self, summary):
+        day_icon = summary["clouds"]
+        thunderstorm = False
+
+        # @see https://stackoverflow.com/a/65402452/1551356
+        start = datetime.datetime.combine(
+            datetime.datetime.fromtimestamp(summary["dateTime"].raw),
+            datetime.time(00, 00, 00),
+        )
+        end = datetime.datetime.combine(
+            datetime.datetime.fromtimestamp(summary["dateTime"].raw),
+            datetime.time(23, 59, 59),
+        )
+
+        periods = self.forecast.weather_periods(
+            self.forecast_source,
+            datetime.datetime.timestamp(start),
+            datetime.datetime.timestamp(end),
+        )
+
+        for period in periods:
+            if period["tstms"] is not None and (period["tstms"] != "S"):
+                thunderstorm = True
+
+        # pprint(summary)
+        # pprint(periods)
+
+        if summary["pop"].raw > 65:
+            if (
+                summary["clouds"] == "BK"
+                or summary["clouds"] == "B1"
+                or summary["clouds"] == "SC"
+            ):
+                if "rain" in summary["precip"]:
+                    day_icon = "rain--scattered"
+                if "snow" in summary["precip"]:
+                    day_icon = "snow--scattered"
+
+            if summary["clouds"] == "B2" or summary["clouds"] == "OV":
+                if "rain" in summary["precip"]:
+                    day_icon = "rain"
+                if "snow" in summary["precip"]:
+                    day_icon = "snow"
+
+            if thunderstorm:
+                day_icon = "thunderstorm"
+        else:
+            if thunderstorm:
+                day_icon = "thunderstorm--scattered"
+
+        return day_icon + ".svg"

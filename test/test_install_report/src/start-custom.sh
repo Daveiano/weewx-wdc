@@ -24,8 +24,8 @@ echo "Starting weewx"
 "${WEEWX_HOME}"/bin/weewxd "${WEEWX_HOME}"/weewx.conf --daemon
 
 echo "$CURRENT_DATE"
-echo "Sleeping 200 seconds..."
-sleep 200
+echo "Sleeping 240 seconds..."
+sleep 240
 
 #printf -v DATE_NOW '%(%Y-%m-%d %H:%M:%S)T\n' -1
 

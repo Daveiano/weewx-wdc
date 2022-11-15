@@ -2,10 +2,12 @@ FROM python:3.10-buster
 
 LABEL org.opencontainers.image.authors="David Baetge <david.baetge@gmail.com>"
 
-ARG WEEWX_VERSION="4.9.0"
+ARG WEEWX_VERSION="4.9.1"
 ARG WDC_VERSION="v1.3.1"
 ARG WEEWX_UID=2749
 ENV WEEWX_HOME="/home/weewx"
+RUN current_date=$(date +%Y-%m-%d\ %H:%M:%S)
+ENV CURRENT_DATE=$current_date
 
 EXPOSE 9877
 
@@ -23,7 +25,7 @@ RUN chmod +x /start.sh &&\
 
 # @see https://blog.nuvotex.de/running-syslog-in-a-container/
 RUN apt-get update &&\
-    apt-get install -q -y --no-install-recommends rsyslog=8.1901.0-1+deb10u2 python3-configobj python3-requests &&\
+    apt-get install -q -y --no-install-recommends gcc make git rsyslog=8.1901.0-1+deb10u2 python3-configobj python3-requests &&\
     apt-get clean &&\
     rm -rf /var/lib/apt/lists/*
 
@@ -34,6 +36,12 @@ RUN addgroup --system --gid ${WEEWX_UID} weewx &&\
 RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
 
 WORKDIR /tmp
+
+RUN git clone https://github.com/wolfcw/libfaketime.git &&\
+    cd libfaketime/src &&\
+    #sed -i -z -e 's|CFLAGS +=|CFLAGS += -DFORCE_MONOTONIC_FIX -DFORCE_PTHREAD_NONVER |g' Makefile &&\
+    make install
+    #cd .. && make test
 
 RUN wget -nv -O "weewx-${WEEWX_VERSION}.tar.gz" "https://github.com/weewx/weewx/archive/refs/tags/v${WEEWX_VERSION}.tar.gz" &&\
     wget -nv -O "weewx-interceptor.zip" "https://github.com/matthewwall/weewx-interceptor/archive/master.zip" &&\

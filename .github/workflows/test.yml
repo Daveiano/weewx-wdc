@@ -45,6 +45,11 @@ jobs:
           sed -i -z "s|base_path = \/home\/dba\/dev\/weewx-wdc\/test\/e2e-tests\/artifacts-custom-weewx-html\/public_html/|base_path = \"${CUSTOM_BASE_PATH}\"|g" test/test_install_report/src/skin-custom.conf
           echo $(cat test/test_install_report/src/skin-custom.conf)
 
+      - name: Set WU API key
+        env:
+          WU_KEY: ${{ secrets.WU }}
+        run: sed -i -z -e "s|SECRET_WU|${WU_KEY}|g" test/test_install_report/src/start-custom.sh
+
       - name: Run shunit2 tests
         run: ./test/run_tests.sh
 

@@ -72,6 +72,12 @@ jobs:
           name: artifacts-classic-weewx-html
           path: test/test_install_report/artifacts-classic-weewx-html/
 
+      - name: Upload forecast html
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts-forecast-weewx-html
+          path: test/test_install_report/artifacts-forecast-weewx-html/
+
       - name: Upload custom html
         uses: actions/upload-artifact@v3
         with:
@@ -113,6 +119,12 @@ jobs:
         with:
           name: artifacts-classic-weewx-html
           path: test/e2e-tests/artifacts-classic-weewx-html
+
+      - name: Download forecast html
+        uses: actions/download-artifact@v3
+        with:
+          name: artifacts-forecast-weewx-html
+          path: test/e2e-tests/artifacts-forecast-weewx-html
 
       - name: Download custom html
         uses: actions/download-artifact@v3

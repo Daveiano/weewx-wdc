@@ -2,7 +2,7 @@ import { test, expect, type Page } from "@playwright/test";
 
 test.describe("Forecast", () => {
   test("Forecast table", async ({ page }) => {
-    await page.goto("artifacts-custom-weewx-html/public_html/index.html");
+    await page.goto("artifacts-forecast-weewx-html/public_html/index.html");
 
     const forecast_table = page.locator(".forecast .forecast-list");
 

@@ -14,12 +14,14 @@ EXPOSE 9877
 COPY src/install-input.txt /tmp/
 COPY src/start.sh /start.sh
 COPY src/start-classic.sh /start-classic.sh
+COPY src/start-forecast.sh /start-forecast.sh
 COPY src/start-custom.sh /start-custom.sh
 COPY src/start-dwd.sh /start-dwd.sh
 COPY src/start-without-forecast.sh /start-without-forecast.sh
 RUN chmod +x /start.sh &&\
     chmod +x /start-classic.sh &&\
     chmod +x /start-without-forecast.sh &&\
+    chmod +x /start-forecast.sh &&\
     chmod +x /start-custom.sh &&\
     chmod +x /start-dwd.sh
 
@@ -66,6 +68,7 @@ RUN bin/wee_extension --install /tmp/weewx-interceptor.zip &&\
     bin/wee_config --reconfigure --driver=user.interceptor --no-prompt
 
 COPY src/skin.conf ./skins/weewx-wdc/
+COPY src/skin-forecast.conf ./skins/weewx-wdc/
 COPY src/skin-custom.conf ./skins/weewx-wdc/
 COPY src/skin-dwd.conf ./skins/weewx-wdc/
 COPY src/weewx-dwd.conf ./skins/weewx-wdc/

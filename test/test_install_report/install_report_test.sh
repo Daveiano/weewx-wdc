@@ -22,6 +22,11 @@ oneTimeSetUp() {
         sleep 1
         mkdir "$DIR"/artifacts-classic-weewx-html
     fi
+    if ! [ -d "$DIR"/artifacts-forecast-weewx-html ] ; then
+        echo Creating artifacts-forecast-weewx-html directory...
+        sleep 1
+        mkdir "$DIR"/artifacts-forecast-weewx-html
+    fi
     if ! [ -d "$DIR"/artifacts-custom-weewx-html ] ; then
         echo Creating artifacts-custom-weewx-html directory...
         sleep 1
@@ -97,9 +102,27 @@ testWeeReportRunClassic() {
     assertNotContains "$output" "Caught unrecoverable exception"
 }
 
-testWeeReportRunCustom() {
+testWeeReportRunForecast() {
     current_date=$(date +%Y-%m-%d\ %H:%M:%S)
-    docker run --env CURRENT_DATE="$current_date" --env FAKETIME_DONT_RESET=1 --env LD_PRELOAD="/usr/local/lib/faketime/libfaketime.so.1" --env FAKETIME="@2022-06-23 07:52:00" --entrypoint "/start-custom.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunCustom.txt 2>&1
+    docker run --env CURRENT_DATE="$current_date" --env FAKETIME_DONT_RESET=1 --env LD_PRELOAD="/usr/local/lib/faketime/libfaketime.so.1" --env FAKETIME="@2022-06-23 07:54:50" --entrypoint "/start-forecast.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunForecast.txt 2>&1
+    docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-forecast-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
+    docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
+
+    output=$(cat "$DIR"/artifacts/testWeeReportRunForecast.txt)
+
+    assertContains "$output" "Starting weewx reports (Alternative layout with forecast)"
+    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 44 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 10 files to /home/weewx/public_html"
+    assertContains "$output" "ZambrettiThread: Zambretti: generated 1 forecast record"
+
+    assertNotContains "$output" "failed with exception"
+    assertNotContains "$output" "Ignoring template"
+    assertNotContains "$output" "Caught unrecoverable exception"
+}
+
+testWeeReportRunCustom() {
+    docker run --entrypoint "/start-custom.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunCustom.txt 2>&1
     docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-custom-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
     docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
 
@@ -109,7 +132,6 @@ testWeeReportRunCustom() {
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 521 files for report WdcReport in"
     assertContains "$output" "INFO weewx.reportengine: Copied 10 files to /home/weewx/public_html"
-    assertContains "$output" "ZambrettiThread: Zambretti: generated 1 forecast record"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"

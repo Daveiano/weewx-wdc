@@ -6,6 +6,7 @@ import calendar
 import time
 import os
 import json
+from pprint import pprint
 
 import weewx
 
@@ -1705,7 +1706,9 @@ class WdcForecastUtil(SearchList):
             if period["tstms"] is not None and (period["tstms"] != "S"):
                 thunderstorm = True
 
-        # pprint(summary)
+        # pprint(summary["precip"])
+        # print(summary['qsf'].raw)
+        # print(summary['qpf'].raw)
         # pprint(periods)
 
         if summary["pop"].raw > 65:
@@ -1714,16 +1717,19 @@ class WdcForecastUtil(SearchList):
                 or summary["clouds"] == "B1"
                 or summary["clouds"] == "SC"
             ):
-                if "rain" in summary["precip"]:
+                if summary['qpf'].raw > 0:
                     day_icon = "rain--scattered"
-                if "snow" in summary["precip"]:
+                if summary['qsf'].raw > 0:
                     day_icon = "snow--scattered"
 
             if summary["clouds"] == "B2" or summary["clouds"] == "OV":
-                if "rain" in summary["precip"]:
+                if summary['qpf'].raw > 0:
                     day_icon = "rain"
-                if "snow" in summary["precip"]:
+                if summary['qsf'].raw > 0:
                     day_icon = "snow"
+
+            if summary['qpf'].raw > 0 and summary['qsf'].raw > 0:
+                day_icon = "sleet"
 
             if thunderstorm:
                 day_icon = "thunderstorm"

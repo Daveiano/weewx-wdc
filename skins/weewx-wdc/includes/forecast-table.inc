@@ -439,15 +439,22 @@
       #set $summary = $forecast.weather_summary($forecast_source, $period.event_ts.raw, periods=$periods)
       <!--prettier-ignore-->
       <bx-structured-list-cell class="index-$x" style="vertical-align: bottom">
-        #if $summary.qpf.raw > 0
-          #include 'includes/icons/forecast/rain.svg'
+        #if $summary.qpf.raw > 0 and $summary.qsf.raw <= 0
+          <!-- include 'includes/icons/forecast/rain.svg' -->
           $summary.qpf.nolabel('%.2f','')
         #end if
-        <br />
-        #if $summary.qsf.raw > 0
-          #include 'includes/icons/forecast/snow.svg'
+
+        #if $summary.qsf.raw > 0 and $summary.qpf.raw <= 0
+          <!-- include 'includes/icons/forecast/snow.svg' -->
           $summary.qsf.nolabel('%.2f','')
         #end if
+
+        #if $summary.qpf.raw > 0 and $summary.qsf.raw > 0
+          <!-- include 'includes/icons/forecast/sleet.svg' -->
+          #set $q_pf_sf = '{:.2f}'.format($summary.qpf.raw + $summary.qsf.raw)
+          $q_pf_sf
+        #end if
+
         #if $summary.qpf.raw == 0 and $summary.qsf.raw == 0
         -
         #end if

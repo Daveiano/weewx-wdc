@@ -48,7 +48,7 @@ jobs:
       - name: Set WU API key
         env:
           WU_KEY: ${{ secrets.WU }}
-        run: sed -i -z -e "s|SECRET_WU|${WU_KEY}|g" test/test_install_report/src/start-custom.sh
+        run: sed -i -z -e "s|SECRET_WU|${WU_KEY}|g" test/test_install_report/src/start-forecast.sh
 
       - name: Run shunit2 tests
         run: ./test/run_tests.sh

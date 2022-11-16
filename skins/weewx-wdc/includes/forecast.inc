@@ -40,7 +40,7 @@
         <div class="bx--tile forecast-tile">
           <!--prettier-ignore-->
           #if $varExists('forecast.zambretti') and $to_bool($Extras['forecast_zambretti']['enable'])
-          <div class="forecast">
+          <div class="forecast" data-test="forecast-zambretti">
             <h3>Zambretti</h3>
             <p>
               <!--prettier-ignore-->
@@ -53,7 +53,7 @@
           #end if
           <!--prettier-ignore-->
           #if $varExists('forecast') and not $dwd_forecast
-          <div class="forecast">
+          <div class="forecast" data-test="forecast-table">
             <!--prettier-ignore-->
             #include "includes/forecast-table.inc"
           </div>

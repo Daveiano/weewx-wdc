@@ -1687,19 +1687,19 @@ class WdcForecastUtil(SearchList):
         thunderstorm = False
 
         # @see https://stackoverflow.com/a/65402452/1551356
-        start = datetime.datetime.combine(
+        start_dt = datetime.datetime.combine(
             datetime.datetime.fromtimestamp(summary["dateTime"].raw),
             datetime.time(00, 00, 00),
         )
-        end = datetime.datetime.combine(
+        end_dt = datetime.datetime.combine(
             datetime.datetime.fromtimestamp(summary["dateTime"].raw),
             datetime.time(23, 59, 59),
         )
 
         periods = self.forecast.weather_periods(
             self.forecast_source,
-            datetime.datetime.timestamp(start),
-            datetime.datetime.timestamp(end),
+            datetime.datetime.timestamp(start_dt),
+            datetime.datetime.timestamp(end_dt),
         )
 
         for period in periods:

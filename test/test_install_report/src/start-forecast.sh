@@ -25,7 +25,7 @@ echo "Starting weewx"
 
 echo "$CURRENT_DATE"
 echo "Sleeping 30 seconds..."
-sleep 30
+sleep 40
 
 echo "Starting wee_reports..."
 FAKETIME="@$CURRENT_DATE" date

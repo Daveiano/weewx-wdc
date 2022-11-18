@@ -493,6 +493,7 @@ Line 39 following:
 # Next
 
 - Added `yScaleMin = 0` to combined wind diagram. [GH-90]
+- Updated italian translation, thanks to Luca Montefiori
 
 ## Changes made to skin.conf since 2.3.1
 

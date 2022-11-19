@@ -32,7 +32,7 @@
 #set $show_moon = 0
 #set $show_pop = 1
 #set $show_precip = 1
-#set $show_obvis = 1
+#set $show_obvis = 0
 
 #set $local_settings = dict()
 
@@ -88,8 +88,10 @@
 #set $lastday = None
 ## If the database has not yet been queried, do it here.
 #if not $varExists('periods')
-#set $periods = $forecast.weather_periods($forecast_source, max_events=$num_periods)
+#set $all_periods = $forecast.weather_periods($forecast_source, max_events=$num_periods)
+#set $periods = $all_periods
 #end if
+
 ## If number of days was specified, then trim periods to that number of days.
 #if $num_days is not None and $periods is not None and len($periods) > 0
   #set $filtered_periods = []
@@ -111,10 +113,54 @@
 <!--prettier-ignore-->
 #if len($periods) > 0
 
-<h3>$gettext($forecast_source)</h3>
+<div class="bx--row">
+  <div
+    class="bx--col-sm-4 bx--col-md-8 bx--col-lg-8 bx--col-xlg-8 bx--col-max-8"
+  >
+    <h3>$gettext($forecast_source)</h3>
+  </div>
+  #if $show_hourly
+  <script
+    type="module"
+    src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/content-switcher.min.js"
+  ></script>
+  <div
+    class="bx--col-sm-4 bx--col-md-8 bx--col-lg-4 bx--col-xlg-4 bx--col-max-4"
+  >
+    <bx-content-switcher size="sm" value="day">
+      <bx-content-switcher-item value="day"
+        >$gettext('Daily')</bx-content-switcher-item
+      >
+      <bx-content-switcher-item value="hour">
+        $gettext('Hourly')
+      </bx-content-switcher-item>
+    </bx-content-switcher>
+    <script>
+      document.addEventListener(
+        "bx-content-switcher-selected",
+        function (event) {
+          const value = event.target.__value;
+          const forecastDaily = document.querySelector(".forecast-list.daily");
+          const forecastHourly = document.querySelector(
+            ".forecast-list.hourly"
+          );
+
+          if (value === "day") {
+            forecastDaily.style.display = "block";
+            forecastHourly.style.display = "none";
+          } else {
+            forecastDaily.style.display = "none";
+            forecastHourly.style.display = "block";
+          }
+        }
+      );
+    </script>
+  </div>
+  #end if
+</div>
 
 <div style="display: block; white-space: nowrap; overflow-x: auto">
-  <bx-structured-list class="forecast-list">
+  <bx-structured-list class="forecast-list daily">
     <bx-structured-list-head>
       #if $show_day or $show_date
       <bx-structured-list-header-row>
@@ -394,7 +440,7 @@
       #end if
 
       <!--prettier-ignore-->
-      #if $show_pop
+      #if $show_pop and $summary.pop.raw is not None
       <bx-structured-list-row class="rain">
         #if $show_legend
         <bx-structured-list-cell>
@@ -441,36 +487,273 @@
         #set $summary = $forecast.weather_summary($forecast_source, $period.event_ts.raw, periods=$periods)
         <!--prettier-ignore-->
         <bx-structured-list-cell class="index-$x" style="vertical-align: bottom">
-        #if $summary.qpf.raw > 0 and $summary.qsf.raw <= 0
-          <!-- include 'includes/icons/forecast/rain.svg' -->
-          $summary.qpf.nolabel('%.2f','')
-        #end if
+          #if $summary.qpf.raw is not None and $summary.qsf.raw is not None
+            #if $summary.qpf.raw > 0 and $summary.qsf.raw <= 0
+              <!-- include 'includes/icons/forecast/rain.svg' -->
+              $summary.qpf.nolabel('%.2f','')
+            #end if
 
-        #if $summary.qsf.raw > 0 and $summary.qpf.raw <= 0
-          <!-- include 'includes/icons/forecast/snow.svg' -->
-          $summary.qsf.nolabel('%.2f','')
-        #end if
+            #if $summary.qsf.raw > 0 and $summary.qpf.raw <= 0
+              <!-- include 'includes/icons/forecast/snow.svg' -->
+              $summary.qsf.nolabel('%.2f','')
+            #end if
 
-        #if $summary.qpf.raw > 0 and $summary.qsf.raw > 0
-          <!-- include 'includes/icons/forecast/sleet.svg' -->
-          #set $q_pf_sf = '{:.2f}'.format($summary.qpf.raw + $summary.qsf.raw)
-          $q_pf_sf
-        #end if
+            #if $summary.qpf.raw > 0 and $summary.qsf.raw > 0
+              <!-- include 'includes/icons/forecast/sleet.svg' -->
+              #set $q_pf_sf = '{:.2f}'.format($summary.qpf.raw + $summary.qsf.raw)
+              $q_pf_sf
+            #end if
+          #end if
 
-        #if $summary.qpf.raw == 0 and $summary.qsf.raw == 0
-        -
-        #end if
-      </bx-structured-list-cell>
+          #if ($summary.qpf.raw == 0 or $summary.qpf.raw is None) and ($summary.qsf.raw == 0 or $summary.qsf.raw is None)
+            -
+          #end if
+        </bx-structured-list-cell>
         <!--prettier-ignore-->
         #end if
-      #end for
+        #end for
       </bx-structured-list-row>
       #end if
 
       <!--@todo Add obs-->
     </bx-structured-list-body>
   </bx-structured-list>
+
+  <!--prettier-ignore-->
+  #if $show_hourly
+  #set $periods = $all_periods
+  <bx-structured-list class="forecast-list hourly" style="display: none">
+    <bx-structured-list-head>
+      #if $show_day or $show_date
+      <bx-structured-list-header-row>
+        #if $show_legend
+        <bx-structured-list-header-cell></bx-structured-list-header-cell>
+        #end if
+        <!--prettier-ignore-->
+        #for $x, $period in enumerate($periods)
+
+        #set $wts = $period.issued_ts
+        <bx-structured-list-header-cell class="index-$x">
+          #if $show_day
+          <span class="day">$period.event_ts.format('%a')</span>
+          <br />
+          #end if
+          <!--prettier-ignore-->
+          #if $show_date
+          <span class="date"
+            >$period.event_ts.format('%d %b') <br />
+            $period.event_ts.format('%H:%M')</span
+          >
+          #end if
+        </bx-structured-list-header-cell>
+        <!--prettier-ignore-->
+        #end for
+      </bx-structured-list-header-row>
+      #end if
+    </bx-structured-list-head>
+    <bx-structured-list-body>
+      #if $show_outlook and $period.clouds is not None
+      <bx-structured-list-row>
+        #if $show_legend
+        <bx-structured-list-cell>$gettext("Outlook")</bx-structured-list-cell>
+        #end if
+
+        <!--prettier-ignore-->
+        #for $x, $period in enumerate($periods)
+        <bx-structured-list-cell class="index-$x">
+          <!--prettier-ignore-->
+          #include "includes/icons/forecast/" + $get_day_icon($period, hourly=True)
+        </bx-structured-list-cell>
+        <!--prettier-ignore-->
+        #end for
+      </bx-structured-list-row>
+      #end if
+
+      <!--prettier-ignore-->
+      #if $show_temp
+      <bx-structured-list-row>
+        #if $show_legend
+        <bx-structured-list-cell>
+          $gettext("Temperature")<br />
+          <span class="unit-label">in $unit.label.outTemp</span>
+        </bx-structured-list-cell>
+        #end if
+
+        <!--prettier-ignore-->
+        #for $x, $period in enumerate($periods)
+        <bx-structured-list-cell class="index-$x">
+          <span> $period.temp.nolabel('%.0f') </span>
+        </bx-structured-list-cell>
+        <!--prettier-ignore-->
+        #end for
+      </bx-structured-list-row>
+      #end if
+
+      <!--prettier-ignore-->
+      #if $show_dewpoint and $period.dewpoint is not None
+      <bx-structured-list-row>
+        #if $show_legend
+        <bx-structured-list-cell>
+          $obs.label.dewpoint <br />
+          <span class="unit-label">in $unit.label.dewpoint</span>
+        </bx-structured-list-cell>
+        #end if
+
+        <!--prettier-ignore-->
+        #for $x, $period in enumerate($periods)
+        <bx-structured-list-cell class="index-$x">
+          <span> $summary.dewpoint.nolabel('%.0f') </span>
+        </bx-structured-list-cell>
+        <!--prettier-ignore-->
+        #end for
+      </bx-structured-list-row>
+      #end if
+
+      <!--prettier-ignore-->
+      #if $show_humidity and $period.humidity is not None
+      <bx-structured-list-row>
+        #if $show_legend
+        <bx-structured-list-cell>
+          $obs.label.outHumidity <br />
+          <span class="unit-label">in $unit.label.outHumidity</span>
+        </bx-structured-list-cell>
+        #end if
+
+        <!--prettier-ignore-->
+        #for $x, $period in enumerate($periods)
+        <bx-structured-list-cell class="index-$x">
+          <span> $summary.humidity.nolabel('%.0f') </span>
+        </bx-structured-list-cell>
+        <!--prettier-ignore-->
+        #end for
+      </bx-structured-list-row>
+      #end if
+
+      <!--prettier-ignore-->
+      #if $show_wind and $period.windSpeed is not None
+      <bx-structured-list-row>
+        #if $show_legend
+        <bx-structured-list-cell>
+          $obs.label.wind<br />
+          <span class="unit-label">in $unit.label.wind</span>
+        </bx-structured-list-cell>
+        #end if
+
+        <!--prettier-ignore-->
+        #for $x, $period in enumerate($periods)
+        <bx-structured-list-cell class="index-$x">
+          <!--prettier-ignore-->
+          $period.windSpeed.nolabel('%.0f',' ')
+          <span class="windgust">$period.windGust.nolabel('%.0f',' ')</span>
+          $period.windChar
+        </bx-structured-list-cell>
+        <!--prettier-ignore-->
+        #end for
+      </bx-structured-list-row>
+      #end if
+
+      <!--prettier-ignore-->
+      #if $show_tides and len($tides) > 0
+      <bx-structured-list-row>
+        #if $show_legend
+        <bx-structured-list-cell>
+          $gettext("Tides")<br />
+          in $unit.label.altitude
+        </bx-structured-list-cell>
+        #end if
+
+        <!--prettier-ignore-->
+        #for $x, $period in enumerate($periods)
+        <bx-structured-list-cell class="index-$x">
+          <!--prettier-ignore-->
+          <table cellspacing="0" cellpadding="0" width="100%">
+            <!--prettier-ignore-->
+            #for $tide in $tides
+              #if $period.event_ts.raw <= $tide.event_ts.raw < $period.event_ts.raw + $period.duration
+              <tr>
+                <td style="font-size: 100%">$tide.event_ts.format('%H:%M')</td>
+                <td class="tide-hilo" style="font-size: 100%">$tide.hilo</td>
+                <td style="font-size: 100%; text-align: right">
+                  $tide.offset.nolabel('%.1f')
+                </td>
+              </tr>
+              <!--prettier-ignore-->
+              #end if
+            #end for
+          </table>
+        </bx-structured-list-cell>
+        <!--prettier-ignore-->
+        #end for
+      </bx-structured-list-row>
+      #end if
+
+      <!--prettier-ignore-->
+      #if $show_pop and $period.pop.raw is not None
+      <bx-structured-list-row class="rain">
+        #if $show_legend
+        <bx-structured-list-cell>
+          $gettext('Probability of precipitation')
+        </bx-structured-list-cell>
+        #end if
+
+        <!--prettier-ignore-->
+        #for $x, $period in enumerate($periods)
+        <bx-structured-list-cell class="index-$x">
+          <!--prettier-ignore-->
+          #if $period.pop.raw > 0
+            $period.pop.format('%.0f','')
+          #end if
+        </bx-structured-list-cell>
+        <!--prettier-ignore-->
+        #end for
+      </bx-structured-list-row>
+      #end if
+
+      <!--prettier-ignore-->
+      #if $show_precip
+      <bx-structured-list-row class="rain">
+        #if $show_legend
+        <bx-structured-list-cell style="vertical-align: bottom">
+          $obs.label.rain <br />
+          <span class="unit-label">in $unit.label.rain</span>
+        </bx-structured-list-cell>
+        #end if
+
+        <!--prettier-ignore-->
+        #for $x, $period in enumerate($periods)
+        <!--prettier-ignore-->
+        <bx-structured-list-cell class="index-$x" style="vertical-align: bottom">
+          #if $period.qpf.raw is not None and $period.qsf.raw is not None
+            #if $period.qpf.raw > 0 and $period.qsf.raw <= 0
+              <!-- include 'includes/icons/forecast/rain.svg' -->
+              $period.qpf.nolabel('%.2f','')
+            #end if
+
+            #if $period.qsf.raw > 0 and $period.qpf.raw <= 0
+              <!-- include 'includes/icons/forecast/snow.svg' -->
+              $period.qsf.nolabel('%.2f','')
+            #end if
+
+            #if $period.qpf.raw > 0 and $period.qsf.raw > 0
+              <!-- include 'includes/icons/forecast/sleet.svg' -->
+              #set $q_pf_sf = '{:.2f}'.format($period.qpf.raw + $period.qsf.raw)
+              $q_pf_sf
+            #end if
+          #end if
+
+          #if ($period.qpf.raw == 0 or $period.qpf.raw is None) and ($period.qsf.raw == 0 or $period.qsf.raw is None)
+            -
+          #end if
+        </bx-structured-list-cell>
+        <!--prettier-ignore-->
+        #end for
+      </bx-structured-list-row>
+      #end if
+    </bx-structured-list-body>
+  </bx-structured-list>
+  #end if
 </div>
+
 <!--prettier-ignore-->
 #set $wloc = $summary.location
 <!--prettier-ignore-->

@@ -26,7 +26,7 @@ from weewx.units import (
 )
 from weewx.wxformulas import beaufort
 from weewx.tags import TimespanBinder
-from weeutil.weeutil import TimeSpan, rounder, to_bool, to_int
+from weeutil.weeutil import TimeSpan, rounder, to_bool, to_int, startOfDay
 from weeutil.config import search_up, accumulateLeaves
 
 
@@ -1680,61 +1680,58 @@ class WdcForecastUtil(SearchList):
             logdbg(
                 "weewx-forecast extension is not installed. Not providing any forecast data.")
 
-    # TODO: obvis
-    # TODO: windGust & windChar is None
-    def get_day_icon(self, summary):
+    def get_day_icon(self, summary, hourly=False):
+        """
+        Returns the icon for the day (summary) or a single period.
+
+        Args:
+            summary (dict): The summary/period dict.
+            hourly (bool, optional): If the summary is for a single period.
+        """
         day_icon = summary["clouds"]
         thunderstorm = False
 
-        # @see https://stackoverflow.com/a/65402452/1551356
-        start_dt = datetime.datetime.combine(
-            datetime.datetime.fromtimestamp(summary["dateTime"].raw),
-            datetime.time(00, 00, 00),
-        )
-        end_dt = datetime.datetime.combine(
-            datetime.datetime.fromtimestamp(summary["dateTime"].raw),
-            datetime.time(23, 59, 59),
-        )
-
-        periods = self.forecast.weather_periods(
-            self.forecast_source,
-            datetime.datetime.timestamp(start_dt),
-            datetime.datetime.timestamp(end_dt),
-        )
-
-        for period in periods:
-            if period["tstms"] is not None and (period["tstms"] != "S"):
+        if hourly:
+            if summary["tstms"] is not None and (summary["tstms"] != "S"):
                 thunderstorm = True
-
-        # pprint(summary["precip"])
-        # print(summary['qsf'].raw)
-        # print(summary['qpf'].raw)
-        # pprint(periods)
-
-        if summary["pop"].raw > 65:
-            if (
-                summary["clouds"] == "BK"
-                or summary["clouds"] == "B1"
-                or summary["clouds"] == "SC"
-            ):
-                if summary['qpf'].raw > 0:
-                    day_icon = "rain--scattered"
-                if summary['qsf'].raw > 0:
-                    day_icon = "snow--scattered"
-
-            if summary["clouds"] == "B2" or summary["clouds"] == "OV":
-                if summary['qpf'].raw > 0:
-                    day_icon = "rain"
-                if summary['qsf'].raw > 0:
-                    day_icon = "snow"
-
-            if summary['qpf'].raw > 0 and summary['qsf'].raw > 0:
-                day_icon = "sleet"
-
-            if thunderstorm:
-                day_icon = "thunderstorm"
         else:
-            if thunderstorm:
-                day_icon = "thunderstorm--scattered"
+            periods = self.forecast.weather_periods(
+                self.forecast_source,
+                startOfDay(summary["dateTime"].raw),
+                summary["dateTime"].raw + 86400,
+            )
+
+            for period in periods:
+                if period["tstms"] is not None and (period["tstms"] != "S"):
+                    thunderstorm = True
+
+        rain = summary['qpf'].raw is not None and summary['qpf'].raw > 0
+        snow = summary['qsf'].raw is not None and summary['qsf'].raw > 0
+
+        if (
+            summary["clouds"] == "BK"
+            or summary["clouds"] == "B1"
+            or summary["clouds"] == "SC"
+        ):
+            if rain:
+                day_icon = "rain--scattered"
+            if snow:
+                day_icon = "snow--scattered"
+
+        if summary["clouds"] == "B2" or summary["clouds"] == "OV":
+            if summary["obvis"] is not None and ('F' in summary["obvis"] or 'PF' in summary["obvis"] or 'F+' in summary["obvis"] or 'PF+' in summary["obvis"]):
+                day_icon = 'fog'
+            if summary['obvis'] is not None and 'H' in summary['obvis']:
+                day_icon = 'haze'
+            if rain:
+                day_icon = "rain"
+            if snow:
+                day_icon = "snow"
+
+        if rain and snow:
+            day_icon = "sleet"
+
+        if thunderstorm:
+            day_icon = "thunderstorm"
 
         return day_icon + ".svg"

@@ -121,6 +121,8 @@ class BasicInstaller(ExtensionInstaller):
                         "skins/weewx-wdc/includes/icons/forecast/rain.svg",
                         "skins/weewx-wdc/includes/icons/forecast/snow.svg",
                         "skins/weewx-wdc/includes/icons/forecast/sleet.svg",
+                        "skins/weewx-wdc/includes/icons/forecast/fog.svg",
+                        "skins/weewx-wdc/includes/icons/forecast/haze.svg",
                         "skins/weewx-wdc/includes/icons/forecast/snow--scattered.svg",
                         "skins/weewx-wdc/includes/icons/forecast/rain--scattered.svg",
                         "skins/weewx-wdc/includes/icons/forecast/thunderstorm.svg",

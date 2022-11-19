@@ -18,7 +18,7 @@ export const StatisticsSelect: React.FC<StatisticsSelect> = (
   props: StatisticsSelect
 ): React.ReactElement => {
   return (
-    // @todo current item preseletced.
+    // @todo current item preselected.
     <ComboBox
       id="statistics-select"
       items={props.items}

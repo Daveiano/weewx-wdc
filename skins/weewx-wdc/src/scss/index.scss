@@ -672,6 +672,12 @@ bx-structured-list.forecast-list,
       font-family: carbon--font-family("mono"), monospace;
     }
   }
+  bx-structured-list-header-cell,
+  .bx--structured-list-th {
+    .day {
+      font-weight: 400;
+    }
+  }
   bx-structured-list-row,
   .bx--structured-list-row {
     bx-structured-list-cell,

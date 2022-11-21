@@ -126,6 +126,7 @@
   ></script>
   <div
     class="bx--col-sm-4 bx--col-md-8 bx--col-lg-4 bx--col-xlg-4 bx--col-max-4"
+    style="margin-bottom: 1rem"
   >
     <bx-content-switcher size="sm" value="day">
       <bx-content-switcher-item value="day"
@@ -532,21 +533,31 @@
         <!--prettier-ignore-->
         #for $x, $period in enumerate($periods)
 
+        #set $thisday = $period.event_ts.format('%d')
         #set $wts = $period.issued_ts
-        <bx-structured-list-header-cell class="index-$x">
-          #if $show_day
+        <bx-structured-list-header-cell
+          class="index-$x"
+          style="vertical-align: bottom"
+        >
+          #if $show_day and $lastday != $thisday
           <span class="day">$period.event_ts.format('%a')</span>
           <br />
           #end if
           <!--prettier-ignore-->
           #if $show_date
-          <span class="date"
-            >$period.event_ts.format('%d %b') <br />
-            $period.event_ts.format('%H:%M')</span
-          >
+          <!--prettier-ignore-->
+          <span class="date">
+            #if $lastday != $thisday
+              $period.event_ts.format('%d %b')<br />
+            #end if
+            $period.event_ts.format('%H:%M')
+          </span>
           #end if
         </bx-structured-list-header-cell>
         <!--prettier-ignore-->
+        #if $lastday != $thisday
+          #set $lastday = $thisday
+        #end if
         #end for
       </bx-structured-list-header-row>
       #end if

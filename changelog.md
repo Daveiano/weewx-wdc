@@ -511,6 +511,7 @@ Line 133:
 
 # 3.0.0
 
+- Bugfix: Forecast error using OWM Forecast [GH-100]
 - Show weather data for a specific day [GH-67]
 - Make diagrams configurable per context (per period) / Refactor diagrams configuration [GH-73], diagrams can now be configured per context, eg. day, week or month. Per default, the day and week pages do not include the `outTemp` min/max/avg diagram anymore.
 

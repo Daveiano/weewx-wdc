@@ -45,6 +45,11 @@ jobs:
           sed -i -z "s|base_path = \/home\/dba\/dev\/weewx-wdc\/test\/e2e-tests\/artifacts-custom-weewx-html\/public_html/|base_path = \"${CUSTOM_BASE_PATH}\"|g" test/test_install_report/src/skin-custom.conf
           echo $(cat test/test_install_report/src/skin-custom.conf)
 
+      - name: Set WU API key
+        env:
+          WU_KEY: ${{ secrets.WU }}
+        run: sed -i -z -e "s|SECRET_WU|${WU_KEY}|g" test/test_install_report/src/start-forecast.sh
+
       - name: Run shunit2 tests
         run: ./test/run_tests.sh
 
@@ -66,6 +71,12 @@ jobs:
         with:
           name: artifacts-classic-weewx-html
           path: test/test_install_report/artifacts-classic-weewx-html/
+
+      - name: Upload forecast html
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts-forecast-weewx-html
+          path: test/test_install_report/artifacts-forecast-weewx-html/
 
       - name: Upload custom html
         uses: actions/upload-artifact@v3
@@ -108,6 +119,12 @@ jobs:
         with:
           name: artifacts-classic-weewx-html
           path: test/e2e-tests/artifacts-classic-weewx-html
+
+      - name: Download forecast html
+        uses: actions/download-artifact@v3
+        with:
+          name: artifacts-forecast-weewx-html
+          path: test/e2e-tests/artifacts-forecast-weewx-html
 
       - name: Download custom html
         uses: actions/download-artifact@v3

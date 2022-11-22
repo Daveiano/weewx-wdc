@@ -40,7 +40,7 @@ test.describe("Data tables", () => {
   });
 
   test("Custom aggregate_interval", async ({ page }) => {
-    await page.goto("artifacts-custom-weewx-html/public_html/index.html");
+    await page.goto("artifacts-custom-weewx-html/public_html/week.html");
     expect(
       await page.locator(".data-table-tile script").innerText()
     ).toMatchSnapshot();

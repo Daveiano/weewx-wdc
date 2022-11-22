@@ -632,19 +632,19 @@ header.section-header {
     & ~ .forecast {
       margin-top: $spacing-06;
     }
-    bx-structured-list-row,
-    bx-structured-list-header-row {
-      @include carbon--breakpoint-down(md) {
-        bx-structured-list-cell,
-        bx-structured-list-header-cell {
-          display: none;
-        }
-        bx-structured-list-cell:nth-of-type(-n + 3),
-        bx-structured-list-header-cell:nth-of-type(-n + 3) {
-          display: table-cell;
-        }
-      }
-    }
+    // bx-structured-list-row,
+    // bx-structured-list-header-row {
+    //   @include carbon--breakpoint-down(md) {
+    //     bx-structured-list-cell,
+    //     bx-structured-list-header-cell {
+    //       display: none;
+    //     }
+    //     bx-structured-list-cell:nth-of-type(-n + 3),
+    //     bx-structured-list-header-cell:nth-of-type(-n + 3) {
+    //       display: table-cell;
+    //     }
+    //   }
+    // }
   }
 }
 
@@ -652,11 +652,30 @@ bx-structured-list.forecast-list,
 .dwd-forecast .bx--structured-list {
   display: block;
   margin-bottom: -4rem;
+  // Legend max-width for first child.
+  .bx--structured-list-tbody,
+  bx-structured-list-body {
+    .bx--structured-list-row,
+    bx-structured-list-row {
+      .bx--structured-list-td:first-child,
+      bx-structured-list-cell:first-child {
+        max-width: 9rem;
+        white-space: initial;
+        padding-right: 1.5rem;
+      }
+    }
+  }
   bx-structured-list-body,
   .bx--structured-list-tbody {
     bx-structured-list-cell[class*="index"],
     .bx--structured-list-td[class*="index"] {
       font-family: carbon--font-family("mono"), monospace;
+    }
+  }
+  bx-structured-list-header-cell,
+  .bx--structured-list-th {
+    .day {
+      font-weight: 400;
     }
   }
   bx-structured-list-row,
@@ -704,16 +723,6 @@ bx-structured-list.forecast-list,
   .bx--structured-list {
     margin-bottom: 0;
     display: table;
-    // Legend max-width for first child.
-    .bx--structured-list-tbody {
-      .bx--structured-list-row {
-        .bx--structured-list-td:first-child {
-          max-width: 8rem;
-          white-space: initial;
-          padding-right: 1.5rem;
-        }
-      }
-    }
   }
   .bx--content-switcher {
     border: 1px solid $text-02;
@@ -950,18 +959,18 @@ body.theme-classic {
       margin-right: 0;
     }
   }
-  .forecast {
-    bx-structured-list {
-      bx-structured-list-header-cell,
-      bx-structured-list-cell {
-        &:nth-child(n + 6) {
-          @media screen and (min-width: 1312px) and (max-width: 1500px) {
-            display: none;
-          }
-        }
-      }
-    }
-  }
+  // .forecast {
+  //   bx-structured-list {
+  //     bx-structured-list-header-cell,
+  //     bx-structured-list-cell {
+  //       &:nth-child(n + 6) {
+  //         @media screen and (min-width: 1312px) and (max-width: 1500px) {
+  //           display: none;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 }
 
 body.theme-alternative {

@@ -9,7 +9,7 @@
     #include 'includes/conditions-table.inc'
 
     <!--prettier-ignore-->
-    #if $context == "day"
+    #if $context == "day" and $daily_archive == False
     #include "includes/forecast.inc"
     #end if
   </div>

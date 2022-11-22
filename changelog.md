@@ -514,10 +514,41 @@ Line 133:
 - Bugfix: Forecast error using OWM Forecast [GH-100]
 - Show weather data for a specific day [GH-67]
 - Make diagrams configurable per context (per period) / Refactor diagrams configuration [GH-73], diagrams can now be configured per context, eg. day, week or month. Per default, the day and week pages do not include the `outTemp` min/max/avg diagram anymore.
+- Enhancements for weewx-forecast support [GH-95]
 
 **Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki) for information on how to configure the new features.**
 
 ## Changes made to skin.conf since X.X.X
+
+Line 20:
+
+```diff
+[[forecast_zambretti]]
+-    enable = True
++    enable = False
+
+[[forecast_table_settings]]
+     source = WU
+     num_periods = 72
+     num_days = 5
+-    # Todo: Does not make sense?
+-    show_legend = 1
+-    show_hourly = 0
++    show_hourly = 1
+     show_day = 1
+     show_date = 1
+     show_outlook = 1
+     show_temp = 1
+     show_dewpoint = 0
+     show_humidity = 0
+     show_wind = 1
+     show_tides = 0
+     show_sun = 1
+     show_moon = 1
+     show_pop = 1
+     show_precip = 1
+-    show_obvis = 0
+```
 
 Line 70:
 

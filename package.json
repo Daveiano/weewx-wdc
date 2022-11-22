@@ -1,6 +1,6 @@
 {
   "name": "weewx-wdc",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "description": "Weather Data Center skin for weewx.",
   "author": "David Baetge <david.baetge@gmail.com>",
   "license": "MIT",
@@ -13,6 +13,7 @@
     "@carbon/icons-react": "10.22.0",
     "@carbon/themes": "10.40.0",
     "@carbon/type": "10.39.0",
+    "@ibm/plex": "^6.1.1",
     "@nivo/bar": "^0.79.1",
     "@nivo/calendar": "^0.79.1",
     "@nivo/core": "^0.79.0",

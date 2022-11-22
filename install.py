@@ -11,7 +11,7 @@ def loader():
 class BasicInstaller(ExtensionInstaller):
     def __init__(self):
         super(BasicInstaller, self).__init__(
-            version="2.3.1",
+            version="2.3.2",
             name="weewx-wdc",
             description="Weather Data Center skin for weewx.",
             author="David Baetge",
@@ -63,6 +63,14 @@ class BasicInstaller(ExtensionInstaller):
                         "skins/weewx-wdc/service-worker.js",
                         "skins/weewx-wdc/dist/main.css",
                         "skins/weewx-wdc/dist/main.js",
+                        "skins/weewx-wdc/dist/assets/IBMPlexMono-Regular.woff2",
+                        "skins/weewx-wdc/dist/assets/IBMPlexMono-Regular.woff",
+                        "skins/weewx-wdc/dist/assets/IBMPlexSans-Regular.woff2",
+                        "skins/weewx-wdc/dist/assets/IBMPlexSans-Regular.woff",
+                        "skins/weewx-wdc/dist/assets/IBMPlexSans-SemiBold.woff2",
+                        "skins/weewx-wdc/dist/assets/IBMPlexSans-SemiBold.woff",
+                        "skins/weewx-wdc/dist/assets/IBMPlexSerif-Regular.woff2",
+                        "skins/weewx-wdc/dist/assets/IBMPlexSerif-Regular.woff",
                         "skins/weewx-wdc/favicon.ico",
                         "skins/weewx-wdc/plotly-custom-build.min.js",
                         "skins/weewx-wdc/includes/html-head.inc",

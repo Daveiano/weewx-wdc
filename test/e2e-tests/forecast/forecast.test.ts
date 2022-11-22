@@ -25,6 +25,10 @@ test.describe("Forecast", () => {
         "bx-structured-list-body bx-structured-list-row:nth-child(2) bx-structured-list-cell:nth-child(1)"
       )
     ).toContainText("Temp in °C");
+
+    await page.locator(".forecast-tile").screenshot({
+      path: "test/e2e-tests/forecast/forecast-front.png",
+    });
   });
 
   test("Daily/Hourly switch", async ({ page }) => {

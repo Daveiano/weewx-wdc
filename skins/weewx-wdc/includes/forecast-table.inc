@@ -488,25 +488,27 @@
         #set $summary = $forecast.weather_summary($forecast_source, $period.event_ts.raw, periods=$periods)
         <!--prettier-ignore-->
         <bx-structured-list-cell class="index-$x" style="vertical-align: bottom">
-          #if $summary.qpf.raw is not None and $summary.qsf.raw is not None
-            #if $summary.qpf.raw > 0 and $summary.qsf.raw <= 0
+          #set $rain = $summary.qpf.raw is not None and $summary.qpf.raw > 0
+          #set $snow = $summary.qsf.raw is not None and $summary.qsf.raw > 0
+          #if $rain or $snow
+            #if $rain and not $snow
               <!-- include 'includes/icons/forecast/rain.svg' -->
               $summary.qpf.nolabel('%.2f','')
             #end if
 
-            #if $summary.qsf.raw > 0 and $summary.qpf.raw <= 0
+            #if $snow and not $rain
               <!-- include 'includes/icons/forecast/snow.svg' -->
               $summary.qsf.nolabel('%.2f','')
             #end if
 
-            #if $summary.qpf.raw > 0 and $summary.qsf.raw > 0
+            #if $rain and $snow
               <!-- include 'includes/icons/forecast/sleet.svg' -->
               #set $q_pf_sf = '{:.2f}'.format($summary.qpf.raw + $summary.qsf.raw)
               $q_pf_sf
             #end if
           #end if
 
-          #if ($summary.qpf.raw == 0 or $summary.qpf.raw is None) and ($summary.qsf.raw == 0 or $summary.qsf.raw is None)
+          #if not $rain and not $snow
             -
           #end if
         </bx-structured-list-cell>
@@ -734,25 +736,27 @@
         #for $x, $period in enumerate($periods)
         <!--prettier-ignore-->
         <bx-structured-list-cell class="index-$x" style="vertical-align: bottom">
-          #if $period.qpf.raw is not None and $period.qsf.raw is not None
-            #if $period.qpf.raw > 0 and $period.qsf.raw <= 0
+          #set $rain = $period.qpf.raw is not None and $period.qpf.raw > 0
+          #set $snow = $period.qsf.raw is not None and $period.qsf.raw > 0
+          #if $rain or $snow
+            #if $rain and not $snow
               <!-- include 'includes/icons/forecast/rain.svg' -->
               $period.qpf.nolabel('%.2f','')
             #end if
 
-            #if $period.qsf.raw > 0 and $period.qpf.raw <= 0
+            #if $snow and not $rain
               <!-- include 'includes/icons/forecast/snow.svg' -->
               $period.qsf.nolabel('%.2f','')
             #end if
 
-            #if $period.qpf.raw > 0 and $period.qsf.raw > 0
+            #if $rain and $snow
               <!-- include 'includes/icons/forecast/sleet.svg' -->
               #set $q_pf_sf = '{:.2f}'.format($period.qpf.raw + $period.qsf.raw)
               $q_pf_sf
             #end if
           #end if
 
-          #if ($period.qpf.raw == 0 or $period.qpf.raw is None) and ($period.qsf.raw == 0 or $period.qsf.raw is None)
+          #if not $rain and not $snow
             -
           #end if
         </bx-structured-list-cell>

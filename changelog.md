@@ -490,10 +490,11 @@ Line 39 following:
     #       carbon_icons = 0
 ```
 
-# Next
+# 2.3.2
 
 - Added `yScaleMin = 0` to combined wind diagram. [GH-90]
 - Updated italian translation, thanks to Luca Montefiori
+- Added IBM Plex font locally, removed GoogleFonts. [GH-99]
 
 ## Changes made to skin.conf since 2.3.1
 

@@ -388,6 +388,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ibm/plex@npm:^6.1.1":
+  version: 6.1.1
+  resolution: "@ibm/plex@npm:6.1.1"
+  checksum: 832f1928732374d15208151d251b31b73ad196006274807a82aaf8075f83b308faa379e3d1dc0bb0952f1ad0848f8bdc1f67cd477404bab7f1f30daf202ccdaa
+  languageName: node
+  linkType: hard
+
 "@jridgewell/gen-mapping@npm:^0.1.0":
   version: 0.1.1
   resolution: "@jridgewell/gen-mapping@npm:0.1.1"
@@ -5316,6 +5323,7 @@ __metadata:
     "@carbon/icons-react": 10.22.0
     "@carbon/themes": 10.40.0
     "@carbon/type": 10.39.0
+    "@ibm/plex": ^6.1.1
     "@nivo/bar": ^0.79.1
     "@nivo/calendar": ^0.79.1
     "@nivo/core": ^0.79.0

@@ -1,6 +1,7 @@
 $feature-flags: (
   enable-css-custom-properties: true,
 );
+$css--font-face: false;
 @import "~@carbon/themes/scss/themes";
 $custom-property-prefix: "cds";
 $carbon--theme: $carbon--theme--g10;
@@ -202,21 +203,16 @@ $carbon--grid-breakpoints: (
 @import "~@carbon/colors/scss/mixins";
 @include carbon--colors();
 
+@import "./fonts";
+
 // @see https://www.carbondesignsystem.com/guidelines/typography/code/
 @import "~@carbon/type/scss/type";
-
-@import "~@carbon/type/scss/font-face/mono";
-@import "~@carbon/type/scss/font-face/sans";
-@import "~@carbon/type/scss/font-face/serif";
 
 @import "~@carbon/type/scss/classes";
 @include carbon--type-classes();
 @import "~@carbon/type/scss/styles";
 
 @include carbon--type-reset();
-@include carbon--font-face-mono();
-@include carbon--font-face-sans();
-@include carbon--font-face-serif();
 
 .diagram.plotly {
   g.hoverlayer {

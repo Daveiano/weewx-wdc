@@ -34,6 +34,10 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: "asset/resource",
+      },
     ],
   },
   resolve: {
@@ -42,8 +46,10 @@ module.exports = {
   devtool: devMode ? "source-map" : false,
   output: {
     filename: "[name].js",
+    assetModuleFilename: "assets/[name][ext]",
     path: path.resolve(__dirname, "skins/weewx-wdc/dist"),
     globalObject: "this",
+    clean: true,
   },
   plugins: [new MiniCssExtractPlugin()],
 };

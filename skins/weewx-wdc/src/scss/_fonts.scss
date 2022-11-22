@@ -1,0 +1,46 @@
+@font-face {
+  font-display: $carbon--font-display;
+  font-family: "IBM Plex Mono";
+  font-weight: 400;
+  font-style: normal;
+  src: local("IBM Plex Mono"), local("IBMPlexMono"),
+    url(~@ibm/plex/IBM-Plex-Mono/fonts/complete/woff2/IBMPlexMono-Regular.woff2)
+      format("woff2"),
+    url(~@ibm/plex/IBM-Plex-Mono/fonts/complete/woff/IBMPlexMono-Regular.woff)
+      format("woff");
+}
+
+@font-face {
+  font-display: $carbon--font-display;
+  font-family: "IBM Plex Sans";
+  font-weight: 400;
+  font-style: normal;
+  src: local("IBM Plex Sans"), local("IBMPlexSans"),
+    url(~@ibm/plex/IBM-Plex-Sans/fonts/complete/woff2/IBMPlexSans-Regular.woff2)
+      format("woff2"),
+    url(~@ibm/plex/IBM-Plex-Sans/fonts/complete/woff/IBMPlexSans-Regular.woff)
+      format("woff");
+}
+@font-face {
+  font-display: $carbon--font-display;
+  font-family: "IBM Plex Sans";
+  font-weight: 600;
+  font-style: normal;
+  src: local("IBM Plex Sans SemiBold"), local("IBMPlexSans-SemiBold"),
+    url(~@ibm/plex/IBM-Plex-Sans/fonts/complete/woff2/IBMPlexSans-SemiBold.woff2)
+      format("woff2"),
+    url(~@ibm/plex/IBM-Plex-Sans/fonts/complete/woff/IBMPlexSans-SemiBold.woff)
+      format("woff");
+}
+
+@font-face {
+  font-display: $carbon--font-display;
+  font-family: "IBM Plex Serif";
+  font-weight: 400;
+  font-style: normal;
+  src: local("IBM Plex Serif"), local("IBMPlexSerif"),
+    url(~@ibm/plex/IBM-Plex-Serif/fonts/complete/woff2/IBMPlexSerif-Regular.woff2)
+      format("woff2"),
+    url(~@ibm/plex/IBM-Plex-Serif/fonts/complete/woff/IBMPlexSerif-Regular.woff)
+      format("woff");
+}

@@ -938,9 +938,9 @@ class WdcDiagramUtil(SearchList):
             show_beaufort = False
 
         db_manager = self.generator.db_binder.get_manager(
-            data_binding=self.generator.config_dict["StdReport"].get(
-                "data_binding", "wx_binding"
-            ))
+            data_binding=search_up(
+                self.generator.config_dict["StdReport"]["WdcReport"], "data_binding", "wx_binding"))
+
         ordinals = self.general_util.get_ordinates()
         windrose_data = []
 
@@ -1089,9 +1089,9 @@ class WdcStatsUtil(SearchList):
         self.diagram_util = WdcDiagramUtil(generator)
 
         # Setup database manager
-        binding = self.generator.config_dict["StdReport"].get(
-            "data_binding", "wx_binding"
-        )
+        binding = search_up(
+            self.generator.config_dict["StdReport"]["WdcReport"], "data_binding", "wx_binding")
+
         self.db_manager = self.generator.db_binder.get_manager(binding)
 
     @staticmethod
@@ -1490,9 +1490,9 @@ class WdcTableUtil(SearchList):
         self.diagram_util = WdcDiagramUtil(generator)
 
         # Setup database manager
-        binding = self.generator.config_dict["StdReport"].get(
-            "data_binding", "wx_binding"
-        )
+        binding = search_up(
+            self.generator.config_dict["StdReport"]["WdcReport"], "data_binding", "wx_binding")
+
         self.db_manager = self.generator.db_binder.get_manager(binding)
 
         self.table_obs = self.generator.skin_dict["DisplayOptions"].get(

@@ -78,6 +78,68 @@ class WdcGeneralUtil(SearchList):
 
         self.time_format = time_format_dict
         self.generator_to_date = to_date_dict
+        self.default_binding = search_up(
+            self.generator.config_dict["StdReport"]["WdcReport"],
+            "data_binding",
+            "wx_binding"
+        )
+
+    def get_custom_data_binding_obs_key(self, obs_key):
+        """
+        Get the observation key for a custom observation.
+
+        Args:
+            obs_key (string): The observation key
+
+        Returns:
+            string: The custom data binding observation key
+        """
+        try:
+            return self.skin_dict["ObservationBindings"][obs_key]["observation"]
+        except KeyError:
+            return obs_key
+
+    def get_data_binding(self, obs_key):
+        """
+        Get the data binding for a given observation.
+
+        Args:
+            obs_key (string): The observation key
+
+        Returns:
+            string: The data binding
+        """
+        try:
+            return self.skin_dict["ObservationBindings"][obs_key]["data_binding"]
+        except KeyError:
+            return self.default_binding
+
+    def get_data_binding_combined_diagram(self, observation, combined_config, combined_key):
+        """
+        Get the data binding for a combined diagram.
+
+        Args:
+            observation (string): The observation
+            combined_config (dict): The combined config
+            combined_key (string): The combined diagram key
+
+        Returns:
+            string: The data binding
+        """
+        if 'data_binding' in combined_config['obs'][observation]:
+            return combined_config['obs'][observation]['data_binding']
+
+        if combined_config['obs'][observation]['observation'] in self.skin_dict["ObservationBindings"]:
+            try:
+                return self.skin_dict["ObservationBindings"][combined_config['obs'][observation]['observation']]['data_binding']
+            except KeyError:
+                logdbg("No data_binding defined for %s" % observation)
+
+        return search_up(
+            self.skin_dict['DisplayOptions']['diagrams']['combined_observations'][combined_key],
+            'data_binding',
+            self.default_binding
+        )
 
     def get_base_path(self, *args, **kwargs):
         """
@@ -258,16 +320,20 @@ class WdcGeneralUtil(SearchList):
             try:
                 color = search_up(
                     diagrams_config[context]["observations"][combined_obs], "color", None)
+
                 if color is not None:
                     return color
             except KeyError:
-                try:
-                    color = search_up(
-                        diagrams_config["combined_observations"][observation]["obs"][combined_obs_key], "color", None)
-                    if color is not None:
-                        return color
-                except KeyError:
-                    color = None
+                color = None
+
+            try:
+                color = search_up(
+                    diagrams_config["combined_observations"][observation]["obs"][combined_obs_key], "color", None)
+
+                if color is not None:
+                    return color
+            except KeyError:
+                color = None
 
         if color is not None:
             return color

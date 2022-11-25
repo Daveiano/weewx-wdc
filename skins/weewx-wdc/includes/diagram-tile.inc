@@ -20,33 +20,35 @@
         <div class="value">
           <!--prettier-ignore-->
           #set $series_name = $partial_obs + 'Series' + str($diagram_index)
+          #set $partial_obs_key = $get_custom_data_binding_obs_key($partial_obs)
+          #set $partial_obs_binding = $get_data_binding($partial_obs)
 
           <!--prettier-ignore-->
           #if $context == 'month' and $use_parameter_month
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($month, $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs, $context), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
+            var $series_name = $getattr($month($data_binding=$partial_obs_binding), $partial_obs_key).series(aggregate_type=$get_aggregate_type($partial_obs, $context), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
           </script>
           <!--prettier-ignore-->
           #else if $context == 'year' and $use_parameter_year
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($year, $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs, $context), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
+            var $series_name = $getattr($year($data_binding=$partial_obs_binding), $partial_obs_key).series(aggregate_type=$get_aggregate_type($partial_obs, $context), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
           </script>
           #else if $context == 'alltime'
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($alltime, $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs, $context), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
+            var $series_name = $getattr($alltime($data_binding=$partial_obs_binding), $partial_obs_key).series(aggregate_type=$get_aggregate_type($partial_obs, $context), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
           </script>
           #else if $context == 'yesterday'
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($yesterday, $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs, $context), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
+            var $series_name = $getattr($yesterday($data_binding=$partial_obs_binding), $partial_obs_key).series(aggregate_type=$get_aggregate_type($partial_obs, $context), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
           </script>
           #else
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($span($hour_delta=$get_hour_delta($context), $boundary=$get_diagram_boundary($context)), $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs, $context), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
+            var $series_name = $getattr($span($data_binding=$partial_obs_binding, $hour_delta=$get_hour_delta($context), $boundary=$get_diagram_boundary($context)), $partial_obs_key).series(aggregate_type=$get_aggregate_type($partial_obs, $context), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
           </script>
           #end if
 

@@ -8,7 +8,8 @@
   <!--prettier-ignore-->
   #for $skin_obs in $DisplayOptions.get('stat_tile_observations')
     #if $skin_obs != 'windDir' and $skin_obs != 'windGustDir'
-      #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), $skin_obs).has_data
+      #set $skin_obs_binding = $get_data_binding($skin_obs)
+      #if $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), $get_custom_data_binding_obs_key($skin_obs)).has_data
         #set global $partial_obs = $skin_obs
         #include "includes/stat-tile.inc"
       #end if

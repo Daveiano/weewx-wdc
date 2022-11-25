@@ -1185,10 +1185,10 @@ class WdcStatsUtil(SearchList):
             "appTemp",
         ]
 
-        if "Temp" in observation:
+        if "Temp" in observation or 'temp' in observation:
             return True
 
-        elif "Humid" in observation:
+        elif "Humid" in observation or "humid" in observation:
             return True
 
         if observation in show_min_stat:

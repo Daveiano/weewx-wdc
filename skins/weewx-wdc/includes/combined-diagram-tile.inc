@@ -83,7 +83,7 @@
             data-labels="$series_labels"
             data-value="$series_names"
             data-color="$series_colors"
-            data-unit="$getattr($unit.label, $combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation)"
+            data-unit="$getattr($unit.label, $get_custom_data_binding_obs_key($combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation))"
             data-obs="$get_diagram_type($combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation)"
             data-diagram="$get_diagram($combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation)"
             data-context="$context"

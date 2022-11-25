@@ -1554,11 +1554,13 @@ class WdcTableUtil(SearchList):
         self.unit = UnitInfoHelper(generator.formatter, generator.converter)
         self.obs = ObsInfoHelper(generator.skin_dict)
         self.diagram_util = WdcDiagramUtil(generator)
+        self.general_util = WdcGeneralUtil(generator)
 
         # Setup database manager
         binding = search_up(
             self.generator.config_dict["StdReport"]["WdcReport"], "data_binding", "wx_binding")
 
+        self.binding = binding
         self.db_manager = self.generator.db_binder.get_manager(binding)
 
         self.table_obs = self.generator.skin_dict["DisplayOptions"].get(
@@ -1642,10 +1644,21 @@ class WdcTableUtil(SearchList):
         }]
 
         for observation in self.table_obs:
-            if self.db_manager.has_data(observation, TimeSpan(start_ts, end_ts)):
+            observation_binding = self.general_util.get_data_binding(
+                observation)
+            observation_key = self.general_util.get_custom_data_binding_obs_key(
+                observation)
+
+            if observation_binding == self.binding:
+                db_manager = self.db_manager
+            else:
+                db_manager = self.generator.db_binder.get_manager(
+                    observation_binding)
+
+            if db_manager.has_data(observation_key, TimeSpan(start_ts, end_ts)):
                 carbon_header = {
                     "title": self.obs.label[observation],
-                    "small": "in " + getattr(self.unit.label, observation),
+                    "small": "in " + getattr(self.unit.label, observation_key),
                     "id": observation,
                     "sortCycle": "tri-states-from-ascending",
                 }
@@ -1668,11 +1681,22 @@ class WdcTableUtil(SearchList):
         carbon_values = []
 
         for observation in self.table_obs:
-            if self.db_manager.has_data(observation, TimeSpan(start_ts, end_ts)):
+            observation_binding = self.general_util.get_data_binding(
+                observation)
+            observation_key = self.general_util.get_custom_data_binding_obs_key(
+                observation)
+
+            if observation_binding == self.binding:
+                db_manager = self.db_manager
+            else:
+                db_manager = self.generator.db_binder.get_manager(
+                    observation_binding)
+
+            if db_manager.has_data(observation_key, TimeSpan(start_ts, end_ts)):
                 series_start_vt, series_stop_vt, observation_vt = weewx.xtypes.get_series(
-                    observation,
+                    observation_key,
                     TimeSpan(start_ts, end_ts),
-                    self.db_manager,
+                    db_manager,
                     aggregate_type=self.diagram_util.get_aggregate_type(
                         observation, context, use_defaults=True
                     ),

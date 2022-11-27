@@ -24,7 +24,7 @@ echo "Starting weewx"
 "${WEEWX_HOME}"/bin/weewxd "${WEEWX_HOME}"/weewx.conf --daemon
 
 echo "$CURRENT_DATE"
-echo "Sleeping 30 seconds..."
+echo "Sleeping 40 seconds..."
 sleep 40
 
 echo "Starting wee_reports..."

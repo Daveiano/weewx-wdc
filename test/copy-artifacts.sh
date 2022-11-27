@@ -8,3 +8,4 @@ cp -R "$DIR"/test_install_report/artifacts-classic-weewx-html "$DIR"/e2e-tests/a
 cp -R "$DIR"/test_install_report/artifacts-forecast-weewx-html "$DIR"/e2e-tests/artifacts-forecast-weewx-html
 cp -R "$DIR"/test_install_report/artifacts-custom-weewx-html "$DIR"/e2e-tests/artifacts-custom-weewx-html
 cp -R "$DIR"/test_install_report/artifacts-dwd-weewx-html "$DIR"/e2e-tests/artifacts-dwd-weewx-html
+cp -R "$DIR"/test_install_report/artifacts-custom-binding-weewx-html "$DIR"/e2e-tests/artifacts-custom-binding-weewx-html

@@ -78,6 +78,87 @@ class WdcGeneralUtil(SearchList):
 
         self.time_format = time_format_dict
         self.generator_to_date = to_date_dict
+        self.default_binding = search_up(
+            self.generator.config_dict["StdReport"]["WdcReport"],
+            "data_binding",
+            "wx_binding"
+        )
+
+    def get_custom_data_binding_obs_key(self, obs_key):
+        """
+        Get the observation key for a custom observation.
+
+        Args:
+            obs_key (string): The observation key
+
+        Returns:
+            string: The custom data binding observation key
+        """
+        try:
+            return self.skin_dict["ObservationBindings"][obs_key]["observation"]
+        except KeyError:
+            return obs_key
+
+    def get_data_binding(self, obs_key, context=None):
+        """
+        Get the data binding for a given observation.
+
+        Args:
+            obs_key (string): The observation key
+            context (string): The context
+
+        Returns:
+            string: The data binding
+        """
+        if context is not None:
+            try:
+                return self.skin_dict["DisplayOptions"]["diagrams"][context]["observations"][obs_key]['data_binding']
+            except KeyError:
+                try:
+                    return self.skin_dict["DisplayOptions"]["diagrams"][context]['data_binding']
+                except KeyError:
+                    pass
+
+        try:
+            return self.skin_dict["ObservationBindings"][obs_key]["data_binding"]
+        except KeyError:
+            return self.default_binding
+
+    def get_data_binding_combined_diagram(self, observation, combined_config, combined_key, context):
+        """
+        Get the data binding for a combined diagram.
+
+        Args:
+            observation (string): The observation
+            combined_config (dict): The combined config
+            combined_key (string): The combined diagram key
+            context (string): The context
+
+        Returns:
+            string: The data binding
+        """
+        try:
+            return self.skin_dict["DisplayOptions"]["diagrams"][context]["observations"][combined_key]['data_binding']
+        except KeyError:
+            try:
+                return self.skin_dict["DisplayOptions"]["diagrams"][context]['data_binding']
+            except KeyError:
+                pass
+
+        if 'data_binding' in combined_config['obs'][observation]:
+            return combined_config['obs'][observation]['data_binding']
+
+        if combined_config['obs'][observation]['observation'] in self.skin_dict["ObservationBindings"]:
+            try:
+                return self.skin_dict["ObservationBindings"][combined_config['obs'][observation]['observation']]['data_binding']
+            except KeyError:
+                logdbg("No data_binding defined for %s" % observation)
+
+        return search_up(
+            self.skin_dict['DisplayOptions']['diagrams']['combined_observations'][combined_key],
+            'data_binding',
+            self.default_binding
+        )
 
     def get_base_path(self, *args, **kwargs):
         """
@@ -258,16 +339,20 @@ class WdcGeneralUtil(SearchList):
             try:
                 color = search_up(
                     diagrams_config[context]["observations"][combined_obs], "color", None)
+
                 if color is not None:
                     return color
             except KeyError:
-                try:
-                    color = search_up(
-                        diagrams_config["combined_observations"][observation]["obs"][combined_obs_key], "color", None)
-                    if color is not None:
-                        return color
-                except KeyError:
-                    color = None
+                color = None
+
+            try:
+                color = search_up(
+                    diagrams_config["combined_observations"][observation]["obs"][combined_obs_key], "color", None)
+
+                if color is not None:
+                    return color
+            except KeyError:
+                color = None
 
         if color is not None:
             return color
@@ -938,9 +1023,9 @@ class WdcDiagramUtil(SearchList):
             show_beaufort = False
 
         db_manager = self.generator.db_binder.get_manager(
-            data_binding=self.generator.config_dict["StdReport"].get(
-                "data_binding", "wx_binding"
-            ))
+            data_binding=search_up(
+                self.generator.config_dict["StdReport"]["WdcReport"], "data_binding", "wx_binding"))
+
         ordinals = self.general_util.get_ordinates()
         windrose_data = []
 
@@ -1089,9 +1174,9 @@ class WdcStatsUtil(SearchList):
         self.diagram_util = WdcDiagramUtil(generator)
 
         # Setup database manager
-        binding = self.generator.config_dict["StdReport"].get(
-            "data_binding", "wx_binding"
-        )
+        binding = search_up(
+            self.generator.config_dict["StdReport"]["WdcReport"], "data_binding", "wx_binding")
+
         self.db_manager = self.generator.db_binder.get_manager(binding)
 
     @staticmethod
@@ -1119,10 +1204,10 @@ class WdcStatsUtil(SearchList):
             "appTemp",
         ]
 
-        if "Temp" in observation:
+        if "Temp" in observation or 'temp' in observation:
             return True
 
-        elif "Humid" in observation:
+        elif "Humid" in observation or "humid" in observation:
             return True
 
         if observation in show_min_stat:
@@ -1488,11 +1573,13 @@ class WdcTableUtil(SearchList):
         self.unit = UnitInfoHelper(generator.formatter, generator.converter)
         self.obs = ObsInfoHelper(generator.skin_dict)
         self.diagram_util = WdcDiagramUtil(generator)
+        self.general_util = WdcGeneralUtil(generator)
 
         # Setup database manager
-        binding = self.generator.config_dict["StdReport"].get(
-            "data_binding", "wx_binding"
-        )
+        binding = search_up(
+            self.generator.config_dict["StdReport"]["WdcReport"], "data_binding", "wx_binding")
+
+        self.binding = binding
         self.db_manager = self.generator.db_binder.get_manager(binding)
 
         self.table_obs = self.generator.skin_dict["DisplayOptions"].get(
@@ -1576,10 +1663,21 @@ class WdcTableUtil(SearchList):
         }]
 
         for observation in self.table_obs:
-            if self.db_manager.has_data(observation, TimeSpan(start_ts, end_ts)):
+            observation_binding = self.general_util.get_data_binding(
+                observation)
+            observation_key = self.general_util.get_custom_data_binding_obs_key(
+                observation)
+
+            if observation_binding == self.binding:
+                db_manager = self.db_manager
+            else:
+                db_manager = self.generator.db_binder.get_manager(
+                    observation_binding)
+
+            if db_manager.has_data(observation_key, TimeSpan(start_ts, end_ts)):
                 carbon_header = {
                     "title": self.obs.label[observation],
-                    "small": "in " + getattr(self.unit.label, observation),
+                    "small": "in " + getattr(self.unit.label, observation_key),
                     "id": observation,
                     "sortCycle": "tri-states-from-ascending",
                 }
@@ -1602,11 +1700,22 @@ class WdcTableUtil(SearchList):
         carbon_values = []
 
         for observation in self.table_obs:
-            if self.db_manager.has_data(observation, TimeSpan(start_ts, end_ts)):
+            observation_binding = self.general_util.get_data_binding(
+                observation)
+            observation_key = self.general_util.get_custom_data_binding_obs_key(
+                observation)
+
+            if observation_binding == self.binding:
+                db_manager = self.db_manager
+            else:
+                db_manager = self.generator.db_binder.get_manager(
+                    observation_binding)
+
+            if db_manager.has_data(observation_key, TimeSpan(start_ts, end_ts)):
                 series_start_vt, series_stop_vt, observation_vt = weewx.xtypes.get_series(
-                    observation,
+                    observation_key,
                     TimeSpan(start_ts, end_ts),
-                    self.db_manager,
+                    db_manager,
                     aggregate_type=self.diagram_util.get_aggregate_type(
                         observation, context, use_defaults=True
                     ),

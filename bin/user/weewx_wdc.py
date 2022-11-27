@@ -112,13 +112,12 @@ class WdcGeneralUtil(SearchList):
         """
         if context is not None:
             try:
-                data_binding = search_up(
-                    self.skin_dict["DisplayOptions"]["diagrams"][context]["observations"][obs_key], 'data_binding', None)
-                if data_binding is not None:
-                    return data_binding
-
+                return self.skin_dict["DisplayOptions"]["diagrams"][context]["observations"][obs_key]['data_binding']
             except KeyError:
-                pass
+                try:
+                    return self.skin_dict["DisplayOptions"]["diagrams"][context]['data_binding']
+                except KeyError:
+                    pass
 
         try:
             return self.skin_dict["ObservationBindings"][obs_key]["data_binding"]
@@ -139,13 +138,12 @@ class WdcGeneralUtil(SearchList):
             string: The data binding
         """
         try:
-            data_binding = search_up(
-                self.skin_dict["DisplayOptions"]["diagrams"][context]["observations"][combined_key], 'data_binding', None)
-            if data_binding is not None:
-                return data_binding
-
+            return self.skin_dict["DisplayOptions"]["diagrams"][context]["observations"][combined_key]['data_binding']
         except KeyError:
-            pass
+            try:
+                return self.skin_dict["DisplayOptions"]["diagrams"][context]['data_binding']
+            except KeyError:
+                pass
 
         if 'data_binding' in combined_config['obs'][observation]:
             return combined_config['obs'][observation]['data_binding']

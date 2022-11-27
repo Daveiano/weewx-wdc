@@ -36,7 +36,7 @@
           <!--prettier-ignore-->
           <span>
             #if $context == 'day'
-              $getattr($current, $partial_obs)
+              $getattr($current($data_binding=$skin_obs_binding), $skin_obs_key)
 
               #if $show_wind_dir and $current.windDir.has_data
                 <span class="stat-wind-dir">

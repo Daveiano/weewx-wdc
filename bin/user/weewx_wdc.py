@@ -99,22 +99,33 @@ class WdcGeneralUtil(SearchList):
         except KeyError:
             return obs_key
 
-    def get_data_binding(self, obs_key):
+    def get_data_binding(self, obs_key, context=None):
         """
         Get the data binding for a given observation.
 
         Args:
             obs_key (string): The observation key
+            context (string): The context
 
         Returns:
             string: The data binding
         """
+        if context is not None:
+            try:
+                data_binding = search_up(
+                    self.skin_dict["DisplayOptions"]["diagrams"][context]["observations"][obs_key], 'data_binding', None)
+                if data_binding is not None:
+                    return data_binding
+
+            except KeyError:
+                pass
+
         try:
             return self.skin_dict["ObservationBindings"][obs_key]["data_binding"]
         except KeyError:
             return self.default_binding
 
-    def get_data_binding_combined_diagram(self, observation, combined_config, combined_key):
+    def get_data_binding_combined_diagram(self, observation, combined_config, combined_key, context):
         """
         Get the data binding for a combined diagram.
 
@@ -122,10 +133,20 @@ class WdcGeneralUtil(SearchList):
             observation (string): The observation
             combined_config (dict): The combined config
             combined_key (string): The combined diagram key
+            context (string): The context
 
         Returns:
             string: The data binding
         """
+        try:
+            data_binding = search_up(
+                self.skin_dict["DisplayOptions"]["diagrams"][context]["observations"][combined_key], 'data_binding', None)
+            if data_binding is not None:
+                return data_binding
+
+        except KeyError:
+            pass
+
         if 'data_binding' in combined_config['obs'][observation]:
             return combined_config['obs'][observation]['data_binding']
 

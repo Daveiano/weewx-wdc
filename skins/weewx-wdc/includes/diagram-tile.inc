@@ -21,7 +21,7 @@
           <!--prettier-ignore-->
           #set $series_name = $partial_obs + 'Series' + str($diagram_index)
           #set $partial_obs_key = $get_custom_data_binding_obs_key($partial_obs)
-          #set $partial_obs_binding = $get_data_binding($partial_obs)
+          #set $partial_obs_binding = $get_data_binding($partial_obs, $context)
 
           <!--prettier-ignore-->
           #if $context == 'month' and $use_parameter_month

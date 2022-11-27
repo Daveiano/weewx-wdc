@@ -37,6 +37,11 @@ oneTimeSetUp() {
         sleep 1
         mkdir "$DIR"/artifacts-dwd-weewx-html
     fi
+    if ! [ -d "$DIR"/artifacts-custom-binding-weewx-html ] ; then
+        echo Creating artifacts-custom-binding-weewx-html directory...
+        sleep 1
+        mkdir "$DIR"/artifacts-custom-binding-weewx-html
+    fi
 }
 
 testBundling() {
@@ -149,6 +154,23 @@ testWeeReportRunDWD() {
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"
     assertContains "$output" "INFO weewx.reportengine: Copied 21 files to /home/weewx/public_html"
+
+    assertNotContains "$output" "failed with exception"
+    assertNotContains "$output" "Ignoring template"
+    assertNotContains "$output" "Caught unrecoverable exception"
+}
+
+testWeeReportRunCustomBinding() {
+    docker run --entrypoint "/start-custom-binding.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunCustomBinding.txt 2>&1
+    docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-custom-binding-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
+    docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
+
+    output=$(cat "$DIR"/artifacts/testWeeReportRunCustomBinding.txt)
+
+    assertContains "$output" "Starting weewx reports (Alternative layout with custom binding)"
+    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"

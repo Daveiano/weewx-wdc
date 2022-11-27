@@ -90,6 +90,12 @@ jobs:
           name: artifacts-dwd-weewx-html
           path: test/test_install_report/artifacts-dwd-weewx-html/
 
+      - name: Upload custom binding html
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts-custom-binding-weewx-html
+          path: test/test_install_report/artifacts-custom-binding-weewx-html/
+
   playwright:
     needs: shunit2
     runs-on: ubuntu-latest
@@ -137,6 +143,12 @@ jobs:
         with:
           name: artifacts-dwd-weewx-html
           path: test/e2e-tests/artifacts-dwd-weewx-html
+
+      - name: Download custom binding html
+        uses: actions/download-artifact@v3
+        with:
+          name: artifacts-custom-binding-weewx-html
+          path: test/e2e-tests/artifacts-custom-binding-weewx-html
 
       - name: Run playwright tests
         run: yarn run test:e2e

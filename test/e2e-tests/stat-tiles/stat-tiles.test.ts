@@ -29,6 +29,7 @@ test.describe("Stat tiles", () => {
       "0.00 cm"
     );
     await expect(rain.locator("[data-test='min']")).toHaveCount(0);
+    await expect(rain.locator("[data-test='max']")).toHaveCount(0);
 
     const radiation = page.locator(".stat-tile[data-test='radiation']");
     await expect(radiation.locator(".value > span")).toHaveText("48 W/m²");
@@ -36,6 +37,7 @@ test.describe("Stat tiles", () => {
       "176 W/m²"
     );
     await expect(radiation.locator("[data-test='min']")).toHaveCount(0);
+    await expect(radiation.locator("[data-test='sum']")).toHaveCount(0);
   });
 
   test("Show min/max time", async ({ page }) => {
@@ -71,5 +73,45 @@ test.describe("Stat tiles", () => {
       .getAttribute("body-text");
 
     expect(maxTime).toBe("07:23:05");
+  });
+
+  test("Sum/Min/Max", async ({ page }) => {
+    await page.goto("artifacts-custom-weewx-html/public_html/week.html");
+
+    const outTemp = page.locator(".stat-tile[data-test='outTemp']");
+    await expect(outTemp.locator(".value span >> nth=0")).toContainText(
+      "19.7°C"
+    );
+    await expect(outTemp.locator("[data-test='min'] .stat-value")).toHaveCount(
+      0
+    );
+    await expect(outTemp.locator("[data-test='sum'] .stat-value")).toHaveCount(
+      0
+    );
+    await expect(outTemp.locator("[data-test='max'] .stat-value")).toHaveText(
+      "37.4°C"
+    );
+
+    const rainRate = page.locator(".stat-tile[data-test='rainRate']");
+    await expect(rainRate.locator(".value span >> nth=0")).toContainText(
+      "0.00 cm/h"
+    );
+    await expect(rainRate.locator("[data-test='min'] .stat-value")).toHaveCount(
+      0
+    );
+    await expect(rainRate.locator("[data-test='sum'] .stat-value")).toHaveCount(
+      0
+    );
+    await expect(rainRate.locator("[data-test='max'] .stat-value")).toHaveText(
+      "0.30 cm/h"
+    );
+
+    const rain = page.locator(".stat-tile[data-test='rain']");
+    await expect(rain.locator(".value span >> nth=0")).toContainText("0.00 cm");
+    await expect(rain.locator("[data-test='min'] .stat-value")).toHaveCount(0);
+    await expect(rain.locator("[data-test='sum'] .stat-value")).toHaveCount(0);
+    await expect(rain.locator("[data-test='max'] .stat-value")).toHaveText(
+      "0.03 cm"
+    );
   });
 });

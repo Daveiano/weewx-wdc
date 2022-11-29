@@ -518,10 +518,23 @@ Line 133:
 - Make diagrams configurable per context (per period) / Refactor diagrams configuration [GH-73], diagrams can now be configured per context, eg. day, week or month. Per default, the day and week pages do not include the `outTemp` min/max/avg diagram anymore.
 - Enhancements for weewx-forecast support [GH-95]
 - Make show_min, show_max, show_sum configurable for stat tiles [GH-94]
+- Support for custom `data_bindings` [GH-71]
 
 **Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki) for information on how to configure the new features.**
 
 ## Changes made to skin.conf since X.X.X
+
+Line 5:
+
+```diff
++[ObservationBindings]
++    [[custom_obs_1]]
++        data_binding = extension_1_binding # eg wx_binding
++        observation = obs_key # eg. outTemp
++    [[custom_obs_2]]
++        data_binding = extension_2_binding
++        observation = another_obs_key
+```
 
 Line 20:
 

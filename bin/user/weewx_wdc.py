@@ -1179,8 +1179,7 @@ class WdcStatsUtil(SearchList):
 
         self.db_manager = self.generator.db_binder.get_manager(binding)
 
-    @staticmethod
-    def get_show_min(observation):
+    def get_show_min(self, observation):
         """
         Returns if the min stats should be shown.
 
@@ -1190,31 +1189,27 @@ class WdcStatsUtil(SearchList):
         Returns:
             bool: Show or hide min stat.
         """
-        show_min_stat = [
-            "outTemp",
-            "outHumidity",
-            "barometer",
-            "pressure",
-            "altimeter",
-            "snowDepth",
-            "heatindex",
-            "dewpoint",
-            "windchill",
-            "cloudbase",
-            "appTemp",
-        ]
+        show_min = self.generator.skin_dict['DisplayOptions'].get(
+            'stat_tiles_show_min',
+            [
+                "outTemp",
+                "outHumidity",
+                "barometer",
+                "pressure",
+                "altimeter",
+                "snowDepth",
+                "heatindex",
+                "dewpoint",
+                "windchill",
+                "cloudbase",
+                "appTemp",
+            ]
+        )
 
-        if "Temp" in observation or 'temp' in observation:
+        if observation in show_min:
             return True
 
-        elif "Humid" in observation or "humid" in observation:
-            return True
-
-        if observation in show_min_stat:
-            return True
-
-    @staticmethod
-    def get_show_sum(observation):
+    def get_show_sum(self, observation):
         """
         Returns if the sum stats should be shown.
 
@@ -1224,13 +1219,15 @@ class WdcStatsUtil(SearchList):
         Returns:
             bool: Show or hide sum stat.
         """
-        show_sum = ["rain", "ET", "lightning_strike_count"]
+        show_sum = self.generator.skin_dict['DisplayOptions'].get(
+            'stat_tiles_show_sum',
+            ["rain", "ET", "hail", "snow", "lightning_strike_count"]
+        )
 
         if observation in show_sum:
             return True
 
-    @staticmethod
-    def get_show_max(observation):
+    def get_show_max(self, observation):
         """
         Returns if the max stats should be shown.
 
@@ -1240,7 +1237,10 @@ class WdcStatsUtil(SearchList):
         Returns:
             bool: Show or hide max stat.
         """
-        show_max = ["rainRate"]
+        show_max = self.generator.skin_dict['DisplayOptions'].get(
+            'stat_tiles_show_max',
+            ["rainRate", "hailRate", "snowRate", "UV"]
+        )
 
         if observation in show_max:
             return True

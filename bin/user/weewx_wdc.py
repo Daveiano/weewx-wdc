@@ -1781,9 +1781,12 @@ class WdcForecastUtil(SearchList):
 
             SearchList.__init__(self, generator)
             self.forecast = ForecastVariables(generator)
-            self.forecast_source = generator.skin_dict.get("Extras")[
-                "forecast_table_settings"
-            ]["source"]
+            try:
+                self.forecast_source = generator.skin_dict["Extras"][
+                    "forecast_table_settings"
+                ]["source"]
+            except KeyError:
+                logdbg("forecast_table_settings.source not found in skin.conf")
 
         except ImportError:
             logdbg(

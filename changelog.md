@@ -517,6 +517,7 @@ Line 133:
 - Show weather data for a specific day [GH-67]
 - Make diagrams configurable per context (per period) / Refactor diagrams configuration [GH-73], diagrams can now be configured per context, eg. day, week or month. Per default, the day and week pages do not include the `outTemp` min/max/avg diagram anymore.
 - Enhancements for weewx-forecast support [GH-95]
+- Make show_min, show_max, show_sum configurable for stat tiles [GH-94]
 
 **Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki) for information on how to configure the new features.**
 
@@ -560,6 +561,17 @@ Line 70:
      stat_tile_winddir_ordinal = True
      diagram_tile_winddir_ordinal = True
      show_min_max_time_day = False
+```
+
+Line 84:
+
+```diff
+# What to show for the stat tiles.
+stat_tile_observations = outTemp, outHumidity, barometer, windSpeed, windDir, windGust, windGustDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
++# Stat tiles: Min/Max/Sum settings.
++stat_tiles_show_min = outTemp, outHumidity, barometer, pressure, altimeter, snowDepth, heatindex, dewpoint, windchill, cloudbase, appTemp
++stat_tiles_show_max = rainRate, hailRate, snowRate, UV
++stat_tiles_show_sum = rain, ET, hail, snow, lightning_strike_count
 ```
 
 Line 96:

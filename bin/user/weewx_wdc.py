@@ -273,29 +273,71 @@ class WdcGeneralUtil(SearchList):
         elif observation == "rainRate":
             return icon_path + "rain-rate.svg"
 
-        elif observation == "dewpoint":
+        elif observation == "dewpoint" or observation == "dewpoint1" or observation == 'inDewpoint':
             return icon_path + "dew-point.svg"
 
         elif observation == "windchill":
             return icon_path + "wind-chill.svg"
 
-        elif observation == "heatindex":
-            return icon_path + "heat.svg"
+        elif observation == "heatindex" or observation == "heatindex1" or observation == 'humidex' or observation == 'humidex1':
+            return icon_path + "heat-index.svg"
 
         elif observation == "UV":
             return icon_path + "uv.svg"
 
         elif observation == "ET":
-            return icon_path + "ev.svg"
+            return icon_path + "et.svg"
 
-        elif observation == "radiation":
-            return icon_path + "solar.svg"
+        elif observation == "noise":
+            return icon_path + "noise.svg"
 
-        elif observation == "appTemp":
-            return icon_path + "feel-temp.svg"
+        elif observation == "forecast":
+            return icon_path + "forecast.svg"
+
+        elif observation == "radiation" or observation == 'luminosity' or observation == 'maxSolarRad':
+            return icon_path + "radiation.svg"
+
+        elif observation == "appTemp" or observation == "appTemp1":
+            return icon_path + "app-temp.svg"
 
         elif observation == "cloudbase":
             return icon_path + "cloud-base.svg"
+
+        elif observation == "snowDepth":
+            return icon_path + "snow-depth.svg"
+
+        elif observation == "snowMoisture":
+            return icon_path + "snow-moist.svg"
+
+        elif observation == "windrun":
+            return icon_path + "wind-run.svg"
+
+        elif observation == "snow" or observation == "snowRate":
+            return icon_path + "snow.svg"
+
+        elif observation == "hail" or observation == "hailRate":
+            return icon_path + "hail.svg"
+
+        elif "leaf" in observation:
+            return icon_path + "leaf.svg"
+
+        elif "signal" in observation or observation == "rxCheckPercent":
+            return icon_path + "signal.svg"
+
+        elif "Voltage" in observation:
+            return icon_path + "voltage.svg"
+
+        elif "batterystatus" in observation.lower() or "batteryvoltage" in observation.lower():
+            return icon_path + "battery.svg"
+
+        elif 'lightning' in observation:
+            return icon_path + "lightning.svg"
+
+        elif "soilMoist" in observation:
+            return icon_path + "soil-moist.svg"
+
+        elif "soilTemp" in observation:
+            return icon_path + "soil-temp.svg"
 
         elif "Temp" in observation:
             return icon_path + "temp.svg"
@@ -686,7 +728,7 @@ class WdcCelestialUtil(SearchList):
             if prop == "set":
                 return "includes/icons/sunset.svg"
             if prop == "transit":
-                return "includes/icons/solar.svg"
+                return "includes/icons/radiation.svg"
 
         if observation == "Moon":
             if prop is None:

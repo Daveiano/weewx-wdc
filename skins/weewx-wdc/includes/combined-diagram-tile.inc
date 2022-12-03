@@ -26,11 +26,21 @@
       <div class="bx--col">
         <!--prettier-ignore-->
         <p class="label">
-          #for $icon in $obs_icons
-            <span>
+          #set $icon = $get_icon($comb_obs, $use_combined_diagram_config=True, $context=$context)
+
+          #if $icon is not None
+            #if $icon != 'none' and "includes/icons/" in $icon and '.svg' in $icon
               #include $icon
-            </span>
-          #end for
+            #elif $icon != 'none' and "includes/icons/" not in $icon
+              <img src="$icon" alt="$obs.label[$partial_obs]" />
+            #end if
+          #else
+            #for $icon in $obs_icons
+              <span>
+                #include $icon
+              </span>
+            #end for
+          #end if
           $combined_diagram.label
         </p>
         <div class="value">

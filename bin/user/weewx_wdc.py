@@ -231,19 +231,64 @@ class WdcGeneralUtil(SearchList):
 
         return windrose_day_enabled or windrose_week_enabled or windrose_month_enabled or windrose_year_enabled or windrose_alltime_enabled
 
-    @staticmethod
-    def get_icon(observation):
+    def get_icon(self, observation, use_diagram_config=False, use_combined_diagram_config=False, context=None):
         """
         Returns an include path for an icon based on the observation
         @see http://weewx.com/docs/sle.html
 
         Args:
             observation (string): The observation
+            use_diagram_config (bool): Use the diagram config
+            use_combined_diagram_config (bool): Use the combined diagram config
+            context (string): The context
 
         Returns:
             str: An icon include path
         """
         icon_path = "includes/icons/"
+
+        if use_diagram_config and context is not None:
+            try:
+                icon = self.generator.skin_dict['DisplayOptions']['diagrams'][context]['observations'][observation]['icon']
+            except KeyError:
+                icon = False
+
+            if icon or icon == 'none':
+                return icon
+
+            try:
+                icon = self.generator.skin_dict['DisplayOptions']['diagrams'][observation]['icon']
+            except KeyError:
+                icon = False
+
+            if icon or icon == 'none':
+                return icon
+
+        if use_combined_diagram_config and context is not None:
+            try:
+                icon = self.generator.skin_dict['DisplayOptions']['diagrams'][context]['observations'][observation]['icon']
+            except KeyError:
+                icon = False
+
+            if icon or icon == 'none':
+                return icon
+
+            try:
+                icon = self.generator.skin_dict['DisplayOptions']['diagrams']['combined_observations'][observation]['icon']
+            except KeyError:
+                icon = False
+
+            if icon or icon == 'none':
+                return icon
+
+        try:
+            icon_config = self.generator.skin_dict['DisplayOptions']['Icons'].get(
+                observation, None)
+        except KeyError:
+            icon_config = None
+
+        if icon_config and icon_path in icon_config and '.svg' in icon_config:
+            return icon_config
 
         if observation == "outTemp" or observation == "inTemp":
             return icon_path + "temp.svg"

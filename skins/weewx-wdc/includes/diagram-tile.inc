@@ -5,22 +5,25 @@
 #if $DisplayOptions.get('layout', 'alternative') == 'classic'
   #set diagram_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6"
 #end if
+#set $partial_obs_key = $get_custom_data_binding_obs_key($partial_obs)
 
 <div class="$diagram_classes">
   <div class="bx--tile diagram-tile" data-test="$partial_obs">
     <div class="bx--row">
       <div class="bx--col">
+        <!--prettier-ignore-->
         <p class="label">
-          <!--prettier-ignore-->
-          #if $get_icon($partial_obs) is not None
-            #include $get_icon($partial_obs)
+          #set $icon = $get_icon($partial_obs_key, $use_diagram_config=True, $context=$context)
+          #if $icon != 'none' and "includes/icons/" in $icon and '.svg' in $icon
+            #include $icon
+          #elif $icon != 'none' and "includes/icons/" not in $icon
+            <img src="$icon" alt="$obs.label[$partial_obs]" />
           #end if
           $obs.label[$partial_obs]
         </p>
         <div class="value">
           <!--prettier-ignore-->
           #set $series_name = $partial_obs + 'Series' + str($diagram_index)
-          #set $partial_obs_key = $get_custom_data_binding_obs_key($partial_obs)
           #set $partial_obs_binding = $get_data_binding($partial_obs, $context)
 
           <!--prettier-ignore-->

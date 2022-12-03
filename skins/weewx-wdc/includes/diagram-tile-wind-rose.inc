@@ -10,10 +10,13 @@
   <div class="bx--tile diagram-tile" data-test="windrose">
     <div class="bx--row">
       <div class="bx--col">
+        <!--prettier-ignore-->
         <p class="label">
-          <!--prettier-ignore-->
-          #if $get_icon("windDir") is not None
-            #include $get_icon("windDir")
+          #set $icon = $get_icon("windDir", $use_diagram_config=True, $context=$context)
+          #if $icon != 'none' and "includes/icons/" in $icon and '.svg' in $icon
+            #include $icon
+          #elif $icon != 'none' and "includes/icons/" not in $icon
+            <img src="$icon" alt="$obs.label['windDir']" />
           #end if
           $obs.label["windDir"]
         </p>

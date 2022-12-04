@@ -287,7 +287,7 @@ class WdcGeneralUtil(SearchList):
         except KeyError:
             icon_config = None
 
-        if icon_config and icon_path in icon_config and '.svg' in icon_config:
+        if icon_config is not None:
             return icon_config
 
         if observation == "outTemp" or observation == "inTemp":

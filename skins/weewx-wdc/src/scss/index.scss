@@ -477,7 +477,8 @@ header.section-header {
     .value {
       display: flex;
       align-items: center;
-      svg {
+      svg,
+      img {
         max-width: 32px;
         display: inline-block;
         margin-right: $spacing-02;

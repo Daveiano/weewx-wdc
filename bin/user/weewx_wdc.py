@@ -290,6 +290,7 @@ class WdcGeneralUtil(SearchList):
         if icon_config is not None:
             return icon_config
 
+        # Default icon set
         if observation == "outTemp" or observation == "inTemp":
             return icon_path + "temp.svg"
 

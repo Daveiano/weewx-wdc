@@ -157,4 +157,34 @@ test.describe("Diagrams", () => {
       await windDir.locator(".value script").innerText()
     ).toMatchSnapshot();
   });
+
+  test("Custom Icons", async ({ page }) => {
+    await page.goto("artifacts-custom-weewx-html/public_html/index.html");
+
+    const tempDewDiagram = page.locator(
+      ".diagram-tile.combined[data-test='outTemp-dewpoint']"
+    );
+    const windDiagram = page.locator(
+      ".diagram-tile.combined[data-test='windSpeed-windGust']"
+    );
+    const uvDiagram = page.locator(
+      ".diagram-tile.combined[data-test='windSpeed-windGust']"
+    );
+    const etDiagram = page.locator(".diagram-tile.combined[data-test='ET']");
+    expect(
+      await windDiagram.locator(".label svg").innerHTML()
+    ).toMatchSnapshot();
+    expect(await uvDiagram.locator(".label svg").innerHTML()).toMatchSnapshot();
+    await expect(tempDewDiagram.locator(".label svg")).toHaveCount(0);
+    await expect(etDiagram.locator(".label svg")).toHaveCount(0);
+
+    await page.goto("artifacts-custom-weewx-html/public_html/year.html");
+
+    const tempMinMax = page.locator(
+      ".diagram-tile.combined[data-test='outTemp-outTemp-outTemp']"
+    );
+    expect(
+      await tempMinMax.locator(".label svg").innerHTML()
+    ).toMatchSnapshot();
+  });
 });

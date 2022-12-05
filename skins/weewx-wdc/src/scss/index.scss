@@ -477,7 +477,8 @@ header.section-header {
     .value {
       display: flex;
       align-items: center;
-      svg {
+      svg,
+      img {
         max-width: 32px;
         display: inline-block;
         margin-right: $spacing-02;
@@ -582,9 +583,12 @@ header.section-header {
     @include carbon--type-style("expressive-heading-02");
     display: flex;
     align-items: center;
+    img,
     svg {
       margin-right: $spacing-02;
       fill: $text-02;
+      max-width: 32px;
+      height: auto;
     }
   }
 }

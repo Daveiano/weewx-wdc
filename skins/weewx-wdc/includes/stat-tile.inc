@@ -27,10 +27,13 @@
     <div class="bx--row">
       <div class="bx--col">
         <p class="label">$obs.label[$partial_obs]</p>
+        <!--prettier-ignore-->
         <p class="value">
-          <!--prettier-ignore-->
-          #if $get_icon($partial_obs) is not None
-          #include $get_icon($partial_obs)
+          #set $icon = $get_icon($skin_obs_key)
+          #if $icon != 'none' and "includes/icons/" in $icon and '.svg' in $icon
+            #include $icon
+          #elif $icon != 'none' and "includes/icons/" not in $icon
+            <img src="$icon" alt="$obs.label[$partial_obs]" />
           #end if
 
           <!--prettier-ignore-->

@@ -38,6 +38,14 @@ test.describe("Stat tiles", () => {
     );
     await expect(radiation.locator("[data-test='min']")).toHaveCount(0);
     await expect(radiation.locator("[data-test='sum']")).toHaveCount(0);
+
+    // Test Icons.
+    expect(await outTemp.locator(".value svg").innerHTML()).toMatchSnapshot();
+    expect(
+      await windSpeed.locator(".value svg >> nth=0").innerHTML()
+    ).toMatchSnapshot();
+    expect(await rain.locator(".value svg").innerHTML()).toMatchSnapshot();
+    expect(await radiation.locator(".value svg").innerHTML()).toMatchSnapshot();
   });
 
   test("Show min/max time", async ({ page }) => {
@@ -113,5 +121,21 @@ test.describe("Stat tiles", () => {
     await expect(rain.locator("[data-test='max'] .stat-value")).toHaveText(
       "0.03 cm"
     );
+  });
+
+  test("Custom Icons", async ({ page }) => {
+    await page.goto("artifacts-custom-weewx-html/public_html/index.html");
+
+    const rain = page.locator(".stat-tile[data-test='rain']");
+    const cloudbase = page.locator(".stat-tile[data-test='cloudbase']");
+    const outHumidity = page.locator(".stat-tile[data-test='outHumidity']");
+
+    // Diagrams
+    expect(await rain.locator(".value svg").innerHTML()).toMatchSnapshot();
+    expect(
+      await outHumidity.locator(".value svg").innerHTML()
+    ).toMatchSnapshot();
+    await expect(cloudbase.locator(".value svg")).toHaveCount(0);
+    await expect(cloudbase.locator(".value img")).toHaveCount(1);
   });
 });

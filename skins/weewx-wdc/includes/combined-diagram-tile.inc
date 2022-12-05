@@ -13,19 +13,34 @@
 
 #set combined_obs_string = '-'.join($combined_diagram_obs.values())
 
+#set $obs_icons = []
+#for $combined_obs in $combined_diagram_obs.values()
+  #if $get_icon($combined_obs) is not None and $get_icon($combined_obs) not in $obs_icons
+    #silent $obs_icons.append($get_icon($combined_obs))
+  #end if
+#end for
+
 <div class="$diagram_classes">
   <div class="bx--tile diagram-tile combined" data-test="$combined_obs_string">
     <div class="bx--row">
       <div class="bx--col">
         <!--prettier-ignore-->
         <p class="label">
-          #for $combined_obs in $combined_diagram_obs.values()
-            <span>
-              #if $get_icon($combined_obs) is not None
-                #include $get_icon($combined_obs)
-              #end if
-            </span>
-          #end for
+          #set $icon = $get_icon($comb_obs, $use_combined_diagram_config=True, $context=$context)
+
+          #if $icon is not None
+            #if $icon != 'none' and "includes/icons/" in $icon and '.svg' in $icon
+              #include $icon
+            #elif $icon != 'none' and "includes/icons/" not in $icon
+              <img src="$icon" alt="$obs.label[$partial_obs]" />
+            #end if
+          #else
+            #for $icon in $obs_icons
+              <span>
+                #include $icon
+              </span>
+            #end for
+          #end if
           $combined_diagram.label
         </p>
         <div class="value">

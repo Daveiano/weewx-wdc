@@ -519,6 +519,7 @@ Line 133:
 - Enhancements for weewx-forecast support [GH-95]
 - Make show_min, show_max, show_sum configurable for stat tiles [GH-94]
 - Support for custom `data_bindings` [GH-71]
+- Configurable Icons [GH-87]
 
 **Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki) for information on how to configure the new features.**
 
@@ -580,11 +581,20 @@ Line 84:
 
 ```diff
 # What to show for the stat tiles.
-stat_tile_observations = outTemp, outHumidity, barometer, windSpeed, windDir, windGust, windGustDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
+-stat_tile_observations = outTemp, outHumidity, barometer, windSpeed, windDir, windGust, windGustDir, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
++stat_tile_observations = outTemp, outHumidity, barometer, windSpeed, windDir, windGust, windGustDir, windrun, rain, rainRate, snowDepth, dewpoint, windchill, heatindex, UV, ET, radiation, appTemp, cloudbase, extraTemp1, extraHumid1, extraTemp2, extraHumid2, extraTemp3, extraHumid3, extraTemp4, extraHumid4, extraTemp5, extraHumid5, extraTemp6, extraHumid6, extraTemp7, extraHumid7, extraTemp8, extraHumid8
 +# Stat tiles: Min/Max/Sum settings.
 +stat_tiles_show_min = outTemp, outHumidity, barometer, pressure, altimeter, snowDepth, heatindex, dewpoint, windchill, cloudbase, appTemp
 +stat_tiles_show_max = rainRate, hailRate, snowRate, UV
-+stat_tiles_show_sum = rain, ET, hail, snow, lightning_strike_count
++stat_tiles_show_sum = rain, ET, hail, snow, lightning_strike_count, windrun
+```
+
+Line 103:
+
+```diff
++[[Icons]]
++    #rain = "includes/icons/barometer.svg"
+
 ```
 
 Line 96:

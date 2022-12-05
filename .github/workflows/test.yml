@@ -43,7 +43,7 @@ jobs:
         run: |
           echo "$CUSTOM_BASE_PATH"
           sed -i -z "s|base_path = \/home\/dba\/dev\/weewx-wdc\/test\/e2e-tests\/artifacts-custom-weewx-html\/public_html/|base_path = \"${CUSTOM_BASE_PATH}\"|g" test/test_install_report/src/skin-custom.conf
-          sed -i -z "s|cloudbase = \/home\/dba\/dev\/weewx-wdc\/test\/e2e-tests\/artifacts-custom-weewx-html\/public_html\/dwd\/icons\/8.png|cloudbase = \"${CUSTOM_BASE_PATH}\"\/dwd\/icons\/8.png|g" test/test_install_report/src/skin-custom.conf
+          sed -i -z "s|cloudbase = \/home\/dba\/dev\/weewx-wdc\/test\/e2e-tests\/artifacts-custom-weewx-html\/public_html\/dwd\/icons\/8.png|cloudbase = \"${CUSTOM_BASE_PATH}\/dwd\/icons\/8.png\"|g" test/test_install_report/src/skin-custom.conf
           echo $(cat test/test_install_report/src/skin-custom.conf)
 
       - name: Set WU API key

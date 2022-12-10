@@ -796,7 +796,57 @@ class WdcDiagramUtil(SearchList):
         self.config_dict = generator.config_dict
         self.general_util = WdcGeneralUtil(generator)
 
-    @staticmethod
+    def get_diagram_data(
+        self,
+        observation,
+        observation_key,
+        context_key,
+        start_ts,
+        end_ts,
+        data_binding,
+        alltime_start,
+        alltime_end,
+    ):
+        """
+        Get diagram data.
+
+        Args:
+            observation (string): The observation
+            observation_key (string): The observation key, this is only
+              different from observation if its a custom observation from
+              a custom data_biding.
+            context_key (string): The context key
+            start_ts (int): The start timestamp
+            end_ts (int): The end timestamp
+            data_binding (string): The data binding
+            alltime_start (str): The alltime start (%d.%m.%Y)
+            alltime_end (str): The alltime end (%d.%m.%Y)
+
+        Returns:
+            list: A list of diagram data
+        """
+        obs_start_vt, obs_stop_vt, obs_vt = weewx.xtypes.get_series(
+            observation_key,
+            TimeSpan(start_ts, end_ts),
+            self.generator.db_binder.get_manager(data_binding),
+            aggregate_type=self.get_aggregate_type(
+                observation, context_key, use_defaults=True
+            ),
+            aggregate_interval=self.get_aggregate_interval(
+                observation=observation, context=context_key,
+                alltime_start=alltime_start, alltime_end=alltime_end
+            )
+        )
+
+        # Target unit conversion.
+        obs_vt = self.generator.converter.convert(obs_vt)
+
+        # Round values.
+        obs_vt = rounder(obs_vt, self.get_rounding(observation))
+
+        return json.dumps(list(zip(obs_start_vt[0], obs_stop_vt[0], obs_vt[0])))
+
+    @ staticmethod
     def get_diagram_type(observation):
         """
         TODO: Remove.
@@ -1007,16 +1057,27 @@ class WdcDiagramUtil(SearchList):
             if context == "year" or context == "alltime":
                 return "midnight"
 
-    def get_rounding(self, observation):
+    def get_rounding(self, observation, type=None):
         """
         Rounding settings for observations.
 
         Args:
             observation (string): The observation
+            type (string): The type (table or diagram)
 
         Returns:
             int: A rounding
         """
+        try:
+            rounding = self.generator.skin_dict["DisplayOptions"][
+                "Rounding"][observation]
+        except KeyError:
+            rounding = None
+
+        if rounding is not None:
+            return int(rounding)
+
+        # Default roundings.
         if observation == "UV" or observation == "cloudbase":
             return 0
 
@@ -1032,7 +1093,7 @@ class WdcDiagramUtil(SearchList):
 
         return 1
 
-    @staticmethod
+    @ staticmethod
     def get_hour_delta(context):
         """
         Get delta for $span($hour_delta=$delta) call.
@@ -1333,7 +1394,7 @@ class WdcStatsUtil(SearchList):
         if observation in show_max:
             return True
 
-    @staticmethod
+    @ staticmethod
     def get_labels(prop, context):
         """
         Returns a label like "Todays Max" or "Monthly average".
@@ -1555,7 +1616,7 @@ class WdcStatsUtil(SearchList):
                 + getattr(self.unit.label, "outTemp")
             )
 
-    @staticmethod
+    @ staticmethod
     def get_calendar_color(obs):
         """
         Returns a color for use in diagram.

@@ -1157,6 +1157,17 @@ class WdcDiagramUtil(SearchList):
         if combined is not None and "rounding" in combined:
             return int(combined["rounding"])
 
+        # Table specific.
+        if type == 'table':
+            # DisplayOptions > tables > Rounding.
+            try:
+                rounding = self.skin_dict["DisplayOptions"]['tables']["Rounding"][observation]
+            except KeyError:
+                rounding = None
+
+            if rounding is not None:
+                return int(rounding)
+
         # Diagram specific.
         if type == 'diagram':
             # General Diagram options, e.g. DisplayOptions > diagrams > heatindex.
@@ -2010,7 +2021,7 @@ class WdcTableUtil(SearchList):
                     )
 
                     table_data_rounded = rounder(table_date_target_unit[0],
-                                                 self.diagram_util.get_rounding(observation))
+                                                 self.diagram_util.get_rounding(observation, type="table"))
 
                     if len(cs_item) == 0:
                         carbon_values.append(

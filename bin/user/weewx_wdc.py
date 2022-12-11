@@ -846,6 +846,7 @@ class WdcDiagramUtil(SearchList):
         data_binding,
         alltime_start,
         alltime_end,
+        combined=None
     ):
         """
         Get diagram data.
@@ -865,13 +866,19 @@ class WdcDiagramUtil(SearchList):
         Returns:
             list: A list of diagram data
         """
+        if combined is not None:
+            aggretate_type = self.get_aggregate_type(
+                observation, context_key, combined=combined)
+        else:
+            aggretate_type = self.get_aggregate_type(
+                observation, context_key
+            )
+
         obs_start_vt, obs_stop_vt, obs_vt = weewx.xtypes.get_series(
             observation_key,
             TimeSpan(start_ts, end_ts),
             self.generator.db_binder.get_manager(data_binding),
-            aggregate_type=self.get_aggregate_type(
-                observation, context_key, use_defaults=True
-            ),
+            aggregate_type=aggretate_type,
             aggregate_interval=self.get_aggregate_interval(
                 observation=observation, context=context_key,
                 alltime_start=alltime_start, alltime_end=alltime_end

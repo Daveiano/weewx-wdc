@@ -1,9 +1,6 @@
 <!--prettier-ignore-->
-## TODO: Simplify this, one big call. Beforehand set $context.
-
 #errorCatcher Echo
 #encoding UTF-8
-#import json
 #set diagram_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-4"
 #if $DisplayOptions.get('layout', 'alternative') == 'classic'
   #set diagram_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6"
@@ -52,7 +49,7 @@
             data-labels="['$obs.label[$partial_obs]']"
             data-color="['$get_color($partial_obs, $context)']"
             data-value="$series_name"
-            data-unit="$getattr($units.labels, 'mm_per_hour')"
+            data-unit="$get_unit_label($get_unit_for_obs($partial_obs_key, $context))"
             data-obs="$get_diagram_type($partial_obs)"
             data-diagram="$get_diagram($partial_obs)"
             data-context="$context"

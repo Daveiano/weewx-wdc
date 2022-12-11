@@ -187,6 +187,46 @@ class WdcGeneralUtil(SearchList):
     def get_time_format_dict(self):
         return self.time_format
 
+    def get_unit_label(self, unit):
+        """
+        Get the unit label for a given unit.
+
+        Args:
+            unit (string): The unit
+
+        Returns:
+            string: The unit label
+        """
+        try:
+            return self.generator.formatter.unit_label_dict[unit]
+        except KeyError:
+            return ' ' + unit
+
+    def get_unit_for_obs(self, obs_key, context):
+        """
+        Get the unit for a given observation.
+
+        Args:
+            obs_key (string): The observation key
+            context (string): The context
+
+        Returns:
+            string: The unit
+        """
+        try:
+            unit = self.skin_dict["DisplayOptions"]["diagrams"][context]["observations"][obs_key]['unit']
+        except KeyError:
+            unit = None
+
+        if unit is not None:
+            return unit
+
+        try:
+            return self.skin_dict["DisplayOptions"]["diagrams"][obs_key]["unit"]
+        except KeyError:
+            unit = self.generator.converter.getTargetUnit(obs_type=obs_key)
+            return unit[0]
+
     def get_windrose_enabled(self):
         """
         Check if the windrose is enabled.
@@ -813,7 +853,7 @@ class WdcDiagramUtil(SearchList):
         Args:
             observation (string): The observation
             observation_key (string): The observation key, this is only
-              different from observation if its a custom observation from
+              different from observation if it's a custom observation from
               a custom data_biding.
             context_key (string): The context key
             start_ts (int): The start timestamp
@@ -838,8 +878,17 @@ class WdcDiagramUtil(SearchList):
             )
         )
 
+        unit_default = self.generator.converter.getTargetUnit(
+            obs_type=observation_key)
+        unit_configured = self.general_util.get_unit_for_obs(
+            observation_key, context_key)
+
         # Target unit conversion.
-        obs_vt = self.generator.converter.convert(obs_vt)
+        if unit_default != unit_configured:
+            obs_vt = weewx.units.Converter(
+                {obs_vt[2]: unit_configured}).convert(obs_vt)
+        else:
+            obs_vt = self.generator.converter.convert(obs_vt)
 
         # Round values.
         obs_vt = rounder(obs_vt, self.get_rounding(observation))

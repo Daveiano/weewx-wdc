@@ -7,6 +7,7 @@ test.describe("Diagrams", () => {
 
   // Do not test the component as is, just test that we are giving the currect values in.
   test("Diagram tiles", async ({ page }) => {
+    // Daily.
     const cloudbase = page.locator(".diagram-tile[data-test='cloudbase']");
     expect(
       await cloudbase.locator(".value script").innerText()
@@ -19,10 +20,140 @@ test.describe("Diagrams", () => {
     expect(
       await windDir.locator(".value script").innerText()
     ).toMatchSnapshot();
+
+    // Yesterday.
+    await page.goto(
+      "artifacts-alternative-weewx-html/public_html/yesterday.html"
+    );
+
+    const outHumidity = page.locator(".diagram-tile[data-test='outHumidity']");
+    expect(
+      await outHumidity.locator(".value script").innerText()
+    ).toMatchSnapshot();
+
+    const barometer = page.locator(".diagram-tile[data-test='barometer']");
+    expect(
+      await barometer.locator(".value script").innerText()
+    ).toMatchSnapshot();
+
+    // Weekly
+    await page.goto("artifacts-alternative-weewx-html/public_html/week.html");
+
+    let rainRate = page.locator(".diagram-tile[data-test='rainRate']");
+    expect(
+      await rainRate.locator(".value script").innerText()
+    ).toMatchSnapshot();
+
+    const UV = page.locator(".diagram-tile[data-test='UV']");
+    expect(await UV.locator(".value script").innerText()).toMatchSnapshot();
+
+    // Monthly.
+    await page.goto("artifacts-alternative-weewx-html/public_html/month.html");
+
+    let ET = page.locator(".diagram-tile[data-test='ET']");
+    expect(await ET.locator(".value script").innerText()).toMatchSnapshot();
+
+    const radiation = page.locator(".diagram-tile[data-test='radiation']");
+    expect(
+      await radiation.locator(".value script").innerText()
+    ).toMatchSnapshot();
+
+    // Yearly.
+    await page.goto("artifacts-alternative-weewx-html/public_html/year.html");
+
+    const appTemp = page.locator(".diagram-tile[data-test='appTemp']");
+    expect(
+      await appTemp.locator(".value script").innerText()
+    ).toMatchSnapshot();
+
+    ET = page.locator(".diagram-tile[data-test='ET']");
+    expect(await ET.locator(".value script").innerText()).toMatchSnapshot();
+
+    // Stats.
+    await page.goto(
+      "artifacts-alternative-weewx-html/public_html/statistics.html"
+    );
+
+    ET = page.locator(".diagram-tile[data-test='ET']");
+    expect(await ET.locator(".value script").innerText()).toMatchSnapshot();
+
+    rainRate = page.locator(".diagram-tile[data-test='rainRate']");
+    expect(
+      await rainRate.locator(".value script").innerText()
+    ).toMatchSnapshot();
   });
 
   test("Combined diagram tiles", async ({ page }) => {
-    const tempDew = page.locator(
+    let tempDew = page.locator(
+      ".diagram-tile.combined[data-test='outTemp-dewpoint']"
+    );
+    await expect(tempDew.locator(".value script")).toHaveCount(2);
+    expect(
+      await tempDew.locator(".value script >> nth=0").innerText()
+    ).toMatchSnapshot();
+    expect(
+      await tempDew.locator(".value script >> nth=1").innerText()
+    ).toMatchSnapshot();
+
+    await page.goto(
+      "artifacts-alternative-weewx-html/public_html/yesterday.html"
+    );
+
+    tempDew = page.locator(
+      ".diagram-tile.combined[data-test='outTemp-dewpoint']"
+    );
+    await expect(tempDew.locator(".value script")).toHaveCount(2);
+    expect(
+      await tempDew.locator(".value script >> nth=0").innerText()
+    ).toMatchSnapshot();
+    expect(
+      await tempDew.locator(".value script >> nth=1").innerText()
+    ).toMatchSnapshot();
+
+    await page.goto("artifacts-alternative-weewx-html/public_html/week.html");
+
+    tempDew = page.locator(
+      ".diagram-tile.combined[data-test='outTemp-dewpoint']"
+    );
+    await expect(tempDew.locator(".value script")).toHaveCount(2);
+    expect(
+      await tempDew.locator(".value script >> nth=0").innerText()
+    ).toMatchSnapshot();
+    expect(
+      await tempDew.locator(".value script >> nth=1").innerText()
+    ).toMatchSnapshot();
+
+    await page.goto("artifacts-alternative-weewx-html/public_html/month.html");
+
+    tempDew = page.locator(
+      ".diagram-tile.combined[data-test='outTemp-dewpoint']"
+    );
+    await expect(tempDew.locator(".value script")).toHaveCount(2);
+    expect(
+      await tempDew.locator(".value script >> nth=0").innerText()
+    ).toMatchSnapshot();
+    expect(
+      await tempDew.locator(".value script >> nth=1").innerText()
+    ).toMatchSnapshot();
+
+    await page.goto("artifacts-alternative-weewx-html/public_html/year.html");
+
+    tempDew = page.locator(
+      ".diagram-tile.combined[data-test='outTemp-dewpoint']"
+    );
+    await expect(tempDew.locator(".value script")).toHaveCount(2);
+    expect(
+      await tempDew.locator(".value script >> nth=0").innerText()
+    ).toMatchSnapshot();
+    expect(
+      await tempDew.locator(".value script >> nth=1").innerText()
+    ).toMatchSnapshot();
+
+    await page.goto(
+      "artifacts-alternative-weewx-html/public_html/statistics.html"
+    );
+
+    tempDew = page.locator(
       ".diagram-tile.combined[data-test='outTemp-dewpoint']"
     );
     await expect(tempDew.locator(".value script")).toHaveCount(2);
@@ -90,7 +221,6 @@ test.describe("Diagrams", () => {
     ).toMatchSnapshot();
   });
 
-  // @todo Add test for custom "show_beafort = False".
   test("Windrose", async ({ page }) => {
     let windrose = page.locator(".diagram-tile[data-test='windrose']");
     expect(

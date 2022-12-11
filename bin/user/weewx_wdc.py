@@ -862,13 +862,14 @@ class WdcDiagramUtil(SearchList):
             data_binding (string): The data binding
             alltime_start (str): The alltime start (%d.%m.%Y)
             alltime_end (str): The alltime end (%d.%m.%Y)
+            combined (dict|None): The combined obs dict
 
         Returns:
             list: A list of diagram data
         """
         if combined is not None:
             aggretate_type = self.get_aggregate_type(
-                observation, context_key, combined=combined)
+                observation, context_key, combined=combined['obs'][observation])
         else:
             aggretate_type = self.get_aggregate_type(
                 observation, context_key
@@ -898,9 +899,18 @@ class WdcDiagramUtil(SearchList):
             obs_vt = self.generator.converter.convert(obs_vt)
 
         # Round values.
-        obs_vt = rounder(obs_vt, self.get_rounding(observation))
+        obs_vt = rounder(
+            obs_vt,
+            self.get_rounding(
+                observation,
+                type="diagram",
+                combined=None if combined is None else combined,
+                context=context_key)
+        )
 
-        return json.dumps(list(zip(obs_start_vt[0], obs_stop_vt[0], obs_vt[0])))
+        return json.dumps(list(
+            zip(obs_start_vt[0], obs_stop_vt[0], obs_vt[0]))
+        )
 
     @ staticmethod
     def get_diagram_type(observation):
@@ -959,6 +969,8 @@ class WdcDiagramUtil(SearchList):
         """
         aggregate_type for observations series.
         @see https://github.com/weewx/weewx/wiki/Tags-for-series#syntax
+
+        @todo Rework/Fix use_defaults (currently used for tables)
 
         Args:
             observation (string): The observation
@@ -1113,20 +1125,62 @@ class WdcDiagramUtil(SearchList):
             if context == "year" or context == "alltime":
                 return "midnight"
 
-    def get_rounding(self, observation, type=None):
+    def get_rounding(self, observation, type=None, context=None, combined=None):
         """
         Rounding settings for observations.
 
         Args:
             observation (string): The observation
             type (string): The type (table or diagram)
+            context (string): The context
+            combined (dict): The combined dict
 
         Returns:
             int: A rounding
         """
+        # Context.
+        if context is not None:
+            try:
+                rounding = search_up(
+                    self.generator.skin_dict["DisplayOptions"]['diagrams'][context]['observations'][observation], 'rounding', None)
+            except KeyError:
+                rounding = None
+
+            if rounding is not None:
+                return int(rounding)
+
+        # Combined obs.
+        if combined is not None and "rounding" in combined['obs'][observation]:
+            return int(combined['obs'][observation]["rounding"])
+
+        # Combined general.
+        if combined is not None and "rounding" in combined:
+            return int(combined["rounding"])
+
+        # Diagram specific.
+        if type == 'diagram':
+            # General Diagram options, e.g. DisplayOptions > diagrams > heatindex.
+            try:
+                rounding = self.skin_dict["DisplayOptions"]['diagrams'][observation]['rounding']
+            except KeyError:
+                rounding = None
+
+            if rounding is not None:
+                return int(rounding)
+
+            # DisplayOptions > diagrams > Rounding.
+            try:
+                rounding = self.skin_dict["DisplayOptions"]['diagrams']["Rounding"][observation]
+            except KeyError:
+                rounding = None
+
+            if rounding is not None:
+                return int(rounding)
+
+        # DisplayOptions > Rounding.
         try:
-            rounding = self.generator.skin_dict["DisplayOptions"][
-                "Rounding"][observation]
+            rounding = self.skin_dict["DisplayOptions"]["Rounding"][
+                observation]
         except KeyError:
             rounding = None
 

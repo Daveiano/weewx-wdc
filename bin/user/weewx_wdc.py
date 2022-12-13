@@ -202,19 +202,45 @@ class WdcGeneralUtil(SearchList):
         except KeyError:
             return ' ' + unit
 
-    def get_unit_for_obs(self, obs_key, context):
+    def get_unit_for_obs(self, observation, observation_key, context, combined=None, combined_key=None):
         """
         Get the unit for a given observation.
 
         Args:
-            obs_key (string): The observation key
+            observation (string): The observation
+            observation_key (string): The observation key, this is only
+              different from observation if it's a custom observation from
+              a custom data_biding.
             context (string): The context
+            combined (dict): The combined config
+            combined_key (string): The combined diagram key
 
         Returns:
             string: The unit
         """
+        # Combined diagram.
+        if combined is not None:
+            try:
+                unit = search_up(self.skin_dict["DisplayOptions"]["diagrams"][context]
+                                 ["observations"][combined_key]['obs'][observation], 'unit', None)
+            except KeyError:
+                unit = None
+
+            if unit is not None:
+                return unit
+
+            try:
+                unit = search_up(self.skin_dict["DisplayOptions"]["diagrams"]
+                                 ["combined_observations"][combined_key]['obs'][observation], 'unit', None)
+            except KeyError:
+                unit = None
+
+            if unit is not None:
+                return unit
+
+        # Context.
         try:
-            unit = self.skin_dict["DisplayOptions"]["diagrams"][context]["observations"][obs_key]['unit']
+            unit = self.skin_dict["DisplayOptions"]["diagrams"][context]["observations"][observation]['unit']
         except KeyError:
             unit = None
 
@@ -222,9 +248,10 @@ class WdcGeneralUtil(SearchList):
             return unit
 
         try:
-            return self.skin_dict["DisplayOptions"]["diagrams"][obs_key]["unit"]
+            return self.skin_dict["DisplayOptions"]["diagrams"][observation]["unit"]
         except KeyError:
-            unit = self.generator.converter.getTargetUnit(obs_type=obs_key)
+            unit = self.generator.converter.getTargetUnit(
+                obs_type=observation_key)
             return unit[0]
 
     def get_windrose_enabled(self):
@@ -539,7 +566,7 @@ class WdcGeneralUtil(SearchList):
 
         return "#161616"
 
-    @staticmethod
+    @ staticmethod
     def get_time_span_from_context(context, day, week, month, year, alltime, yesterday):
         """
         Get tag for use in templates.
@@ -846,7 +873,8 @@ class WdcDiagramUtil(SearchList):
         data_binding,
         alltime_start,
         alltime_end,
-        combined=None
+        combined=None,
+        combined_key=None,
     ):
         """
         Get diagram data.
@@ -863,15 +891,16 @@ class WdcDiagramUtil(SearchList):
             alltime_start (str): The alltime start (%d.%m.%Y)
             alltime_end (str): The alltime end (%d.%m.%Y)
             combined (dict|None): The combined obs dict
+            combined_key (string|None): The combined key
 
         Returns:
             list: A list of diagram data
         """
         if combined is not None:
-            aggretate_type = self.get_aggregate_type(
+            aggregate_type = self.get_aggregate_type(
                 observation, context_key, combined=combined['obs'][observation])
         else:
-            aggretate_type = self.get_aggregate_type(
+            aggregate_type = self.get_aggregate_type(
                 observation, context_key
             )
 
@@ -879,7 +908,7 @@ class WdcDiagramUtil(SearchList):
             observation_key,
             TimeSpan(start_ts, end_ts),
             self.generator.db_binder.get_manager(data_binding),
-            aggregate_type=aggretate_type,
+            aggregate_type=aggregate_type,
             aggregate_interval=self.get_aggregate_interval(
                 observation=observation, context=context_key,
                 alltime_start=alltime_start, alltime_end=alltime_end
@@ -889,10 +918,15 @@ class WdcDiagramUtil(SearchList):
         unit_default = self.generator.converter.getTargetUnit(
             obs_type=observation_key)
         unit_configured = self.general_util.get_unit_for_obs(
-            observation_key, context_key)
+            observation, observation_key, context_key,
+            combined=combined, combined_key=combined_key)
 
         # Target unit conversion.
-        if unit_default != unit_configured:
+        if unit_default != unit_configured:  # and unit_configured is not None:
+            if unit_configured is None:
+                print("observation: " + observation)
+                print("observation_key: " + observation_key)
+                print(unit_configured)
             obs_vt = weewx.units.Converter(
                 {obs_vt[2]: unit_configured}).convert(obs_vt)
         else:
@@ -904,7 +938,8 @@ class WdcDiagramUtil(SearchList):
             self.get_rounding(
                 observation,
                 type="diagram",
-                combined=None if combined is None else combined,
+                combined=combined,
+                combined_key=combined_key,
                 context=context_key)
         )
 
@@ -1050,7 +1085,6 @@ class WdcDiagramUtil(SearchList):
         # Then, use defaults.
         if context == "day":
             if observation == "ET" or observation == "rain":
-                print('Komisch')
                 return 7200  # 2 hours
 
             return 1800  # 30 minutes
@@ -1125,7 +1159,7 @@ class WdcDiagramUtil(SearchList):
             if context == "year" or context == "alltime":
                 return "midnight"
 
-    def get_rounding(self, observation, type=None, context=None, combined=None):
+    def get_rounding(self, observation, type=None, context=None, combined=None, combined_key=None):
         """
         Rounding settings for observations.
 
@@ -1134,6 +1168,7 @@ class WdcDiagramUtil(SearchList):
             type (string): The type (table or diagram)
             context (string): The context
             combined (dict): The combined dict
+            combined_key (string): The combined key
 
         Returns:
             int: A rounding
@@ -1143,6 +1178,18 @@ class WdcDiagramUtil(SearchList):
             try:
                 rounding = search_up(
                     self.generator.skin_dict["DisplayOptions"]['diagrams'][context]['observations'][observation], 'rounding', None)
+            except KeyError:
+                rounding = None
+
+            if rounding is not None:
+                return int(rounding)
+
+        # Combined context.
+        if combined is not None and context is not None:
+            # Combined diagram.
+            try:
+                rounding = search_up(self.skin_dict["DisplayOptions"]["diagrams"][context]
+                                     ["observations"][combined_key]['obs'][observation], 'rounding', None)
             except KeyError:
                 rounding = None
 

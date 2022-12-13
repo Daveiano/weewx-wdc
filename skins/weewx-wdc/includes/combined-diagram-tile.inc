@@ -78,7 +78,7 @@
 
           <script>
             /* prettier-ignore */
-            var $series_name = $get_diagram_data($observation=$combined_obs, $observation_key=$series_observation_key, $context_key=$context, $start_ts=$obs_context.start.raw, $end_ts=$obs_context.end.raw, $data_binding=$combined_obs_binding, $alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y'), combined=$combined_diagram);
+            var $series_name = $get_diagram_data($observation=$combined_obs, $observation_key=$series_observation_key, $context_key=$context, $start_ts=$obs_context.start.raw, $end_ts=$obs_context.end.raw, $data_binding=$combined_obs_binding, $alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y'), combined=$combined_diagram, combined_key=$comb_obs);
           </script>
 
           <!--prettier-ignore-->
@@ -90,7 +90,7 @@
             data-labels="$series_labels"
             data-value="$series_names"
             data-color="$series_colors"
-            data-unit="$get_unit_label($get_unit_for_obs($get_custom_data_binding_obs_key($combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation), $context))"
+            data-unit="$get_unit_label($get_unit_for_obs($combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation, $get_custom_data_binding_obs_key($combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation), $context))"
             data-obs="$get_diagram_type($combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation)"
             data-diagram="$get_diagram($combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation)"
             data-context="$context"

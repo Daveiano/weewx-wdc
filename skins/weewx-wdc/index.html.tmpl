@@ -11,6 +11,9 @@
   <head>
     #include "includes/html-head.inc"
     <title>$station.location - $gettext("Current Weather Conditions")</title>
+    #if 'refresh_interval' in $Extras
+    <meta http-equiv="refresh" content="$Extras.refresh_interval" />
+    #end if
   </head>
 
   <body class="theme-$DisplayOptions.get('layout', 'alternative')">

@@ -523,6 +523,7 @@ Line 133:
 - Configurable unit for diagrams [GH-88]
 - Configurable Rounding [GH-89]
 - Make markers configurable [GH-106]
+- Automatic Refresh [GH-105]
 
 **Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki) for information on how to configure the new features.**
 
@@ -538,6 +539,14 @@ Line 5:
 +    [[custom_obs_2]]
 +        data_binding = extension_2_binding
 +        observation = another_obs_key
+```
+
+Line 18:
+
+```diff
++# If activated the Fontpage (index.html) will be automatically be
++# refreshed in the browser every 300 seconds.
++#refresh_interval = 300
 ```
 
 Line 20:

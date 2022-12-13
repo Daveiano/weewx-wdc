@@ -317,4 +317,89 @@ test.describe("Diagrams", () => {
       await tempMinMax.locator(".label svg").innerHTML()
     ).toMatchSnapshot();
   });
+
+  test("Custom Units", async ({ page }) => {
+    await page.goto("artifacts-custom-weewx-html/public_html/index.html");
+
+    let rainRate = page.locator(".diagram-tile[data-test='rainRate']");
+    const tempDew = page.locator(".diagram-tile[data-test='outTemp-dewpoint']");
+
+    expect(
+      await rainRate.locator(".value > .diagram").getAttribute("data-unit")
+    ).toBe("[' cm/h']");
+    expect(
+      await rainRate.locator(".value script").innerText()
+    ).toMatchSnapshot();
+
+    expect(
+      await tempDew.locator(".value > .diagram").getAttribute("data-unit")
+    ).toBe("['°C', '°F']");
+    expect(
+      await tempDew.locator(".value script >> nth=0").innerText()
+    ).toMatchSnapshot();
+    expect(
+      await tempDew.locator(".value script >> nth=1").innerText()
+    ).toMatchSnapshot();
+
+    await page.goto("artifacts-custom-weewx-html/public_html/week.html");
+
+    rainRate = page.locator(".diagram-tile[data-test='rainRate']");
+
+    expect(
+      await rainRate.locator(".value > .diagram").getAttribute("data-unit")
+    ).toBe("[' mm/h']");
+    expect(
+      await rainRate.locator(".value script").innerText()
+    ).toMatchSnapshot();
+
+    await page.goto("artifacts-custom-weewx-html/public_html/year.html");
+
+    const tempMinMaxAvg = page.locator(
+      ".diagram-tile[data-test='outTemp-outTemp-outTemp']"
+    );
+
+    expect(
+      await tempMinMaxAvg.locator(".value > .diagram").getAttribute("data-unit")
+    ).toBe("['°F', '°F', '°F']");
+    expect(
+      await tempMinMaxAvg.locator(".value script >> nth=0").innerText()
+    ).toMatchSnapshot();
+    expect(
+      await tempMinMaxAvg.locator(".value script >> nth=1").innerText()
+    ).toMatchSnapshot();
+    expect(
+      await tempMinMaxAvg.locator(".value script >> nth=2").innerText()
+    ).toMatchSnapshot();
+  });
+
+  test("Custom rounding", async ({ page }) => {
+    await page.goto("artifacts-custom-weewx-html/public_html/year.html");
+
+    let barometer = page.locator(".diagram-tile[data-test='barometer']");
+    const tempDew = page.locator(".diagram-tile[data-test='outTemp-dewpoint']");
+    const windChillHeatIndex = page.locator(
+      ".diagram-tile[data-test='windchill-heatindex']"
+    );
+
+    expect(
+      await windChillHeatIndex.locator(".value script >> nth=0").innerText()
+    ).toMatchSnapshot();
+    expect(
+      await windChillHeatIndex.locator(".value script >> nth=1").innerText()
+    ).toMatchSnapshot();
+
+    expect(
+      await barometer.locator(".value script").innerText()
+    ).toMatchSnapshot();
+    expect(
+      await tempDew.locator(".value script >> nth=1").innerText()
+    ).toMatchSnapshot();
+
+    await page.goto("artifacts-custom-weewx-html/public_html/week.html");
+
+    barometer = page.locator(".diagram-tile[data-test='barometer']");
+    expect(
+      await barometer.locator(".value script").innerText()
+    ).toMatchSnapshot();
+  });
 });

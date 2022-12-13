@@ -520,6 +520,8 @@ Line 133:
 - Make show_min, show_max, show_sum configurable for stat tiles [GH-94]
 - Support for custom `data_bindings` [GH-71]
 - Configurable Icons [GH-87]
+- Configurable unit for diagrams [GH-88]
+- Configurable Rounding [GH-89]
 
 **Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki) for information on how to configure the new features.**
 
@@ -595,6 +597,23 @@ Line 103:
 +[[Icons]]
 +    #rain = "includes/icons/barometer.svg"
 
+```
+
+Line 106 following:
+
+```diff
++#[[Rounding]]
++   #dewpoint = 3
+
+[[tables]]
++   #[[[Rounding]]]
++      #outTemp = 3
+   [[[day]]]
+      aggregate_interval = 3600  # 1 hour
+
+[[diagrams]]
++   #[[[Rounding]]]
++      #barometer = 3
 ```
 
 Line 96:

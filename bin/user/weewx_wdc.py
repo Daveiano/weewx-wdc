@@ -25,7 +25,6 @@ from weewx.units import (
     ValueHelper
 )
 from weewx.wxformulas import beaufort
-from weewx.tags import TimespanBinder
 from weeutil.weeutil import TimeSpan, rounder, to_bool, to_int, startOfDay
 from weeutil.config import search_up, accumulateLeaves
 
@@ -186,6 +185,77 @@ class WdcGeneralUtil(SearchList):
 
     def get_time_format_dict(self):
         return self.time_format
+
+    def get_unit_label(self, unit):
+        """
+        Get the unit label for a given unit.
+
+        Args:
+            unit (string): The unit
+
+        Returns:
+            string: The unit label
+        """
+        try:
+            unit_label = self.generator.formatter.unit_label_dict[unit]
+            if type(unit_label) == list:
+                return unit_label[1]
+            else:
+                return unit_label
+        except KeyError:
+            return ' ' + unit
+
+    def get_unit_for_obs(self, observation, observation_key, context, combined=None, combined_key=None):
+        """
+        Get the unit for a given observation.
+
+        Args:
+            observation (string): The observation
+            observation_key (string): The observation key (e.g. outTemp), this
+              is only different from observation if it's a custom observation
+              from a custom data_biding.
+            context (string): The context
+            combined (dict): The combined config
+            combined_key (string): The combined diagram key
+
+        Returns:
+            string: The unit
+        """
+        # Combined diagram.
+        if combined is not None:
+            try:
+                unit = search_up(self.skin_dict["DisplayOptions"]["diagrams"][context]
+                                 ["observations"][combined_key]['obs'][observation], 'unit', None)
+            except KeyError:
+                unit = None
+
+            if unit is not None:
+                return unit
+
+            try:
+                unit = search_up(self.skin_dict["DisplayOptions"]["diagrams"]
+                                 ["combined_observations"][combined_key]['obs'][observation], 'unit', None)
+            except KeyError:
+                unit = None
+
+            if unit is not None:
+                return unit
+
+        # Context.
+        try:
+            unit = self.skin_dict["DisplayOptions"]["diagrams"][context]["observations"][observation]['unit']
+        except KeyError:
+            unit = None
+
+        if unit is not None:
+            return unit
+
+        try:
+            return self.skin_dict["DisplayOptions"]["diagrams"][observation]["unit"]
+        except KeyError:
+            unit = self.generator.converter.getTargetUnit(
+                obs_type=observation_key)
+            return unit[0]
 
     def get_windrose_enabled(self):
         """
@@ -499,7 +569,7 @@ class WdcGeneralUtil(SearchList):
 
         return "#161616"
 
-    @staticmethod
+    @ staticmethod
     def get_time_span_from_context(context, day, week, month, year, alltime, yesterday):
         """
         Get tag for use in templates.
@@ -796,7 +866,88 @@ class WdcDiagramUtil(SearchList):
         self.config_dict = generator.config_dict
         self.general_util = WdcGeneralUtil(generator)
 
-    @staticmethod
+    def get_diagram_data(
+        self,
+        observation,
+        observation_key,
+        context_key,
+        start_ts,
+        end_ts,
+        data_binding,
+        alltime_start,
+        alltime_end,
+        combined=None,
+        combined_key=None,
+    ):
+        """
+        Get diagram data.
+
+        Args:
+            observation (string): The observation
+            observation_key (string): The observation key, this is only
+              different from observation if it's a custom observation from
+              a custom data_biding.
+            context_key (string): The context key
+            start_ts (int): The start timestamp
+            end_ts (int): The end timestamp
+            data_binding (string): The data binding
+            alltime_start (str): The alltime start (%d.%m.%Y)
+            alltime_end (str): The alltime end (%d.%m.%Y)
+            combined (dict|None): The combined obs dict
+            combined_key (string|None): The combined key
+
+        Returns:
+            list: A list of diagram data
+        """
+        if combined is not None:
+            aggregate_type = self.get_aggregate_type(
+                observation, context_key, combined=combined['obs'][observation])
+        else:
+            aggregate_type = self.get_aggregate_type(
+                observation, context_key
+            )
+
+        obs_start_vt, obs_stop_vt, obs_vt = weewx.xtypes.get_series(
+            observation_key,
+            TimeSpan(start_ts, end_ts),
+            self.generator.db_binder.get_manager(data_binding),
+            aggregate_type=aggregate_type,
+            aggregate_interval=self.get_aggregate_interval(
+                observation=observation, context=context_key,
+                alltime_start=alltime_start, alltime_end=alltime_end
+            )
+        )
+
+        unit_default = self.generator.converter.getTargetUnit(
+            obs_type=observation_key)
+        unit_configured = self.general_util.get_unit_for_obs(
+            observation, observation_key, context_key,
+            combined=combined, combined_key=combined_key)
+
+        # Target unit conversion.
+        if unit_default != unit_configured and unit_configured is not None:
+            obs_vt = weewx.units.Converter(
+                {obs_vt[2]: unit_configured}).convert(obs_vt)
+        else:
+            obs_vt = self.generator.converter.convert(obs_vt)
+
+        # Round values.
+        obs_vt = rounder(
+            obs_vt,
+            self.get_rounding(
+                observation,
+                observation_key,
+                type="diagram",
+                combined=combined,
+                combined_key=combined_key,
+                context=context_key)
+        )
+
+        return json.dumps(list(
+            zip(obs_start_vt[0], obs_stop_vt[0], obs_vt[0]))
+        )
+
+    @ staticmethod
     def get_diagram_type(observation):
         """
         TODO: Remove.
@@ -853,6 +1004,8 @@ class WdcDiagramUtil(SearchList):
         """
         aggregate_type for observations series.
         @see https://github.com/weewx/weewx/wiki/Tags-for-series#syntax
+
+        @todo Rework/Fix use_defaults (currently used for tables)
 
         Args:
             observation (string): The observation
@@ -932,7 +1085,6 @@ class WdcDiagramUtil(SearchList):
         # Then, use defaults.
         if context == "day":
             if observation == "ET" or observation == "rain":
-                print('Komisch')
                 return 7200  # 2 hours
 
             return 1800  # 30 minutes
@@ -1007,16 +1159,96 @@ class WdcDiagramUtil(SearchList):
             if context == "year" or context == "alltime":
                 return "midnight"
 
-    def get_rounding(self, observation):
+    def get_rounding(self, observation, observation_key, type=None, context=None, combined=None, combined_key=None):
         """
         Rounding settings for observations.
 
         Args:
             observation (string): The observation
+            observation_key (string): The observation key (e.g. outTemp), this
+              is only different from observation if it's a custom observation
+              from a custom data_biding.
+            type (string): The type (table or diagram)
+            context (string): The context
+            combined (dict): The combined dict
+            combined_key (string): The combined key
 
         Returns:
             int: A rounding
         """
+        # Context.
+        if context is not None:
+            try:
+                rounding = search_up(
+                    self.generator.skin_dict["DisplayOptions"]['diagrams'][context]['observations'][observation_key], 'rounding', None)
+            except KeyError:
+                rounding = None
+
+            if rounding is not None:
+                return int(rounding)
+
+        # Combined context.
+        if combined is not None and context is not None:
+            # Combined diagram.
+            try:
+                rounding = search_up(self.skin_dict["DisplayOptions"]["diagrams"][context]
+                                     ["observations"][combined_key]['obs'][observation], 'rounding', None)
+            except KeyError:
+                rounding = None
+
+            if rounding is not None:
+                return int(rounding)
+
+        # Combined obs.
+        if combined is not None and "rounding" in combined['obs'][observation]:
+            return int(combined['obs'][observation]["rounding"])
+
+        # Combined general.
+        if combined is not None and "rounding" in combined:
+            return int(combined["rounding"])
+
+        # Table specific.
+        if type == 'table':
+            # DisplayOptions > tables > Rounding.
+            try:
+                rounding = self.skin_dict["DisplayOptions"]['tables']["Rounding"][observation_key]
+            except KeyError:
+                rounding = None
+
+            if rounding is not None:
+                return int(rounding)
+
+        # Diagram specific.
+        if type == 'diagram':
+            # General Diagram options, e.g. DisplayOptions > diagrams > heatindex.
+            try:
+                rounding = self.skin_dict["DisplayOptions"]['diagrams'][observation_key]['rounding']
+            except KeyError:
+                rounding = None
+
+            if rounding is not None:
+                return int(rounding)
+
+            # DisplayOptions > diagrams > Rounding.
+            try:
+                rounding = self.skin_dict["DisplayOptions"]['diagrams']["Rounding"][observation_key]
+            except KeyError:
+                rounding = None
+
+            if rounding is not None:
+                return int(rounding)
+
+        # DisplayOptions > Rounding.
+        try:
+            rounding = self.skin_dict["DisplayOptions"]["Rounding"][
+                observation_key]
+        except KeyError:
+            rounding = None
+
+        if rounding is not None:
+            return int(rounding)
+
+        # Default roundings.
         if observation == "UV" or observation == "cloudbase":
             return 0
 
@@ -1032,7 +1264,7 @@ class WdcDiagramUtil(SearchList):
 
         return 1
 
-    @staticmethod
+    @ staticmethod
     def get_hour_delta(context):
         """
         Get delta for $span($hour_delta=$delta) call.
@@ -1333,7 +1565,7 @@ class WdcStatsUtil(SearchList):
         if observation in show_max:
             return True
 
-    @staticmethod
+    @ staticmethod
     def get_labels(prop, context):
         """
         Returns a label like "Todays Max" or "Monthly average".
@@ -1555,7 +1787,7 @@ class WdcStatsUtil(SearchList):
                 + getattr(self.unit.label, "outTemp")
             )
 
-    @staticmethod
+    @ staticmethod
     def get_calendar_color(obs):
         """
         Returns a color for use in diagram.
@@ -1626,7 +1858,7 @@ class WdcStatsUtil(SearchList):
                 rain_target_unit_vt = self.generator.converter.convert(
                     (day[1], rain_vt[1], rain_vt[2]))
                 rain_days.append(
-                    {"value": rounder(rain_target_unit_vt[0], self.diagram_util.get_rounding("rain")), "day": day_dt.strftime("%Y-%m-%d")})
+                    {"value": rounder(rain_target_unit_vt[0], self.diagram_util.get_rounding("rain", "rain")), "day": day_dt.strftime("%Y-%m-%d")})
 
             return rain_days
 
@@ -1649,7 +1881,7 @@ class WdcStatsUtil(SearchList):
                         (day[1], outTemp_vt[1], outTemp_vt[2]))
                     temp_days.append(
                         {"value": rounder(outTemp_target_unit_vt[0], self.diagram_util.get_rounding(
-                            "outTemp")), "day": day_dt.strftime("%Y-%m-%d")}
+                            "outTemp", "outTemp")), "day": day_dt.strftime("%Y-%m-%d")}
                     )
 
             return temp_days
@@ -1839,7 +2071,7 @@ class WdcTableUtil(SearchList):
                     )
 
                     table_data_rounded = rounder(table_date_target_unit[0],
-                                                 self.diagram_util.get_rounding(observation))
+                                                 self.diagram_util.get_rounding(observation, observation, type="table"))
 
                     if len(cs_item) == 0:
                         carbon_values.append(

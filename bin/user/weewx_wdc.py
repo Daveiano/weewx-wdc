@@ -239,7 +239,6 @@ class WdcGeneralUtil(SearchList):
                 unit = None
 
             if unit is not None:
-                print(unit)
                 return unit
 
         # Context.
@@ -937,6 +936,7 @@ class WdcDiagramUtil(SearchList):
             obs_vt,
             self.get_rounding(
                 observation,
+                observation_key,
                 type="diagram",
                 combined=combined,
                 combined_key=combined_key,
@@ -1159,12 +1159,15 @@ class WdcDiagramUtil(SearchList):
             if context == "year" or context == "alltime":
                 return "midnight"
 
-    def get_rounding(self, observation, type=None, context=None, combined=None, combined_key=None):
+    def get_rounding(self, observation, observation_key, type=None, context=None, combined=None, combined_key=None):
         """
         Rounding settings for observations.
 
         Args:
             observation (string): The observation
+            observation_key (string): The observation key (e.g. outTemp), this
+              is only different from observation if it's a custom observation
+              from a custom data_biding.
             type (string): The type (table or diagram)
             context (string): The context
             combined (dict): The combined dict
@@ -1177,7 +1180,7 @@ class WdcDiagramUtil(SearchList):
         if context is not None:
             try:
                 rounding = search_up(
-                    self.generator.skin_dict["DisplayOptions"]['diagrams'][context]['observations'][observation], 'rounding', None)
+                    self.generator.skin_dict["DisplayOptions"]['diagrams'][context]['observations'][observation_key], 'rounding', None)
             except KeyError:
                 rounding = None
 
@@ -1208,7 +1211,7 @@ class WdcDiagramUtil(SearchList):
         if type == 'table':
             # DisplayOptions > tables > Rounding.
             try:
-                rounding = self.skin_dict["DisplayOptions"]['tables']["Rounding"][observation]
+                rounding = self.skin_dict["DisplayOptions"]['tables']["Rounding"][observation_key]
             except KeyError:
                 rounding = None
 
@@ -1219,7 +1222,7 @@ class WdcDiagramUtil(SearchList):
         if type == 'diagram':
             # General Diagram options, e.g. DisplayOptions > diagrams > heatindex.
             try:
-                rounding = self.skin_dict["DisplayOptions"]['diagrams'][observation]['rounding']
+                rounding = self.skin_dict["DisplayOptions"]['diagrams'][observation_key]['rounding']
             except KeyError:
                 rounding = None
 
@@ -1228,7 +1231,7 @@ class WdcDiagramUtil(SearchList):
 
             # DisplayOptions > diagrams > Rounding.
             try:
-                rounding = self.skin_dict["DisplayOptions"]['diagrams']["Rounding"][observation]
+                rounding = self.skin_dict["DisplayOptions"]['diagrams']["Rounding"][observation_key]
             except KeyError:
                 rounding = None
 
@@ -1238,7 +1241,7 @@ class WdcDiagramUtil(SearchList):
         # DisplayOptions > Rounding.
         try:
             rounding = self.skin_dict["DisplayOptions"]["Rounding"][
-                observation]
+                observation_key]
         except KeyError:
             rounding = None
 
@@ -1855,7 +1858,7 @@ class WdcStatsUtil(SearchList):
                 rain_target_unit_vt = self.generator.converter.convert(
                     (day[1], rain_vt[1], rain_vt[2]))
                 rain_days.append(
-                    {"value": rounder(rain_target_unit_vt[0], self.diagram_util.get_rounding("rain")), "day": day_dt.strftime("%Y-%m-%d")})
+                    {"value": rounder(rain_target_unit_vt[0], self.diagram_util.get_rounding("rain", "rain")), "day": day_dt.strftime("%Y-%m-%d")})
 
             return rain_days
 
@@ -1878,7 +1881,7 @@ class WdcStatsUtil(SearchList):
                         (day[1], outTemp_vt[1], outTemp_vt[2]))
                     temp_days.append(
                         {"value": rounder(outTemp_target_unit_vt[0], self.diagram_util.get_rounding(
-                            "outTemp")), "day": day_dt.strftime("%Y-%m-%d")}
+                            "outTemp", "outTemp")), "day": day_dt.strftime("%Y-%m-%d")}
                     )
 
             return temp_days
@@ -2068,7 +2071,7 @@ class WdcTableUtil(SearchList):
                     )
 
                     table_data_rounded = rounder(table_date_target_unit[0],
-                                                 self.diagram_util.get_rounding(observation, type="table"))
+                                                 self.diagram_util.get_rounding(observation, observation, type="table"))
 
                     if len(cs_item) == 0:
                         carbon_values.append(

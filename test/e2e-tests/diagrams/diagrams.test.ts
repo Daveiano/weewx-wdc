@@ -371,4 +371,35 @@ test.describe("Diagrams", () => {
       await tempMinMaxAvg.locator(".value script >> nth=2").innerText()
     ).toMatchSnapshot();
   });
+
+  test("Custom rounding", async ({ page }) => {
+    await page.goto("artifacts-custom-weewx-html/public_html/year.html");
+
+    let barometer = page.locator(".diagram-tile[data-test='barometer']");
+    const tempDew = page.locator(".diagram-tile[data-test='outTemp-dewpoint']");
+    const windChillHeatIndex = page.locator(
+      ".diagram-tile[data-test='windchill-heatindex']"
+    );
+
+    expect(
+      await windChillHeatIndex.locator(".value script >> nth=0").innerText()
+    ).toMatchSnapshot();
+    expect(
+      await windChillHeatIndex.locator(".value script >> nth=1").innerText()
+    ).toMatchSnapshot();
+
+    expect(
+      await barometer.locator(".value script").innerText()
+    ).toMatchSnapshot();
+    expect(
+      await tempDew.locator(".value script >> nth=1").innerText()
+    ).toMatchSnapshot();
+
+    await page.goto("artifacts-custom-weewx-html/public_html/week.html");
+
+    barometer = page.locator(".diagram-tile[data-test='barometer']");
+    expect(
+      await barometer.locator(".value script").innerText()
+    ).toMatchSnapshot();
+  });
 });

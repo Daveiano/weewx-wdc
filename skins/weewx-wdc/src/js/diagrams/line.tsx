@@ -33,6 +33,23 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
     document.documentElement.classList.contains("dark")
   );
 
+  const unitCombinedDistinct = Array.isArray(props.unit)
+    ? [...new Set(props.unit)]
+    : props.unit;
+
+  let yFormatUnit = props.unit;
+
+  if (
+    Array.isArray(unitCombinedDistinct) &&
+    unitCombinedDistinct.length === 1
+  ) {
+    yFormatUnit = unitCombinedDistinct[0];
+  }
+
+  if (Array.isArray(unitCombinedDistinct) && unitCombinedDistinct.length > 1) {
+    yFormatUnit = "";
+  }
+
   const callback = (mutationsList: Array<MutationRecord>) => {
     mutationsList.forEach((mutation) => {
       if (
@@ -105,7 +122,7 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
           strokeDasharray: "10, 10",
         },
         // @todo Does only work with °C.
-        legend: `0 ${props.unit}`,
+        legend: `0 ${Array.isArray(props.unit) ? props.unit[0] : props.unit}`,
         legendOrientation: "horizontal",
       },
     ];
@@ -121,7 +138,9 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
       }}
       axisLeft={{
         legend:
-          props.observation === "windDir" && windDirOrdinals ? "" : props.unit,
+          props.observation === "windDir" && windDirOrdinals
+            ? ""
+            : unitCombinedDistinct?.toString(),
         legendOffset: getAxisLeftLegendOffset(props.observation),
         legendPosition: "middle",
         tickSize: 0,
@@ -203,7 +222,7 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
         props.nivoProps.yScaleMax
       )}
       xFormat="time:%Y/%m/%d %H:%M"
-      yFormat={(value) => `${value} ${props.unit}`}
+      yFormat={(value) => `${value} ${yFormatUnit}`}
       theme={
         darkMode
           ? {

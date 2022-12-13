@@ -113,7 +113,11 @@ diagrams.forEach((diagram) => {
         root.render(
           <BarDiagram
             color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
-            unit={diagram.dataset.unit}
+            unit={
+              diagram.dataset.unit
+                ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
+                : ""
+            }
             data={data}
             observation={diagram.dataset.obs}
             context={diagram.dataset.context as context}
@@ -125,7 +129,11 @@ diagrams.forEach((diagram) => {
         root.render(
           <LineDiagram
             color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
-            unit={diagram.dataset.unit}
+            unit={
+              diagram.dataset.unit
+                ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
+                : ""
+            }
             data={data}
             observation={diagram.dataset.obs}
             context={diagram.dataset.context as context}

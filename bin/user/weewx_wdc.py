@@ -25,7 +25,6 @@ from weewx.units import (
     ValueHelper
 )
 from weewx.wxformulas import beaufort
-from weewx.tags import TimespanBinder
 from weeutil.weeutil import TimeSpan, rounder, to_bool, to_int, startOfDay
 from weeutil.config import search_up, accumulateLeaves
 
@@ -198,7 +197,11 @@ class WdcGeneralUtil(SearchList):
             string: The unit label
         """
         try:
-            return self.generator.formatter.unit_label_dict[unit]
+            unit_label = self.generator.formatter.unit_label_dict[unit]
+            if type(unit_label) == list:
+                return unit_label[1]
+            else:
+                return unit_label
         except KeyError:
             return ' ' + unit
 
@@ -208,9 +211,9 @@ class WdcGeneralUtil(SearchList):
 
         Args:
             observation (string): The observation
-            observation_key (string): The observation key, this is only
-              different from observation if it's a custom observation from
-              a custom data_biding.
+            observation_key (string): The observation key (e.g. outTemp), this
+              is only different from observation if it's a custom observation
+              from a custom data_biding.
             context (string): The context
             combined (dict): The combined config
             combined_key (string): The combined diagram key
@@ -236,6 +239,7 @@ class WdcGeneralUtil(SearchList):
                 unit = None
 
             if unit is not None:
+                print(unit)
                 return unit
 
         # Context.
@@ -922,11 +926,7 @@ class WdcDiagramUtil(SearchList):
             combined=combined, combined_key=combined_key)
 
         # Target unit conversion.
-        if unit_default != unit_configured:  # and unit_configured is not None:
-            if unit_configured is None:
-                print("observation: " + observation)
-                print("observation_key: " + observation_key)
-                print(unit_configured)
+        if unit_default != unit_configured and unit_configured is not None:
             obs_vt = weewx.units.Converter(
                 {obs_vt[2]: unit_configured}).convert(obs_vt)
         else:

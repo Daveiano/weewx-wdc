@@ -49,7 +49,7 @@
             data-labels="['$obs.label[$partial_obs]']"
             data-color="['$get_color($partial_obs, $context)']"
             data-value="$series_name"
-            data-unit="$get_unit_label($get_unit_for_obs($partial_obs, $partial_obs_key, $context))"
+            data-unit="['$get_unit_label($get_unit_for_obs($partial_obs, $partial_obs_key, $context))']"
             data-obs="$get_diagram_type($partial_obs)"
             data-diagram="$get_diagram($partial_obs)"
             data-context="$context"

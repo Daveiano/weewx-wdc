@@ -12,7 +12,7 @@ type CalendarDiagramBaseProps = {
 
 type DiagramBaseProps = {
   color: string[];
-  unit?: string;
+  unit?: string | [string];
   data: Serie[];
   observation: string;
   context: context;

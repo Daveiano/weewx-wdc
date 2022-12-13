@@ -50,7 +50,7 @@
             data-color="['$get_color($partial_obs, $context)']"
             data-value="$series_name"
             data-unit="$getattr($unit.label, $partial_obs)"
-            data-obs="$get_diagram_type($partial_obs)"
+            data-obs="$partial_obs"
             data-diagram="$get_diagram($partial_obs)"
             data-context="$context"
             data-aggregate-type="['$get_aggregate_type($partial_obs, $context)']"

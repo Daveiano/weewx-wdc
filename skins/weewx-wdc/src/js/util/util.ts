@@ -32,21 +32,6 @@ export const getyScale = (
   };
 };
 
-export const getCurve = (obs: string) => {
-  switch (obs) {
-    case "windDir":
-    case "radiation":
-      return "basis"; // basis
-    case "UV":
-      return "step";
-    case "rainRate":
-    case "wind":
-      return "linear";
-    default:
-      return "natural";
-  }
-};
-
 export const getMargins = (obs: string): Box => {
   const margin = {
     top: 20,
@@ -59,7 +44,7 @@ export const getMargins = (obs: string): Box => {
     margin.left = 50;
   }
 
-  if (obs === "pressure") {
+  if (obs === "pressure" || obs === "altimeter" || obs === "barometer") {
     margin.left = 55;
   }
 
@@ -73,6 +58,8 @@ export const getMargins = (obs: string): Box => {
 export const getAxisLeftLegendOffset = (obs: string): number => {
   switch (obs) {
     case "pressure":
+    case "altimeter":
+    case "barometer":
       return -50;
     case "cloudbase":
     case "rainRate":

@@ -7,7 +7,6 @@ import { DiagramBaseProps } from "./types";
 import { TooltipLine } from "../components/tooltip-line";
 import {
   getyScale,
-  getCurve,
   getMargins,
   getAxisLeftLegendOffset,
   getTimeDifferenceInMonths,
@@ -22,6 +21,7 @@ const ordinalCompass = (window as any).weewxWdcConfig.ordinalCompass;
 export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
   props: DiagramBaseProps
 ): React.ReactElement => {
+  console.log("LineDiagram", props);
   const small = useMediaQuery("(max-width: 672px)");
   const timeDifferenceInMonths = getTimeDifferenceInMonths(props.data[0].data);
   const handle = useFullScreenHandle();
@@ -109,20 +109,24 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
   }
 
   let markers: any[] | undefined = [];
-  if (props.observation === "temp") {
+  if (props.nivoProps.markerValue) {
     markers = [
       ...markers,
       {
         axis: "y",
-        value: 0,
+        value: props.nivoProps.markerValue,
         lineStyle: {
-          stroke: "#00BFFF",
+          stroke: props.nivoProps.markerColor
+            ? props.nivoProps.markerColor
+            : "#00BFFF",
           strokeWidth: 2,
           strokeOpacity: 0.75,
           strokeDasharray: "10, 10",
         },
         // @todo Does only work with °C.
-        legend: `0 ${Array.isArray(props.unit) ? props.unit[0] : props.unit}`,
+        legend: props.nivoProps.markerLabel
+          ? props.nivoProps.markerLabel
+          : `0 ${Array.isArray(props.unit) ? props.unit[0] : props.unit}`,
         legendOrientation: "horizontal",
       },
     ];
@@ -174,7 +178,6 @@ export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
               })
           : props.color
       }
-      //curve={getCurve(props.observation)}
       data={props.data}
       //enableArea={props.nivoProps.enableArea}
       areaBaselineValue={

@@ -522,6 +522,7 @@ Line 133:
 - Configurable Icons [GH-87]
 - Configurable unit for diagrams [GH-88]
 - Configurable Rounding [GH-89]
+- Make markers configurable [GH-106]
 
 **Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki) for information on how to configure the new features.**
 
@@ -621,9 +622,30 @@ Line 96:
 ```diff
       [[diagrams]]
          [[[combined_observations]]]
-            ...
+            [[[[temp_min_max_avg]]]]
+                label = "Temperature Min/Max/Avg"
+                pointSize = 3
+                yScaleOffset = 0.5
++               markerValue = 0
++               markerColor = "#00BFFF"
+                [[[[[obs]]]]]
+                    [[[[[[outTemp_min]]]]]]
+                        observation = "outTemp"
+                        aggregate_type = "min"
+                        color = "#0198E1"
+                    [[[[[[outTemp_average]]]]]]
+                        observation = "outTemp"
+                        aggregate_type = "avg"
+                        color = "#666666"
+                    [[[[[[outTemp_max]]]]]]
+                        observation = "outTemp"
+                        aggregate_type = "max"
+                        color = "#8B0000"
+
             [[[[tempdew]]]]
                 label = 'Temperature / Dewpoint'
++               markerValue = 0
++               markerColor = "#00BFFF"
                 [[[[[obs]]]]]
                     [[[[[[temp]]]]]]
                         observation = "outTemp"
@@ -631,7 +653,19 @@ Line 96:
                         observation = "dewpoint"
 +                        color = "#5F9EA0"
 
-             ...
+             [[[[windchill_heatindex]]]]
+                label = 'Windchill / Heatindex'
+                yScaleOffset = 0.5
++               markerValue = 0
++               markerColor = "#00BFFF"
+                [[[[[obs]]]]]
+                    [[[[[[chill]]]]]]
+                        observation = "windchill"
+                        color = '#0099CC'
+                    [[[[[[heat]]]]]]
+                        observation = "heatindex"
+                        color = '#610000'
+
              [[[[wind]]]]
                  label = 'Wind speed / Gust speed'
                  yScaleMin = 0
@@ -774,6 +808,8 @@ Line 96:
 +        [[[appTemp]]]
 +            type = line
 +            color = "#C41E3A"
++            markerValue = 0
++            markerColor = "#00BFFF"
 +
 +        # Context specific settings, alltime: if aggregate_interval is not set,
 +        # it will be calculated.

@@ -93,7 +93,7 @@
             data-value="$series_names"
             data-color="$series_colors"
             data-unit="$series_units"
-            data-obs="$get_diagram_type($combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation)"
+            data-obs="$combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation"
             data-diagram="$get_diagram($combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation)"
             data-context="$context"
             data-aggregate-type="$series_aggregate_type"

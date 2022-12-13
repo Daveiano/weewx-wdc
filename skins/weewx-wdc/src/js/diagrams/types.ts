@@ -25,6 +25,9 @@ type DiagramBaseProps = {
     enablePoints?: boolean;
     enableLabel?: boolean;
     enableCrosshair?: boolean;
+    markerColor?: string;
+    markerLabel?: string;
+    markerValue?: number;
     yScaleOffset: string;
     yScaleMin?: string;
     yScaleMax?: string;

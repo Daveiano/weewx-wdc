@@ -59,9 +59,6 @@ except ImportError:
     def logerr(msg):
         logmsg(syslog.LOG_ERR, msg)
 
-temp_obs = ["outTemp", "inTemp", "dewpoint",
-            "windchill", "heatindex", "appTemp"]
-
 
 class WdcGeneralUtil(SearchList):
     def __init__(self, generator):
@@ -564,7 +561,7 @@ class WdcGeneralUtil(SearchList):
         if observation == "rainRate":
             return "#0a6794"
 
-        if observation in temp_obs or "temp" in observation.lower():
+        if "temp" in observation.lower():
             return "#8B0000"
 
         return "#161616"
@@ -946,38 +943,6 @@ class WdcDiagramUtil(SearchList):
         return json.dumps(list(
             zip(obs_start_vt[0], obs_stop_vt[0], obs_vt[0]))
         )
-
-    @ staticmethod
-    def get_diagram_type(observation):
-        """
-        TODO: Remove.
-
-        Set e.g. "temp" for all diagrams which should be rendered as temp
-        diagram (includes also heat anmd windchill).
-
-        Args:
-            observation (string): The observation
-
-        Returns:
-            str: A diagram type string
-        """
-        if observation in temp_obs or "temp" in observation.lower():
-            return "temp"
-
-        if "humidity" in observation.lower():
-            return "humidity"
-
-        if observation == "windSpeed" or observation == "windGust":
-            return "wind"
-
-        if (
-                observation == "barometer"
-                or observation == "pressure"
-                or observation == "altimeter"
-        ):
-            return "pressure"
-
-        return observation
 
     def get_diagram(self, observation):
         """

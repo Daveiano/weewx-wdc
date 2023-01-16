@@ -49,7 +49,8 @@
           #set $series_colors = []
           #set $series_labels = []
           #set $series_units = []
-          #set series_aggregate_type = []
+          #set $series_aggregate_type = []
+          #set $diagram_types = []
           #set $combined_index = 0
 
           <!--prettier-ignore-->
@@ -63,6 +64,7 @@
             #set $series_observation_key = $get_custom_data_binding_obs_key($series_observation)
             #set $combined_obs_binding = $get_data_binding($combined_obs, $context)
             #silent $series_units.append($get_unit_label($get_unit_for_obs($combined_obs, $series_observation_key, $context, combined=$combined_diagram, combined_key=$comb_obs)))
+            #silent $diagram_types.append($get_diagram($series_observation_key))
 
           <!--prettier-ignore-->
           #if $context == 'month' and $use_parameter_month
@@ -94,7 +96,7 @@
             data-color="$series_colors"
             data-unit="$series_units"
             data-obs="$combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation"
-            data-diagram="$get_diagram($combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation)"
+            data-diagram="$list(dict.fromkeys($diagram_types))"
             data-context="$context"
             data-aggregate-type="$series_aggregate_type"
             data-nivo-props="$get_diagram_props($comb_obs, $context)"

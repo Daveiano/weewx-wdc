@@ -21,7 +21,6 @@ const ordinalCompass = (window as any).weewxWdcConfig.ordinalCompass;
 export const LineDiagram: FunctionComponent<DiagramBaseProps> = (
   props: DiagramBaseProps
 ): React.ReactElement => {
-  console.log("LineDiagram", props);
   const small = useMediaQuery("(max-width: 672px)");
   const timeDifferenceInMonths = getTimeDifferenceInMonths(props.data[0].data);
   const handle = useFullScreenHandle();

@@ -53,11 +53,6 @@ export const WindRoseDiagram: FunctionComponent<WindRoseProps> = (
     };
   }, []);
 
-  console.log(backgroundColorDarkModeLightness);
-  colors.map((c: string) => {
-    console.log(color(c).lightness());
-  });
-
   const windroseDiagram = (
     <Plot
       data={props.data}

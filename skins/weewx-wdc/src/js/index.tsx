@@ -13,6 +13,7 @@ import "./../scss/index.scss";
 import { WindRoseDiagram } from "./diagrams/windrose";
 import { DWDWarning } from "./components/dwd-warning";
 import { DWDForecast } from "./components/dwd-forecast";
+import { CombinedDiagram } from "./diagrams/combined";
 
 const calendarDiagrams = document.querySelectorAll(
   "div.calendar-diagram-clim-wrap"
@@ -49,11 +50,13 @@ diagrams.forEach((diagram) => {
     diagram.dataset.aggregateType &&
     diagram.dataset.obs &&
     diagram.dataset.context &&
-    diagram.dataset.color
+    diagram.dataset.color &&
+    diagram.dataset.diagram
   ) {
     let data: Serie[] = [];
     let nivoProps: any = {};
     const combined = diagram.classList.contains("combined");
+    const diagramTypes = JSON.parse(diagram.dataset.diagram.replace(/'/g, '"'));
     const root = createRoot(diagram);
 
     if (combined) {
@@ -108,38 +111,61 @@ diagrams.forEach((diagram) => {
       }
     }
 
-    switch (diagram.dataset.diagram) {
-      case "bar":
-        root.render(
-          <BarDiagram
-            color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
-            unit={
-              diagram.dataset.unit
-                ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
-                : ""
-            }
-            data={data}
-            observation={diagram.dataset.obs}
-            context={diagram.dataset.context as context}
-            nivoProps={nivoProps}
-          />
-        );
-        break;
-      default:
-        root.render(
-          <LineDiagram
-            color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
-            unit={
-              diagram.dataset.unit
-                ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
-                : ""
-            }
-            data={data}
-            observation={diagram.dataset.obs}
-            context={diagram.dataset.context as context}
-            nivoProps={nivoProps}
-          />
-        );
+    console.log(diagram.dataset.diagram, typeof diagram.dataset.diagram);
+
+    if (diagramTypes.length === 1 && diagramTypes[0] === "line") {
+      root.render(
+        <LineDiagram
+          color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
+          unit={
+            diagram.dataset.unit
+              ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
+              : ""
+          }
+          data={data}
+          observation={diagram.dataset.obs}
+          context={diagram.dataset.context as context}
+          nivoProps={nivoProps}
+        />
+      );
+    }
+
+    if (diagramTypes.length === 1 && diagramTypes[0] === "bar") {
+      root.render(
+        <BarDiagram
+          color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
+          unit={
+            diagram.dataset.unit
+              ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
+              : ""
+          }
+          data={data}
+          observation={diagram.dataset.obs}
+          context={diagram.dataset.context as context}
+          nivoProps={nivoProps}
+        />
+      );
+    }
+
+    if (
+      diagramTypes.length > 1 &&
+      diagramTypes.includes("bar") &&
+      diagramTypes.includes("line")
+    ) {
+      root.render(
+        <CombinedDiagram
+          color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
+          unit={
+            diagram.dataset.unit
+              ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
+              : ""
+          }
+          data={data}
+          observation={diagram.dataset.obs}
+          context={diagram.dataset.context as context}
+          nivoProps={nivoProps}
+        />
+      );
     }
   }
 });

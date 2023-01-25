@@ -1,11 +1,10 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import type { Serie } from "@nivo/line";
 
 import { CarbonDataTableStateManager } from "carbon-data-table-state-manager";
 import { BarDiagram } from "./diagrams/bar";
 import { LineDiagram } from "./diagrams/line";
-import type { context, DiagramBaseProps, Series } from "./diagrams/types";
+import type { context, Serie, Series } from "./diagrams/types";
 import { CalendarDiagram } from "./diagrams/calendar";
 import { StatisticsSelect } from "./components/statistics-select";
 

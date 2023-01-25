@@ -1,4 +1,15 @@
-import type { Serie } from "@nivo/line";
+interface Datum {
+  x: number;
+  y: number;
+  end: number;
+  [key: string]: any;
+}
+
+interface Serie {
+  id: string | number;
+  data: Datum[];
+  [key: string]: any;
+}
 
 type context = "day" | "week" | "month" | "year" | "alltime";
 
@@ -38,6 +49,7 @@ type WindRoseProps = {
   data: any[];
 };
 
+// @todo What is this?
 interface Series {
   x: number;
   y: number;
@@ -47,6 +59,8 @@ export {
   CalendarDiagramBaseProps,
   DiagramBaseProps,
   context,
+  Datum,
+  Serie,
   Series,
   WindRoseProps,
 };

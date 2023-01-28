@@ -5,6 +5,8 @@ import { DiagramBaseProps } from "./types";
 import type { Size } from "../util/util";
 import { useWindowSize } from "../util/util";
 
+const axisGridColor = "#525252";
+
 export const CombinedDiagram: FunctionComponent<DiagramBaseProps> = (
   props: DiagramBaseProps
 ): React.ReactElement => {
@@ -18,7 +20,7 @@ export const CombinedDiagram: FunctionComponent<DiagramBaseProps> = (
     d3.select(ref.current).selectChildren().remove();
 
     // @see https://gist.github.com/mbostock/3019563
-    const margin = { top: 20, right: 20, bottom: 20, left: 20 },
+    const margin = { top: 20, right: 20, bottom: 20, left: 40 },
       // @todo React-watch-dimesions plugin, use width and height in state and useEffect.
       width = ref.current?.parentElement
         ? ref.current?.parentElement.clientWidth - margin.left - margin.right
@@ -39,8 +41,9 @@ export const CombinedDiagram: FunctionComponent<DiagramBaseProps> = (
       yScale = d3
         .scaleLinear()
         .domain([
-          d3.min(props.data[1].data, (d: any) => d.y),
-          d3.max(props.data[1].data, (d: any) => d.y),
+          // @todo configurable yScaleOffset.
+          d3.min(props.data[1].data, (d: any) => d.y) - 3,
+          d3.max(props.data[1].data, (d: any) => d.y) + 3,
         ])
         .range([height, 0]);
 
@@ -55,15 +58,17 @@ export const CombinedDiagram: FunctionComponent<DiagramBaseProps> = (
     svgElement
       .append("g")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(xScale).ticks(5).tickSize(0).tickPadding(6));
+      // @todo configurable tick date/time format.
+      .call(d3.axisBottom(xScale).ticks(5, "%d.%m").tickSize(0).tickPadding(6));
 
+    // @see https://stackoverflow.com/a/17871021
     svgElement
       .selectAll("line.verticalGrid")
       .data(xScale.ticks())
       .enter()
       .append("line")
       .attr("class", "verticalGrid")
-      .attr("y1", margin.top)
+      .attr("y1", 0)
       .attr("y2", height)
       .attr("x1", function (d) {
         return xScale(d);
@@ -73,7 +78,7 @@ export const CombinedDiagram: FunctionComponent<DiagramBaseProps> = (
       })
       .attr("fill", "none")
       .attr("shape-rendering", "crispEdges")
-      .attr("stroke", "#525252")
+      .attr("stroke", axisGridColor)
       .attr("stroke-width", "1px");
 
     // y Axis.
@@ -81,13 +86,27 @@ export const CombinedDiagram: FunctionComponent<DiagramBaseProps> = (
       .append("g")
       .call(d3.axisLeft(yScale).ticks(5).tickSize(0).tickPadding(6));
 
+    // Y Axis Label.
+    svgElement
+      .append("g")
+      .attr(
+        "transform",
+        "translate(" + -margin.left / 1.5 + ", " + height / 2 + ")"
+      )
+      .append("text")
+      .attr("text-anchor", "middle")
+      .attr("font-size", "0.75em")
+      .attr("transform", "rotate(-90)")
+      .text("Y Axis Label");
+
+    // @see https://stackoverflow.com/a/17871021
     svgElement
       .selectAll("line.horizontalGrid")
       .data(yScale.ticks())
       .enter()
       .append("line")
       .attr("class", "horizontalGrid")
-      .attr("x1", margin.right)
+      .attr("x1", 1)
       .attr("x2", width)
       .attr("y1", function (d) {
         return yScale(d);
@@ -97,8 +116,15 @@ export const CombinedDiagram: FunctionComponent<DiagramBaseProps> = (
       })
       .attr("fill", "none")
       .attr("shape-rendering", "crispEdges")
-      .attr("stroke", "#525252")
+      .attr("stroke", axisGridColor)
       .attr("stroke-width", "1px");
+
+    // Axis styling.
+    svgElement
+      .selectAll(".domain")
+      .style("fill", "none")
+      .style("stroke", axisGridColor)
+      .style("stroke-width", "1");
 
     // Dots.
     svgElement

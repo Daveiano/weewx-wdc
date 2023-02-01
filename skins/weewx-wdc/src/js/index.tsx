@@ -110,8 +110,6 @@ diagrams.forEach((diagram) => {
       }
     }
 
-    console.log(diagram.dataset.diagram, typeof diagram.dataset.diagram);
-
     if (diagramTypes.length === 1 && diagramTypes[0] === "line") {
       root.render(
         <LineDiagram
@@ -163,6 +161,7 @@ diagrams.forEach((diagram) => {
           observation={diagram.dataset.obs}
           context={diagram.dataset.context as context}
           nivoProps={nivoProps}
+          chartTypes={diagramTypes}
         />
       );
     }

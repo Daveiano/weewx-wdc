@@ -509,6 +509,14 @@ class WdcGeneralUtil(SearchList):
             except KeyError:
                 color = None
 
+            try:
+                color = diagrams_config[combined_obs]["color"]
+
+                if color is not None:
+                    return color
+            except KeyError:
+                color = None
+
         if color is not None:
             return color
 

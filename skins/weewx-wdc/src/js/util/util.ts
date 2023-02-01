@@ -34,6 +34,10 @@ export const useWindowSize = (): Size => {
   return windowSize;
 };
 
+/**
+ *
+ * Not used anymore for d3 implemetation.
+ */
 export const getyScale = (
   data: Series[],
   yScaleOffset: string,

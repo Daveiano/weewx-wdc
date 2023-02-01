@@ -6,6 +6,7 @@ import calendar
 import time
 import os
 import json
+from packaging import version
 
 import weewx
 from weewx.cheetahgenerator import SearchList
@@ -21,9 +22,9 @@ from weewx.wxformulas import beaufort
 from weewx.tags import TimespanBinder
 from weeutil.weeutil import TimeSpan, rounder, to_bool, to_int
 
-if weewx.__version__ < "4.6":
+if version.parse(weewx.__version__) < version.parse("4.6.0"):
     raise weewx.UnsupportedFeature(
-        "weewx 4.6 and newer is required, found %s" % weewx.__version__
+        "weewx 4.6.0 and newer is required, found %s" % weewx.__version__
     )
 
 temp_obs = ["outTemp", "inTemp", "dewpoint",

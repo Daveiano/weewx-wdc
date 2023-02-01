@@ -11,8 +11,6 @@ import { DiagramBaseProps, Series } from "./types";
 import type { Size } from "../util/util";
 import { useWindowSize } from "../util/util";
 
-const axisGridColor = "#525252";
-
 type CombinedDiagramBaseProps = DiagramBaseProps & { chartTypes: string[] };
 
 export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
@@ -20,11 +18,13 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 ): React.ReactElement => {
   const ref: RefObject<SVGSVGElement> = useRef(null);
   const size: Size = useWindowSize();
+
   // @todo This adds one MutationObserver per LineDiagram. Add this to one
   //    general component which shares the state.
   const [darkMode, setDarkMode] = useState(
     document.documentElement.classList.contains("dark")
   );
+  const axisGridColor = darkMode ? "#525252" : "#dddddd";
 
   let combinedData: any[] = [];
   if (props.data.length > 1) {
@@ -125,9 +125,10 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         return xScale(d);
       })
       .attr("fill", "none")
+      // @todo remove from here. Perhaps add to line.
       .attr("shape-rendering", "crispEdges")
       .attr("stroke", axisGridColor)
-      .attr("stroke-width", "1px");
+      .attr("stroke-width", 1);
 
     // y Axis.
     svgElement
@@ -184,7 +185,8 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         })
         .y(function (d: any) {
           return yScale(d.y);
-        });
+        })
+        .curve(d3.curveStepAfter);
 
       if (
         props.chartTypes[index] === "line" ||

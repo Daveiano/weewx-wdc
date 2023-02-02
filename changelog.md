@@ -510,3 +510,9 @@ Line 133:
         [[[[[[gust]]]]]]
             observation = "windGust"
 ```
+
+# 2.3.3
+
+- Compatibility for Weewx > 4.10 [GH-111]
+
+## No changes made to skin.conf since 2.3.2

@@ -1,6 +1,6 @@
 from weecfg.extension import ExtensionInstaller
 
-# Copyright 2022 David Bätge
+# Copyright 2023 David Bätge
 # Distributed under the terms of the GNU Public License (GPLv3)
 
 
@@ -11,7 +11,7 @@ def loader():
 class BasicInstaller(ExtensionInstaller):
     def __init__(self):
         super(BasicInstaller, self).__init__(
-            version="2.3.2",
+            version="2.3.3",
             name="weewx-wdc",
             description="Weather Data Center skin for weewx.",
             author="David Baetge",

@@ -6,15 +6,8 @@ import calendar
 import time
 import os
 import json
-from pprint import pprint
 
 import weewx
-
-if weewx.__version__ < "4.6":
-    raise weewx.UnsupportedFeature(
-        "weewx 4.6 and newer is required, found %s" % weewx.__version__
-    )
-
 from weewx.cheetahgenerator import SearchList
 from weewx.units import (
     UnitInfoHelper,

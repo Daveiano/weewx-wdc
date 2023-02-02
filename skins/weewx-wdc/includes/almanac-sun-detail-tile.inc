@@ -87,10 +87,10 @@
         <div class="bx--row">
           <div class="bx--col">
             <p class="label small">$gettext("Total daylight")</p>
-            <p class="value">$almanac.sun.visible</p>
+            <p class="value">$almanac.sun.visible.long_form</p>
             <p class="label small">
               <!--prettier-ignore-->
-              $almanac.sun.visible_change
+              $almanac.sun.visible_change.long_form
               #if $almanac.sun.visible_change.raw < 0
                 $gettext("less than yesterday")
               #else

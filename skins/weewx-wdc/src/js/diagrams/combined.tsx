@@ -178,6 +178,54 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
     // Actual chart line/bars/dots.
     props.data.forEach((dataSet: any, index: number) => {
+      let curve = d3.curveNatural;
+      switch (props.nivoProps.curve) {
+        case "basis": {
+          curve = d3.curveBasis;
+          break;
+        }
+        case "cardinal": {
+          curve = d3.curveCardinal;
+          break;
+        }
+        case "catmullRom": {
+          curve = d3.curveCatmullRom;
+          break;
+        }
+        case "linear": {
+          curve = d3.curveLinear;
+          break;
+        }
+        case "monotoneX": {
+          curve = d3.curveMonotoneX;
+          break;
+        }
+        case "monotoneY": {
+          curve = d3.curveMonotoneY;
+          break;
+        }
+        case "natural": {
+          curve = d3.curveNatural;
+          break;
+        }
+        case "step": {
+          curve = d3.curveStep;
+          break;
+        }
+        case "stepAfter": {
+          curve = d3.curveStepAfter;
+          break;
+        }
+        case "stepBefore": {
+          curve = d3.curveStepBefore;
+          break;
+        }
+        default: {
+          curve = d3.curveNatural;
+          break;
+        }
+      }
+
       const lineGenerator = d3
         .line()
         .x(function (d: any) {
@@ -186,7 +234,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         .y(function (d: any) {
           return yScale(d.y);
         })
-        .curve(d3.curveStepAfter);
+        .curve(curve);
 
       if (
         props.chartTypes[index] === "line" ||
@@ -237,6 +285,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
                 // @todo Area base line value.
                 .y0(yScale(yScaleMin))
                 .y1((d: any) => yScale(d.y))
+                .curve(curve)
             );
         }
         // Line.

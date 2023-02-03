@@ -42,6 +42,17 @@ type DiagramBaseProps = {
     yScaleOffset: string;
     yScaleMin?: string;
     yScaleMax?: string;
+    curve:
+      | "basis"
+      | "cardinal"
+      | "catmullRom"
+      | "linear"
+      | "monotoneX"
+      | "monotoneY"
+      | "natural"
+      | "step"
+      | "stepAfter"
+      | "stepBefore";
   };
 };
 

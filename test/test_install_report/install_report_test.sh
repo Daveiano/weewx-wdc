@@ -82,6 +82,7 @@ testWeeReportRunAlternative() {
 
     assertContains "$output" "Starting weewx reports (alternative layout)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Generating as of last timestamp in the database."
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 44 files for report WdcReport in"
     assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx/public_html"
 
@@ -99,6 +100,7 @@ testWeeReportRunClassic() {
 
     assertContains "$output" "Starting weewx reports (classic layout)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Generating as of last timestamp in the database."
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 44 files for report WdcReport in"
     assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx/public_html"
 
@@ -135,6 +137,7 @@ testWeeReportRunCustom() {
 
     assertContains "$output" "Starting weewx reports (Alternative layout with customisations)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Generating as of last timestamp in the database."
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 521 files for report WdcReport in"
     assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx/public_html"
 
@@ -152,6 +155,7 @@ testWeeReportRunDWD() {
 
     assertContains "$output" "Starting weewx reports (weewx-DWD)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Generating as of last timestamp in the database."
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 43 files for report WdcReport in"
     assertContains "$output" "INFO weewx.reportengine: Copied 21 files to /home/weewx/public_html"
 
@@ -184,6 +188,7 @@ testWeeReportRunWithoutWeewxForecast() {
 
     assertContains "$output" "Starting weewx reports (without forecast)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Generating as of last timestamp in the database."
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 44 files for report WdcReport in"
     assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx/public_html"
     assertContains "$output" "DEBUG user.weewx_wdc: weewx-forecast extension is not installed. Not providing any forecast data."

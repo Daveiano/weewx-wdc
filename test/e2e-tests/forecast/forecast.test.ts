@@ -8,10 +8,10 @@ test.describe("Forecast", () => {
   test("Forecast table", async ({ page }) => {
     const forecast_table = page.locator(".forecast .forecast-list.daily");
 
-    // 7 rows.
+    // 6 rows.
     await expect(
       forecast_table.locator("bx-structured-list-body > bx-structured-list-row")
-    ).toHaveCount(7);
+    ).toHaveCount(6);
 
     // 6 columns.
     await expect(

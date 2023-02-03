@@ -511,6 +511,12 @@ Line 133:
             observation = "windGust"
 ```
 
+# 2.3.3
+
+- Compatibility for Weewx > 4.10 [GH-111]
+
+## No changes made to skin.conf since 2.3.2
+
 # 3.0.0
 
 - Bugfix: Forecast error using OWM Forecast [GH-100]

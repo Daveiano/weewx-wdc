@@ -178,6 +178,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
     // Actual chart line/bars/dots.
     props.data.forEach((dataSet: any, index: number) => {
+      // @see http://using-d3js.com/05_04_curves.html
       let curve = d3.curveNatural;
       switch (props.nivoProps.curve) {
         case "basis": {

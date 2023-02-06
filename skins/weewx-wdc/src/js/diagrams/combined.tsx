@@ -10,6 +10,7 @@ import * as d3 from "d3";
 import { DiagramBaseProps, Series } from "./types";
 import type { Size } from "../util/util";
 import { useWindowSize } from "../util/util";
+import dayjs from "dayjs";
 
 type CombinedDiagramBaseProps = DiagramBaseProps & { chartTypes: string[] };
 
@@ -169,13 +170,6 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       .attr("stroke", axisGridColor)
       .attr("stroke-width", "1px");
 
-    // Axis styling.
-    svgElement
-      .selectAll(".domain")
-      .style("fill", "none")
-      .style("stroke", axisGridColor)
-      .style("stroke-width", "1");
-
     // Actual chart line/bars/dots.
     props.data.forEach((dataSet: any, index: number) => {
       // @see http://using-d3js.com/05_04_curves.html
@@ -237,10 +231,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         })
         .curve(curve);
 
-      if (
-        props.chartTypes[index] === "line" ||
-        props.chartTypes[index] === "bar"
-      ) {
+      if (props.chartTypes[index] === "line") {
         if (props.nivoProps.enablePoints) {
           // Dots.
           svgElement
@@ -302,9 +293,79 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       }
 
       if (props.chartTypes[index] === "bar") {
-        // @todo Bar chart.
+        const xScale2 = d3
+            .scaleBand()
+            .range([0, width])
+            // @todo Configurable date/time.
+            // dayjs.unix(d.x).format("DD/MM/YYYY")
+            .domain(dataSet.data.map((d: any) => d.x)),
+          yScale2 = d3
+            .scaleLinear()
+            // @todo yScaleMin, yScaleMax does not make sense to have this per chart, needs to be per obs.
+            .domain([
+              0,
+              d3.max(dataSet.data, (d: any) => d.y) as unknown as number,
+            ])
+            .range([height, 0]);
+
+        // X Axis 2.
+        svgElement
+          .append("g")
+          .attr("transform", `translate(0, ${height})`)
+          .call(
+            d3
+              .axisBottom(xScale2)
+              .tickFormat((d: any) => dayjs.unix(d).format("DD/MM/YYYY"))
+          )
+          .selectAll("text")
+          .attr("transform", "translate(-10,0)rotate(-45)")
+          .style("text-anchor", "end");
+
+        // y Axis 2.
+        svgElement
+          .append("g")
+          .attr("transform", "translate(" + width + ",0)")
+          .call(d3.axisRight(yScale2).ticks(5).tickSize(0).tickPadding(6));
+
+        // Y Axis 2 Label.
+        svgElement
+          .append("g")
+          .attr(
+            "transform",
+            "translate(" +
+              (width - margin.right / 1.5) +
+              ", " +
+              height / 2 +
+              ")"
+          )
+          .append("text")
+          .attr("text-anchor", "middle")
+          .attr("font-size", "0.75em")
+          .attr("transform", "rotate(-90)")
+          .text("Y Axis Label 2");
+
+        // Bars
+        svgElement
+          .selectAll("bars")
+          .data(dataSet.data)
+          .join("rect")
+          .attr(
+            "x",
+            (d: any) => (xScale2(d.x) as number) + xScale2.bandwidth() * 0.125
+          )
+          .attr("y", (d: any) => yScale2(d.y))
+          .attr("width", xScale2.bandwidth() * 0.75)
+          .attr("height", (d: any) => height - yScale2(d.y))
+          .attr("fill", props.color[index]);
       }
     });
+
+    // Axis styling.
+    svgElement
+      .selectAll(".domain")
+      .style("fill", "none")
+      .style("stroke", axisGridColor)
+      .style("stroke-width", "1");
 
     // Interactivity.
     // @see  http://www.d3noob.org/2014/07/my-favourite-tooltip-method-for-line.html

@@ -5,6 +5,7 @@ import React, {
   useState,
   RefObject,
 } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import * as d3 from "d3";
 
 import { DiagramBaseProps, Series } from "./types";
@@ -17,7 +18,8 @@ type CombinedDiagramBaseProps = DiagramBaseProps & { chartTypes: string[] };
 export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
   props: CombinedDiagramBaseProps
 ): React.ReactElement => {
-  const ref: RefObject<SVGSVGElement> = useRef(null);
+  const svgRef: RefObject<SVGSVGElement> = useRef(null);
+  const tooltipRef: RefObject<HTMLDivElement> = useRef(null);
   const size: Size = useWindowSize();
 
   // @todo This adds one MutationObserver per LineDiagram. Add this to one
@@ -59,15 +61,17 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
   useEffect(() => {
     // Clean up (otherwise on resize it gets rendered multiple times).
-    d3.select(ref.current).selectChildren().remove();
+    d3.select(svgRef.current).selectChildren().remove();
 
     // @see https://gist.github.com/mbostock/3019563
     const margin = { top: 20, right: 20, bottom: 20, left: 40 },
-      width = ref.current?.parentElement
-        ? ref.current?.parentElement.clientWidth - margin.left - margin.right
+      width = svgRef.current?.parentElement
+        ? svgRef.current?.parentElement.clientWidth - margin.left - margin.right
         : 0,
-      height = ref.current?.parentElement
-        ? ref.current?.parentElement.clientHeight - margin.top - margin.bottom
+      height = svgRef.current?.parentElement
+        ? svgRef.current?.parentElement.clientHeight -
+          margin.top -
+          margin.bottom
         : 0,
       xScale = d3
         .scaleTime()
@@ -93,7 +97,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         .range([height, 0]);
 
     const svgElement = d3
-      .select(ref.current)
+      .select(svgRef.current)
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
@@ -366,14 +370,52 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       .style("stroke-width", "1");
 
     // Interactivity.
+    const tooltipHtml = (
+      <div
+        style={{
+          padding: "7px",
+          color: "white",
+          borderLeft: `5px solid red`,
+          textAlign: "right",
+        }}
+        className="diagram-tooltip"
+      >
+        <div style={{ marginBottom: "5px" }}>X</div>
+        <div>Y</div>
+      </div>
+    );
+
     // @see  http://www.d3noob.org/2014/07/my-favourite-tooltip-method-for-line.html
     const focus = svgElement.append("g").style("display", "none");
+
+    // append the x line
+    focus
+      .append("line")
+      .attr("class", "x")
+      .style("stroke", "#000")
+      .style("stroke-dasharray", "7")
+      .style("opacity", 0.75)
+      .attr("y1", 0)
+      .attr("y2", height);
+
+    // append the y line
+    focus
+      .append("line")
+      .attr("class", "y")
+      .style("stroke", "#000")
+      .style("stroke-dasharray", "7")
+      .style("opacity", 0.75)
+      .attr("x1", width)
+      .attr("x2", width);
 
     focus
       .append("circle")
       .attr("class", "y")
+      .style("opacity", 0.5)
       .style("fill", "none")
-      .style("stroke", "blue")
+      .style("stroke", "#000")
+      //@todo Temporary hidden.
+      .style("display", "none")
       .attr("r", 4);
 
     svgElement
@@ -387,6 +429,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       })
       .on("mouseout", function () {
         focus.style("display", "none");
+        d3.select(tooltipRef.current).style("display", "none");
       })
       .on("mousemove", (event: MouseEvent) => {
         const x0 = xScale.invert(d3.pointer(event)[0]).getTime();
@@ -398,14 +441,58 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
         const d = x0 - d0.x * 1000 > d1.x * 1000 - x0 ? d1 : d0;
 
+        // @todo Try with position absolute & d3.pointer(event).
+        d3.select(tooltipRef.current)
+          .style("display", "block")
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY - 25 + "px");
+
         focus
           .select("circle.y")
           .attr(
             "transform",
             "translate(" + xScale(d.x * 1000) + "," + yScale(d.y) + ")"
           );
+
+        focus
+          .select("line.x")
+          .attr(
+            "transform",
+            "translate(" + xScale(d.x * 1000) + "," + yScale(d.y) + ")"
+          )
+          .attr("y2", height - yScale(d.y));
+
+        focus
+          .select("line.y")
+          .attr(
+            "transform",
+            "translate(" + width * -1 + "," + yScale(d.y) + ")"
+          )
+          .attr("x2", width + width);
       });
   }, [size, props.data]);
 
-  return <svg ref={ref} />;
+  return (
+    <div style={{ height: "100%", position: "relative" }}>
+      <svg ref={svgRef} />
+      <div
+        ref={tooltipRef}
+        className="d3-diagram-tooltip"
+        style={{ display: "none", position: "fixed" }}
+      >
+        <div
+          style={{
+            padding: "7px",
+            color: "white",
+            borderLeft: `5px solid red`,
+            textAlign: "right",
+          }}
+          className="diagram-tooltip"
+        >
+          <div style={{ marginBottom: "5px" }}>X</div>
+          <div>Y</div>
+        </div>
+      </div>
+    </div>
+  );
 };

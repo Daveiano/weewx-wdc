@@ -36,9 +36,6 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
     combinedData = props.data[0].data;
   }
 
-  console.log(props);
-  console.log(combinedData);
-
   const callback = (mutationsList: Array<MutationRecord>) => {
     mutationsList.forEach((mutation) => {
       if (
@@ -345,6 +342,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           .text("Y Axis Label 2");
 
         // Bars
+        // @todo nivoProps bar label.
         svgElement
           .selectAll("bars")
           .data(dataSet.data)
@@ -369,10 +367,14 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
     // Interactivity.
     // @see  http://www.d3noob.org/2014/07/my-favourite-tooltip-method-for-line.html
-    const focus = svgElement
-      .append("g")
-      .style("display", "none")
-      .text("TOOLTIP");
+    const focus = svgElement.append("g").style("display", "none");
+
+    focus
+      .append("circle")
+      .attr("class", "y")
+      .style("fill", "none")
+      .style("stroke", "blue")
+      .attr("r", 4);
 
     svgElement
       .append("rect")
@@ -385,8 +387,24 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       })
       .on("mouseout", function () {
         focus.style("display", "none");
+      })
+      .on("mousemove", (event: MouseEvent) => {
+        const x0 = xScale.invert(d3.pointer(event)[0]).getTime();
+        const i = d3
+          .bisector((d: any) => d.x * 1000)
+          .left(props.data[0].data, x0, 1);
+        const d0 = props.data[0].data[i - 1];
+        const d1 = props.data[0].data[i];
+
+        const d = x0 - d0.x * 1000 > d1.x * 1000 - x0 ? d1 : d0;
+
+        focus
+          .select("circle.y")
+          .attr(
+            "transform",
+            "translate(" + xScale(d.x * 1000) + "," + yScale(d.y) + ")"
+          );
       });
-    //.on("mousemove", mousemove);
   }, [size, props.data]);
 
   return <svg ref={ref} />;

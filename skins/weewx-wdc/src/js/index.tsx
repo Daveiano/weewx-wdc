@@ -14,6 +14,9 @@ import { DWDWarning } from "./components/dwd-warning";
 import { DWDForecast } from "./components/dwd-forecast";
 import { CombinedDiagram } from "./diagrams/combined";
 
+// FEATURE FLAG: Use D3 diagrams.
+const useD3Diagrams = true;
+
 const calendarDiagrams = document.querySelectorAll(
   "div.calendar-diagram-clim-wrap"
 );
@@ -110,7 +113,11 @@ diagrams.forEach((diagram) => {
       }
     }
 
-    if (diagramTypes.length === 1 && diagramTypes[0] === "line") {
+    if (
+      diagramTypes.length === 1 &&
+      diagramTypes[0] === "line" &&
+      !useD3Diagrams
+    ) {
       root.render(
         <LineDiagram
           color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
@@ -127,7 +134,11 @@ diagrams.forEach((diagram) => {
       );
     }
 
-    if (diagramTypes.length === 1 && diagramTypes[0] === "bar") {
+    if (
+      diagramTypes.length === 1 &&
+      diagramTypes[0] === "bar" &&
+      !useD3Diagrams
+    ) {
       root.render(
         <BarDiagram
           color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
@@ -145,9 +156,10 @@ diagrams.forEach((diagram) => {
     }
 
     if (
-      diagramTypes.length > 1 &&
-      diagramTypes.includes("bar") &&
-      diagramTypes.includes("line")
+      (diagramTypes.length > 1 &&
+        diagramTypes.includes("bar") &&
+        diagramTypes.includes("line")) ||
+      useD3Diagrams
     ) {
       root.render(
         <CombinedDiagram

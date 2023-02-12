@@ -21,6 +21,9 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
   const svgRef: RefObject<SVGSVGElement> = useRef(null);
   const tooltipRef: RefObject<HTMLDivElement> = useRef(null);
   const size: Size = useWindowSize();
+  const [tooltip, setTooltip] = useState<{ x: number; y: number }[]>(
+    props.data.map(() => ({ x: 0, y: 0 }))
+  );
 
   // @todo This adds one MutationObserver per LineDiagram. Add this to one
   //    general component which shares the state.
@@ -37,6 +40,9 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
   } else {
     combinedData = props.data[0].data;
   }
+  combinedData.sort((a, b) => {
+    return a.x - b.x;
+  });
 
   const callback = (mutationsList: Array<MutationRecord>) => {
     mutationsList.forEach((mutation) => {
@@ -63,8 +69,17 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
     // Clean up (otherwise on resize it gets rendered multiple times).
     d3.select(svgRef.current).selectChildren().remove();
 
+    const unitCombinedDistinct: string[] = Array.isArray(props.unit)
+      ? [...new Set(props.unit)]
+      : [props.unit];
+
     // @see https://gist.github.com/mbostock/3019563
-    const margin = { top: 20, right: 20, bottom: 20, left: 40 },
+    const margin = {
+        top: 20,
+        right: unitCombinedDistinct.length > 1 ? 50 : 10,
+        bottom: 20,
+        left: 50,
+      },
       width = svgRef.current?.parentElement
         ? svgRef.current?.parentElement.clientWidth - margin.left - margin.right
         : 0,
@@ -76,11 +91,8 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       xScale = d3
         .scaleTime()
         .domain([
-          new Date((props.data[1].data[0].x as number) * 1000),
-          new Date(
-            (props.data[1].data[props.data[1].data.length - 1].x as number) *
-              1000
-          ),
+          new Date((combinedData[0].x as number) * 1000),
+          new Date((combinedData[combinedData.length - 1].x as number) * 1000),
         ])
         .range([0, width]),
       yScaleMin = props.nivoProps.yScaleMin
@@ -135,20 +147,31 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
     // y Axis.
     svgElement
       .append("g")
-      .call(d3.axisLeft(yScale).ticks(5).tickSize(0).tickPadding(6));
+      // @todo Wind direction degree/ordinal.
+      .call(
+        d3
+          .axisLeft(yScale)
+          .ticks(5)
+          .tickFormat((d) => {
+            return d.toString();
+          })
+          .tickSize(0)
+          .tickPadding(6)
+      );
 
     // Y Axis Label.
     svgElement
       .append("g")
       .attr(
         "transform",
-        "translate(" + -margin.left / 1.5 + ", " + height / 2 + ")"
+        `translate(${-margin.left * 0.85}, ${height / 2}), rotate(-90)`
       )
       .append("text")
       .attr("text-anchor", "middle")
       .attr("font-size", "0.75em")
-      .attr("transform", "rotate(-90)")
-      .text("Y Axis Label");
+      .style("dominant-baseline", "central")
+      .style("font-family", "sans-serif")
+      .text(props.unit[0]);
 
     // y Axis gutter.
     // @see https://stackoverflow.com/a/17871021
@@ -171,9 +194,16 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       .attr("stroke", axisGridColor)
       .attr("stroke-width", "1px");
 
+    console.log(props.data);
+
     // Actual chart line/bars/dots.
     props.data.forEach((dataSet: any, index: number) => {
+      console.log(dataSet);
       // @see http://using-d3js.com/05_04_curves.html
+      const chartType = props.chartTypes[index]
+        ? props.chartTypes[index]
+        : props.chartTypes[0];
+
       let curve = d3.curveNatural;
       switch (props.nivoProps.curve) {
         case "basis": {
@@ -232,9 +262,9 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         })
         .curve(curve);
 
-      if (props.chartTypes[index] === "line") {
+      if (chartType === "line") {
+        // Dots.
         if (props.nivoProps.enablePoints) {
-          // Dots.
           svgElement
             .append("g")
             .selectAll("dot")
@@ -254,8 +284,8 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             .style("fill", props.color[index]);
         }
 
+        // Area.
         if (props.nivoProps.enableArea) {
-          // Area.
           svgElement
             .append("path")
             .datum(dataSet.data as any)
@@ -281,6 +311,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
                 .curve(curve)
             );
         }
+
         // Line.
         svgElement
           .append("path")
@@ -293,7 +324,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           .attr("d", lineGenerator(dataSet.data as any));
       }
 
-      if (props.chartTypes[index] === "bar") {
+      if (chartType === "bar") {
         const xScale2 = d3
             .scaleBand()
             .range([0, width])
@@ -313,14 +344,10 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         svgElement
           .append("g")
           .attr("transform", `translate(0, ${height})`)
-          .call(
-            d3
-              .axisBottom(xScale2)
-              .tickFormat((d: any) => dayjs.unix(d).format("DD/MM/YYYY"))
-          )
-          .selectAll("text")
-          .attr("transform", "translate(-10,0)rotate(-45)")
-          .style("text-anchor", "end");
+          .call(d3.axisBottom(xScale2).tickValues([]));
+        //.selectAll("text")
+        //.attr("transform", "translate(0,5)rotate(0)");
+        //.style("text-anchor", "end");
 
         // y Axis 2.
         svgElement
@@ -370,21 +397,6 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       .style("stroke-width", "1");
 
     // Interactivity.
-    const tooltipHtml = (
-      <div
-        style={{
-          padding: "7px",
-          color: "white",
-          borderLeft: `5px solid red`,
-          textAlign: "right",
-        }}
-        className="diagram-tooltip"
-      >
-        <div style={{ marginBottom: "5px" }}>X</div>
-        <div>Y</div>
-      </div>
-    );
-
     // @see  http://www.d3noob.org/2014/07/my-favourite-tooltip-method-for-line.html
     const focus = svgElement.append("g").style("display", "none");
 
@@ -441,10 +453,17 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
         const d = x0 - d0.x * 1000 > d1.x * 1000 - x0 ? d1 : d0;
 
-        // @todo Try with position absolute & d3.pointer(event).
+        setTooltip([
+          { x: d.x, y: d.y },
+          { x: 0, y: 0 },
+        ]);
+
         d3.select(tooltipRef.current)
           .style("display", "block")
-          .style("left", event.pageX + 10 + "px")
+          .style(
+            "left",
+            event.pageX - (tooltipRef.current?.clientWidth as number) / 2 + "px"
+          )
           .style("top", event.pageY - 25 + "px");
 
         focus
@@ -478,7 +497,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       <div
         ref={tooltipRef}
         className="d3-diagram-tooltip"
-        style={{ display: "none", position: "fixed" }}
+        style={{ display: "none", position: "fixed", zIndex: 1000 }}
       >
         <div
           style={{
@@ -489,8 +508,13 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           }}
           className="diagram-tooltip"
         >
-          <div style={{ marginBottom: "5px" }}>X</div>
-          <div>Y</div>
+          <div style={{ marginBottom: "5px" }}>
+            {dayjs.unix(tooltip[0].x).format("DD.MM.YYYY HH:mm")}
+          </div>
+          {/*@todo configurable date/time*/}
+          <div>
+            {tooltip[0].y} {props.unit[0]}
+          </div>
         </div>
       </div>
     </div>

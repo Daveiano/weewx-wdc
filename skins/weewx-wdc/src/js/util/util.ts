@@ -1,5 +1,5 @@
 import { Scale, ScaleLinearSpec } from "@nivo/scales";
-import { Box } from "@nivo/core";
+import { Margin } from "@nivo/core";
 import { Series } from "../diagrams/types";
 import dayjs from "dayjs";
 import { useState, useEffect } from "react";
@@ -67,7 +67,8 @@ export const getyScale = (
   };
 };
 
-export const getMargins = (obs: string): Box => {
+export const getMargins = (obs: string): Margin => {
+  // These are nivo margin, not d3!
   const margin = {
     top: 20,
     right: 10,
@@ -79,7 +80,13 @@ export const getMargins = (obs: string): Box => {
     margin.left = 50;
   }
 
-  if (obs === "pressure" || obs === "altimeter" || obs === "barometer") {
+  if (
+    obs === "pressure" ||
+    obs === "altimeter" ||
+    obs === "barometer" ||
+    obs === "rain" ||
+    obs === "ET"
+  ) {
     margin.left = 55;
   }
 
@@ -95,6 +102,8 @@ export const getAxisLeftLegendOffset = (obs: string): number => {
     case "pressure":
     case "altimeter":
     case "barometer":
+    case "ET":
+    case "rain":
       return -50;
     case "cloudbase":
     case "rainRate":

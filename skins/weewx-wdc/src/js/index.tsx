@@ -12,7 +12,8 @@ import "./../scss/index.scss";
 import { WindRoseDiagram } from "./diagrams/windrose";
 import { DWDWarning } from "./components/dwd-warning";
 import { DWDForecast } from "./components/dwd-forecast";
-import { CombinedDiagram } from "./diagrams/combined";
+import { CombinedDiagram } from "./diagrams/d3/combined";
+import { D3BarDiagram } from "./diagrams/d3/bar";
 
 // FEATURE FLAG: Use D3 diagrams.
 const useD3Diagrams = true;
@@ -134,32 +135,45 @@ diagrams.forEach((diagram) => {
       );
     }
 
-    if (
-      diagramTypes.length === 1 &&
-      diagramTypes[0] === "bar" &&
-      !useD3Diagrams
-    ) {
-      root.render(
-        <BarDiagram
-          color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
-          unit={
-            diagram.dataset.unit
-              ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
-              : ""
-          }
-          data={data}
-          observation={diagram.dataset.obs}
-          context={diagram.dataset.context as context}
-          nivoProps={nivoProps}
-        />
-      );
+    // Bar diagrams.
+    if (diagramTypes.length === 1 && diagramTypes[0] === "bar") {
+      if (useD3Diagrams) {
+        root.render(
+          <D3BarDiagram
+            color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
+            unit={
+              diagram.dataset.unit
+                ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
+                : ""
+            }
+            data={data}
+            observation={diagram.dataset.obs}
+            context={diagram.dataset.context as context}
+            nivoProps={nivoProps}
+          />
+        );
+      } else {
+        root.render(
+          <BarDiagram
+            color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
+            unit={
+              diagram.dataset.unit
+                ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
+                : ""
+            }
+            data={data}
+            observation={diagram.dataset.obs}
+            context={diagram.dataset.context as context}
+            nivoProps={nivoProps}
+          />
+        );
+      }
     }
 
     if (
-      (diagramTypes.length > 1 &&
-        diagramTypes.includes("bar") &&
-        diagramTypes.includes("line")) ||
-      useD3Diagrams
+      diagramTypes.length > 1 &&
+      diagramTypes.includes("bar") &&
+      diagramTypes.includes("line")
     ) {
       root.render(
         <CombinedDiagram

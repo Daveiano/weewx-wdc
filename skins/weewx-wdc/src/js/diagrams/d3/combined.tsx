@@ -8,9 +8,9 @@ import React, {
 import { renderToStaticMarkup } from "react-dom/server";
 import * as d3 from "d3";
 
-import { DiagramBaseProps, Series } from "./types";
-import type { Size } from "../util/util";
-import { useWindowSize } from "../util/util";
+import { DiagramBaseProps, Series } from "../types";
+import { getAxisLeftLegendOffset, getMargins, Size } from "../../util/util";
+import { useWindowSize } from "../../util/util";
 import dayjs from "dayjs";
 
 type CombinedDiagramBaseProps = DiagramBaseProps & { chartTypes: string[] };
@@ -69,6 +69,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
     // Clean up (otherwise on resize it gets rendered multiple times).
     d3.select(svgRef.current).selectChildren().remove();
 
+    // Determine the number of unique units to display.
     const unitCombinedDistinct: string[] = Array.isArray(props.unit)
       ? [...new Set(props.unit)]
       : [props.unit];
@@ -76,9 +77,10 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
     // @see https://gist.github.com/mbostock/3019563
     const margin = {
         top: 20,
+        // Second axis on the right?
         right: unitCombinedDistinct.length > 1 ? 50 : 10,
         bottom: 20,
-        left: 50,
+        left: getMargins(props.observation).left - 2.5,
       },
       width = svgRef.current?.parentElement
         ? svgRef.current?.parentElement.clientWidth - margin.left - margin.right
@@ -164,7 +166,9 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       .append("g")
       .attr(
         "transform",
-        `translate(${-margin.left * 0.85}, ${height / 2}), rotate(-90)`
+        `translate(${getAxisLeftLegendOffset(props.observation) + 2.25}, ${
+          height / 2
+        }), rotate(-90)`
       )
       .append("text")
       .attr("text-anchor", "middle")
@@ -194,11 +198,8 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       .attr("stroke", axisGridColor)
       .attr("stroke-width", "1px");
 
-    console.log(props.data);
-
     // Actual chart line/bars/dots.
     props.data.forEach((dataSet: any, index: number) => {
-      console.log(dataSet);
       // @see http://using-d3js.com/05_04_curves.html
       const chartType = props.chartTypes[index]
         ? props.chartTypes[index]
@@ -316,6 +317,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         svgElement
           .append("path")
           .attr("fill", "none")
+          //@todo Dark mode color handling.
           .attr("stroke", props.color[index])
           .attr(
             "stroke-width",
@@ -350,27 +352,27 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         //.style("text-anchor", "end");
 
         // y Axis 2.
-        svgElement
-          .append("g")
-          .attr("transform", "translate(" + width + ",0)")
-          .call(d3.axisRight(yScale2).ticks(5).tickSize(0).tickPadding(6));
+        // svgElement
+        //   .append("g")
+        //   .attr("transform", "translate(" + width + ",0)")
+        //   .call(d3.axisRight(yScale2).ticks(5).tickSize(0).tickPadding(6));
 
         // Y Axis 2 Label.
-        svgElement
-          .append("g")
-          .attr(
-            "transform",
-            "translate(" +
-              (width - margin.right / 1.5) +
-              ", " +
-              height / 2 +
-              ")"
-          )
-          .append("text")
-          .attr("text-anchor", "middle")
-          .attr("font-size", "0.75em")
-          .attr("transform", "rotate(-90)")
-          .text("Y Axis Label 2");
+        // svgElement
+        //   .append("g")
+        //   .attr(
+        //     "transform",
+        //     "translate(" +
+        //       (width - margin.right / 1.5) +
+        //       ", " +
+        //       height / 2 +
+        //       ")"
+        //   )
+        //   .append("text")
+        //   .attr("text-anchor", "middle")
+        //   .attr("font-size", "0.75em")
+        //   .attr("transform", "rotate(-90)")
+        //   .text("Y Axis Label 2");
 
         // Bars
         // @todo nivoProps bar label.
@@ -382,9 +384,9 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             "x",
             (d: any) => (xScale2(d.x) as number) + xScale2.bandwidth() * 0.125
           )
-          .attr("y", (d: any) => yScale2(d.y))
+          .attr("y", (d: any) => yScale(d.y))
           .attr("width", xScale2.bandwidth() * 0.75)
-          .attr("height", (d: any) => height - yScale2(d.y))
+          .attr("height", (d: any) => height - yScale(d.y))
           .attr("fill", props.color[index]);
       }
     });

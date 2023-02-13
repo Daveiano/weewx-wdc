@@ -8,7 +8,7 @@ import React, {
 import { renderToStaticMarkup } from "react-dom/server";
 import * as d3 from "d3";
 
-import { DiagramBaseProps, Series } from "../types";
+import { DiagramBaseProps } from "../types";
 import { getAxisLeftLegendOffset, getMargins, Size } from "../../util/util";
 import { useWindowSize } from "../../util/util";
 import dayjs from "dayjs";
@@ -499,7 +499,12 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       <div
         ref={tooltipRef}
         className="d3-diagram-tooltip"
-        style={{ display: "none", position: "fixed", zIndex: 1000 }}
+        style={{
+          display: "none",
+          position: "fixed",
+          zIndex: 1000,
+          transition: "top, left 0.2s ease-in-out",
+        }}
       >
         <div
           style={{

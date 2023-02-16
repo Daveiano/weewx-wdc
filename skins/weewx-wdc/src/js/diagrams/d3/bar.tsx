@@ -5,10 +5,9 @@ import React, {
   useState,
   RefObject,
 } from "react";
-import { renderToStaticMarkup } from "react-dom/server";
 import * as d3 from "d3";
 
-import { Datum, DiagramBaseProps, Series } from "../types";
+import { DiagramBaseProps } from "../types";
 import { getAxisLeftLegendOffset, getMargins, Size } from "../../util/util";
 import { useWindowSize } from "../../util/util";
 import dayjs from "dayjs";
@@ -291,7 +290,8 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
           display: "none",
           position: "absolute",
           zIndex: 1000,
-          transition: "top, left 0.2s ease-in-out",
+          transition: "left 0.25s ease-in-out, top 0.35s ease-in-out",
+          pointerEvents: "none",
         }}
       >
         <div

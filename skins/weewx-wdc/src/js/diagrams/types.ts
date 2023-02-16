@@ -2,7 +2,7 @@ interface Datum {
   x: number;
   y: number;
   end: number;
-  [key: string]: any;
+  [key: string]: number;
 }
 
 interface Serie {
@@ -56,6 +56,12 @@ type DiagramBaseProps = {
   };
 };
 
+type TooltipProps = {
+  tooltips: Datum[];
+  color: string[];
+  unit: string[];
+};
+
 type WindRoseProps = {
   data: any[];
 };
@@ -73,5 +79,6 @@ export {
   Datum,
   Serie,
   Series,
+  TooltipProps,
   WindRoseProps,
 };

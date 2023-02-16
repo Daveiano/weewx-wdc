@@ -14,9 +14,12 @@ import { DWDWarning } from "./components/dwd-warning";
 import { DWDForecast } from "./components/dwd-forecast";
 import { CombinedDiagram } from "./diagrams/d3/combined";
 import { D3BarDiagram } from "./diagrams/d3/bar";
+import { D3LineDiagram } from "./diagrams/d3/line";
+
+export const chartTransition = "left 0.25s ease-in-out, top 0.35s ease-in-out";
 
 // FEATURE FLAG: Use D3 diagrams.
-const useD3Diagrams = true;
+const useD3Diagrams = false;
 
 const calendarDiagrams = document.querySelectorAll(
   "div.calendar-diagram-clim-wrap"
@@ -114,25 +117,38 @@ diagrams.forEach((diagram) => {
       }
     }
 
-    if (
-      diagramTypes.length === 1 &&
-      diagramTypes[0] === "line" &&
-      !useD3Diagrams
-    ) {
-      root.render(
-        <LineDiagram
-          color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
-          unit={
-            diagram.dataset.unit
-              ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
-              : ""
-          }
-          data={data}
-          observation={diagram.dataset.obs}
-          context={diagram.dataset.context as context}
-          nivoProps={nivoProps}
-        />
-      );
+    if (diagramTypes.length === 1 && diagramTypes[0] === "line") {
+      if (useD3Diagrams) {
+        root.render(
+          <D3LineDiagram
+            color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
+            unit={
+              diagram.dataset.unit
+                ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
+                : ""
+            }
+            data={data}
+            observation={diagram.dataset.obs}
+            context={diagram.dataset.context as context}
+            nivoProps={nivoProps}
+          />
+        );
+      } else {
+        root.render(
+          <LineDiagram
+            color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
+            unit={
+              diagram.dataset.unit
+                ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
+                : ""
+            }
+            data={data}
+            observation={diagram.dataset.obs}
+            context={diagram.dataset.context as context}
+            nivoProps={nivoProps}
+          />
+        );
+      }
     }
 
     // Bar diagrams.

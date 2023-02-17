@@ -575,6 +575,18 @@ header.section-header {
       opacity: 1;
     }
   }
+  &:fullscreen {
+    .bx--row,
+    .bx--col {
+      height: 100%;
+    }
+    .value {
+      height: 95%;
+      .diagram {
+        height: 100%;
+      }
+    }
+  }
 }
 
 .diagram-tile,

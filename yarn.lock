@@ -1092,7 +1092,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/d3-selection@npm:*":
+"@types/d3-selection@npm:*, @types/d3-selection@npm:^3.0.4":
   version: 3.0.4
   resolution: "@types/d3-selection@npm:3.0.4"
   checksum: b1e486db7f020610c854996a96b2f59a43b89d48bc7ac2ef9479f6f6e6324d3b21d7dfc8031a0b6d049a84b769b14eca65d73fc42613ab0044ef67973a9fe6ca
@@ -5919,6 +5919,7 @@ __metadata:
     "@types/color": ^3.0.3
     "@types/d3": ^7.4.0
     "@types/d3-scale": ^4.0.2
+    "@types/d3-selection": ^3.0.4
     "@types/he": ^1.1.2
     "@types/plotly.js": ^2.12.1
     "@types/react": ^18.0.8

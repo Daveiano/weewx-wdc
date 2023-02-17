@@ -14,6 +14,8 @@ import { getAxisLeftLegendOffset, getMargins, Size } from "../../util/util";
 import { useWindowSize } from "../../util/util";
 import { chartTransition } from "../..";
 import { Tooltip } from "./components/tooltip";
+import { Maximize } from "../../assets/maximize";
+import { addMarkers } from "./components/marker";
 
 export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
   props: DiagramBaseProps
@@ -172,7 +174,7 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
       .call(
         d3
           .axisLeft(yScale)
-          .ticks(5)
+          .ticks(6)
           .tickFormat((d) => {
             return d.toString();
           })
@@ -339,6 +341,19 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
         .attr("d", lineGenerator(dataSet.data as any));
     });
 
+    // Markers.
+    if (props.nivoProps.markerValue) {
+      addMarkers(
+        svgElement,
+        width,
+        yScale,
+        props.unit[0],
+        props.nivoProps.markerValue,
+        props.nivoProps.markerColor,
+        props.nivoProps.markerLabel
+      );
+    }
+
     // Axis styling.
     svgElement
       .selectAll(".domain")
@@ -406,9 +421,16 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
 
           props.data.forEach((dataSet: any, index: number) => {
             const x0 = xScale.invert(pointerX).getTime();
-            const i = d3
+            let i = d3
               .bisector((d: any) => d.x * 1000)
               .left(props.data[index].data, x0, 1);
+
+            if (i <= 0) {
+              i = 1;
+            } else if (i >= props.data[index].data.length) {
+              i = props.data[index].data.length - 1;
+            }
+
             const d0 = props.data[index].data[i - 1];
             const d1 = props.data[index].data[i];
 
@@ -437,7 +459,6 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
               );
             } else {
               // Left.
-              console.log("wrong");
               d3.select(tooltipRef.current).style(
                 "left",
                 margin.left + xScale(values[0].x * 1000) + 20 + "px"
@@ -549,28 +570,41 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
         );
       }
     }
-  }, [size, props.data]);
+  }, [size, props.data, darkMode]);
+
+  const handleFullScreen = () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      (
+        svgRef.current?.closest(".diagram-tile") as HTMLDivElement
+      ).requestFullscreen();
+    }
+  };
 
   return (
-    <div style={{ height: "100%", position: "relative" }}>
-      <svg ref={svgRef} xmlns="http://www.w3.org/2000/svg" />
-      <div
-        ref={tooltipRef}
-        className="d3-diagram-tooltip"
-        style={{
-          opacity: 0,
-          position: "absolute",
-          zIndex: 1000,
-          transition: chartTransition,
-          pointerEvents: "none",
-        }}
-      >
-        <Tooltip
-          tooltips={tooltip}
-          color={colors}
-          unit={typeof props.unit === "string" ? [props.unit] : props.unit}
-        />
+    <>
+      <Maximize onClick={handleFullScreen} />
+      <div style={{ height: "100%", position: "relative" }}>
+        <svg ref={svgRef} xmlns="http://www.w3.org/2000/svg" />
+        <div
+          ref={tooltipRef}
+          className="d3-diagram-tooltip"
+          style={{
+            opacity: 0,
+            position: "absolute",
+            zIndex: 1000,
+            transition: chartTransition,
+            pointerEvents: "none",
+          }}
+        >
+          <Tooltip
+            tooltips={tooltip}
+            color={colors}
+            unit={typeof props.unit === "string" ? [props.unit] : props.unit}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };

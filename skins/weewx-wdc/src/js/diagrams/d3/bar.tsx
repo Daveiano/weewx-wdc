@@ -6,11 +6,12 @@ import React, {
   RefObject,
 } from "react";
 import * as d3 from "d3";
+import dayjs from "dayjs";
 
 import { DiagramBaseProps } from "../types";
 import { getAxisLeftLegendOffset, getMargins, Size } from "../../util/util";
 import { useWindowSize } from "../../util/util";
-import dayjs from "dayjs";
+import { Maximize } from "../../assets/maximize";
 
 export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
   props: DiagramBaseProps
@@ -279,40 +280,53 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
             .attr("x2", width + width);
         });
     }
-  }, [size, props.data]);
+  }, [size, props.data, darkMode]);
+
+  const handleFullScreen = () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      (
+        svgRef.current?.closest(".diagram-tile") as HTMLDivElement
+      ).requestFullscreen();
+    }
+  };
 
   return (
-    <div style={{ height: "100%", position: "relative" }}>
-      <svg ref={svgRef} />
-      <div
-        ref={tooltipRef}
-        className="d3-diagram-tooltip"
-        style={{
-          display: "none",
-          position: "absolute",
-          zIndex: 1000,
-          transition: "left 0.25s ease-in-out, top 0.35s ease-in-out",
-          pointerEvents: "none",
-        }}
-      >
+    <>
+      <Maximize onClick={handleFullScreen} />
+      <div style={{ height: "100%", position: "relative" }}>
+        <svg ref={svgRef} />
         <div
+          ref={tooltipRef}
+          className="d3-diagram-tooltip"
           style={{
-            padding: "7px",
-            color: "white",
-            borderLeft: `5px solid ${props.color[0]}`,
-            textAlign: "right",
+            display: "none",
+            position: "absolute",
+            zIndex: 1000,
+            transition: "left 0.25s ease-in-out, top 0.35s ease-in-out",
+            pointerEvents: "none",
           }}
-          className="diagram-tooltip"
         >
-          <div style={{ marginBottom: "5px", whiteSpace: "nowrap" }}>
-            {/*@todo configurable date/time*/}
-            {dayjs.unix(tooltip.x).format("DD.MM.YYYY HH:mm")}
-          </div>
-          <div>
-            {tooltip.y} {props.unit[0]}
+          <div
+            style={{
+              padding: "7px",
+              color: "white",
+              borderLeft: `5px solid ${props.color[0]}`,
+              textAlign: "right",
+            }}
+            className="diagram-tooltip"
+          >
+            <div style={{ marginBottom: "5px", whiteSpace: "nowrap" }}>
+              {/*@todo configurable date/time*/}
+              {dayjs.unix(tooltip.x).format("DD.MM.YYYY HH:mm")}
+            </div>
+            <div>
+              {tooltip.y} {props.unit[0]}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };

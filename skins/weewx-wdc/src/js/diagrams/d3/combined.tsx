@@ -491,7 +491,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           )
           .attr("x2", width + width);
       });
-  }, [size, props.data]);
+  }, [size, props.data, darkMode]);
 
   return (
     <div style={{ height: "100%", position: "relative" }}>

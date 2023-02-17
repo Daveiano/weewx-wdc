@@ -46,6 +46,7 @@ export const Tooltip = (props: TooltipProps): React.ReactElement => {
       </header>
       {props.tooltips.map((item, index) => (
         <div
+          key={index}
           style={{
             padding: "7px",
             color: "white",

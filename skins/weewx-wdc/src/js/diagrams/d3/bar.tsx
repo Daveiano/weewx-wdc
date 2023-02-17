@@ -232,6 +232,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
         .style("stroke", "#000")
         .style("stroke-dasharray", "7")
         .style("opacity", 0.75)
+        .style("transition", "all 0.35s ease-in-out")
         .attr("x1", width)
         .attr("x2", width);
 

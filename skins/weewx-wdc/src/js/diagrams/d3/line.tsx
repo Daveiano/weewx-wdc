@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import * as d3 from "d3";
 import dayjs from "dayjs";
+import color from "color";
 
 import { Datum, DiagramBaseProps } from "../types";
 import { getAxisLeftLegendOffset, getMargins, Size } from "../../util/util";
@@ -27,7 +28,28 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
   const [darkMode, setDarkMode] = useState(
     document.documentElement.classList.contains("dark")
   );
+
+  // Color handling
   const axisGridColor = darkMode ? "#525252" : "#dddddd";
+  const backgroundColorDarkModeLightness = color("#393939").lightness();
+  const colors = darkMode
+    ? props.nivoProps.enableArea
+      ? props.color.map((c) =>
+          color(c).lightness() <= backgroundColorDarkModeLightness * 2
+            ? color(c).desaturate(0.1).lighten(0.75).hex()
+            : c
+        )
+      : props.color.map((c) => {
+          if (color(c).red() > 90) {
+            return color(c).desaturate(0.5).lighten(1.5).hex();
+          }
+          if (color(c).lightness() <= backgroundColorDarkModeLightness) {
+            return color(c).lighten(10).hex();
+          }
+
+          return color(c).lighten(0.25).hex();
+        })
+    : props.color;
 
   let combinedData: any[] = [];
   if (props.data.length > 1) {
@@ -273,7 +295,7 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
             "r",
             props.nivoProps.pointSize ? props.nivoProps.pointSize / 2 : 2.5
           )
-          .style("fill", props.color[index]);
+          .style("fill", colors[index]);
       }
 
       // Area.
@@ -281,7 +303,7 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
         svgElement
           .append("path")
           .datum(dataSet.data as any)
-          .attr("fill", props.color[index])
+          .attr("fill", colors[index])
           .attr(
             "fill-opacity",
             darkMode
@@ -309,7 +331,7 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
         .append("path")
         .attr("fill", "none")
         //@todo Dark mode color handling.
-        .attr("stroke", props.color[index])
+        .attr("stroke", colors[index])
         .attr(
           "stroke-width",
           props.nivoProps.lineWidth ? props.nivoProps.lineWidth : 2
@@ -357,9 +379,9 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
         focus
           .append("circle")
           .attr("class", `y y-${index}`)
-          .style("opacity", 0.5)
+          .style("opacity", 0.75)
           .style("fill", "none")
-          .style("stroke", "#000")
+          .style("stroke", axisGridColor)
           .style("transition", "all 0.35s ease-in-out")
           .attr("r", 4);
       });
@@ -400,16 +422,41 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
           const yAverage =
             values.reduce((a: number, b: Datum) => a + b.y, 0) / values.length;
 
-          // @todo Tooltip position left or right from the cursor.
-          d3.select(tooltipRef.current)
-            .style(
+          // @todo Combined tooltip position left or right from the cursor.
+          if (props.data.length > 1) {
+            // Is the cursor in the right half or in the left half of the chart?
+            if (pointerX > width / 2) {
+              // Right.
+              d3.select(tooltipRef.current).style(
+                "left",
+                margin.left +
+                  xScale(values[0].x * 1000) -
+                  (tooltipRef.current?.clientWidth as number) -
+                  20 +
+                  "px"
+              );
+            } else {
+              // Left.
+              console.log("wrong");
+              d3.select(tooltipRef.current).style(
+                "left",
+                margin.left + xScale(values[0].x * 1000) + 20 + "px"
+              );
+            }
+          } else {
+            d3.select(tooltipRef.current).style(
               "left",
               margin.left +
                 xScale(values[0].x * 1000) -
                 (tooltipRef.current?.clientWidth as number) / 2 +
                 "px"
-            )
-            .style("top", yScale(yAverage) - 45 + "px");
+            );
+          }
+
+          d3.select(tooltipRef.current).style(
+            "top",
+            yScale(yAverage) - 45 + "px"
+          );
 
           values.forEach((d: any, index: number) => {
             focus
@@ -440,12 +487,73 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
             )
             .attr("y2", height - yScale(d3.max(values, (d: any) => d.y)));
         });
+
+      // Legend.
+      if (props.data.length > 1) {
+        // Add one dot in the legend for each name.
+        const size = 14,
+          x = 144,
+          y = 1.5;
+
+        const legend = svgElement.append("g");
+
+        props.data.map((item, index) => {
+          const legendItem = legend
+            .append("g")
+            .attr("transform", `translate(0, ${index * 21})`);
+
+          legendItem
+            .append("rect")
+            .attr("width", 160)
+            .attr("height", 19)
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("fill", "transparent");
+
+          legendItem
+            .selectAll("legend-rect")
+            .data([item.id])
+            .enter()
+            .append("rect")
+            .attr("x", x)
+            .attr("y", y)
+            .attr("width", size)
+            .attr("height", size)
+            .style("pointer-events", "none")
+            .style("fill", () => {
+              return props.color[index];
+            });
+
+          legendItem
+            .selectAll("legend-text")
+            .data([item.id])
+            .enter()
+            .append("text")
+            .attr("x", x - 10)
+            .attr("y", y + 6)
+            .style("fill", () => {
+              return props.color[index];
+            })
+            .text(function (d) {
+              return d;
+            })
+            .attr("text-anchor", "end")
+            .style("dominant-baseline", "central")
+            .style("pointer-events", "none")
+            .style("font-size", "11px");
+        });
+
+        legend.attr(
+          "transform",
+          `translate(${width - (legend.node()?.getBBox().width as number)}, 0)`
+        );
+      }
     }
   }, [size, props.data]);
 
   return (
     <div style={{ height: "100%", position: "relative" }}>
-      <svg ref={svgRef} />
+      <svg ref={svgRef} xmlns="http://www.w3.org/2000/svg" />
       <div
         ref={tooltipRef}
         className="d3-diagram-tooltip"
@@ -459,7 +567,7 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
       >
         <Tooltip
           tooltips={tooltip}
-          color={props.color}
+          color={colors}
           unit={typeof props.unit === "string" ? [props.unit] : props.unit}
         />
       </div>

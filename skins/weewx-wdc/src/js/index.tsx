@@ -17,7 +17,7 @@ import { D3BarDiagram } from "./diagrams/d3/bar";
 import { D3LineDiagram } from "./diagrams/d3/line";
 
 // FEATURE FLAG: Use D3 diagrams.
-const useD3Diagrams = true;
+const useD3Diagrams = false;
 
 const calendarDiagrams = document.querySelectorAll(
   "div.calendar-diagram-clim-wrap"

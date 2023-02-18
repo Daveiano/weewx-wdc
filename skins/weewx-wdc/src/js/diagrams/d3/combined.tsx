@@ -7,11 +7,18 @@ import React, {
 } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import * as d3 from "d3";
+import dayjs from "dayjs";
 
-import { DiagramBaseProps } from "../types";
+import { Datum, DiagramBaseProps } from "../types";
 import { getAxisLeftLegendOffset, getMargins, Size } from "../../util/util";
 import { useWindowSize } from "../../util/util";
-import dayjs from "dayjs";
+import {
+  chartTransition,
+  getAxisGridColor,
+  getColors,
+} from "./components/util";
+import { Maximize } from "../../assets/maximize";
+import { Tooltip } from "./components/tooltip";
 
 type CombinedDiagramBaseProps = DiagramBaseProps & { chartTypes: string[] };
 
@@ -21,16 +28,15 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
   const svgRef: RefObject<SVGSVGElement> = useRef(null);
   const tooltipRef: RefObject<HTMLDivElement> = useRef(null);
   const size: Size = useWindowSize();
-  const [tooltip, setTooltip] = useState<{ x: number; y: number }[]>(
-    props.data.map(() => ({ x: 0, y: 0 }))
-  );
+  const [tooltip, setTooltip] = useState<Datum[]>([] as Datum[]);
 
   // @todo This adds one MutationObserver per LineDiagram. Add this to one
   //    general component which shares the state.
   const [darkMode, setDarkMode] = useState(
     document.documentElement.classList.contains("dark")
   );
-  const axisGridColor = darkMode ? "#525252" : "#dddddd";
+  const axisGridColor = getAxisGridColor(darkMode);
+  const colors = getColors(darkMode, props.nivoProps.enableArea, props.color);
 
   let combinedData: any[] = [];
   if (props.data.length > 1) {
@@ -109,6 +115,11 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         .scaleLinear()
         .domain([yScaleMin, yScaleMax])
         .range([height, 0]);
+
+    let barXScale, barYScale;
+
+    if (unitCombinedDistinct.length > 1) {
+    }
 
     const svgElement = d3
       .select(svgRef.current)
@@ -352,10 +363,10 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         //.style("text-anchor", "end");
 
         // y Axis 2.
-        // svgElement
-        //   .append("g")
-        //   .attr("transform", "translate(" + width + ",0)")
-        //   .call(d3.axisRight(yScale2).ticks(5).tickSize(0).tickPadding(6));
+        svgElement
+          .append("g")
+          .attr("transform", "translate(" + width + ",0)")
+          .call(d3.axisRight(yScale2).ticks(5).tickSize(0).tickPadding(6));
 
         // Y Axis 2 Label.
         // svgElement
@@ -384,9 +395,9 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             "x",
             (d: any) => (xScale2(d.x) as number) + xScale2.bandwidth() * 0.125
           )
-          .attr("y", (d: any) => yScale(d.y))
+          .attr("y", (d: any) => yScale2(d.y))
           .attr("width", xScale2.bandwidth() * 0.75)
-          .attr("height", (d: any) => height - yScale(d.y))
+          .attr("height", (d: any) => height - yScale2(d.y))
           .attr("fill", props.color[index]);
       }
     });
@@ -440,90 +451,115 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       .style("pointer-events", "all")
       .on("mouseover", function () {
         focus.style("display", null);
+        d3.select(tooltipRef.current).style("opacity", 1);
       })
       .on("mouseout", function () {
         focus.style("display", "none");
-        d3.select(tooltipRef.current).style("display", "none");
+        d3.select(tooltipRef.current).style("opacity", 0);
       })
       .on("mousemove", (event: MouseEvent) => {
-        const x0 = xScale.invert(d3.pointer(event)[0]).getTime();
-        const i = d3
-          .bisector((d: any) => d.x * 1000)
-          .left(props.data[0].data, x0, 1);
-        const d0 = props.data[0].data[i - 1];
-        const d1 = props.data[0].data[i];
+        const pointerX = d3.pointer(event)[0];
+        let values: Datum[] = [] as Datum[];
 
-        const d = x0 - d0.x * 1000 > d1.x * 1000 - x0 ? d1 : d0;
+        props.data.forEach((dataSet: any, index: number) => {
+          if (props.chartTypes[index] === "line") {
+            const x0 = xScale.invert(pointerX).getTime();
+            let i = d3
+              .bisector((d: any) => d.x * 1000)
+              .left(props.data[index].data, x0, 1);
 
-        setTooltip([
-          { x: d.x, y: d.y },
-          { x: 0, y: 0 },
-        ]);
+            if (i <= 0) {
+              i = 1;
+            } else if (i >= props.data[index].data.length) {
+              i = props.data[index].data.length - 1;
+            }
 
-        d3.select(tooltipRef.current)
-          .style("display", "block")
-          .style(
+            const d0 = props.data[index].data[i - 1];
+            const d1 = props.data[index].data[i];
+
+            const d: Datum = x0 - d0.x * 1000 > d1.x * 1000 - x0 ? d1 : d0;
+
+            values = [...values, d];
+          }
+          if (props.chartTypes[index] === "bar") {
+          }
+        });
+
+        setTooltip(values);
+
+        const yAverage =
+          values.reduce((a: number, b: Datum) => a + b.y, 0) / values.length;
+
+        // @todo Combined tooltip position left or right from the cursor.
+        if (props.data.length > 1) {
+          // Is the cursor in the right half or in the left half of the chart?
+          if (pointerX > width / 2) {
+            // Right.
+            d3.select(tooltipRef.current).style(
+              "left",
+              margin.left +
+                xScale(values[0].x * 1000) -
+                (tooltipRef.current?.clientWidth as number) -
+                20 +
+                "px"
+            );
+          } else {
+            // Left.
+            d3.select(tooltipRef.current).style(
+              "left",
+              margin.left + xScale(values[0].x * 1000) + 20 + "px"
+            );
+          }
+        } else {
+          d3.select(tooltipRef.current).style(
             "left",
-            event.pageX - (tooltipRef.current?.clientWidth as number) / 2 + "px"
-          )
-          .style("top", event.pageY - 25 + "px");
-
-        focus
-          .select("circle.y")
-          .attr(
-            "transform",
-            "translate(" + xScale(d.x * 1000) + "," + yScale(d.y) + ")"
+            margin.left +
+              xScale(values[0].x * 1000) -
+              (tooltipRef.current?.clientWidth as number) / 2 +
+              "px"
           );
+        }
 
-        focus
-          .select("line.x")
-          .attr(
-            "transform",
-            "translate(" + xScale(d.x * 1000) + "," + yScale(d.y) + ")"
-          )
-          .attr("y2", height - yScale(d.y));
-
-        focus
-          .select("line.y")
-          .attr(
-            "transform",
-            "translate(" + width * -1 + "," + yScale(d.y) + ")"
-          )
-          .attr("x2", width + width);
+        d3.select(tooltipRef.current).style(
+          "top",
+          yScale(yAverage) - 45 + "px"
+        );
       });
   }, [size, props.data, darkMode]);
 
+  const handleFullScreen = () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      (
+        svgRef.current?.closest(".diagram-tile") as HTMLDivElement
+      ).requestFullscreen();
+    }
+  };
+
   return (
-    <div style={{ height: "100%", position: "relative" }}>
-      <svg ref={svgRef} />
-      <div
-        ref={tooltipRef}
-        className="d3-diagram-tooltip"
-        style={{
-          display: "none",
-          position: "fixed",
-          zIndex: 1000,
-          transition: "top, left 0.2s ease-in-out",
-        }}
-      >
+    <>
+      <Maximize onClick={handleFullScreen} />
+      <div style={{ height: "100%", position: "relative" }}>
+        <svg ref={svgRef} xmlns="http://www.w3.org/2000/svg" />
         <div
+          ref={tooltipRef}
+          className="d3-diagram-tooltip"
           style={{
-            padding: "7px",
-            color: "white",
-            borderLeft: `5px solid red`,
-            textAlign: "right",
+            opacity: 0,
+            position: "absolute",
+            zIndex: 1000,
+            transition: chartTransition,
+            pointerEvents: "none",
           }}
-          className="diagram-tooltip"
         >
-          <div style={{ marginBottom: "5px" }}>
-            {dayjs.unix(tooltip[0].x).format("DD.MM.YYYY HH:mm")}
-          </div>
-          {/*@todo configurable date/time*/}
-          <div>
-            {tooltip[0].y} {props.unit[0]}
-          </div>
+          <Tooltip
+            tooltips={tooltip}
+            color={colors}
+            unit={typeof props.unit === "string" ? [props.unit] : props.unit}
+          />
         </div>
       </div>
-    </div>
+    </>
   );
 };

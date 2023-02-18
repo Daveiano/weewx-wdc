@@ -12,6 +12,8 @@ import { DiagramBaseProps } from "../types";
 import { getAxisLeftLegendOffset, getMargins, Size } from "../../util/util";
 import { useWindowSize } from "../../util/util";
 import { Maximize } from "../../assets/maximize";
+import { addMarkers } from "./components/marker";
+import { getAxisGridColor } from "./components/util";
 
 export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
   props: DiagramBaseProps
@@ -29,7 +31,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
   const [darkMode, setDarkMode] = useState(
     document.documentElement.classList.contains("dark")
   );
-  const axisGridColor = darkMode ? "#525252" : "#dddddd";
+  const axisGridColor = getAxisGridColor(darkMode);
 
   let combinedData: any[] = [];
   if (props.data.length > 1) {
@@ -213,6 +215,19 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
           });
       }
     });
+
+    // Markers.
+    if (props.nivoProps.markerValue) {
+      addMarkers(
+        svgElement,
+        width,
+        yScale,
+        props.unit[0],
+        props.nivoProps.markerValue,
+        props.nivoProps.markerColor,
+        props.nivoProps.markerLabel
+      );
+    }
 
     // Axis styling.
     svgElement

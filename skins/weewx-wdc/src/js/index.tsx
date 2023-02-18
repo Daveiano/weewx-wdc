@@ -16,8 +16,6 @@ import { CombinedDiagram } from "./diagrams/d3/combined";
 import { D3BarDiagram } from "./diagrams/d3/bar";
 import { D3LineDiagram } from "./diagrams/d3/line";
 
-export const chartTransition = "left 0.25s ease-in-out, top 0.35s ease-in-out";
-
 // FEATURE FLAG: Use D3 diagrams.
 const useD3Diagrams = true;
 

@@ -13,6 +13,11 @@ export const addMarkers = (
     return false;
   }
 
+  // Marker outside of visible domain.
+  if (markerValue <= yScale.domain()[0] || markerValue >= yScale.domain()[1]) {
+    return false;
+  }
+
   if (!markerColor) {
     markerColor = "black";
   }

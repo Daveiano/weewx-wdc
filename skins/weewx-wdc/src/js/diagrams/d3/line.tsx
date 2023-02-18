@@ -6,16 +6,18 @@ import React, {
   RefObject,
 } from "react";
 import * as d3 from "d3";
-import dayjs from "dayjs";
-import color from "color";
 
 import { Datum, DiagramBaseProps } from "../types";
 import { getAxisLeftLegendOffset, getMargins, Size } from "../../util/util";
 import { useWindowSize } from "../../util/util";
-import { chartTransition } from "../..";
 import { Tooltip } from "./components/tooltip";
 import { Maximize } from "../../assets/maximize";
 import { addMarkers } from "./components/marker";
+import {
+  getAxisGridColor,
+  chartTransition,
+  getColors,
+} from "./components/util";
 
 export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
   props: DiagramBaseProps
@@ -32,26 +34,8 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
   );
 
   // Color handling
-  const axisGridColor = darkMode ? "#525252" : "#dddddd";
-  const backgroundColorDarkModeLightness = color("#393939").lightness();
-  const colors = darkMode
-    ? props.nivoProps.enableArea
-      ? props.color.map((c) =>
-          color(c).lightness() <= backgroundColorDarkModeLightness * 2
-            ? color(c).desaturate(0.1).lighten(0.75).hex()
-            : c
-        )
-      : props.color.map((c) => {
-          if (color(c).red() > 90) {
-            return color(c).desaturate(0.5).lighten(1.5).hex();
-          }
-          if (color(c).lightness() <= backgroundColorDarkModeLightness) {
-            return color(c).lighten(10).hex();
-          }
-
-          return color(c).lighten(0.25).hex();
-        })
-    : props.color;
+  const axisGridColor = getAxisGridColor(darkMode);
+  const colors = getColors(darkMode, props.nivoProps.enableArea, props.color);
 
   let combinedData: any[] = [];
   if (props.data.length > 1) {

@@ -242,16 +242,18 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
       // @see  http://www.d3noob.org/2014/07/my-favourite-tooltip-method-for-line.html
       const focus = svgElement.append("g").style("display", "none");
 
-      // append the y line
-      focus
-        .append("line")
-        .attr("class", "y")
-        .style("stroke", darkMode ? "#FFF" : "#000")
-        .style("stroke-dasharray", "7")
-        .style("opacity", 0.75)
-        .style("transition", "all 0.35s ease-in-out")
-        .attr("x1", width)
-        .attr("x2", width);
+      if (props.nivoProps.enableCrosshair) {
+        // Append the y line
+        focus
+          .append("line")
+          .attr("class", "y")
+          .style("stroke", darkMode ? "#FFF" : "#000")
+          .style("stroke-dasharray", "7")
+          .style("opacity", 0.75)
+          .style("transition", "all 0.35s ease-in-out")
+          .attr("x1", width)
+          .attr("x2", width);
+      }
 
       svgElement
         .append("rect")
@@ -288,13 +290,15 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
             // Tooltip over the bars.
             .style("top", yScale(d.y) - 45 + "px");
 
-          focus
-            .select("line.y")
-            .attr(
-              "transform",
-              "translate(" + width * -1 + "," + yScale(d.y) + ")"
-            )
-            .attr("x2", width + width);
+          if (props.nivoProps.enableCrosshair) {
+            focus
+              .select("line.y")
+              .attr(
+                "transform",
+                "translate(" + width * -1 + "," + yScale(d.y) + ")"
+              )
+              .attr("x2", width + width);
+          }
         });
     }
   }, [size, props.data, darkMode]);

@@ -19,9 +19,14 @@ import {
   getColors,
   getCurve,
 } from "./components/util";
+import { addLegend } from "./components/legend";
 
-export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
-  props: DiagramBaseProps
+type LineDiagramBaseProps = DiagramBaseProps & {
+  unit: string[];
+};
+
+export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
+  props: LineDiagramBaseProps
 ): React.ReactElement => {
   const svgRef: RefObject<SVGSVGElement> = useRef(null);
   const tooltipRef: RefObject<HTMLDivElement> = useRef(null);
@@ -305,40 +310,42 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
       // @see  http://www.d3noob.org/2014/07/my-favourite-tooltip-method-for-line.html
       const focus = svgElement.append("g").style("display", "none");
 
-      // append the x line
-      focus
-        .append("line")
-        .attr("class", "x")
-        .style("stroke", darkMode ? "#FFF" : "#000")
-        .style("stroke-dasharray", "7")
-        .style("opacity", 0.75)
-        .style("transition", "all 0.35s ease-in-out")
-        .attr("y1", 0)
-        .attr("y2", height);
-
-      props.data.forEach((dataSet: any, index: number) => {
-        // append the y line(s)
+      // Append the x line
+      if (props.nivoProps.enableCrosshair) {
         focus
           .append("line")
-          .attr("class", `y y-${index}`)
+          .attr("class", "x")
           .style("stroke", darkMode ? "#FFF" : "#000")
-          //.style("display", "block")
           .style("stroke-dasharray", "7")
           .style("opacity", 0.75)
           .style("transition", "all 0.35s ease-in-out")
-          .attr("x1", width)
-          .attr("x2", width);
+          .attr("y1", 0)
+          .attr("y2", height);
 
-        // append the circle(s) at the intersection
-        focus
-          .append("circle")
-          .attr("class", `y y-${index}`)
-          .style("opacity", 0.75)
-          .style("fill", "none")
-          .style("stroke", axisGridColor)
-          .style("transition", "all 0.35s ease-in-out")
-          .attr("r", 4);
-      });
+        props.data.forEach((dataSet: any, index: number) => {
+          // append the y line(s)
+          focus
+            .append("line")
+            .attr("class", `y y-${index}`)
+            .style("stroke", darkMode ? "#FFF" : "#000")
+            //.style("display", "block")
+            .style("stroke-dasharray", "7")
+            .style("opacity", 0.75)
+            .style("transition", "all 0.35s ease-in-out")
+            .attr("x1", width)
+            .attr("x2", width);
+
+          // append the circle(s) at the intersection
+          focus
+            .append("circle")
+            .attr("class", `y y-${index}`)
+            .style("opacity", 0.75)
+            .style("fill", "none")
+            .style("stroke", axisGridColor)
+            .style("transition", "all 0.35s ease-in-out")
+            .attr("r", 4);
+        });
+      }
 
       svgElement
         .append("rect")
@@ -418,96 +425,40 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
             yScale(yAverage) - 45 + "px"
           );
 
-          values.forEach((d: any, index: number) => {
-            focus
-              .select(`circle.y.y-${index}`)
-              .attr(
-                "transform",
-                "translate(" + xScale(d.x * 1000) + "," + yScale(d.y) + ")"
-              );
+          if (props.nivoProps.enableCrosshair) {
+            values.forEach((d: any, index: number) => {
+              focus
+                .select(`circle.y.y-${index}`)
+                .attr(
+                  "transform",
+                  "translate(" + xScale(d.x * 1000) + "," + yScale(d.y) + ")"
+                );
+
+              focus
+                .select(`line.y.y-${index}`)
+                .attr(
+                  "transform",
+                  "translate(" + width * -1 + "," + yScale(d.y) + ")"
+                )
+                .attr("x2", width + width);
+            });
 
             focus
-              .select(`line.y.y-${index}`)
+              .select("line.x")
               .attr(
                 "transform",
-                "translate(" + width * -1 + "," + yScale(d.y) + ")"
+                "translate(" +
+                  xScale(values[0].x * 1000) +
+                  "," +
+                  yScale(d3.max(values, (d: any) => d.y)) +
+                  ")"
               )
-              .attr("x2", width + width);
-          });
-
-          focus
-            .select("line.x")
-            .attr(
-              "transform",
-              "translate(" +
-                xScale(values[0].x * 1000) +
-                "," +
-                yScale(d3.max(values, (d: any) => d.y)) +
-                ")"
-            )
-            .attr("y2", height - yScale(d3.max(values, (d: any) => d.y)));
+              .attr("y2", height - yScale(d3.max(values, (d: any) => d.y)));
+          }
         });
 
       // Legend.
-      if (props.data.length > 1) {
-        // Add one dot in the legend for each name.
-        const size = 14,
-          x = 144,
-          y = 1.5;
-
-        const legend = svgElement.append("g");
-
-        props.data.map((item, index) => {
-          const legendItem = legend
-            .append("g")
-            .attr("transform", `translate(0, ${index * 21})`);
-
-          legendItem
-            .append("rect")
-            .attr("width", 160)
-            .attr("height", 19)
-            .attr("x", 0)
-            .attr("y", 0)
-            .attr("fill", "transparent");
-
-          legendItem
-            .selectAll("legend-rect")
-            .data([item.id])
-            .enter()
-            .append("rect")
-            .attr("x", x)
-            .attr("y", y)
-            .attr("width", size)
-            .attr("height", size)
-            .style("pointer-events", "none")
-            .style("fill", () => {
-              return props.color[index];
-            });
-
-          legendItem
-            .selectAll("legend-text")
-            .data([item.id])
-            .enter()
-            .append("text")
-            .attr("x", x - 10)
-            .attr("y", y + 6)
-            .style("fill", () => {
-              return props.color[index];
-            })
-            .text(function (d) {
-              return d;
-            })
-            .attr("text-anchor", "end")
-            .style("dominant-baseline", "central")
-            .style("pointer-events", "none")
-            .style("font-size", "11px");
-        });
-
-        legend.attr(
-          "transform",
-          `translate(${width - (legend.node()?.getBBox().width as number)}, 0)`
-        );
-      }
+      addLegend(svgElement, width, props.data, props.unit, props.color);
     }
   }, [size, props.data, darkMode]);
 

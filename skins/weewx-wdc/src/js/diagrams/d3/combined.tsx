@@ -23,10 +23,12 @@ import {
 } from "./components/util";
 import { Maximize } from "../../assets/maximize";
 import { Tooltip } from "./components/tooltip";
+import { addLegend } from "./components/legend";
 
 type CombinedDiagramBaseProps = DiagramBaseProps & {
   chartTypes: string[];
   observation: string[];
+  unit: string[];
 };
 
 export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
@@ -83,9 +85,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
     d3.select(svgRef.current).selectChildren().remove();
 
     // Determine the number of unique units to display.
-    const unitCombinedDistinct: string[] = Array.isArray(props.unit)
-      ? [...new Set(props.unit)]
-      : [props.unit];
+    const unitCombinedDistinct: string[] = [...new Set(props.unit)];
 
     // @see https://gist.github.com/mbostock/3019563
     const margin = {
@@ -217,9 +217,13 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           .tickFormat((d: any) => dayjs.unix(d).format("DD/MM"))
       );
 
-    // Y Axis.
+    // Y Axis, first sort the scales by the order of the units (data).
+    const sortedScales = Object.entries(scales).sort((a, b) => {
+      return props.unit.indexOf(a[0]) - props.unit.indexOf(b[0]);
+    });
+
     let index = 0;
-    for (const [unit, value] of Object.entries(scales)) {
+    for (const [unit, value] of sortedScales) {
       if (index >= 2) {
         return;
       }
@@ -447,20 +451,25 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       .style("stroke", axisGridColor)
       .style("stroke-width", "1");
 
+    // Legend.
+    addLegend(svgElement, width, props.data, props.unit, props.color, true);
+
     // Interactivity.
     // @see  http://www.d3noob.org/2014/07/my-favourite-tooltip-method-for-line.html
     const focus = svgElement.append("g").style("display", "none");
 
-    // append the x line
-    focus
-      .append("line")
-      .attr("class", "x")
-      .style("stroke", darkMode ? "#FFF" : "#000")
-      .style("stroke-dasharray", "7")
-      .style("opacity", 0.75)
-      .style("transition", "all 0.35s ease-in-out")
-      .attr("y1", 0)
-      .attr("y2", height);
+    if (props.nivoProps.enableCrosshair) {
+      // Append the x line
+      focus
+        .append("line")
+        .attr("class", "x")
+        .style("stroke", darkMode ? "#FFF" : "#000")
+        .style("stroke-dasharray", "7")
+        .style("opacity", 0.75)
+        .style("transition", "all 0.35s ease-in-out")
+        .attr("y1", 0)
+        .attr("y2", height);
+    }
 
     svgElement
       .append("rect")
@@ -523,12 +532,9 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
         setTooltip(values);
 
-        console.log(tooltipX);
-
         // Is the cursor in the right half or in the left half of the chart?
         if (pointerX > width / 2) {
           // Right.
-          console.log("rightz");
           d3.select(tooltipRef.current).style(
             "left",
             margin.left +
@@ -539,17 +545,18 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           );
         } else {
           // Left.
-          console.log("leftz");
           d3.select(tooltipRef.current).style(
             "left",
             margin.left + tooltipX + 20 + "px"
           );
         }
 
-        focus
-          .select("line.x")
-          .attr("transform", "translate(" + tooltipX + "," + 0 + ")")
-          .attr("y2", height);
+        if (props.nivoProps.enableCrosshair) {
+          focus
+            .select("line.x")
+            .attr("transform", "translate(" + tooltipX + "," + 0 + ")")
+            .attr("y2", height);
+        }
 
         d3.select(tooltipRef.current).style(
           "top",

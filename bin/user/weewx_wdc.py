@@ -1,4 +1,4 @@
-# Copyright 2022 David Bätge
+# Copyright 2023 David Bätge
 # Distributed under the terms of the GNU Public License (GPLv3)
 
 import datetime
@@ -912,7 +912,8 @@ class WdcDiagramUtil(SearchList):
             aggregate_type=aggregate_type,
             aggregate_interval=self.get_aggregate_interval(
                 observation=observation, context=context_key,
-                alltime_start=alltime_start, alltime_end=alltime_end
+                alltime_start=alltime_start, alltime_end=alltime_end,
+                combined_key=combined_key
             )
         )
 
@@ -1029,11 +1030,28 @@ class WdcDiagramUtil(SearchList):
         """
         alltime_start = kwargs.get("alltime_start", None)
         alltime_end = kwargs.get("alltime_end", None)
+        combined_key = kwargs.get("combined_key", None)
 
         if context == "yesterday":
             context = "day"
 
-        # First, check if something is configured via skin.conf.
+        # First, check combined obs.
+        if combined_key is not None:
+            try:
+                aggregate_interval = self.generator.skin_dict["DisplayOptions"]["diagrams"][
+                    context]["observations"][combined_key]["obs"][observation]["aggregate_interval"]
+                return aggregate_interval
+            except KeyError:
+                aggregate_interval = False
+
+            try:
+                aggregate_interval = self.generator.skin_dict["DisplayOptions"]["diagrams"][
+                    context]["observations"][combined_key]["aggregate_interval"]
+                return aggregate_interval
+            except KeyError:
+                aggregate_interval = False
+
+        # Check if something is configured via skin.conf.
         context_dict = self.generator.skin_dict["DisplayOptions"]["diagrams"].get(
             context, {})
         try:

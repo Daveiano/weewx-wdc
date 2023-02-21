@@ -17,7 +17,7 @@ import { D3BarDiagram } from "./diagrams/d3/bar";
 import { D3LineDiagram } from "./diagrams/d3/line";
 
 // FEATURE FLAG: Use D3 diagrams.
-const useD3Diagrams = false;
+const useD3Diagrams = true;
 
 const calendarDiagrams = document.querySelectorAll(
   "div.calendar-diagram-clim-wrap"
@@ -55,12 +55,17 @@ diagrams.forEach((diagram) => {
     diagram.dataset.obs &&
     diagram.dataset.context &&
     diagram.dataset.color &&
-    diagram.dataset.diagram
+    diagram.dataset.diagram &&
+    diagram.dataset.unit
   ) {
     let data: Serie[] = [];
     let nivoProps: any = {};
     const combined = diagram.classList.contains("combined");
     const diagramTypes = JSON.parse(diagram.dataset.diagram.replace(/'/g, '"'));
+    const diagramObservations = diagram.dataset.observations
+      ? JSON.parse(diagram.dataset.observations.replace(/'/g, '"'))
+      : [diagram.dataset.obs];
+    const diagramTypesUnique = [...new Set(diagramTypes)];
     const root = createRoot(diagram);
 
     if (combined) {
@@ -115,16 +120,12 @@ diagrams.forEach((diagram) => {
       }
     }
 
-    if (diagramTypes.length === 1 && diagramTypes[0] === "line") {
+    if (diagramTypesUnique.length === 1 && diagramTypesUnique[0] === "line") {
       if (useD3Diagrams) {
         root.render(
           <D3LineDiagram
             color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
-            unit={
-              diagram.dataset.unit
-                ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
-                : ""
-            }
+            unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
             data={data}
             observation={diagram.dataset.obs}
             context={diagram.dataset.context as context}
@@ -135,11 +136,7 @@ diagrams.forEach((diagram) => {
         root.render(
           <LineDiagram
             color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
-            unit={
-              diagram.dataset.unit
-                ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
-                : ""
-            }
+            unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
             data={data}
             observation={diagram.dataset.obs}
             context={diagram.dataset.context as context}
@@ -150,16 +147,12 @@ diagrams.forEach((diagram) => {
     }
 
     // Bar diagrams.
-    if (diagramTypes.length === 1 && diagramTypes[0] === "bar") {
+    if (diagramTypesUnique.length === 1 && diagramTypesUnique[0] === "bar") {
       if (useD3Diagrams) {
         root.render(
           <D3BarDiagram
             color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
-            unit={
-              diagram.dataset.unit
-                ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
-                : ""
-            }
+            unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
             data={data}
             observation={diagram.dataset.obs}
             context={diagram.dataset.context as context}
@@ -170,11 +163,7 @@ diagrams.forEach((diagram) => {
         root.render(
           <BarDiagram
             color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
-            unit={
-              diagram.dataset.unit
-                ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
-                : ""
-            }
+            unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
             data={data}
             observation={diagram.dataset.obs}
             context={diagram.dataset.context as context}
@@ -185,20 +174,16 @@ diagrams.forEach((diagram) => {
     }
 
     if (
-      diagramTypes.length > 1 &&
-      diagramTypes.includes("bar") &&
-      diagramTypes.includes("line")
+      diagramTypesUnique.length === 2 &&
+      diagramTypesUnique.includes("bar") &&
+      diagramTypesUnique.includes("line")
     ) {
       root.render(
         <CombinedDiagram
           color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
-          unit={
-            diagram.dataset.unit
-              ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
-              : ""
-          }
+          unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
           data={data}
-          observation={diagram.dataset.obs}
+          observation={diagramObservations}
           context={diagram.dataset.context as context}
           nivoProps={nivoProps}
           chartTypes={diagramTypes}

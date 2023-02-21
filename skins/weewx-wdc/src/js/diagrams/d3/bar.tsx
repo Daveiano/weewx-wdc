@@ -13,7 +13,7 @@ import { getAxisLeftLegendOffset, getMargins, Size } from "../../util/util";
 import { useWindowSize } from "../../util/util";
 import { Maximize } from "../../assets/maximize";
 import { addMarkers } from "./components/marker";
-import { getAxisGridColor } from "./components/util";
+import { getAxisGridColor, getColors } from "./components/util";
 
 export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
   props: DiagramBaseProps
@@ -32,6 +32,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
     document.documentElement.classList.contains("dark")
   );
   const axisGridColor = getAxisGridColor(darkMode);
+  const colors = getColors(darkMode, props.nivoProps.enableArea, props.color);
 
   let combinedData: any[] = [];
   if (props.data.length > 1) {
@@ -193,7 +194,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
         .attr("width", xScale.bandwidth() * 0.75)
         .attr("height", (d: any) => height - yScale(d.y))
         // @todo Dark mode handling.
-        .attr("fill", props.color[index]);
+        .attr("fill", colors[index]);
 
       if (props.nivoProps.enableLabel) {
         svgElement
@@ -245,7 +246,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
       focus
         .append("line")
         .attr("class", "y")
-        .style("stroke", "#000")
+        .style("stroke", darkMode ? "#FFF" : "#000")
         .style("stroke-dasharray", "7")
         .style("opacity", 0.75)
         .style("transition", "all 0.35s ease-in-out")
@@ -268,6 +269,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
         .on("mousemove", (event: MouseEvent) => {
           // @see https://stackoverflow.com/questions/38633082/d3-getting-invert-value-of-band-scales
           const xScaleStep = xScale.step();
+
           let i = Math.floor(d3.pointer(event)[0] / xScaleStep);
 
           if (i < 0) {
@@ -327,7 +329,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
             style={{
               padding: "7px",
               color: "white",
-              borderLeft: `5px solid ${props.color[0]}`,
+              borderLeft: `5px solid ${colors[0]}`,
               textAlign: "right",
             }}
             className="diagram-tooltip"

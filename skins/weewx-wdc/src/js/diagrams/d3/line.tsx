@@ -17,6 +17,7 @@ import {
   getAxisGridColor,
   chartTransition,
   getColors,
+  getCurve,
 } from "./components/util";
 
 export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
@@ -205,53 +206,7 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
 
     // Actual chart lines.
     props.data.forEach((dataSet: any, index: number) => {
-      let curve = d3.curveNatural;
-      switch (props.nivoProps.curve) {
-        case "basis": {
-          curve = d3.curveBasis;
-          break;
-        }
-        case "cardinal": {
-          curve = d3.curveCardinal;
-          break;
-        }
-        case "catmullRom": {
-          curve = d3.curveCatmullRom;
-          break;
-        }
-        case "linear": {
-          curve = d3.curveLinear;
-          break;
-        }
-        case "monotoneX": {
-          curve = d3.curveMonotoneX;
-          break;
-        }
-        case "monotoneY": {
-          curve = d3.curveMonotoneY;
-          break;
-        }
-        case "natural": {
-          curve = d3.curveNatural;
-          break;
-        }
-        case "step": {
-          curve = d3.curveStep;
-          break;
-        }
-        case "stepAfter": {
-          curve = d3.curveStepAfter;
-          break;
-        }
-        case "stepBefore": {
-          curve = d3.curveStepBefore;
-          break;
-        }
-        default: {
-          curve = d3.curveNatural;
-          break;
-        }
-      }
+      const curve = getCurve(props.nivoProps.curve);
 
       const lineGenerator = d3
         .line()
@@ -354,7 +309,7 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
       focus
         .append("line")
         .attr("class", "x")
-        .style("stroke", "#000")
+        .style("stroke", darkMode ? "#FFF" : "#000")
         .style("stroke-dasharray", "7")
         .style("opacity", 0.75)
         .style("transition", "all 0.35s ease-in-out")
@@ -366,7 +321,7 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
         focus
           .append("line")
           .attr("class", `y y-${index}`)
-          .style("stroke", "#000")
+          .style("stroke", darkMode ? "#FFF" : "#000")
           //.style("display", "block")
           .style("stroke-dasharray", "7")
           .style("opacity", 0.75)
@@ -583,6 +538,7 @@ export const D3LineDiagram: FunctionComponent<DiagramBaseProps> = (
           }}
         >
           <Tooltip
+            context={props.context}
             tooltips={tooltip}
             color={colors}
             unit={typeof props.unit === "string" ? [props.unit] : props.unit}

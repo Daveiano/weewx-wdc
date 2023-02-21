@@ -49,6 +49,7 @@
           #set $series_colors = []
           #set $series_labels = []
           #set $series_units = []
+          #set $series_observations = []
           #set $series_aggregate_type = []
           #set $diagram_types = []
           #set $combined_index = 0
@@ -59,6 +60,7 @@
             #set $series_name = $series_observation + 'Series' + str($diagram_index) + str($combined_index)
             #silent $series_names.append($series_name)
             #silent $series_labels.append($obs.label[$series_observation])
+            #silent $series_observations.append($series_observation)
             #silent $series_aggregate_type.append($get_aggregate_type($series_observation, $context, combined=$combined_diagram.obs[$combined_obs]))
             #silent $series_colors.append($get_color($comb_obs, $context, combined=True, combined_obs_key=$combined_obs, combined_obs=$series_observation))
             #set $series_observation_key = $get_custom_data_binding_obs_key($series_observation)
@@ -96,7 +98,8 @@
             data-color="$series_colors"
             data-unit="$series_units"
             data-obs="$combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation"
-            data-diagram="$list(dict.fromkeys($diagram_types))"
+            data-observations="$series_observations"
+            data-diagram="$diagram_types"
             data-context="$context"
             data-aggregate-type="$series_aggregate_type"
             data-nivo-props="$get_diagram_props($comb_obs, $context)"

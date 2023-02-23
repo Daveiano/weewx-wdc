@@ -28,6 +28,7 @@ type LineDiagramBaseProps = DiagramBaseProps & {
 export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
   props: LineDiagramBaseProps
 ): React.ReactElement => {
+  console.log(props);
   const svgRef: RefObject<SVGSVGElement> = useRef(null);
   const tooltipRef: RefObject<HTMLDivElement> = useRef(null);
   const size: Size = useWindowSize();
@@ -53,6 +54,32 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
   }
   combinedData.sort((a, b) => {
     return a.x - b.x;
+  });
+
+  const dataGroupedByUnit: { unit: string; data: Datum[] }[] = [
+    { unit: props.unit[0], data: props.data[0].data },
+  ];
+
+  props.unit.forEach((unit, index) => {
+    if (index === 0) {
+      return;
+    }
+
+    const alreadyGrouped = dataGroupedByUnit.find(
+      (group) => group.unit === unit
+    );
+
+    if (alreadyGrouped) {
+      alreadyGrouped.data = [...alreadyGrouped.data, ...props.data[index].data];
+      dataGroupedByUnit[
+        dataGroupedByUnit.findIndex((group) => group.unit === unit)
+      ] = alreadyGrouped;
+    } else {
+      dataGroupedByUnit.push({
+        unit: unit,
+        data: props.data[index].data,
+      });
+    }
   });
 
   const callback = (mutationsList: Array<MutationRecord>) => {
@@ -81,9 +108,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
     d3.select(svgRef.current).selectChildren().remove();
 
     // Determine the number of unique units to display.
-    const unitCombinedDistinct: string[] = Array.isArray(props.unit)
-      ? [...new Set(props.unit)]
-      : [props.unit];
+    const unitCombinedDistinct: string[] = [...new Set(props.unit)];
 
     // @see https://gist.github.com/mbostock/3019563
     const margin = {
@@ -91,7 +116,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
         // Second axis on the right?
         right: unitCombinedDistinct.length > 1 ? 50 : 10,
         bottom: 20,
-        left: getMargins(props.observation).left - 2.5,
+        left: getMargins(props.observation[0]).left - 2.5,
       },
       width = svgRef.current?.parentElement
         ? svgRef.current?.parentElement.clientWidth - margin.left - margin.right
@@ -107,19 +132,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
         .domain([
           new Date((combinedData[0].x as number) * 1000),
           new Date((combinedData[combinedData.length - 1].x as number) * 1000),
-        ]),
-      yScaleMin = props.nivoProps.yScaleMin
-        ? parseFloat(props.nivoProps.yScaleMin)
-        : d3.min(combinedData, (d: any) => d.y) -
-          parseFloat(props.nivoProps.yScaleOffset),
-      yScaleMax = props.nivoProps.yScaleMax
-        ? parseFloat(props.nivoProps.yScaleMax)
-        : d3.max(combinedData, (d: any) => d.y) +
-          parseFloat(props.nivoProps.yScaleOffset),
-      yScale = d3
-        .scaleLinear()
-        .domain([yScaleMin, yScaleMax])
-        .range([height, 0]);
+        ]);
 
     const svgElement = d3
       .select(svgRef.current)
@@ -157,71 +170,163 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
       .attr("stroke", axisGridColor)
       .attr("stroke-width", 1);
 
-    // y Axis.
-    svgElement
-      .append("g")
-      // @todo Wind direction degree/ordinal.
-      .call(
-        d3
-          .axisLeft(yScale)
-          .ticks(6)
-          .tickFormat((d) => {
-            return d.toString();
+    let processedUnits: string[] = [];
+    const scales: {
+      [key: string]: any;
+      y: any;
+      yScaleMin: number;
+    } = {} as any;
+
+    props.data.forEach((serie, index) => {
+      if (!processedUnits.includes(props.unit[index])) {
+        processedUnits = [...processedUnits, props.unit[index]];
+
+        const unitData = dataGroupedByUnit.find(
+          (data) => data.unit === props.unit[index]
+        );
+
+        // @todo Should be obs specific?
+        const yScaleMin = props.nivoProps.yScaleMin
+            ? parseFloat(props.nivoProps.yScaleMin)
+            : d3.min(unitData?.data as Datum[], (d: any) => d.y) -
+              parseFloat(props.nivoProps.yScaleOffset),
+          yScaleMax = props.nivoProps.yScaleMax
+            ? parseFloat(props.nivoProps.yScaleMax)
+            : d3.max(unitData?.data as Datum[], (d: any) => d.y) +
+              parseFloat(props.nivoProps.yScaleOffset),
+          yScale = d3
+            .scaleLinear()
+            .domain([yScaleMin, yScaleMax])
+            .range([height, 0]);
+
+        scales[props.unit[index]] = {
+          y: yScale,
+          yScaleMin,
+        };
+      }
+    });
+
+    // Y Axis.
+    let index = 0;
+    for (const [unit, value] of Object.entries(scales)) {
+      if (index >= 2) {
+        return;
+      }
+
+      const yScale = value.y;
+
+      // Y Axis left.
+      if (index === 0) {
+        svgElement
+          .append("g")
+          // @todo Wind direction degree/ordinal.
+          .call(
+            d3
+              .axisLeft(yScale)
+              .ticks(6)
+              .tickFormat((d) => {
+                return d.toString();
+              })
+              .tickSize(0)
+              .tickPadding(6)
+          );
+
+        // Y Axis Label.
+        svgElement
+          .append("g")
+          .attr(
+            "transform",
+            `translate(${
+              getAxisLeftLegendOffset(
+                props.observation[props.unit.indexOf(unit)]
+              ) + 2.25
+            }, ${height / 2}), rotate(-90)`
+          )
+          .append("text")
+          .attr("text-anchor", "middle")
+          .attr("font-size", "0.75em")
+          .style("dominant-baseline", "central")
+          .style("font-family", "sans-serif")
+          .text(unit);
+
+        // y Axis gutter.
+        // @see https://stackoverflow.com/a/17871021
+        svgElement
+          .selectAll("line.horizontalGrid")
+          .data(yScale.ticks())
+          .enter()
+          .append("line")
+          .attr("class", "horizontalGrid")
+          .attr("x1", 1)
+          .attr("x2", width)
+          .attr("y1", function (d) {
+            return yScale(d);
           })
-          .tickSize(0)
-          .tickPadding(6)
-      );
+          .attr("y2", function (d) {
+            return yScale(d);
+          })
+          .attr("fill", "none")
+          .attr("shape-rendering", "crispEdges")
+          .attr("stroke", axisGridColor)
+          .attr("stroke-width", "1px");
+      }
 
-    // Y Axis Label.
-    svgElement
-      .append("g")
-      .attr(
-        "transform",
-        `translate(${getAxisLeftLegendOffset(props.observation) + 2.25}, ${
-          height / 2
-        }), rotate(-90)`
-      )
-      .append("text")
-      .attr("text-anchor", "middle")
-      .attr("font-size", "0.75em")
-      .style("dominant-baseline", "central")
-      .style("font-family", "sans-serif")
-      .text(props.unit[0]);
+      // Only draw right axis if there are multiple units.
+      if (index > 0) {
+        svgElement
+          .append("g")
+          .attr("transform", "translate(" + width + ",0)")
+          // @todo Wind direction degree/ordinal.
+          .call(
+            d3
+              .axisRight(yScale)
+              .ticks(6)
+              .tickFormat((d) => {
+                return d.toString();
+              })
+              .tickSize(0)
+              .tickPadding(6)
+          );
 
-    // y Axis gutter.
-    // @see https://stackoverflow.com/a/17871021
-    svgElement
-      .selectAll("line.horizontalGrid")
-      .data(yScale.ticks())
-      .enter()
-      .append("line")
-      .attr("class", "horizontalGrid")
-      .attr("x1", 1)
-      .attr("x2", width)
-      .attr("y1", function (d) {
-        return yScale(d);
-      })
-      .attr("y2", function (d) {
-        return yScale(d);
-      })
-      .attr("fill", "none")
-      .attr("shape-rendering", "crispEdges")
-      .attr("stroke", axisGridColor)
-      .attr("stroke-width", "1px");
+        // Y Axis Label.
+        svgElement
+          .append("g")
+          .attr(
+            "transform",
+            `translate(${
+              -getAxisLeftLegendOffset(
+                props.observation[props.unit.indexOf(unit)]
+              ) -
+              2.25 +
+              width
+            }, ${height / 2}), rotate(90)`
+          )
+          .append("text")
+          .attr("text-anchor", "middle")
+          .attr("font-size", "0.75em")
+          .style("dominant-baseline", "central")
+          .style("font-family", "sans-serif")
+          .text(unit);
+      }
+
+      index++;
+    }
 
     // Actual chart lines.
     props.data.forEach((dataSet: any, index: number) => {
       const curve = getCurve(props.nivoProps.curve);
 
-      const lineGenerator = d3
-        .line()
-        .x(function (d: any) {
-          return xScale(d.x * 1000);
-        })
-        .y(function (d: any) {
-          return yScale(d.y);
-        })
-        .curve(curve);
+      const yScale = scales[props.unit[index]]["y"],
+        yScaleMin = scales[props.unit[index]]["yScaleMin"],
+        lineGenerator = d3
+          .line()
+          .x(function (d: any) {
+            return xScale(d.x * 1000);
+          })
+          .y(function (d: any) {
+            return yScale(d.y);
+          })
+          .curve(curve);
 
       // Dots.
       if (props.nivoProps.enablePoints) {
@@ -286,16 +391,20 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
     });
 
     // Markers.
-    if (props.nivoProps.markerValue) {
-      addMarkers(
-        svgElement,
-        width,
-        yScale,
-        props.unit[0],
-        props.nivoProps.markerValue,
-        props.nivoProps.markerColor,
-        props.nivoProps.markerLabel
-      );
+    if (Object.entries(scales).length === 1) {
+      if (props.nivoProps.markerValue) {
+        addMarkers(
+          svgElement,
+          width,
+          scales[props.unit[0]]["y"],
+          props.unit[0],
+          props.nivoProps.markerValue,
+          props.nivoProps.markerColor,
+          props.nivoProps.markerLabel
+        );
+      }
+    } else {
+      // @todo Marker per unit.
     }
 
     // Axis styling.
@@ -324,16 +433,18 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
 
         props.data.forEach((dataSet: any, index: number) => {
           // append the y line(s)
-          focus
-            .append("line")
-            .attr("class", `y y-${index}`)
-            .style("stroke", darkMode ? "#FFF" : "#000")
-            //.style("display", "block")
-            .style("stroke-dasharray", "7")
-            .style("opacity", 0.75)
-            .style("transition", "all 0.35s ease-in-out")
-            .attr("x1", width)
-            .attr("x2", width);
+          if (Object.entries(scales).length === 1) {
+            focus
+              .append("line")
+              .attr("class", `y y-${index}`)
+              .style("stroke", darkMode ? "#FFF" : "#000")
+              //.style("display", "block")
+              .style("stroke-dasharray", "7")
+              .style("opacity", 0.75)
+              .style("transition", "all 0.35s ease-in-out")
+              .attr("x1", width)
+              .attr("x2", width);
+          }
 
           // append the circle(s) at the intersection
           focus
@@ -387,10 +498,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
 
           setTooltip(values);
 
-          const yAverage =
-            values.reduce((a: number, b: Datum) => a + b.y, 0) / values.length;
-
-          // @todo Combined tooltip position left or right from the cursor.
+          // Combined tooltip position left or right from the cursor.
           if (props.data.length > 1) {
             // Is the cursor in the right half or in the left half of the chart?
             if (pointerX > width / 2) {
@@ -420,13 +528,18 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
             );
           }
 
+          // @todo Probably the second solution is the overall better one?
           d3.select(tooltipRef.current).style(
             "top",
-            yScale(yAverage) - 45 + "px"
+            d3.pointer(event)[1] -
+              (tooltipRef.current?.clientHeight as number) / 2 +
+              "px"
           );
 
           if (props.nivoProps.enableCrosshair) {
             values.forEach((d: any, index: number) => {
+              const yScale = scales[props.unit[index]]["y"];
+
               focus
                 .select(`circle.y.y-${index}`)
                 .attr(
@@ -434,26 +547,44 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
                   "translate(" + xScale(d.x * 1000) + "," + yScale(d.y) + ")"
                 );
 
-              focus
-                .select(`line.y.y-${index}`)
-                .attr(
-                  "transform",
-                  "translate(" + width * -1 + "," + yScale(d.y) + ")"
-                )
-                .attr("x2", width + width);
+              if (Object.entries(scales).length === 1) {
+                focus
+                  .select(`line.y.y-${index}`)
+                  .attr(
+                    "transform",
+                    "translate(" + width * -1 + "," + yScale(d.y) + ")"
+                  )
+                  .attr("x2", width + width);
+              }
             });
 
-            focus
-              .select("line.x")
-              .attr(
-                "transform",
-                "translate(" +
-                  xScale(values[0].x * 1000) +
-                  "," +
-                  yScale(d3.max(values, (d: any) => d.y)) +
-                  ")"
-              )
-              .attr("y2", height - yScale(d3.max(values, (d: any) => d.y)));
+            if (Object.entries(scales).length === 1) {
+              focus
+                .select("line.x")
+                .attr(
+                  "transform",
+                  "translate(" +
+                    xScale(values[0].x * 1000) +
+                    "," +
+                    scales[props.unit[0]]["y"](
+                      d3.max(values, (d: any) => d.y)
+                    ) +
+                    ")"
+                )
+                .attr(
+                  "y2",
+                  height -
+                    scales[props.unit[0]]["y"](d3.max(values, (d: any) => d.y))
+                );
+            } else {
+              focus
+                .select("line.x")
+                .attr(
+                  "transform",
+                  "translate(" + xScale(values[0].x * 1000) + "," + 0 + ")"
+                )
+                .attr("y2", height);
+            }
           }
         });
 

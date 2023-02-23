@@ -119,6 +119,10 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         yScaleMin: number;
       } = {} as any;
 
+    // @todo First calculate dataGroupedByUnit,
+    // then use this to calculate the scales (yScaleOffset
+    // relative to all values of unit (dataGroupedByUnit)).
+
     // Group data per unit. First only process bar scales bc we need them later for the line scales.
     props.data.forEach((serie, index) => {
       // Unit not yet added/proccessed.
@@ -172,7 +176,6 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
                   (combinedData[combinedData.length - 1].x as number) * 1000
                 ),
               ])
-              // @todo bandwidth / 2
               .range([barScaleOffset, width - barScaleOffset]),
             // @todo Should be obs specific?
             yScaleMin = props.nivoProps.yScaleMin
@@ -228,6 +231,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         return;
       }
 
+      // Y Axis left.
       if (index === 0) {
         svgElement
           .append("g")
@@ -249,7 +253,9 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           .attr(
             "transform",
             `translate(${
-              getAxisLeftLegendOffset(props.observation[0]) + 2.25
+              getAxisLeftLegendOffset(
+                props.observation[props.unit.indexOf(unit)]
+              ) + 2.25
             }, ${height / 2}), rotate(-90)`
           )
           .append("text")
@@ -257,7 +263,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           .attr("font-size", "0.75em")
           .style("dominant-baseline", "central")
           .style("font-family", "sans-serif")
-          .text(props.unit[0]);
+          .text(unit);
 
         // Y Axis Grid.
         svgElement
@@ -302,7 +308,11 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           .attr(
             "transform",
             `translate(${
-              -getAxisLeftLegendOffset(props.observation[index]) - 2.25 + width
+              -getAxisLeftLegendOffset(
+                props.observation[props.unit.indexOf(unit)]
+              ) -
+              2.25 +
+              width
             }, ${height / 2}), rotate(90)`
           )
           .append("text")
@@ -310,7 +320,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           .attr("font-size", "0.75em")
           .style("dominant-baseline", "central")
           .style("font-family", "sans-serif")
-          .text(props.unit[index]);
+          .text(unit);
       }
 
       index++;

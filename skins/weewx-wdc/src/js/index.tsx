@@ -127,7 +127,7 @@ diagrams.forEach((diagram) => {
             color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
             unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
             data={data}
-            observation={diagram.dataset.obs}
+            observation={diagramObservations}
             context={diagram.dataset.context as context}
             nivoProps={nivoProps}
           />

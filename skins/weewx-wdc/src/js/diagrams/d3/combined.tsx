@@ -47,6 +47,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
   const axisGridColor = getAxisGridColor(darkMode);
   const colors = getColors(darkMode, props.nivoProps.enableArea, props.color);
 
+  // Combine all data into one array and sort by x value.
   let combinedData: any[] = [];
   if (props.data.length > 1) {
     for (const serie of props.data) {
@@ -58,6 +59,21 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
   combinedData.sort((a, b) => {
     return a.x - b.x;
   });
+
+  // @todo same as in bar.tsx
+  let dateFormat = "HH:mm";
+  switch (props.context) {
+    case "week":
+      dateFormat = "DD.MM";
+      break;
+    case "month":
+      dateFormat = "DD.MM";
+      break;
+    case "year":
+    case "alltime":
+      dateFormat = "DD.MM";
+      break;
+  }
 
   const callback = (mutationsList: Array<MutationRecord>) => {
     mutationsList.forEach((mutation) => {
@@ -92,7 +108,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         top: 20,
         // Second axis on the right?
         right: unitCombinedDistinct.length > 1 ? 50 : 10,
-        bottom: 20,
+        bottom: 40,
         left: getMargins(props.observation[0]).left - 2.5,
       },
       width = svgRef.current?.parentElement
@@ -119,10 +135,6 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         yScaleMin: number;
       } = {} as any;
 
-    // @todo First calculate dataGroupedByUnit,
-    // then use this to calculate the scales (yScaleOffset
-    // relative to all values of unit (dataGroupedByUnit)).
-
     // Group data per unit. First only process bar scales bc we need them later for the line scales.
     props.data.forEach((serie, index) => {
       // Unit not yet added/proccessed.
@@ -133,8 +145,6 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           const xScale = d3
             .scaleBand()
             .range([0, width])
-            // @todo Configurable date/time.
-            // dayjs.unix(d.x).format("DD/MM/YYYY")
             .domain(serie.data.map((d: any) => d.x));
 
           // @todo Should be obs specific?
@@ -217,8 +227,13 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           .axisBottom(scales[barCharUnit]["x"])
           .tickSize(0)
           .tickPadding(6)
-          .tickFormat((d: any) => dayjs.unix(d).format("DD/MM"))
-      );
+          .tickFormat((d: any) => dayjs.unix(d).format(dateFormat))
+      )
+      .selectAll("text")
+      .style("text-anchor", "end")
+      .attr("dx", "-.8em")
+      .attr("dy", ".15em")
+      .attr("transform", "rotate(-65)");
 
     // Y Axis, first sort the scales by the order of the units (data).
     const sortedScales = Object.entries(scales).sort((a, b) => {
@@ -400,7 +415,6 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         svgElement
           .append("path")
           .attr("fill", "none")
-          //@todo Dark mode color handling.
           .attr("stroke", colors[index])
           .attr(
             "stroke-width",
@@ -427,7 +441,6 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             "height",
             (d: any) => height - scales[props.unit[index]]["y"](d.y)
           )
-          // @todo Dark mode handling.
           .attr("fill", colors[index]);
 
         if (props.nivoProps.enableLabel) {
@@ -462,7 +475,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       .style("stroke-width", "1");
 
     // Legend.
-    addLegend(svgElement, width, props.data, props.unit, props.color, true);
+    addLegend(svgElement, width, props.data, props.unit, colors, true);
 
     // Interactivity.
     // @see  http://www.d3noob.org/2014/07/my-favourite-tooltip-method-for-line.html

@@ -21,19 +21,25 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
   const svgRef: RefObject<SVGSVGElement> = useRef(null);
   const tooltipRef: RefObject<HTMLDivElement> = useRef(null);
   const size: Size = useWindowSize();
-  const [tooltip, setTooltip] = useState<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
-  });
+  const [tooltip, setTooltip] = useState<{ x: number; y: number; end: number }>(
+    {
+      x: 0,
+      y: 0,
+      end: 0,
+    }
+  );
 
   // @todo This adds one MutationObserver per LineDiagram. Add this to one
   //    general component which shares the state.
   const [darkMode, setDarkMode] = useState(
     document.documentElement.classList.contains("dark")
   );
+
+  // Color handling.
   const axisGridColor = getAxisGridColor(darkMode);
   const colors = getColors(darkMode, props.nivoProps.enableArea, props.color);
 
+  // Combine all data into one array and sort by x value.
   let combinedData: any[] = [];
   if (props.data.length > 1) {
     for (const serie of props.data) {
@@ -45,6 +51,21 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
   combinedData.sort((a, b) => {
     return a.x - b.x;
   });
+
+  // @todo same as in combined.tsx
+  let dateFormat = "HH:mm";
+  switch (props.context) {
+    case "week":
+      dateFormat = "DD.MM";
+      break;
+    case "month":
+      dateFormat = "DD.MM";
+      break;
+    case "year":
+    case "alltime":
+      dateFormat = "DD.MM";
+      break;
+  }
 
   const callback = (mutationsList: Array<MutationRecord>) => {
     mutationsList.forEach((mutation) => {
@@ -81,7 +102,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
         top: 20,
         // Second axis on the right?
         right: unitCombinedDistinct.length > 1 ? 50 : 10,
-        bottom: 20,
+        bottom: 40,
         left: getMargins(props.observation).left - 2.5,
       },
       width = svgRef.current?.parentElement
@@ -120,15 +141,18 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
     svgElement
       .append("g")
       .attr("transform", "translate(0," + height + ")")
-      // @todo Configurable date/time.
-      // dayjs.unix(d.x).format("DD/MM/YYYY")
       .call(
         d3
           .axisBottom(xScale)
-          .tickFormat((d) => dayjs.unix(parseInt(d)).format("DD.MM"))
+          .tickFormat((d) => dayjs.unix(parseInt(d)).format(dateFormat))
           .tickSize(0)
           .tickPadding(6)
-      );
+      )
+      .selectAll("text")
+      .style("text-anchor", "end")
+      .attr("dx", "-.8em")
+      .attr("dy", ".15em")
+      .attr("transform", "rotate(-65)");
 
     // y Axis.
     svgElement.append("g").call(
@@ -193,7 +217,6 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
         .attr("y", (d: any) => yScale(d.y))
         .attr("width", xScale.bandwidth() * 0.75)
         .attr("height", (d: any) => height - yScale(d.y))
-        // @todo Dark mode handling.
         .attr("fill", colors[index]);
 
       if (props.nivoProps.enableLabel) {
@@ -282,7 +305,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
 
           const d = props.data[0].data[i];
 
-          setTooltip({ x: d.x, y: d.y });
+          setTooltip({ x: d.x, y: d.y, end: d.end });
 
           d3.select(tooltipRef.current)
             .style("display", "block")
@@ -339,8 +362,8 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
             className="diagram-tooltip"
           >
             <div style={{ marginBottom: "5px", whiteSpace: "nowrap" }}>
-              {/*@todo configurable date/time*/}
-              {dayjs.unix(tooltip.x).format("DD.MM.YYYY HH:mm")}
+              {dayjs.unix(tooltip.x).format(dateFormat)} -{" "}
+              {dayjs.unix(tooltip.end).format(dateFormat)}
             </div>
             <div>
               {tooltip.y} {props.unit[0]}

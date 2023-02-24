@@ -6,9 +6,15 @@ import React, {
   RefObject,
 } from "react";
 import * as d3 from "d3";
+import { useMediaQuery } from "@react-hook/media-query";
 
 import { Datum, DiagramBaseProps } from "../types";
-import { getAxisLeftLegendOffset, getMargins, Size } from "../../util/util";
+import {
+  getAxisLeftLegendOffset,
+  getMargins,
+  getTimeDifferenceInMonths,
+  Size,
+} from "../../util/util";
 import { useWindowSize } from "../../util/util";
 import { Tooltip } from "./components/tooltip";
 import { Maximize } from "../../assets/maximize";
@@ -31,6 +37,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
   console.log(props);
   const svgRef: RefObject<SVGSVGElement> = useRef(null);
   const tooltipRef: RefObject<HTMLDivElement> = useRef(null);
+  const small = useMediaQuery("(max-width: 672px)");
   const size: Size = useWindowSize();
   const [tooltip, setTooltip] = useState<Datum[]>([] as Datum[]);
 
@@ -44,6 +51,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
   const axisGridColor = getAxisGridColor(darkMode);
   const colors = getColors(darkMode, props.nivoProps.enableArea, props.color);
 
+  // Combine all data into one array and sort by x value.
   let combinedData: any[] = [];
   if (props.data.length > 1) {
     for (const serie of props.data) {
@@ -56,6 +64,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
     return a.x - b.x;
   });
 
+  // Group data by unit.
   const dataGroupedByUnit: { unit: string; data: Datum[] }[] = [
     { unit: props.unit[0], data: props.data[0].data },
   ];
@@ -81,6 +90,36 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
       });
     }
   });
+
+  const timeDifferenceInMonths = getTimeDifferenceInMonths(combinedData);
+  let format = "%H:%M";
+  let tickValues = 5;
+
+  // @todo Optimize this.
+  switch (props.context) {
+    case "week":
+      format = "%d.%m";
+      tickValues = 5;
+      break;
+    case "month":
+      format = "%d.%m";
+      tickValues = small ? 3 : 5;
+      break;
+    case "year":
+      format = "%d.%m";
+      tickValues = small ? 3 : 5;
+      break;
+    case "alltime":
+      if (timeDifferenceInMonths > 60) {
+        format = "%m.%y";
+        tickValues = small ? 3 : 5;
+      } else {
+        format = "%m.%y";
+        tickValues = small ? 3 : 5;
+      }
+
+      break;
+  }
 
   const callback = (mutationsList: Array<MutationRecord>) => {
     mutationsList.forEach((mutation) => {
@@ -145,8 +184,13 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
     svgElement
       .append("g")
       .attr("transform", "translate(0," + height + ")")
-      // @todo configurable tick date/time format.
-      .call(d3.axisBottom(xScale).ticks(5, "%d.%m").tickSize(0).tickPadding(6));
+      .call(
+        d3
+          .axisBottom(xScale)
+          .ticks(tickValues, format)
+          .tickSize(0)
+          .tickPadding(6)
+      );
 
     // x Axis gutter.
     // @see https://stackoverflow.com/a/17871021
@@ -381,7 +425,6 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
       svgElement
         .append("path")
         .attr("fill", "none")
-        //@todo Dark mode color handling.
         .attr("stroke", colors[index])
         .attr(
           "stroke-width",
@@ -528,7 +571,6 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
             );
           }
 
-          // @todo Probably the second solution is the overall better one?
           d3.select(tooltipRef.current).style(
             "top",
             d3.pointer(event)[1] -
@@ -589,7 +631,14 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
         });
 
       // Legend.
-      addLegend(svgElement, width, props.data, props.unit, props.color);
+      addLegend(
+        svgElement,
+        width,
+        props.data,
+        props.unit,
+        colors,
+        unitCombinedDistinct.length > 1
+      );
     }
   }, [size, props.data, darkMode]);
 

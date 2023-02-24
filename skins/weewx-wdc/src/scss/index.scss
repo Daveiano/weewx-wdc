@@ -369,6 +369,11 @@ header.section-header {
   > div {
     padding-bottom: 1rem;
   }
+  #panel-climatogram {
+    div.diagram.combined {
+      height: 400px;
+    }
+  }
 }
 .climatological-tile {
   bx-tooltip-body {
@@ -583,7 +588,7 @@ header.section-header {
     .value {
       height: 95%;
       .diagram {
-        height: 100%;
+        height: 100% !important;
       }
     }
   }

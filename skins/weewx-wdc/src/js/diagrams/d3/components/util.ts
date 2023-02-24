@@ -127,7 +127,7 @@ export const getDateFormattedTooltip = (
       format = "YYYY/MM/DD";
       break;
     case "alltime":
-      format = "YYYY/MM/DD";
+      format = "YYYY/MM";
       break;
   }
 

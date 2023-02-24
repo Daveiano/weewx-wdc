@@ -39,6 +39,9 @@
     $gettext('Avg.') $obs.label.outTemp
   </bx-tab>
   #end if
+  <bx-tab id="tab-climatogram" target="panel-climatogram" value="climatogram"
+    >$gettext('Climatogram')</bx-tab
+  >
 </bx-tabs>
 
 <div class="bx-ce-demo-devenv--tab-panels">
@@ -139,4 +142,28 @@
     ></div>
   </div>
   #end if
+  <div
+    id="panel-climatogram"
+    role="tabpanel"
+    aria-labelledby="tab-climatogram"
+    hidden
+  >
+    #if $context == 'year'
+    <div class="year">
+      <!-- prettier-ignore -->
+      #set global $comb_obs = "climatogram_year"
+      #set global $combined_diagram = $DisplayOptions.get("diagrams", {}).get("combined_observations", {}).get('climatogram_year', {})
+      #set global $diagram_index = 9999
+      #include "includes/combined-diagram-tile.inc"
+    </div>
+    #else
+    <div class="alltime">
+      <!-- prettier-ignore -->
+      #set global $comb_obs = "climatogram_statistics"
+      #set global $combined_diagram = $DisplayOptions.get("diagrams", {}).get("combined_observations", {}).get('climatogram_statistics', {})
+      #set global $diagram_index = 9999
+      #include "includes/combined-diagram-tile.inc"
+    </div>
+    #end if
+  </div>
 </div>

@@ -3,6 +3,7 @@
 
 import datetime
 import calendar
+import pprint
 import time
 import os
 import json
@@ -1051,6 +1052,20 @@ class WdcDiagramUtil(SearchList):
             except KeyError:
                 aggregate_interval = False
 
+            try:
+                aggregate_interval = self.generator.skin_dict["DisplayOptions"]["diagrams"][
+                    "combined_observations"][combined_key]["obs"][observation]["aggregate_interval"]
+                return aggregate_interval
+            except KeyError:
+                aggregate_interval = False
+
+            try:
+                aggregate_interval = self.generator.skin_dict["DisplayOptions"]["diagrams"][
+                    "combined_observations"][combined_key]["aggregate_interval"]
+                return aggregate_interval
+            except KeyError:
+                aggregate_interval = False
+
         # Check if something is configured via skin.conf.
         context_dict = self.generator.skin_dict["DisplayOptions"]["diagrams"].get(
             context, {})
@@ -1292,8 +1307,11 @@ class WdcDiagramUtil(SearchList):
         diagrams_config = self.skin_dict["DisplayOptions"]["diagrams"]
         diagram_base_props = diagrams_config[self.get_diagram(obs)]
 
-        diagram_context_props = accumulateLeaves(
-            diagrams_config[context]['observations'][obs], max_level=3)
+        try:
+            diagram_context_props = accumulateLeaves(
+                diagrams_config[context]['observations'][obs], max_level=3)
+        except KeyError:
+            diagram_context_props = {}
 
         if obs in diagrams_config:
             return {

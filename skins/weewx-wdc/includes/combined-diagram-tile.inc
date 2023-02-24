@@ -1,10 +1,20 @@
-<!--prettier-ignore-->
 #errorCatcher Echo
+
+<!--prettier-ignore-->
 #encoding UTF-8
-#set diagram_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-4"
+## Input vars:
+##   $combined_diagram - The diagrams config
+##   $comb_obs - The skin observation (e.g. tempdew or temp_min_max_avg)
+
+#set $diagram_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-4"
 #if $DisplayOptions.get('layout', 'alternative') == 'classic'
-  #set diagram_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6"
+  #set $diagram_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6"
 #end if
+
+#if $comb_obs == "climatogram_year" or $comb_obs == "climatogram_statistics"
+  #set $diagram_classes = "bx--col"
+#end if
+
 <!--prettier-ignore-->
 #set $combined_diagram_obs = {}
 #for $combined_obs in $combined_diagram.obs.keys()

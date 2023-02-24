@@ -2,7 +2,7 @@ import { Scale, ScaleLinearSpec } from "@nivo/scales";
 import { Margin } from "@nivo/core";
 import { Series } from "../diagrams/types";
 import dayjs from "dayjs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Ref, RefObject } from "react";
 export interface Size {
   width: number | undefined;
   height: number | undefined;
@@ -32,6 +32,24 @@ export const useWindowSize = (): Size => {
     return () => window.removeEventListener("resize", handleResize);
   }, []); // Empty array ensures that effect is only run on mount
   return windowSize;
+};
+
+// @see https://dev.to/jmalvarez/check-if-an-element-is-visible-with-react-hooks-27h8
+export const useIsVisible = (ref: RefObject<SVGSVGElement>): boolean => {
+  const [isIntersecting, setIntersecting] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) =>
+      setIntersecting(entry.isIntersecting)
+    );
+
+    observer.observe(ref.current as Element);
+    return () => {
+      observer.disconnect();
+    };
+  }, [ref]);
+
+  return isIntersecting;
 };
 
 /**

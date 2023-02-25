@@ -95,4 +95,52 @@ test.describe("Climatological days", () => {
     await expect(avgTemp).toHaveScreenshot();
     expect(await avgTemp.locator("> script").innerText()).toMatchSnapshot();
   });
+
+  test("Climatogram Stats", async ({ page }) => {
+    const climatogram = page.locator("#panel-climatogram");
+
+    await page.locator("bx-tab[value='climatogram']").click();
+    await expect(climatogram).toBeVisible();
+
+    await expect(climatogram).toHaveScreenshot();
+    // Rain data.
+    expect(
+      await climatogram
+        .locator(".diagram-tile.combined .value > script >> nth=0")
+        .innerText()
+    ).toMatchSnapshot();
+
+    // outTemp data.
+    expect(
+      await climatogram
+        .locator(".diagram-tile.combined .value > script >> nth=1")
+        .innerText()
+    ).toMatchSnapshot();
+  });
+
+  test("Climatogram Year", async ({ page }) => {
+    await page.goto(
+      "artifacts-alternative-weewx-html/public_html/year-2021.html"
+    );
+
+    const climatogram = page.locator("#panel-climatogram");
+
+    await page.locator("bx-tab[value='climatogram']").click();
+    await expect(climatogram).toBeVisible();
+
+    await expect(climatogram).toHaveScreenshot();
+    // Rain data.
+    expect(
+      await climatogram
+        .locator(".diagram-tile.combined .value > script >> nth=0")
+        .innerText()
+    ).toMatchSnapshot();
+
+    // outTemp data.
+    expect(
+      await climatogram
+        .locator(".diagram-tile.combined .value > script >> nth=1")
+        .innerText()
+    ).toMatchSnapshot();
+  });
 });

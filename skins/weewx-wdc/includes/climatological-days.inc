@@ -1,6 +1,8 @@
 <!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
+#set $show_climatogram_year = $context == 'year' and $DisplayOptions.get("climatogram_enable_year_stats", False)
+#set $show_climatogram_alltime = $context == 'alltime' and $DisplayOptions.get("climatogram_enable_stats", False)
 
 <script
   type="module"
@@ -16,10 +18,9 @@
   type="module"
   src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/tabs.min.js"
 ></script>
-
+<!--prettier-ignore-->
 <bx-tabs trigger-content="Select an item" value="table" type="container">
   <bx-tab id="tab-table" target="panel-table" value="table">Table</bx-tab>
-  <!--prettier-ignore-->
   #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'rain').has_data
   <bx-tab
     id="tab-diagram-rain"
@@ -29,7 +30,6 @@
     $gettext('rainDays')
   </bx-tab>
   #end if
-  <!--prettier-ignore-->
   #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'outTemp').has_data
   <bx-tab
     id="tab-diagram-temp-avg"
@@ -39,9 +39,11 @@
     $gettext('Avg.') $obs.label.outTemp
   </bx-tab>
   #end if
+  #if $show_climatogram_year or $show_climatogram_alltime
   <bx-tab id="tab-climatogram" target="panel-climatogram" value="climatogram"
     >$gettext('Climatogram')</bx-tab
   >
+  #end if
 </bx-tabs>
 
 <div class="bx-ce-demo-devenv--tab-panels">
@@ -142,28 +144,30 @@
     ></div>
   </div>
   #end if
+  <!-- prettier-ignore -->
+  #if $show_climatogram_year or $show_climatogram_alltime
+  <!-- prettier-ignore -->
   <div
     id="panel-climatogram"
     role="tabpanel"
     aria-labelledby="tab-climatogram"
     hidden
   >
-    #if $context == 'year'
-    <div class="year">
-      <!-- prettier-ignore -->
-      #set global $comb_obs = "climatogram_year"
-      #set global $combined_diagram = $DisplayOptions.get("diagrams", {}).get("combined_observations", {}).get('climatogram_year', {})
-      #set global $diagram_index = 9999
-      #include "includes/combined-diagram-tile.inc"
-    </div>
-    #else
-    <div class="alltime">
-      <!-- prettier-ignore -->
-      #set global $comb_obs = "climatogram_statistics"
-      #set global $combined_diagram = $DisplayOptions.get("diagrams", {}).get("combined_observations", {}).get('climatogram_statistics', {})
-      #set global $diagram_index = 9999
-      #include "includes/combined-diagram-tile.inc"
-    </div>
+    #if $show_climatogram_year
+      <div class="year">
+        #set global $comb_obs = "climatogram_year"
+        #set global $combined_diagram = $DisplayOptions.get("diagrams", {}).get("combined_observations", {}).get('climatogram_year', {})
+        #set global $diagram_index = 9999
+        #include "includes/combined-diagram-tile.inc"
+      </div>
+    #else if $show_climatogram_alltime
+      <div class="alltime">
+        #set global $comb_obs = "climatogram_statistics"
+        #set global $combined_diagram = $DisplayOptions.get("diagrams", {}).get("combined_observations", {}).get('climatogram_statistics', {})
+        #set global $diagram_index = 9999
+        #include "includes/combined-diagram-tile.inc"
+      </div>
     #end if
   </div>
+  #end if
 </div>

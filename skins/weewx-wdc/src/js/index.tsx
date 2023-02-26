@@ -1,11 +1,10 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import type { Serie } from "@nivo/line";
 
 import { CarbonDataTableStateManager } from "carbon-data-table-state-manager";
 import { BarDiagram } from "./diagrams/bar";
 import { LineDiagram } from "./diagrams/line";
-import type { context, DiagramBaseProps, Series } from "./diagrams/types";
+import type { context, Serie, Series } from "./diagrams/types";
 import { CalendarDiagram } from "./diagrams/calendar";
 import { StatisticsSelect } from "./components/statistics-select";
 
@@ -13,6 +12,12 @@ import "./../scss/index.scss";
 import { WindRoseDiagram } from "./diagrams/windrose";
 import { DWDWarning } from "./components/dwd-warning";
 import { DWDForecast } from "./components/dwd-forecast";
+import { CombinedDiagram } from "./diagrams/d3/combined";
+import { D3BarDiagram } from "./diagrams/d3/bar";
+import { D3LineDiagram } from "./diagrams/d3/line";
+
+// FEATURE FLAG: Use D3 diagrams.
+const useD3Diagrams = (window as any).weewxWdcConfig.ENABLE_D3_DIAGRAMS;
 
 const calendarDiagrams = document.querySelectorAll(
   "div.calendar-diagram-clim-wrap"
@@ -49,11 +54,18 @@ diagrams.forEach((diagram) => {
     diagram.dataset.aggregateType &&
     diagram.dataset.obs &&
     diagram.dataset.context &&
-    diagram.dataset.color
+    diagram.dataset.color &&
+    diagram.dataset.diagram &&
+    diagram.dataset.unit
   ) {
     let data: Serie[] = [];
     let nivoProps: any = {};
     const combined = diagram.classList.contains("combined");
+    const diagramTypes = JSON.parse(diagram.dataset.diagram.replace(/'/g, '"'));
+    const diagramObservations = diagram.dataset.observations
+      ? JSON.parse(diagram.dataset.observations.replace(/'/g, '"'))
+      : [diagram.dataset.obs];
+    const diagramTypesUnique = [...new Set(diagramTypes)];
     const root = createRoot(diagram);
 
     if (combined) {
@@ -108,38 +120,75 @@ diagrams.forEach((diagram) => {
       }
     }
 
-    switch (diagram.dataset.diagram) {
-      case "bar":
+    if (diagramTypesUnique.length === 1 && diagramTypesUnique[0] === "line") {
+      if (useD3Diagrams) {
         root.render(
-          <BarDiagram
+          <D3LineDiagram
             color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
-            unit={
-              diagram.dataset.unit
-                ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
-                : ""
-            }
+            unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
             data={data}
-            observation={diagram.dataset.obs}
+            observation={diagramObservations}
             context={diagram.dataset.context as context}
             nivoProps={nivoProps}
           />
         );
-        break;
-      default:
+      } else {
         root.render(
           <LineDiagram
             color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
-            unit={
-              diagram.dataset.unit
-                ? JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))
-                : ""
-            }
+            unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
             data={data}
             observation={diagram.dataset.obs}
             context={diagram.dataset.context as context}
             nivoProps={nivoProps}
           />
         );
+      }
+    }
+
+    // Bar diagrams.
+    if (diagramTypesUnique.length === 1 && diagramTypesUnique[0] === "bar") {
+      if (useD3Diagrams) {
+        root.render(
+          <D3BarDiagram
+            color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
+            unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
+            data={data}
+            observation={diagram.dataset.obs}
+            context={diagram.dataset.context as context}
+            nivoProps={nivoProps}
+          />
+        );
+      } else {
+        root.render(
+          <BarDiagram
+            color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
+            unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
+            data={data}
+            observation={diagram.dataset.obs}
+            context={diagram.dataset.context as context}
+            nivoProps={nivoProps}
+          />
+        );
+      }
+    }
+
+    if (
+      diagramTypesUnique.length === 2 &&
+      diagramTypesUnique.includes("bar") &&
+      diagramTypesUnique.includes("line")
+    ) {
+      root.render(
+        <CombinedDiagram
+          color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
+          unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
+          data={data}
+          observation={diagramObservations}
+          context={diagram.dataset.context as context}
+          nivoProps={nivoProps}
+          chartTypes={diagramTypes}
+        />
+      );
     }
   }
 });

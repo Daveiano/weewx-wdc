@@ -84,13 +84,6 @@
           #end if
 
           <!--prettier-ignore-->
-          #if 'forecast_diagram' in $Extras['weewx-DWD']
-          <div class="bx--row" style="margin-bottom: 1.5rem">
-            #include "includes/dwd-forecast.inc"
-          </div>
-          #end if
-
-          <!--prettier-ignore-->
           #if $to_bool($Extras['weewx-DWD']['show_pressure_map']) or $to_bool($Extras['weewx-DWD']['show_warning_map'])
           <div class="bx--row" style="margin-bottom: 1.5rem">
             <div

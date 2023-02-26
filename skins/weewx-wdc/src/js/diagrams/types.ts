@@ -1,4 +1,15 @@
-import type { Serie } from "@nivo/line";
+interface Datum {
+  x: number;
+  y: number;
+  end: number;
+  [key: string]: number;
+}
+
+interface Serie {
+  id: string | number;
+  data: Datum[];
+  [key: string]: any;
+}
 
 type context = "day" | "week" | "month" | "year" | "alltime";
 
@@ -12,7 +23,7 @@ type CalendarDiagramBaseProps = {
 
 type DiagramBaseProps = {
   color: string[];
-  unit?: string | [string];
+  unit: string | string[];
   data: Serie[];
   observation: string;
   context: context;
@@ -31,13 +42,31 @@ type DiagramBaseProps = {
     yScaleOffset: string;
     yScaleMin?: string;
     yScaleMax?: string;
+    curve:
+      | "basis"
+      | "cardinal"
+      | "catmullRom"
+      | "linear"
+      | "monotoneX"
+      | "monotoneY"
+      | "natural"
+      | "step"
+      | "stepAfter"
+      | "stepBefore";
   };
+};
+
+type TooltipProps = {
+  tooltips: Datum[];
+  color: string[];
+  unit: string[];
 };
 
 type WindRoseProps = {
   data: any[];
 };
 
+// @todo What is this?
 interface Series {
   x: number;
   y: number;
@@ -47,6 +76,9 @@ export {
   CalendarDiagramBaseProps,
   DiagramBaseProps,
   context,
+  Datum,
+  Serie,
   Series,
+  TooltipProps,
   WindRoseProps,
 };

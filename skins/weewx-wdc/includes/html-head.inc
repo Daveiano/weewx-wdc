@@ -78,7 +78,8 @@
       "Archive_day": "$gettext('Archive day')",
       "stats_helper_text": "$gettext('Choose a day to view a statistics page. You can also filter/search for a date by start typing, eg:')",
       "Format_is": "$gettext('Format is')",
-    }
+    },
+    ENABLE_D3_DIAGRAMS: $int($DisplayOptions.get('ENABLE_D3_DIAGRAMS', True) == "True")
   };
 </script>
 

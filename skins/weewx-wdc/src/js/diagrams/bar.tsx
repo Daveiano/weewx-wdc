@@ -11,6 +11,10 @@ import { Maximize } from "../assets/maximize";
 export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
   props: DiagramBaseProps
 ): React.ReactElement => {
+  const unitCombinedDistinct = Array.isArray(props.unit)
+    ? [...new Set(props.unit)]
+    : props.unit;
+
   const small = useMediaQuery("(max-width: 672px)");
   const handle = useFullScreenHandle();
   let dateFormat = "HH:mm";
@@ -37,7 +41,7 @@ export const BarDiagram: FunctionComponent<DiagramBaseProps> = (
         tickRotation: -65,
       }}
       axisLeft={{
-        legend: props.unit,
+        legend: unitCombinedDistinct?.toString(),
         legendOffset: -50,
         legendPosition: "middle",
         tickSize: 0,

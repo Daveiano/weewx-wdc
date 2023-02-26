@@ -531,6 +531,8 @@ Line 133:
 - Configurable Rounding [GH-89]
 - Make markers configurable [GH-106]
 - Automatic Refresh [GH-105]
+- Support for combining different diagram types (eg. line and bar) [GH-75]. This adds an own implementaion of chart rendering based directly on [D3.js](https://d3js.org/), please see https://github.com/Daveiano/weewx-wdc/wiki/Configuration#ENABLE_D3_DIAGRAMS
+- Along [GH-75]: Added new climatogram (combined chart consiting of rain as bar and outTemp as line) for statistics and yearly statistics pages
 
 **Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki) for information on how to configure the new features.**
 
@@ -608,6 +610,16 @@ Line 84:
 +stat_tiles_show_sum = rain, ET, hail, snow, lightning_strike_count, windrun
 ```
 
+Line 109:
+
+```diff
+# Climatogram on year and statistics pages.
++climatogram_enable_stats = True
++climatogram_enable_year_stats = True
+
++ENABLE_D3_DIAGRAMS = FALSE
+```
+
 Line 103:
 
 ```diff
@@ -638,6 +650,26 @@ Line 96:
 ```diff
       [[diagrams]]
          [[[combined_observations]]]
++           [[[[climatogram_year]]]]
++               label = "Climatogram"
++               curve="natural"
++               aggregate_interval = month
++               [[[[[obs]]]]]
++                   [[[[[[rain]]]]]]
++                       observation = "rain"
++                   [[[[[[outTemp]]]]]]
++                       observation = "outTemp"
+
++           [[[[climatogram_statistics]]]]
++               label = "Climatogram"
++               curve="natural"
++               aggregate_interval = year
++               [[[[[obs]]]]]
++                   [[[[[[rain]]]]]]
++                       observation = "rain"
++                   [[[[[[outTemp]]]]]]
++                       observation = "outTemp"
+
             [[[[temp_min_max_avg]]]]
                 label = "Temperature Min/Max/Avg"
                 pointSize = 3
@@ -687,6 +719,7 @@ Line 96:
                  yScaleMin = 0
 +                enableArea = True
 +                areaOpacity = 0.5
++                curve = linear
                  [[[[[obs]]]]]
                      [[[[[[speed]]]]]]
                          observation = "windSpeed"
@@ -710,6 +743,7 @@ Line 96:
          [[[bar]]]
              enableLabel = False
              isInteractive = True
++            enableCrosshair = True
              yScaleOffset = 3
 
          # Observation specific settings.
@@ -776,6 +810,7 @@ Line 96:
 +            color = "#666666"
          [[[rain]]]
              aggregate_type = "sum"
++            yScaleMin = 0
              yScaleOffset = 0.25
 +            type = bar
 +            color = "#0198E1"
@@ -798,6 +833,7 @@ Line 96:
 +            color = "#e61919"
          [[[ET]]]
              aggregate_type = "sum"
++            yScaleMin = 0
              yScaleOffset = 0.02
 -        [[[pressure]]]
 -            yScaleOffset = 1

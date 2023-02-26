@@ -3,7 +3,6 @@
 
 import datetime
 import calendar
-import pprint
 import time
 import os
 import json
@@ -89,17 +88,27 @@ class WdcGeneralUtil(SearchList):
         except KeyError:
             return obs_key
 
-    def get_data_binding(self, obs_key, context=None):
+    def get_data_binding(self, obs_key, context=None, combined_key=None):
         """
         Get the data binding for a given observation.
 
         Args:
             obs_key (string): The observation key
             context (string): The context
+            combined_key (string): The combined diagram key, eg. tempdew.
 
         Returns:
             string: The data binding
         """
+        if combined_key is not None and context is not None:
+            try:
+                return self.skin_dict["DisplayOptions"]["diagrams"][context]["observations"][combined_key]['data_binding']
+            except KeyError:
+                try:
+                    return self.skin_dict["DisplayOptions"]["diagrams"]["combined_observations"][combined_key]['data_binding']
+                except KeyError:
+                    pass
+
         if context is not None:
             try:
                 return self.skin_dict["DisplayOptions"]["diagrams"][context]["observations"][obs_key]['data_binding']
@@ -710,32 +719,6 @@ class WdcGeneralUtil(SearchList):
         except KeyError:
             return {}
 
-    def get_dwd_forecast(self, obs):
-        """
-        Get dwd forecast series.
-
-        Args:
-            obs (string): The data_type.
-        """
-        binding = self.generator.skin_dict["Extras"]["weewx-DWD"]["forecast_diagram"].get(
-            "data_binding", "dwd_binding"
-        )
-        db_manager = self.generator.db_binder.get_manager(binding)
-
-        # Now
-        start_ts = time.time()
-        # Now + 11 days
-        end_dt = datetime.date.today() + datetime.timedelta(days=11)
-        end_ts = time.mktime(end_dt.timetuple())
-
-        dwd_start_vt, dwd_stop_vt, dwd_vt = weewx.xtypes.get_series(
-            obs,
-            TimeSpan(start_ts, end_ts),
-            db_manager
-        )
-
-        return (zip(dwd_start_vt[0], dwd_stop_vt[0], rounder(dwd_vt[0], WdcDiagramUtil.get_rounding(self, obs))))
-
 
 class WdcArchiveUtil(SearchList):
     def get_day_archive_enabled(self):
@@ -1073,8 +1056,11 @@ class WdcDiagramUtil(SearchList):
             aggregate_interval = search_up(
                 context_dict['observations'][observation], 'aggregate_interval')
         except KeyError:
-            aggregate_interval = search_up(
-                context_dict, 'aggregate_interval', False)
+            try:
+                aggregate_interval = search_up(
+                    context_dict, 'aggregate_interval', False)
+            except (KeyError, AttributeError):
+                aggregate_interval = False
         except AttributeError:
             aggregate_interval = False
 

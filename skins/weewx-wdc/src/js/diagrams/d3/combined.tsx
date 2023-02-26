@@ -282,6 +282,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             )
             .append("text")
             .attr("text-anchor", "middle")
+            .attr("class", "axis-label-left")
             .attr("font-size", "0.75em")
             .style("dominant-baseline", "central")
             .style("font-family", "sans-serif")
@@ -340,6 +341,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             .append("text")
             .attr("text-anchor", "middle")
             .attr("font-size", "0.75em")
+            .attr("class", "axis-label-right")
             .style("dominant-baseline", "central")
             .style("font-family", "sans-serif")
             .text(unit);

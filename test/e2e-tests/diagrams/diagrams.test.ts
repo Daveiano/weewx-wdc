@@ -402,4 +402,48 @@ test.describe("Diagrams", () => {
       await barometer.locator(".value script").innerText()
     ).toMatchSnapshot();
   });
+
+  test("Multiple Units Chart", async ({ page }) => {
+    await page.goto("artifacts-custom-weewx-html/public_html/month.html");
+
+    const pressureTemp = page.locator(
+      ".diagram-tile[data-test='outTemp-dewpoint-barometer-pressure']"
+    );
+    const rainTemp = page.locator(
+      ".diagram-tile[data-test='rain-outTemp-outTemp']"
+    );
+
+    expect(
+      await pressureTemp.locator(".value script >> nth=0").innerText()
+    ).toMatchSnapshot();
+    expect(
+      await pressureTemp.locator(".value script >> nth=1").innerText()
+    ).toMatchSnapshot();
+    expect(
+      await pressureTemp.locator(".value script >> nth=2").innerText()
+    ).toMatchSnapshot();
+    expect(
+      await pressureTemp.locator(".value script >> nth=3").innerText()
+    ).toMatchSnapshot();
+
+    expect(
+      await rainTemp.locator(".value script >> nth=0").innerText()
+    ).toMatchSnapshot();
+    expect(
+      await rainTemp.locator(".value script >> nth=1").innerText()
+    ).toMatchSnapshot();
+    expect(
+      await rainTemp.locator(".value script >> nth=2").innerText()
+    ).toMatchSnapshot();
+
+    // Text axis labels.
+    await expect(pressureTemp.locator(".axis-label-left")).toHaveText("°C");
+    await expect(pressureTemp.locator(".axis-label-right")).toHaveText(" mbar");
+
+    await expect(rainTemp.locator(".axis-label-left")).toHaveText(" cm");
+    await expect(rainTemp.locator(".axis-label-right")).toHaveText("°C");
+
+    await expect(pressureTemp).toHaveScreenshot();
+    await expect(rainTemp).toHaveScreenshot();
+  });
 });

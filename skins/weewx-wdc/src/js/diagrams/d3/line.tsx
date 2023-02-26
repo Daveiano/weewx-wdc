@@ -287,6 +287,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
             }, ${height / 2}), rotate(-90)`
           )
           .append("text")
+          .attr("class", "axis-label-left")
           .attr("text-anchor", "middle")
           .attr("font-size", "0.75em")
           .style("dominant-baseline", "central")
@@ -347,6 +348,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
           )
           .append("text")
           .attr("text-anchor", "middle")
+          .attr("class", "axis-label-right")
           .attr("font-size", "0.75em")
           .style("dominant-baseline", "central")
           .style("font-family", "sans-serif")

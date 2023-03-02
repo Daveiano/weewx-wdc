@@ -106,7 +106,6 @@
             #set $context_key = $context
           ## @todo Experimetal - use parameter for time_span.
           #else if $context == 'dwd-forecast'
-            #set $obs_context = $yesterday($data_binding=$combined_obs_binding)
             ## Now
             #set $start_ts = time.time()
             ## Now + 11 days

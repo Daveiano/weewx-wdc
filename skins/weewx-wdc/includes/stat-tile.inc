@@ -38,7 +38,7 @@
 
           <!--prettier-ignore-->
           <span>
-            #if $context == 'day'
+            #if $context == 'day' and not $daily_archive
               $getattr($current($data_binding=$skin_obs_binding), $skin_obs_key)
 
               #if $show_wind_dir and $current.windDir.has_data
@@ -102,15 +102,15 @@
               #end if
             #end if
             <!--prettier-ignore-->
-            #if $context != 'day' and not $get_show_sum($partial_obs) and not $get_show_max($partial_obs)
+            #if ($context != 'day' or $daily_archive) and not $get_show_sum($partial_obs) and not $get_show_max($partial_obs)
             <span>$gettext("Avg")</span>
             #end if
             <!--prettier-ignore-->
-            #if $context != 'day' and $get_show_sum($partial_obs)
+            #if ($context != 'day' or $daily_archive) and $get_show_sum($partial_obs)
             <span>$gettext("Total")</span>
             #end if
             <!--prettier-ignore-->
-            #if $context != 'day' and $get_show_max($partial_obs)
+            #if ($context != 'day' or $daily_archive) and $get_show_max($partial_obs)
             <span>$gettext("Max")</span>
             #end if
           </span>

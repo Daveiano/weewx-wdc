@@ -288,18 +288,12 @@
   );
 
   bxSideNavLinks.forEach((element) => {
-    const isFront =
-      (element.getAttribute("href") &&
-        element.getAttribute("href").includes("index.html")) ||
-      window.location.pathname === "/";
-
     if (
-      isFront ||
-      (element.getAttribute("href") &&
-        window.location.pathname.includes(
-          // Remove leading slash.
-          element.getAttribute("href").replace(/^\/+/, "")
-        ))
+      element.getAttribute("href") &&
+      window.location.pathname.includes(
+        // Remove leading slash.
+        element.getAttribute("href").replace(/^\/+/, "")
+      )
     ) {
       element.setAttribute("active", true);
     }

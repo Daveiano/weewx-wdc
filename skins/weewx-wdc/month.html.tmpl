@@ -2,6 +2,7 @@
 #errorCatcher Echo
 #encoding UTF-8
 #from datetime import datetime, timedelta
+#from time import strftime, localtime
 #attr $context = 'month'
 #attr $use_parameter_month = False
 #attr $use_parameter_year = False
@@ -24,7 +25,7 @@
               <h1>$gettext("Monthly Weather Conditions")</h1>
               <h2>
                 <!--prettier-ignore-->
-                $month.start - $month.end
+                $month.start - $strftime($get_time_format_dict['month'], $localtime($month.end.raw - 1))
               </h2>
             </header>
           </div>

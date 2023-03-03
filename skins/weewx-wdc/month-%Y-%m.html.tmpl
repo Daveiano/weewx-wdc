@@ -1,6 +1,7 @@
 <!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
+#from time import strftime, localtime
 #attr $context = 'month'
 #attr $use_parameter_month = True
 #attr $use_parameter_year = False
@@ -21,7 +22,8 @@
           <div class="bx--row">
             <header class="bx--col page-header">
               <h1>$gettext("Monthly Weather Conditions")</h1>
-              <h2>$month.start - $month.end</h2>
+              <!-- prettier-ignore -->
+              <h2>$month.start - $strftime($get_time_format_dict['month'], $localtime($month.end.raw - 1))</h2>
               <h3>
                 <a
                   class="noaa-report-link"

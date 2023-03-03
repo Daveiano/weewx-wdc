@@ -45,8 +45,14 @@
             #silent $series_aggregate_type.append($get_aggregate_type($series_observation, combined=$combined_diagram.obs[$combined_obs]))
             #if 'color' in $combined_diagram.obs[$combined_obs] then $series_colors.append($combined_diagram.obs[$combined_obs].color) else $series_colors.append($get_color($series_observation))#
 
+          #if $series_observation == 'windDir'
+            #set $wobs = 'wind'
+          #else
+            #set $wobs = $series_observation
+          #end if
           <!--prettier-ignore-->
           #if $context == 'month' and $use_parameter_month
+
           <script>
             /* prettier-ignore */
             var $series_name = $getattr($month, $series_observation).series(aggregate_type=$get_aggregate_type($series_observation, combined=$combined_diagram.obs[$combined_obs]), aggregate_interval=$get_aggregate_interval($series_observation, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($series_observation)).json;

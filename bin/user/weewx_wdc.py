@@ -998,6 +998,9 @@ class WdcDiagramUtil(SearchList):
         ):
             return "max"
 
+        if observation == "windDir":
+            return "vecdir"
+
         return "avg"
 
     def get_aggregate_interval(self, observation, context, *args, **kwargs):
@@ -1412,10 +1415,10 @@ class WdcDiagramUtil(SearchList):
             )
 
         windDir_start_vt, windDir_stop_vt, windDir_vt = weewx.xtypes.get_series(
-            "windDir",
+            "wind",
             TimeSpan(start_ts, end_ts),
             db_manager,
-            aggregate_type="avg",
+            aggregate_type="vecdir",
             aggregate_interval=self.get_aggregate_interval(
                 observation="windDir", context=context
             )
@@ -2020,8 +2023,13 @@ class WdcTableUtil(SearchList):
                     observation_binding)
 
             if db_manager.has_data(observation_key, TimeSpan(start_ts, end_ts)):
+                if observation_key == 'windDir':
+                    wobs = 'wind'
+                else:
+                    wobs = observation_key
+
                 series_start_vt, series_stop_vt, observation_vt = weewx.xtypes.get_series(
-                    observation_key,
+                    wobs,
                     TimeSpan(start_ts, end_ts),
                     db_manager,
                     aggregate_type=self.diagram_util.get_aggregate_type(

@@ -82,50 +82,50 @@
             #silent $series_units.append($get_unit_label($get_unit_for_obs($combined_obs, $series_observation_key, $context, combined=$combined_diagram, combined_key=$comb_obs)))
             #silent $diagram_types.append($get_diagram($series_observation_key))
 
-          <!--prettier-ignore-->
-          #if $context == 'month' and $use_parameter_month
-            #set $obs_context = $month($data_binding=$combined_obs_binding)
-            #set $start_ts=$obs_context.start.raw
-            #set $end_ts=$obs_context.end.raw
-            #set $context_key = $context
-          <!--prettier-ignore-->
-          #else if $context == 'year' and $use_parameter_year
-            #set $obs_context = $year($data_binding=$combined_obs_binding)
-            #set $start_ts=$obs_context.start.raw
-            #set $end_ts=$obs_context.end.raw
-            #set $context_key = $context
-          #else if $context == 'alltime'
-            #set $obs_context = $alltime($data_binding=$combined_obs_binding)
-            #set $start_ts=$obs_context.start.raw
-            #set $end_ts=$obs_context.end.raw
-            #set $context_key = $context
-          #else if $context == 'yesterday'
-            #set $obs_context = $yesterday($data_binding=$combined_obs_binding)
-            #set $start_ts=$obs_context.start.raw
-            #set $end_ts=$obs_context.end.raw
-            #set $context_key = $context
-          ## @todo Experimetal - use parameter for time_span.
-          #else if $context == 'dwd-forecast'
-            ## Now
-            #set $start_ts = time.time()
-            ## Now + 11 days
-            #set $end_dt = $datetime.date.today() + $datetime.timedelta(days=11)
-            #set $end_ts = $time.mktime($end_dt.timetuple())
-            #set $context_key = 'week'
-          #else
-            #set $obs_context = $span($data_binding=$combined_obs_binding ,$hour_delta=$get_hour_delta($context), $boundary=$get_diagram_boundary($context))
-            #set $start_ts=$obs_context.start.raw
-            #set $end_ts=$obs_context.end.raw
-            #set $context_key = $context
-          #end if
+            <!--prettier-ignore-->
+            #if $context == 'month' and $use_parameter_month
+              #set $obs_context = $month($data_binding=$combined_obs_binding)
+              #set $start_ts=$obs_context.start.raw
+              #set $end_ts=$obs_context.end.raw
+              #set $context_key = $context
+            <!--prettier-ignore-->
+            #else if $context == 'year' and $use_parameter_year
+              #set $obs_context = $year($data_binding=$combined_obs_binding)
+              #set $start_ts=$obs_context.start.raw
+              #set $end_ts=$obs_context.end.raw
+              #set $context_key = $context
+            #else if $context == 'alltime'
+              #set $obs_context = $alltime($data_binding=$combined_obs_binding)
+              #set $start_ts=$obs_context.start.raw
+              #set $end_ts=$obs_context.end.raw
+              #set $context_key = $context
+            #else if $context == 'yesterday'
+              #set $obs_context = $yesterday($data_binding=$combined_obs_binding)
+              #set $start_ts=$obs_context.start.raw
+              #set $end_ts=$obs_context.end.raw
+              #set $context_key = $context
+            ## @todo Experimetal - use parameter for time_span.
+            #else if $context == 'dwd-forecast'
+              ## Now
+              #set $start_ts = time.time()
+              ## Now + 11 days
+              #set $end_dt = $datetime.date.today() + $datetime.timedelta(days=11)
+              #set $end_ts = $time.mktime($end_dt.timetuple())
+              #set $context_key = 'week'
+            #else
+              #set $obs_context = $span($data_binding=$combined_obs_binding ,$hour_delta=$get_hour_delta($context), $boundary=$get_diagram_boundary($context))
+              #set $start_ts=$obs_context.start.raw
+              #set $end_ts=$obs_context.end.raw
+              #set $context_key = $context
+            #end if
 
-          <script>
+            <script>
             /* prettier-ignore */
             var $series_name = $get_diagram_data($observation=$combined_obs, $observation_key=$series_observation_key, $context_key=$context_key, $start_ts=$start_ts, $end_ts=$end_ts, $data_binding=$combined_obs_binding, $alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y'), combined=$combined_diagram, combined_key=$comb_obs);
-          </script>
+            </script>
 
-          <!--prettier-ignore-->
-          #set $combined_index = $combined_index + 1
+            <!--prettier-ignore-->
+            #set $combined_index = $combined_index + 1
           #end for
 
           <div

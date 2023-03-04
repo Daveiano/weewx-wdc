@@ -70,15 +70,15 @@
 
                 #if $show_wind_dir and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").has_data
                   <span class="stat-wind-dir">
-                    #set global $windDir_deg = $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").avg.degree_compass
+                    #set global $windDir_deg = $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "wind").vecdir.degree_compass
                     #include "includes/icons/wind-direction.inc"
-                    $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").avg
+                    $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "wind").vecdir
                   </span>
                 #else if $show_wind_dir_ordinal and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").has_data
                   <span class="stat-wind-dir">
-                    #set global $windDir_deg = $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").avg.degree_compass
+                    #set global $windDir_deg = $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "wind").vecdir.degree_compass
                     #include "includes/icons/wind-direction.inc"
-                    $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").avg.ordinal_compass
+                    $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "wind").vecdir.ordinal_compass
                   </span>
                 #else if $show_gust_dir and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windGustDir").has_data
                   <span class="stat-wind-dir">
@@ -141,7 +141,11 @@
             <p class="stat-label">$gettext($label_avg)</p>
             <p class="stat-value">
               <!--prettier-ignore-->
-              $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), $partial_obs).avg
+              #if $partial_obs == 'windDir'
+                $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "wind").vecdir
+              #else
+                $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), $partial_obs).avg
+              #end if
             </p>
           </div>
         </div>

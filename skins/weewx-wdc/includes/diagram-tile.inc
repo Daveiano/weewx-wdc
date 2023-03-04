@@ -21,32 +21,38 @@
           <!--prettier-ignore-->
           #set $series_name = $partial_obs + 'Series' + str($diagram_index)
 
+          #if $partial_obs == 'windDir'
+            #set $wobs = 'wind'
+          #else
+            #set $wobs = $partial_obs
+          #end if
+
           <!--prettier-ignore-->
           #if $context == 'month' and $use_parameter_month
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($month, $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
+            var $series_name = $getattr($month, $wobs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
           </script>
           <!--prettier-ignore-->
           #else if $context == 'year' and $use_parameter_year
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($year, $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
+            var $series_name = $getattr($year, $wobs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
           </script>
           #else if $context == 'alltime'
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($alltime, $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
+            var $series_name = $getattr($alltime, $wobs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
           </script>
           #else if $context == 'yesterday'
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($yesterday, $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
+            var $series_name = $getattr($yesterday, $wobs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
           </script>
           #else
           <script>
             /* prettier-ignore */
-            var $series_name = $getattr($span($hour_delta=$get_hour_delta($context), $boundary=$get_diagram_boundary($context)), $partial_obs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
+            var $series_name = $getattr($span($hour_delta=$get_hour_delta($context), $boundary=$get_diagram_boundary($context)), $wobs).series(aggregate_type=$get_aggregate_type($partial_obs), aggregate_interval=$get_aggregate_interval($partial_obs, $context, alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y')), time_series='both', time_unit='unix_epoch').round($get_rounding($partial_obs)).json;
           </script>
           #end if
 

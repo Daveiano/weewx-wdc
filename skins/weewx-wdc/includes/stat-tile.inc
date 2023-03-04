@@ -141,7 +141,11 @@
             <p class="stat-label">$gettext($label_avg)</p>
             <p class="stat-value">
               <!--prettier-ignore-->
-              $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), $partial_obs).avg
+              #if $partial_obs == 'windDir'
+                $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "wind").vecdir
+              #else
+                $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), $partial_obs).avg
+              #end if
             </p>
           </div>
         </div>

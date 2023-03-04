@@ -519,6 +519,8 @@ Line 133:
 
 # 3.0.0
 
+**Requires WeeWX >=v4.9.0**
+
 - Bugfix: Forecast error using OWM Forecast [GH-100]
 - Bugfix: Forecast NWS Bug: Reason: '>' not supported between instances of 'NoneType' and 'int' [GH-118]
 - Bugfix: Why are the Weather intervals (week, month, year) all off by one day? [GH-116]
@@ -535,6 +537,7 @@ Line 133:
 - Support for combining different diagram types (eg. line and bar) [GH-75]. This adds an own implementaion of chart rendering based directly on [D3.js](https://d3js.org/), please see https://github.com/Daveiano/weewx-wdc/wiki/Configuration#ENABLE_D3_DIAGRAMS
 - Along [GH-75]: Added new climatogram (combined chart consiting of rain as bar and outTemp as line) for statistics and yearly statistics pages
 - Update radar_img to allow for raw html (for using eg. iFrames as radar maps) [GH-108]
+- Wind direction aggregation - use vecdir instead of avg [GH-119]
 
 **Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki) for information on how to configure the new features.**
 

@@ -889,8 +889,13 @@ class WdcDiagramUtil(SearchList):
                 observation, context_key
             )
 
+        if (observation_key == 'windDir'):
+            wobs = "wind"
+        else:
+            wobs = observation_key
+
         obs_start_vt, obs_stop_vt, obs_vt = weewx.xtypes.get_series(
-            observation_key,
+            wobs,
             TimeSpan(start_ts, end_ts),
             self.generator.db_binder.get_manager(data_binding),
             aggregate_type=aggregate_type,

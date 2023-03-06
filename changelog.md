@@ -525,7 +525,7 @@ Line 133:
 - Bugfix: Forecast NWS Bug: Reason: '>' not supported between instances of 'NoneType' and 'int' [GH-118]
 - Bugfix: Why are the Weather intervals (week, month, year) all off by one day? [GH-116]
 - Show weather data for a specific day [GH-67]
-- Make diagrams configurable per context (per period) / Refactor diagrams configuration [GH-73], diagrams can now be configured per context, eg. day, week or month. Per default, the day and week pages do not include the `outTemp` min/max/avg diagram anymore.
+- Make diagrams configurable per context (per period) / Refactor diagrams configuration [GH-73]. Diagrams can now be configured per context, eg. day, week or month. Per default, the day and week pages do not include the `outTemp` min/max/avg diagram anymore.
 - Enhancements for weewx-forecast support [GH-95]
 - Make show_min, show_max, show_sum configurable for stat tiles [GH-94]
 - Support for custom `data_bindings` [GH-71]
@@ -534,15 +534,15 @@ Line 133:
 - Configurable Rounding [GH-89]
 - Make markers configurable [GH-106]
 - Automatic Refresh [GH-105]
-- Support for combining different diagram types (eg. line and bar) [GH-75]. This adds an own implementaion of chart rendering based directly on [D3.js](https://d3js.org/), please see https://github.com/Daveiano/weewx-wdc/wiki/Configuration#ENABLE_D3_DIAGRAMS
-- Along [GH-75]: Added new climatogram (combined chart consiting of rain as bar and outTemp as line) for statistics and yearly statistics pages
-- Update radar_img to allow for raw html (for using eg. iFrames as radar maps) [GH-108]
+- Support for combining different diagram types (eg. line and bar) [GH-75]. This adds an own implementation of chart rendering based directly on [D3.js](https://d3js.org/), please see https://github.com/Daveiano/weewx-wdc/wiki/Configuration#ENABLE_D3_DIAGRAMS (a Feature Flag was added to skin.conf for activating the new charts)
+- Along [GH-75]: Added new climatogram (combined chart consisting of rain as bar and outTemp as line) for statistics and yearly statistics pages
+- Update radar_img to allow for raw HTML (for using eg. iFrames as radar maps) [GH-108]
 - Wind direction aggregation - use vecdir instead of avg [GH-119]
 
 **Please have a look at the [wiki](https://github.com/Daveiano/weewx-wdc/wiki) for information on how to configure the new features.**
 
 ## Changes made to skin.conf since 2.3.3
 
-This update contains like a rewrite of the skin.conf file, a complete diff can be found here:
+This update contains like a rewrite of the skin.conf file, a complete diff can be found here (please click on "Load diff"):
 
-https://github.com/Daveiano/weewx-wdc/compare/v2.3.3...3.x#diff-ba225fb627dcbf577d0d1fde0f18d93e8e2cf2097c37086cd28ef23e8e7bd820
+https://github.com/Daveiano/weewx-wdc/compare/v2.3.3...7da0c421941c8e61e5aaf2b6d236ae7cf231009b#diff-ba225fb627dcbf577d0d1fde0f18d93e8e2cf2097c37086cd28ef23e8e7bd820

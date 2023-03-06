@@ -18,7 +18,7 @@ from weewx.units import (
     ValueHelper
 )
 from weewx.wxformulas import beaufort
-from weeutil.weeutil import TimeSpan, rounder, to_bool, to_int, startOfDay
+from weeutil.weeutil import TimeSpan, rounder, to_bool, to_int, startOfDay, startOfArchiveDay
 from weeutil.config import search_up, accumulateLeaves
 
 
@@ -2015,6 +2015,14 @@ class WdcTableUtil(SearchList):
         """
         carbon_values = []
 
+        # The aggregate_interval should be the multiple of a day for these contexts, so
+        # we need to adjust the start and end timestamps to the start of the day.
+        # This would otherwise generate table rows with different start timestamps, actually
+        # it puts the windDir (wind) values sometimes in a new row.
+        if context == 'year' or context == 'alltime':
+            start_ts = startOfArchiveDay(start_ts)
+            end_ts = startOfArchiveDay(end_ts)
+
         for observation in self.table_obs:
             observation_binding = self.general_util.get_data_binding(
                 observation)
@@ -2050,7 +2058,8 @@ class WdcTableUtil(SearchList):
                         series_stop_vt[0],
                         observation_vt[0]
                 ):
-                    if context == "alltime":
+                    if context == "alltime" or context == "year":
+                        # We show the date only here, so we need the start of the day.
                         cs_time_dt = datetime.datetime.fromtimestamp(
                             table_start_ts)
                     else:

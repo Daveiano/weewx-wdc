@@ -29,8 +29,9 @@
 
 #set $obs_icons = []
 #for $combined_obs in $combined_diagram_obs.values()
-  #if $get_icon($combined_obs) is not None and $get_icon($combined_obs) not in $obs_icons
-    #silent $obs_icons.append($get_icon($combined_obs))
+  #set $obs_icon = $get_icon($combined_obs)
+  #if $obs_icon is not None and $obs_icon not in $obs_icons and $obs_icon != 'none'
+    #silent $obs_icons.append($obs_icon)
   #end if
 #end for
 
@@ -42,10 +43,10 @@
         <p class="label">
           #set $icon = $get_icon($comb_obs, $use_combined_diagram_config=True, $context=$context)
 
-          #if $icon is not None
-            #if $icon != 'none' and "includes/icons/" in $icon and '.svg' in $icon
+          #if $icon is not None and $icon != 'none'
+            #if "includes/icons/" in $icon and '.svg' in $icon
               #include $icon
-            #elif $icon != 'none' and "includes/icons/" not in $icon
+            #elif "includes/icons/" not in $icon
               <img src="$icon" alt="$obs.label[$partial_obs]" />
             #end if
           #else
@@ -82,14 +83,14 @@
             #silent $series_units.append($get_unit_label($get_unit_for_obs($combined_obs, $series_observation_key, $context, combined=$combined_diagram, combined_key=$comb_obs)))
             #silent $diagram_types.append($get_diagram($series_observation_key))
 
-            <!--prettier-ignore-->
-            #if $context == 'month' and $use_parameter_month
+          <!--prettier-ignore-->
+          #if $context == 'month' and $use_parameter_month
               #set $obs_context = $month($data_binding=$combined_obs_binding)
               #set $start_ts=$obs_context.start.raw
               #set $end_ts=$obs_context.end.raw
               #set $context_key = $context
-            <!--prettier-ignore-->
-            #else if $context == 'year' and $use_parameter_year
+          <!--prettier-ignore-->
+          #else if $context == 'year' and $use_parameter_year
               #set $obs_context = $year($data_binding=$combined_obs_binding)
               #set $start_ts=$obs_context.start.raw
               #set $end_ts=$obs_context.end.raw
@@ -119,13 +120,13 @@
               #set $context_key = $context
             #end if
 
-            <script>
+          <script>
             /* prettier-ignore */
             var $series_name = $get_diagram_data($observation=$combined_obs, $observation_key=$series_observation_key, $context_key=$context_key, $start_ts=$start_ts, $end_ts=$end_ts, $data_binding=$combined_obs_binding, $alltime_start=$alltime.start.format('%d.%m.%Y'), alltime_end=$alltime.end.format('%d.%m.%Y'), combined=$combined_diagram, combined_key=$comb_obs);
-            </script>
+          </script>
 
-            <!--prettier-ignore-->
-            #set $combined_index = $combined_index + 1
+          <!--prettier-ignore-->
+          #set $combined_index = $combined_index + 1
           #end for
 
           <div

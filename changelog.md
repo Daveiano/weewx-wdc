@@ -546,3 +546,9 @@ Line 133:
 This update contains like a rewrite of the skin.conf file, a complete diff can be found here (please click on "Load diff"):
 
 https://github.com/Daveiano/weewx-wdc/compare/v2.3.3...7da0c421941c8e61e5aaf2b6d236ae7cf231009b#diff-ba225fb627dcbf577d0d1fde0f18d93e8e2cf2097c37086cd28ef23e8e7bd820
+
+# Next
+
+- Some built-in fields require adding an entry to [[Icons]] GH-124
+
+## Changes made to skin.conf since 3.0.0

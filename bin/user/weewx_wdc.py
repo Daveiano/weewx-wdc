@@ -1,5 +1,6 @@
 # Copyright 2023 David Bätge
 # Distributed under the terms of the GNU Public License (GPLv3)
+# @see http://weewx.com/docs/sle.html
 
 import datetime
 import calendar
@@ -304,7 +305,8 @@ class WdcGeneralUtil(SearchList):
     def get_icon(self, observation, use_diagram_config=False, use_combined_diagram_config=False, context=None):
         """
         Returns an include path for an icon based on the observation
-        @see http://weewx.com/docs/sle.html
+        # @see https://www.weewx.com/docs/customizing.htm#units
+        # @see https://carbondesignsystem.com/guidelines/icons/library/
 
         Args:
             observation (string): The observation
@@ -460,6 +462,8 @@ class WdcGeneralUtil(SearchList):
 
         elif "Humid" in observation:
             return icon_path + "humidity.svg"
+
+        return 'none'
 
     def get_color(self, observation, context, *args, **kwargs):
         """

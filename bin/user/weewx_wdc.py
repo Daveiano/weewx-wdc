@@ -315,7 +315,7 @@ class WdcGeneralUtil(SearchList):
             context (string): The context
 
         Returns:
-            str: An icon include path
+            str: An icon include path | 'none' | 'unset'
         """
         icon_path = "includes/icons/"
 
@@ -342,16 +342,22 @@ class WdcGeneralUtil(SearchList):
             except KeyError:
                 icon = False
 
-            if icon or icon == 'none':
+            if icon and icon != 'none':
                 return icon
+
+            if icon and icon == 'none':
+                return 'unset'
 
             try:
                 icon = self.generator.skin_dict['DisplayOptions']['diagrams']['combined_observations'][observation]['icon']
             except KeyError:
                 icon = False
 
-            if icon or icon == 'none':
+            if icon and icon != 'none':
                 return icon
+
+            if icon and icon == 'none':
+                return 'unset'
 
         try:
             icon_config = self.generator.skin_dict['DisplayOptions']['Icons'].get(

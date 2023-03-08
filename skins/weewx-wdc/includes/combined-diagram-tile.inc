@@ -43,19 +43,22 @@
         <p class="label">
           #set $icon = $get_icon($comb_obs, $use_combined_diagram_config=True, $context=$context)
 
-          #if $icon is not None and $icon != 'none'
-            #if "includes/icons/" in $icon and '.svg' in $icon
-              #include $icon
-            #elif "includes/icons/" not in $icon
-              <img src="$icon" alt="$obs.label[$partial_obs]" />
-            #end if
-          #else
-            #for $icon in $obs_icons
-              <span>
+          #if $icon != 'unset'
+            #if $icon is not None and $icon != 'none'
+              #if "includes/icons/" in $icon and '.svg' in $icon
                 #include $icon
-              </span>
-            #end for
+              #elif "includes/icons/" not in $icon
+                <img src="$icon" alt="$obs.label[$partial_obs]" />
+              #end if
+            #else
+              #for $icon in $obs_icons
+                <span>
+                  #include $icon
+                </span>
+              #end for
+            #end if
           #end if
+
           $combined_diagram.label
         </p>
         <div class="value">

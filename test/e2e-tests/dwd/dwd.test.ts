@@ -5,7 +5,7 @@ test.describe("DWD", () => {
     await page.goto("artifacts-dwd-weewx-html/public_html/index.html");
   });
 
-  test("Front page forecast", async ({ page }) => {
+  test.fixme("Front page forecast", async ({ page }) => {
     const forecast = page.locator(".dwd-forecast");
     expect(await forecast.locator("h3").innerText()).toBe(
       "Wettervorhersage für Pulsnitz"

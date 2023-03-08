@@ -190,6 +190,7 @@ class WdcGeneralUtil(SearchList):
     def get_unit_label(self, unit):
         """
         Get the unit label for a given unit.
+        @see https://www.weewx.com/docs/customizing.htm#units
 
         Args:
             unit (string): The unit
@@ -200,7 +201,11 @@ class WdcGeneralUtil(SearchList):
         try:
             unit_label = self.generator.formatter.unit_label_dict[unit]
             if type(unit_label) == list:
-                return unit_label[1]
+                # Singular vs Plural label.
+                if len(unit_label) == 2:
+                    return unit_label[1]
+                else:
+                    return unit_label[0]
             else:
                 return unit_label
         except KeyError:

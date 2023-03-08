@@ -549,6 +549,7 @@ https://github.com/Daveiano/weewx-wdc/compare/v2.3.3...7da0c421941c8e61e5aaf2b6d
 
 # Next
 
-- Some built-in fields require adding an entry to [[Icons]] GH-124
+- Bugfix: Some built-in fields require adding an entry to [[Icons]] GH-124
+- Bugfix: Unexpected IndexError in get_unit_label GH-123
 
 ## Changes made to skin.conf since 3.0.0

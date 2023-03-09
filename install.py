@@ -131,6 +131,7 @@ class BasicInstaller(ExtensionInstaller):
                         "skins/weewx-wdc/includes/icons/moonrise.svg",
                         "skins/weewx-wdc/includes/icons/moonset.svg",
                         "skins/weewx-wdc/includes/icons/github.svg",
+                        "skins/weewx-wdc/includes/icons/mask.svg",
                         "skins/weewx-wdc/includes/icons/wdc.svg",
                         "skins/weewx-wdc/includes/icons/forecast/B1.svg",
                         "skins/weewx-wdc/includes/icons/forecast/B2.svg",

@@ -387,6 +387,14 @@ class WdcGeneralUtil(SearchList):
         ):
             return icon_path + "barometer.svg"
 
+        elif (
+                observation == "no2"
+                or observation == "pm1_0"
+                or observation == "pm2_5"
+                or observation == "pm10_0"
+        ):
+            return icon_path + "mask.svg"
+
         elif observation == "windSpeed":
             return icon_path + "wind-speed.svg"
 

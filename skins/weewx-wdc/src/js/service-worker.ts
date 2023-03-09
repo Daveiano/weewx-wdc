@@ -1,22 +1,13 @@
 /* eslint-disable no-undef */
 //(window as any).__WB_DISABLE_DEV_LOGS = false;
 
-//import { manifest, version } from "@parcel/service-worker";
-
-import {
-  registerRoute,
-  setDefaultHandler,
-  setCatchHandler,
-} from "workbox-routing";
+import { registerRoute, setCatchHandler } from "workbox-routing";
 import {
   NetworkFirst,
   StaleWhileRevalidate,
   CacheFirst,
 } from "workbox-strategies";
 import { warmStrategyCache } from "workbox-recipes";
-
-//console.log(manifest);
-//console.log(version);
 
 // Fallback assets to cache
 const FALLBACK_HTML_URL = "/offline.html";
@@ -30,8 +21,6 @@ warmStrategyCache({
 
 // Used for filtering matches based on status code, header, or both
 import { CacheableResponsePlugin } from "workbox-cacheable-response";
-// Used to limit entries in cache, remove entries after a certain period of time
-import { ExpirationPlugin } from "workbox-expiration";
 
 // Cache page navigations (html) with a Network First strategy
 registerRoute(
@@ -66,31 +55,6 @@ registerRoute(
       // Ensure that only requests that result in a 200 status are cached
       new CacheableResponsePlugin({
         statuses: [200],
-      }),
-    ],
-  })
-);
-
-// Cache images with a Cache First strategy
-registerRoute(
-  // Check to see if the request's destination is style for an image
-  ({ request }) =>
-    request.destination === "image" &&
-    !request.url.includes("dwd/Schilder") &&
-    !request.url.includes("dwd/bwk_bodendruck"),
-  // Use a Cache First caching strategy
-  new CacheFirst({
-    // Put all cached files in a cache named 'images'
-    cacheName: "images",
-    plugins: [
-      // Ensure that only requests that result in a 200 status are cached
-      new CacheableResponsePlugin({
-        statuses: [200],
-      }),
-      // Don't cache more than 50 items, and expire them after 30 days
-      new ExpirationPlugin({
-        maxEntries: 50,
-        maxAgeSeconds: 60 * 60 * 24 * 30, // 30 Days
       }),
     ],
   })

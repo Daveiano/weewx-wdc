@@ -34,7 +34,6 @@ type LineDiagramBaseProps = DiagramBaseProps & {
 export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
   props: LineDiagramBaseProps
 ): React.ReactElement => {
-  console.log(props);
   const svgRef: RefObject<SVGSVGElement> = useRef(null);
   const tooltipRef: RefObject<HTMLDivElement> = useRef(null);
   const small = useMediaQuery("(max-width: 672px)");

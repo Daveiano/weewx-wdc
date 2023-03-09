@@ -550,6 +550,8 @@ https://github.com/Daveiano/weewx-wdc/compare/v2.3.3...7da0c421941c8e61e5aaf2b6d
 # Next
 
 - Bugfix: Some built-in fields require adding an entry to [[Icons]] GH-124
+- Added icon for no2, pm1_0, pm2_5 and pm10_0
 - Bugfix: Unexpected IndexError in get_unit_label GH-123
+- Bugfix: Resolved a caching issue for radar images
 
 ## Changes made to skin.conf since 3.0.0

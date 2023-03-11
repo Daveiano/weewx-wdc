@@ -46,7 +46,7 @@ except ImportError:
     import syslog
 
     def logmsg(level, msg):
-        syslog.syslog(level, F'jas: {msg}')
+        syslog.syslog(level, 'weewx-wdc: %s' % msg)
 
     def logdbg(msg):
         logmsg(syslog.LOG_DEBUG, msg)

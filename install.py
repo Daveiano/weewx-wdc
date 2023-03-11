@@ -1,6 +1,6 @@
 from weecfg.extension import ExtensionInstaller
 
-# Copyright 2023 David Bätge
+# Copyright 2023 David Baetge
 # Distributed under the terms of the GNU Public License (GPLv3)
 
 

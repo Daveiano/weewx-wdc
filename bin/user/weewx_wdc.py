@@ -1,7 +1,11 @@
-# Copyright 2023 David Bätge
-# Distributed under the terms of the GNU Public License (GPLv3)
-# @see http://weewx.com/docs/sle.html
-
+# coding: utf-8
+#
+#    Copyright (c) 2023 David Baetge <david.baetge@gmail.com>
+#
+#    Distributed under the terms of the GNU Public License (GPLv3)
+#
+#    @see http://weewx.com/docs/sle.html
+#
 import datetime
 import calendar
 import time
@@ -1499,6 +1503,7 @@ class WdcDiagramUtil(SearchList):
         for index, data in enumerate(windrose_data):
             for p_index, percent in enumerate(data["r"]):
                 windrose_data[index]["r"][p_index] = round(
+                    # todo: division by zero
                     (percent / num_of_values) * 100
                 )
 

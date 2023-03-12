@@ -71,12 +71,12 @@ If you like the look and feel of the skin please consider having a look at the o
 
 ## Installation
 
-**Requires WeeWX >= 4.9**
+**Requires WeeWX >= 4.9 and Python 3**
 
 1. Download the [latest version](https://github.com/Daveiano/weewx-wdc/releases)
 
 ```
-wget -O "/tmp/weewx-wdc.zip" https://github.com/Daveiano/weewx-wdc/releases/download/v3.0.0/weewx-wdc-v3.0.0.zip
+wget -O "/tmp/weewx-wdc.zip" https://github.com/Daveiano/weewx-wdc/releases/download/v3.0.1/weewx-wdc-v3.0.1.zip
 ```
 
 2. Create a new folder and unzip to that folder
@@ -94,7 +94,7 @@ unzip /tmp/weewx-wdc.zip -d /tmp/weewx-wdc/
 
 For help, please have a look at the [official weewx documentation](https://weewx.com/docs/utilities.htm#wee_extension_utility).
 
-**Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v3.0.0/weewx-wdc-v3.0.0.zip.
+**Please note:** For installation, please use the generated zip archive from a release, eg. https://github.com/Daveiano/weewx-wdc/releases/download/v3.0.1/weewx-wdc-v3.0.1.zip.
 Don't download the repository directly and don't use the GitHub generated zip and tar.gz archives that come alongside the release. Always use the zip archive named **weewx-wdc-vX.X.X.zip**
 
 Background: The files in the src/ directory are the source files (TypeScript, SCSS). When creating a release, these source files get transformed and optimized, and the output location of these transformed files is the location which matches the location in the install.py script. The weewx-wdc-vX.X.X.zip should contain all these transformed files (like service-worker.js or main.css), but if you download the current state of the repo, these files are not included and this will throw multiple `FileNotFoundError` errors while installing. For manual building of these files, see [Development](#development).

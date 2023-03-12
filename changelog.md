@@ -547,12 +547,15 @@ This update contains like a rewrite of the skin.conf file, a complete diff can b
 
 https://github.com/Daveiano/weewx-wdc/compare/v2.3.3...7da0c421941c8e61e5aaf2b6d236ae7cf231009b#diff-ba225fb627dcbf577d0d1fde0f18d93e8e2cf2097c37086cd28ef23e8e7bd820
 
-# Next
+# 3.0.1
 
 - Bugfix: Some built-in fields require adding an entry to [[Icons]] GH-124
 - Added icon for no2, pm1_0, pm2_5 and pm10_0
 - Bugfix: Unexpected IndexError in get_unit_label GH-123
 - Bugfix: Resolved a caching issue for radar images (service worker was caching too much here)
-- Bugfix: Resolved encoding issues with Python 2. GH-122
 
-## Changes made to skin.conf since 3.0.0
+## No changes made to skin.conf since 3.0.0
+
+# Next
+
+## Changes made to skin.conf since 3.0.1

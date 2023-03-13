@@ -73,6 +73,7 @@ class BasicInstaller(ExtensionInstaller):
                         "skins/weewx-wdc/dist/assets/IBMPlexSerif-Regular.woff",
                         "skins/weewx-wdc/favicon.ico",
                         "skins/weewx-wdc/plotly-custom-build.min.js",
+                        "skins/weewx-wdc/live-updates.js",
                         "skins/weewx-wdc/includes/html-head.inc",
                         "skins/weewx-wdc/includes/almanac-tile.inc",
                         "skins/weewx-wdc/includes/almanac-tile-simple.inc",

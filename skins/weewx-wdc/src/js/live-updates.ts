@@ -9,6 +9,7 @@ import { Client, Message } from "paho-mqtt";
  * @see https://www.hivemq.com/blog/mqtt-client-library-encyclopedia-paho-js/
  */
 
+const ordinalCompass = (window as any).weewxWdcConfig.ordinalCompass;
 const mqtt_host: string = (window as any).mqtt_host;
 const mqtt_port: string = (window as any).mqtt_port;
 const mqtt_topic: string = (window as any).mqtt_topic;
@@ -97,10 +98,46 @@ const onMessageArrived = (message: Message) => {
         ? parseInt(statTile.getAttribute("data-rounding")!)
         : 1;
 
+    // Float or int? Do not use rounding on ints.
+    const newValue =
+      payLoad[key].toString().indexOf(".") != -1
+        ? parseFloat(payLoad[key]).toFixed(statTileRounding)
+        : payLoad[key];
+
+    // For eg. the windDir arrows on the windSpeed and gustSpeed tiles.
+    const statTileDetail = statTile.querySelector(
+      ".stat-title-obs-value .stat-detail"
+    );
+
     // Update the main value.
-    statTile.querySelector(".stat-title-obs-value")!.innerHTML = `${parseFloat(
-      payLoad[key]
-    ).toFixed(statTileRounding)}${statTileUnit}`;
+    statTile.querySelector(
+      ".stat-title-obs-value .raw"
+    )!.innerHTML = `${newValue}${statTileUnit}`;
+
+    // Re-append the detail.
+    if (statTileDetail) {
+      if (
+        (observation === "windSpeed" || observation === "windGust") &&
+        payLoad["windDir"]
+      ) {
+        const ordinal =
+          ordinalCompass[
+            Math.floor(parseInt(payLoad["windDir"]) / 22.5 + 0.5) % 16
+          ];
+
+        if (statTile.querySelector(".stat-title-obs-value .stat-detail")) {
+          statTile.querySelector(
+            ".stat-title-obs-value .stat-detail .value-detail"
+          )!.textContent = ordinal;
+        }
+
+        (
+          statTile.querySelector(
+            ".stat-title-obs-value .stat-detail svg"
+          ) as HTMLElement
+        ).style.transform = `rotate(${parseInt(payLoad["windDir"]) + 90}deg)`;
+      }
+    }
 
     // Update min/max if available.
     const min = statTile.querySelector(".value-min .stat-value");

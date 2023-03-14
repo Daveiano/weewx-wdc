@@ -32,13 +32,25 @@
                 type="module"
                 src="https://1.www.s81c.com/common/carbon/web-components/version/v1.25.0/notification.min.js"
               ></script>
-              <div id="notification-container-mqtt" style="display: none">
-                <bx-inline-notification
-                  style="min-width: 30rem; margin-bottom: 0.5rem"
-                  title="Connected to live weather station."
-                  subtitle=""
+              <div
+                class="bx--row"
+                id="notification-container-mqtt"
+                style="display: none"
+              >
+                <div
+                  class="bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-6 bx--col-max-6"
                 >
-                </bx-inline-notification>
+                  <bx-inline-notification
+                    style="
+                      min-width: auto;
+                      max-width: none;
+                      margin-bottom: 0.5rem;
+                    "
+                    title="Connected to live weather station."
+                    subtitle=""
+                  >
+                  </bx-inline-notification>
+                </div>
               </div>
               #end if
             </header>

@@ -494,6 +494,7 @@ header.section-header {
           max-width: 24px;
           vertical-align: text-bottom;
           margin-right: 0;
+          transition: transform 350ms ease;
         }
       }
       > span {
@@ -504,7 +505,7 @@ header.section-header {
           max-width: 100%;
           overflow: hidden;
         }
-        span {
+        span:not(.raw) {
           @include carbon--type-style("productive-heading-01");
         }
       }

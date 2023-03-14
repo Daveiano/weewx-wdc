@@ -39,31 +39,32 @@
           <!--prettier-ignore-->
           <span class="stat-title-obs-value">
             #if $context == 'day' and not $daily_archive
-              $getattr($current($data_binding=$skin_obs_binding), $skin_obs_key)
-
+              <span class="raw">
+                $getattr($current($data_binding=$skin_obs_binding), $skin_obs_key)
+              </span>
               #if $show_wind_dir and $current.windDir.has_data
-                <span class="stat-wind-dir">
+                <span class="stat-wind-dir stat-detail">
                   #set global $windDir_deg = $current.windDir.degree_compass
                   #include "includes/icons/wind-direction.inc"
-                  $current.windDir
+                  <span class="value-detail">$current.windDir</span>
                 </span>
               #else if $show_wind_dir_ordinal and $current.windDir.has_data
-                <span class="stat-wind-dir">
+                <span class="stat-wind-dir stat-detail">
                   #set global $windDir_deg = $current.windDir.degree_compass
                   #include "includes/icons/wind-direction.inc"
-                  $current.windDir.ordinal_compass
+                  <span class="value-detail">$current.windDir.ordinal_compass</span>
                 </span>
               #else if $show_gust_dir and $current.windGustDir.has_data
-                <span class="stat-wind-dir">
+                <span class="stat-wind-dir stat-detail">
                   #set global $windDir_deg = $current.windGustDir.degree_compass
                   #include "includes/icons/wind-direction.inc"
-                  $current.windGustDir
+                  <span class="value-detail">$current.windGustDir</span>
                 </span>
               #else if $show_gust_dir_ordinal and $current.windGustDir.has_data
-                <span class="stat-wind-dir">
+                <span class="stat-wind-dir stat-detail">
                   #set global $windDir_deg = $current.windGustDir.degree_compass
                   #include "includes/icons/wind-direction.inc"
-                  $current.windGustDir.ordinal_compass
+                  <span class="value-detail">$current.windGustDir.ordinal_compass</span>
                 </span>
               #end if
             #else
@@ -75,25 +76,25 @@
                 $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).avg
 
                 #if $show_wind_dir and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").has_data
-                  <span class="stat-wind-dir">
+                  <span class="stat-wind-dir stat-detail">
                     #set global $windDir_deg = $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "wind").vecdir.degree_compass
                     #include "includes/icons/wind-direction.inc"
                     $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "wind").vecdir
                   </span>
                 #else if $show_wind_dir_ordinal and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").has_data
-                  <span class="stat-wind-dir">
+                  <span class="stat-wind-dir stat-detail">
                     #set global $windDir_deg = $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "wind").vecdir.degree_compass
                     #include "includes/icons/wind-direction.inc"
                     $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "wind").vecdir.ordinal_compass
                   </span>
                 #else if $show_gust_dir and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").has_data
-                  <span class="stat-wind-dir">
+                  <span class="stat-wind-dir stat-detail">
                     #set global $windDir_deg = $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").avg.degree_compass
                     #include "includes/icons/wind-direction.inc"
                     $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").avg
                   </span>
                 #else if $show_gust_dir_ordinal and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").has_data
-                  <span class="stat-wind-dir">
+                  <span class="stat-wind-dir stat-detail">
                     #set global $windDir_deg = $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").avg.degree_compass
                     #include "includes/icons/wind-direction.inc"
                     $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").avg.ordinal_compass
@@ -203,13 +204,13 @@
           $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).max
 
           #if $show_wind_dir and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").has_data
-            <span class="stat-wind-dir">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").max</span>
+            <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").max</span>
           #else if $show_wind_dir_ordinal and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").has_data
-            <span class="stat-wind-dir">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").max.ordinal_compass</span>
+            <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").max.ordinal_compass</span>
           #else if $show_gust_dir and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").has_data
-            <span class="stat-wind-dir">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").max</span>
+            <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").max</span>
           #else if $show_gust_dir_ordinal and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").has_data
-            <span class="stat-wind-dir">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").max.ordinal_compass</span>
+            <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").max.ordinal_compass</span>
           #end if
         </p>
       </div>

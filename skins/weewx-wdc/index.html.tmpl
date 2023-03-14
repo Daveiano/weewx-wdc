@@ -26,6 +26,21 @@
             <header class="bx--col page-header">
               <h1>$gettext("Current Weather Conditions")</h1>
               <h2>$current.dateTime</h2>
+              <!--prettier-ignore-->
+              #if $to_bool($Extras['mqtt']['mqtt_websockets_enabled'])
+              <script
+                type="module"
+                src="https://1.www.s81c.com/common/carbon/web-components/version/v1.25.0/notification.min.js"
+              ></script>
+              <div id="notification-container-mqtt" style="display: none">
+                <bx-inline-notification
+                  style="min-width: 30rem; margin-bottom: 0.5rem"
+                  title="Connected to live weather station."
+                  subtitle=""
+                >
+                </bx-inline-notification>
+              </div>
+              #end if
             </header>
           </div>
 
@@ -42,10 +57,15 @@
     #include "includes/footer.inc"
 
     <script src="$get_base_path(path='dist/main.js')" defer></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"
-      type="text/javascript"
-    ></script>
-    <script src="$get_base_path(path='live-updates.js')" defer></script>
+    #if $to_bool($Extras['mqtt']['mqtt_websockets_enabled'])
+    <!--prettier-ignore-->
+    <script>
+      var mqtt_host = "$Extras['mqtt']['mqtt_websockets_host']";
+      var mqtt_port = "$Extras['mqtt']['mqtt_websockets_port']";
+      var mqtt_topic = "$Extras['mqtt']['mqtt_websockets_topic']";
+      var mqtt_ssl = "$Extras['mqtt']['mqtt_websockets_ssl']";
+    </script>
+    <script src="$get_base_path(path='dist/live-updates.js')" defer></script>
+    #end if
   </body>
 </html>

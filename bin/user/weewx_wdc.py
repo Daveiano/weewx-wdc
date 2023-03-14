@@ -1269,6 +1269,12 @@ class WdcDiagramUtil(SearchList):
             return int(rounding)
 
         # Default roundings.
+        if context is None:
+            context = 'day'
+
+        unit = self.general_util.get_unit_for_obs(
+            observation, observation_key, context)
+
         if observation == "UV" or observation == "cloudbase":
             return 0
 
@@ -1281,6 +1287,9 @@ class WdcDiagramUtil(SearchList):
                 or observation == "altimeter"
         ) and self.unit.unit_type.pressure == "inHg":
             return 3
+
+        if unit == 'percent':
+            return 0
 
         return 1
 

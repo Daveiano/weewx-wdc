@@ -28,6 +28,11 @@
               <h2>$current.dateTime</h2>
               <!--prettier-ignore-->
               #if $to_bool($Extras['mqtt']['mqtt_websockets_enabled'])
+              #if $DisplayOptions.get('layout', 'alternative') == 'alternative'
+                #set $mqtt_notfication_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-6 bx--col-max-6"
+              #else
+                #set $mqtt_notfication_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-4 bx--col-xlg-4 bx--col-max-4"
+              #end if
               <script
                 type="module"
                 src="https://1.www.s81c.com/common/carbon/web-components/version/v1.25.0/notification.min.js"
@@ -37,9 +42,7 @@
                 id="notification-container-mqtt"
                 style="display: none"
               >
-                <div
-                  class="bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-6 bx--col-max-6"
-                >
+                <div class="$mqtt_notfication_classes">
                   <bx-inline-notification
                     style="
                       min-width: auto;

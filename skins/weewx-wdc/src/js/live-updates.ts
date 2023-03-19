@@ -22,7 +22,7 @@ const notfication = websiteMessageContainer!.querySelector(
   "bx-inline-notification"
 );
 
-const getUnitFromMQTTProp = (keySplitted: string[]) => {
+const _getUnitFromMQTTProp = (keySplitted: string[]) => {
   let unitMQTT = undefined;
 
   if (keySplitted.length > 1) {
@@ -33,7 +33,243 @@ const getUnitFromMQTTProp = (keySplitted: string[]) => {
   return unitMQTT;
 };
 
-// called when the client connects
+const _updateStatTile = (
+  statTile: HTMLElement,
+  key: string,
+  observation: string,
+  unit: string,
+  value: number,
+  rounding: number,
+  payLoad: any
+) => {
+  // Update the main value.
+  statTile.querySelector(
+    ".stat-title-obs-value .raw"
+  )!.innerHTML = `${value}${unit}`;
+
+  // For eg. the windDir arrows on the windSpeed and gustSpeed tiles.
+  const statTileDetail = statTile.querySelector(
+    ".stat-title-obs-value .stat-detail"
+  );
+
+  // Re-append the detail.
+  if (statTileDetail) {
+    if (
+      (observation === "windSpeed" || observation === "windGust") &&
+      payLoad["windDir"]
+    ) {
+      const ordinal =
+        ordinalCompass[
+          Math.floor(parseInt(payLoad["windDir"]) / 22.5 + 0.5) % 16
+        ];
+
+      if (statTile.querySelector(".stat-title-obs-value .stat-detail")) {
+        statTile.querySelector(
+          ".stat-title-obs-value .stat-detail .value-detail"
+        )!.textContent = ordinal;
+      }
+
+      (
+        statTile.querySelector(
+          ".stat-title-obs-value .stat-detail svg"
+        ) as HTMLElement
+      ).style.transform = `rotate(${parseInt(payLoad["windDir"]) + 90}deg)`;
+    }
+  }
+
+  // Update min/max if available.
+  // @todo WindDir for min/max.
+  const min = statTile.querySelector(".value-min"),
+    minValue = min
+      ? min!.querySelector(".stat-value span.value")!.innerHTML
+      : "";
+
+  if (min && payLoad[key] < parseFloat(minValue)) {
+    min.querySelector(".stat-value span.value")!.textContent = `${parseFloat(
+      payLoad[key]
+    ).toFixed(rounding)}${unit}`;
+
+    // Update min/max time if enabled.
+    const timeToolTip = min.querySelector("bx-tooltip-definition");
+
+    if (timeToolTip) {
+      timeToolTip.setAttribute(
+        "body-text",
+        dayjs.unix(payLoad.dateTime).format("h:mm:ss A")
+      );
+    }
+
+    // windDir.
+    if (
+      (observation === "windSpeed" || observation === "windGust") &&
+      payLoad["windDir"]
+    ) {
+      const ordinal =
+        ordinalCompass[
+          Math.floor(parseInt(payLoad["windDir"]) / 22.5 + 0.5) % 16
+        ];
+
+      if (min.querySelector(".stat-wind-dir.stat-detail")) {
+        min.querySelector(
+          ".stat-wind-dir.stat-detail"
+        )!.textContent = `, ${ordinal}`;
+      }
+    }
+  }
+
+  const max = statTile.querySelector(".value-max"),
+    maxValue = max
+      ? max!.querySelector(".stat-value span.value")!.innerHTML
+      : "";
+
+  if (max && payLoad[key] > parseFloat(maxValue)) {
+    max.querySelector(".stat-value span.value")!.textContent = `${parseFloat(
+      payLoad[key]
+    ).toFixed(rounding)}${unit}`;
+
+    // Update min/max time if enabled.
+    const timeToolTip = max.querySelector("bx-tooltip-definition");
+
+    if (timeToolTip) {
+      timeToolTip.setAttribute(
+        "body-text",
+        dayjs.unix(payLoad.dateTime).format("h:mm:ss A")
+      );
+    }
+
+    // windDir.
+    if (
+      (observation === "windSpeed" || observation === "windGust") &&
+      payLoad["windDir"]
+    ) {
+      const ordinal =
+        ordinalCompass[
+          Math.floor(parseInt(payLoad["windDir"]) / 22.5 + 0.5) % 16
+        ];
+
+      if (max.querySelector(".stat-wind-dir.stat-detail")) {
+        max.querySelector(
+          ".stat-wind-dir.stat-detail"
+        )!.textContent = `, ${ordinal}`;
+      }
+    }
+  }
+};
+
+const _updateTableRow = (
+  tableRow: HTMLElement,
+  key: string,
+  observation: string,
+  unit: string,
+  value: number,
+  rounding: number,
+  payLoad: any
+) => {
+  // Update the main value.
+  tableRow.querySelector(
+    "bx-structured-list-cell.cell-value > span"
+  )!.textContent = `${value}${unit}`;
+
+  // For eg. the windDir arrows on the windSpeed and gustSpeed tiles.
+  const tableRowDetail = tableRow.querySelector(
+    "bx-structured-list-cell.cell-value .stat-detail"
+  );
+
+  // Re-append the detail.
+  if (tableRowDetail) {
+    if (
+      (observation === "windSpeed" || observation === "windGust") &&
+      payLoad["windDir"]
+    ) {
+      const ordinal =
+        ordinalCompass[
+          Math.floor(parseInt(payLoad["windDir"]) / 22.5 + 0.5) % 16
+        ];
+
+      if (
+        tableRow.querySelector(
+          "bx-structured-list-cell.cell-value .stat-detail"
+        )
+      ) {
+        tableRow.querySelector(
+          "bx-structured-list-cell.cell-value .stat-detail"
+        )!.textContent = `, ${ordinal}`;
+      }
+    }
+  }
+
+  // Update min/max.
+  const min = tableRow.querySelector("bx-structured-list-cell.cell-min"),
+    minValueSpan = tableRow.querySelector(
+      "bx-structured-list-cell.cell-min > span"
+    )!,
+    minValue = minValueSpan.innerHTML;
+
+  if (min && payLoad[key] < parseFloat(minValue)) {
+    minValueSpan.textContent = `${parseFloat(payLoad[key]).toFixed(
+      rounding
+    )}${unit}`;
+
+    // Update min/max time if enabled.
+    const time = min!.querySelector(".date");
+    if (time) {
+      time.textContent = dayjs.unix(payLoad.dateTime).format("h:mm:ss A");
+    }
+
+    // windDir.
+    if (
+      (observation === "windSpeed" || observation === "windGust") &&
+      payLoad["windDir"]
+    ) {
+      const ordinal =
+        ordinalCompass[
+          Math.floor(parseInt(payLoad["windDir"]) / 22.5 + 0.5) % 16
+        ];
+
+      if (min.querySelector(".stat-wind-dir.stat-detail")) {
+        min.querySelector(
+          ".stat-wind-dir.stat-detail"
+        )!.textContent = `, ${ordinal}`;
+      }
+    }
+  }
+
+  const max = tableRow.querySelector("bx-structured-list-cell.cell-max"),
+    maxValueSpan = tableRow.querySelector(
+      "bx-structured-list-cell.cell-max > span"
+    )!,
+    maxValue = maxValueSpan.innerHTML;
+  if (max && payLoad[key] > parseFloat(maxValue)) {
+    maxValueSpan.textContent = `${parseFloat(payLoad[key]).toFixed(
+      rounding
+    )}${unit}`;
+
+    // Update min/max time if enabled.
+    const time = max!.querySelector(".date");
+    if (time) {
+      time.textContent = dayjs.unix(payLoad.dateTime).format("h:mm:ss A");
+    }
+
+    // windDir.
+    if (
+      (observation === "windSpeed" || observation === "windGust") &&
+      payLoad["windDir"]
+    ) {
+      const ordinal =
+        ordinalCompass[
+          Math.floor(parseInt(payLoad["windDir"]) / 22.5 + 0.5) % 16
+        ];
+
+      if (max.querySelector(".stat-wind-dir.stat-detail")) {
+        max.querySelector(
+          ".stat-wind-dir.stat-detail"
+        )!.textContent = `, ${ordinal}`;
+      }
+    }
+  }
+};
+
+// Called when the client connects
 const onConnect = () => {
   // Once a connection has been made, make a subscription and send a message.
   console.log("MQTT WS: onConnect Success.");
@@ -46,6 +282,7 @@ const onConnect = () => {
   client.subscribe(mqtt_topic);
 };
 
+// Called when initial connection fails.
 const onFailure = () => {
   // Once a connection has been made, make a subscription and send a message.
   console.log("MQTT WS: onConnect Failure.");
@@ -70,9 +307,13 @@ const onConnectionLost = (responseObject: any) => {
   }
 };
 
-// called when a message arrives
+// Called when a message arrives from the broker.
 const onMessageArrived = (message: Message) => {
   const payLoad = JSON.parse(message.payloadString);
+
+  // @todo Respect loop vs archive for totals (aggregation).
+  console.log(message.destinationName);
+  console.log(payLoad);
 
   notfication!.setAttribute(
     "subtitle",
@@ -84,74 +325,64 @@ const onMessageArrived = (message: Message) => {
 
     const keySplitted = key.split("_");
     const observation = keySplitted[0];
-    const unitMQTT = getUnitFromMQTTProp(keySplitted);
+    const unitMQTT = _getUnitFromMQTTProp(keySplitted);
 
+    // Alternative layout.
     const statTile = document.querySelector(
       `.stat-tile[data-observation="${observation}"]`
     );
 
-    if (!statTile) continue;
-
-    const statTileUnit = statTile.getAttribute("data-unit");
-    const statTileRounding =
-      typeof statTile.getAttribute("data-rounding") === "string"
-        ? parseInt(statTile.getAttribute("data-rounding")!)
-        : 1;
-
-    // Float or int? Do not use rounding on ints.
-    const newValue =
-      payLoad[key].toString().indexOf(".") != -1
-        ? parseFloat(payLoad[key]).toFixed(statTileRounding)
-        : payLoad[key];
-
-    // For eg. the windDir arrows on the windSpeed and gustSpeed tiles.
-    const statTileDetail = statTile.querySelector(
-      ".stat-title-obs-value .stat-detail"
+    // Classic layout.
+    const tableRow = document.querySelector(
+      `.obs-stat-tile bx-structured-list-row[data-observation="${observation}"]`
     );
 
-    // Update the main value.
-    statTile.querySelector(
-      ".stat-title-obs-value .raw"
-    )!.innerHTML = `${newValue}${statTileUnit}`;
+    if (statTile) {
+      const statTileUnit = statTile.getAttribute("data-unit")!;
+      const statTileRounding =
+        typeof statTile.getAttribute("data-rounding") === "string"
+          ? parseInt(statTile.getAttribute("data-rounding")!)
+          : 1;
 
-    // Re-append the detail.
-    if (statTileDetail) {
-      if (
-        (observation === "windSpeed" || observation === "windGust") &&
-        payLoad["windDir"]
-      ) {
-        const ordinal =
-          ordinalCompass[
-            Math.floor(parseInt(payLoad["windDir"]) / 22.5 + 0.5) % 16
-          ];
+      // Float or int? Do not use rounding on ints.
+      const newValue =
+        payLoad[key].toString().indexOf(".") != -1
+          ? parseFloat(payLoad[key]).toFixed(statTileRounding)
+          : payLoad[key];
 
-        if (statTile.querySelector(".stat-title-obs-value .stat-detail")) {
-          statTile.querySelector(
-            ".stat-title-obs-value .stat-detail .value-detail"
-          )!.textContent = ordinal;
-        }
-
-        (
-          statTile.querySelector(
-            ".stat-title-obs-value .stat-detail svg"
-          ) as HTMLElement
-        ).style.transform = `rotate(${parseInt(payLoad["windDir"]) + 90}deg)`;
-      }
+      _updateStatTile(
+        statTile as HTMLElement,
+        key,
+        observation,
+        statTileUnit,
+        newValue,
+        statTileRounding,
+        payLoad
+      );
     }
 
-    // Update min/max if available.
-    const min = statTile.querySelector(".value-min .stat-value");
-    if (min && payLoad[key] < parseFloat(min.innerHTML)) {
-      min.innerHTML = `${parseFloat(payLoad[key]).toFixed(
-        statTileRounding
-      )}${statTileUnit}`;
-    }
+    if (tableRow) {
+      const tableRowUnit = tableRow.getAttribute("data-unit")!;
+      const tableRowRounding =
+        typeof tableRow.getAttribute("data-rounding") === "string"
+          ? parseInt(tableRow.getAttribute("data-rounding")!)
+          : 1;
 
-    const max = statTile.querySelector(".value-max .stat-value");
-    if (max && payLoad[key] > parseFloat(max.innerHTML)) {
-      max.innerHTML = `${parseFloat(payLoad[key]).toFixed(
-        statTileRounding
-      )}${statTileUnit}`;
+      // Float or int? Do not use rounding on ints.
+      const newValue =
+        payLoad[key].toString().indexOf(".") != -1
+          ? parseFloat(payLoad[key]).toFixed(tableRowRounding)
+          : payLoad[key];
+
+      _updateTableRow(
+        tableRow as HTMLElement,
+        key,
+        observation,
+        tableRowUnit,
+        newValue,
+        tableRowRounding,
+        payLoad
+      );
     }
   }
 };

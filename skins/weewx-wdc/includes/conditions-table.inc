@@ -56,21 +56,21 @@
               <div class="mobile-header">
                 <div class="label">$obs.label[$skin_obs]</div>
               </div>
-              <bx-structured-list-row data-test="$skin_obs">
-                <bx-structured-list-cell>$obs.label[$skin_obs]</bx-structured-list-cell>
-                <bx-structured-list-cell>
+              <bx-structured-list-row data-test="$skin_obs" data-observation="$skin_obs_key" data-unit="$get_unit_label($get_unit_for_obs($skin_obs, $skin_obs_key, $context))" data-rounding="$get_rounding($skin_obs, $skin_obs_key)">
+                <bx-structured-list-cell class="cell-label">$obs.label[$skin_obs]</bx-structured-list-cell>
+                <bx-structured-list-cell class="cell-value">
                   <!--prettier-ignore-->
                   #if $context == 'day'
-                    $getattr($current($data_binding=$skin_obs_binding), $skin_obs_key)
+                    <span>$getattr($current($data_binding=$skin_obs_binding), $skin_obs_key)</span>
 
                     #if $show_wind_dir and $current.windDir.has_data
-                      <span class="stat-wind-dir">, $current.windDir</span>
+                      <span class="stat-wind-dir stat-detail">, $current.windDir</span>
                     #else if $show_wind_dir_ordinal and $current.windDir.has_data
-                      <span class="stat-wind-dir">, $current.windDir.ordinal_compass</span>
+                      <span class="stat-wind-dir stat-detail">, $current.windDir.ordinal_compass</span>
                     #else if $show_gust_dir and $current.windGustDir.has_data
-                      <span class="stat-wind-dir">, $current.windGustDir</span>
+                      <span class="stat-wind-dir stat-detail">, $current.windGustDir</span>
                     #else if $show_gust_dir_ordinal and $current.windGustDir.has_data
-                      <span class="stat-wind-dir">, $current.windGustDir.ordinal_compass</span>
+                      <span class="stat-wind-dir stat-detail">, $current.windGustDir.ordinal_compass</span>
                     #end if
                   #else
                     #if $get_show_sum($skin_obs)
@@ -81,40 +81,39 @@
                         $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).avg
 
                         #if $show_wind_dir and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").has_data
-                          <span class="stat-wind-dir">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").avg</span>
+                          <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").avg</span>
                         #else if $show_wind_dir_ordinal and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").has_data
-                          <span class="stat-wind-dir">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").avg.ordinal_compass</span>
+                          <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").avg.ordinal_compass</span>
                         #else if $show_gust_dir and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windGustDir").has_data
-                          <span class="stat-wind-dir">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windGustDir").avg</span>
+                          <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windGustDir").avg</span>
                         #else if $show_gust_dir_ordinal and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windGustDir").has_data
-                          <span class="stat-wind-dir">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windGustDir").avg.ordinal_compass</span>
+                          <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windGustDir").avg.ordinal_compass</span>
                         #end if
                     #end if
                   #end if
                 </bx-structured-list-cell>
-                <bx-structured-list-cell>
-                  <!--prettier-ignore-->
-                    $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).min
-                  <!--prettier-ignore-->
+                <!--prettier-ignore-->
+                <bx-structured-list-cell class="cell-min">
+                  <span>$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).min</span>
+
                   #if show_min_max_time
                     <span class="date">$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).mintime.format($min_max_time_format)</span>
                   #end if
                 </bx-structured-list-cell>
-                <bx-structured-list-cell>
-                  <!--prettier-ignore-->
-                  $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).max
+                <!--prettier-ignore-->
+                <bx-structured-list-cell class="cell-max">
+                  <span>$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).max</span>
 
                   #if $show_wind_dir and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").has_data
-                    <span class="stat-wind-dir">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").max</span>
+                    <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").max</span>
                   #else if $show_wind_dir_ordinal and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").has_data
-                    <span class="stat-wind-dir">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").max.ordinal_compass</span>
+                    <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").max.ordinal_compass</span>
                   #else if $show_gust_dir and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windGustDir").has_data
-                    <span class="stat-wind-dir">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windGustDir").max</span>
+                    <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windGustDir").max</span>
                   #else if $show_gust_dir_ordinal and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windGustDir").has_data
-                    <span class="stat-wind-dir">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windGustDir").max.ordinal_compass</span>
+                    <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windGustDir").max.ordinal_compass</span>
                   #end if
 
-                  <!--prettier-ignore-->
                   #if $show_min_max_time
                   <span class="date">$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).maxtime.format($min_max_time_format)</span>
                   #end if

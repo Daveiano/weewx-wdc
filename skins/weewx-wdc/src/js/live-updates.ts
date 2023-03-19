@@ -22,8 +22,8 @@ const notfication = websiteMessageContainer!.querySelector(
   "bx-inline-notification"
 );
 
-const _getUnitFromMQTTProp = (keySplitted: string[]) => {
-  let unitMQTT = undefined;
+const _getUnitFromMQTTProp = (keySplitted: string[]): string => {
+  let unitMQTT = "";
 
   if (keySplitted.length > 1) {
     keySplitted.shift();
@@ -40,7 +40,8 @@ const _updateStatTile = (
   unit: string,
   value: number,
   rounding: number,
-  payLoad: any
+  payLoad: any,
+  unitMQTT: string
 ) => {
   // Update the main value.
   statTile.querySelector(
@@ -95,7 +96,7 @@ const _updateStatTile = (
     if (timeToolTip) {
       timeToolTip.setAttribute(
         "body-text",
-        dayjs.unix(payLoad.dateTime).format("h:mm:ss A")
+        dayjs.unix(payLoad.dateTime).format("HH:mm:ss")
       );
     }
 
@@ -133,7 +134,7 @@ const _updateStatTile = (
     if (timeToolTip) {
       timeToolTip.setAttribute(
         "body-text",
-        dayjs.unix(payLoad.dateTime).format("h:mm:ss A")
+        dayjs.unix(payLoad.dateTime).format("HH:mm:ss")
       );
     }
 
@@ -153,6 +154,19 @@ const _updateStatTile = (
         )!.textContent = `, ${ordinal}`;
       }
     }
+  }
+
+  // Update sum.
+  const sum = statTile.querySelector(".value-sum"),
+    sumValue =
+      payLoad[
+        `day${observation[0].toUpperCase()}${observation.slice(1)}_${unitMQTT}`
+      ];
+
+  if (sum && sumValue) {
+    sum.querySelector(".stat-value")!.textContent = `${parseFloat(
+      sumValue
+    ).toFixed(rounding)}${unit} !!!`;
   }
 };
 
@@ -213,7 +227,7 @@ const _updateTableRow = (
     // Update min/max time if enabled.
     const time = min!.querySelector(".date");
     if (time) {
-      time.textContent = dayjs.unix(payLoad.dateTime).format("h:mm:ss A");
+      time.textContent = dayjs.unix(payLoad.dateTime).format("HH:mm:ss");
     }
 
     // windDir.
@@ -247,7 +261,7 @@ const _updateTableRow = (
     // Update min/max time if enabled.
     const time = max!.querySelector(".date");
     if (time) {
-      time.textContent = dayjs.unix(payLoad.dateTime).format("h:mm:ss A");
+      time.textContent = dayjs.unix(payLoad.dateTime).format("HH:mm:ss");
     }
 
     // windDir.
@@ -317,7 +331,7 @@ const onMessageArrived = (message: Message) => {
 
   notfication!.setAttribute(
     "subtitle",
-    `Last update was ${dayjs.unix(payLoad.dateTime).format("h:mm:ss A")}`
+    `Last update was ${dayjs.unix(payLoad.dateTime).format("HH:mm:ss")}`
   );
 
   for (const key in payLoad) {
@@ -357,7 +371,8 @@ const onMessageArrived = (message: Message) => {
         statTileUnit,
         newValue,
         statTileRounding,
-        payLoad
+        payLoad,
+        unitMQTT
       );
     }
 
@@ -374,15 +389,29 @@ const onMessageArrived = (message: Message) => {
           ? parseFloat(payLoad[key]).toFixed(tableRowRounding)
           : payLoad[key];
 
-      _updateTableRow(
-        tableRow as HTMLElement,
-        key,
-        observation,
-        tableRowUnit,
-        newValue,
-        tableRowRounding,
-        payLoad
-      );
+      if (tableRow.getAttribute("data-aggregation") === "sum") {
+        if (
+          payLoad[
+            `day${
+              observation.charAt(0).toUpperCase() + observation.slice(1)
+            }_${unitMQTT}`
+          ]
+        ) {
+          tableRow.querySelector(
+            "bx-structured-list-cell.cell-value"
+          )!.textContent = `${newValue}${tableRowUnit}`;
+        }
+      } else {
+        _updateTableRow(
+          tableRow as HTMLElement,
+          key,
+          observation,
+          tableRowUnit,
+          newValue,
+          tableRowRounding,
+          payLoad
+        );
+      }
     }
   }
 };

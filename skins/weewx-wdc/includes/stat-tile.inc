@@ -121,11 +121,11 @@
     <!-- Main row -->
     <!--prettier-ignore-->
     #if $context == 'day' and $get_show_sum($partial_obs)
-      <div class="bx--row" data-test="sum">
+      <div class="bx--row value-sum" data-test="sum">
         <div class="bx--col">
           <p class="stat-label">$gettext($label_sum)</p>
+          <!--prettier-ignore-->
           <p class="stat-value">
-            <!--prettier-ignore-->
             $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).sum
           </p>
         </div>

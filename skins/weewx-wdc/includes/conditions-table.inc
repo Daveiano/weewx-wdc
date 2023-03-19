@@ -143,10 +143,10 @@
             #set $skin_obs_key = $get_custom_data_binding_obs_key($skin_obs)
             #set $alltime_tag = None if $use_parameter_year or $use_parameter_month else $alltime($data_binding=$skin_obs_binding)
             #if $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).has_data and $get_show_sum($skin_obs)
-              <bx-structured-list-row data-test="$skin_obs">
+              <bx-structured-list-row data-aggregation="sum" data-test="$skin_obs" data-observation="$skin_obs_key" data-unit="$get_unit_label($get_unit_for_obs($skin_obs, $skin_obs_key, $context))" data-rounding="$get_rounding($skin_obs, $skin_obs_key)">
                 <bx-structured-list-cell class="keep-cell">$obs.label[$skin_obs]</bx-structured-list-cell>
-                <bx-structured-list-cell>
-                  <!--prettier-ignore-->
+                <!--prettier-ignore-->
+                <bx-structured-list-cell class="cell-value">
                   $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).sum
                 </bx-structured-list-cell>
               </bx-structured-list-row>

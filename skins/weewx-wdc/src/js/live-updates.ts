@@ -165,7 +165,7 @@ const _updateStatTile = (
   if (sum && sumValue) {
     sum.querySelector(".stat-value")!.textContent = `${parseFloat(
       sumValue
-    ).toFixed(rounding)}${unit} !!!`;
+    ).toFixed(rounding)}${unit}`;
   }
 };
 

@@ -79,7 +79,6 @@ const _updateStatTile = (
   }
 
   // Update min/max if available.
-  // @todo WindDir for min/max.
   const min = statTile.querySelector(".value-min"),
     minValue = min
       ? min!.querySelector(".stat-value span.value")!.innerHTML
@@ -324,10 +323,6 @@ const onConnectionLost = (responseObject: any) => {
 // Called when a message arrives from the broker.
 const onMessageArrived = (message: Message) => {
   const payLoad = JSON.parse(message.payloadString);
-
-  // @todo Respect loop vs archive for totals (aggregation).
-  console.log(message.destinationName);
-  console.log(payLoad);
 
   notfication!.setAttribute(
     "subtitle",

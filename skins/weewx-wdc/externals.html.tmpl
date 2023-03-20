@@ -1,0 +1,107 @@
+<!--prettier-ignore-->
+#errorCatcher Echo
+#encoding UTF-8
+
+<!DOCTYPE html>
+<html lang="$lang">
+  <head>
+    #include "includes/html-head.inc"
+    <title>$station.location - $gettext("About")</title>
+    <script
+      type="module"
+      src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/notification.min.js"
+    ></script>
+    <script
+      type="module"
+      src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/code-snippet.min.js"
+    ></script>
+    <script
+      type="module"
+      src="https://1.www.s81c.com/common/carbon-for-ibm-dotcom/version/v1.19.0/image-with-caption.min.js"
+    ></script>
+    <script
+      type="module"
+      src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/tabs.min.js"
+    ></script>
+  </head>
+
+  <body>
+    #include "includes/ui-shell.inc"
+
+    <!--@see https://github.com/carbon-design-system/carbon/blob/v10/packages/type/scss/modules/_styles.scss#L628-->
+    <main class="user-page">
+      <section class="main bx--content">
+        <div class="bx--grid bx--grid--full-width">
+          <div class="bx--row">
+            <header class="bx--col page-header">
+              <h1>$gettext("Webcams/Externals")</h1>
+            </header>
+          </div>
+
+          <!--prettier-ignore-->
+          <div class="bx--row">
+            #if 'external_1' in $Extras
+            <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6" style="margin-bottom: 1rem;">
+              <h3 class="bx--type-productive-heading-04">
+                $Extras.external_1.title
+              </h3>
+
+              $Extras.external_1.source
+
+              <h5 class="bx--type-productive-heading-02">
+                $Extras.external_1.title_long
+              </h5>
+            </div>
+            #end if
+
+            #if 'external_2' in $Extras
+            <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6" style="margin-bottom: 1rem;">
+              <h3 class="bx--type-productive-heading-04">
+                $Extras.external_2.title
+              </h3>
+
+              $Extras.external_2.source
+
+              <h5 class="bx--type-productive-heading-02">
+                $Extras.external_2.title_long
+              </h5>
+            </div>
+            #end if
+
+            #if 'external_3' in $Extras
+            <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6" style="margin-bottom: 1rem;">
+              <h3 class="bx--type-productive-heading-04">
+                $Extras.external_3.title
+              </h3>
+
+              $Extras.external_3.source
+
+              <h5 class="bx--type-productive-heading-02">
+                $Extras.external_3.title_long
+              </h5>
+            </div>
+            #end if
+
+            #if 'external_4' in $Extras
+            <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6" style="margin-bottom: 1rem;">
+              <h3 class="bx--type-productive-heading-04">
+                $Extras.external_4.title
+              </h3>
+
+              $Extras.external_4.source
+
+              <h5 class="bx--type-productive-heading-02">
+                $Extras.external_4.title_long
+              </h5>
+            </div>
+            #end if
+          </div>
+        </div>
+      </section>
+    </main>
+
+    #include "includes/footer.inc"
+
+    <script src="$get_base_path(path='dist/main.js')" defer></script>
+  </body>
+</html>

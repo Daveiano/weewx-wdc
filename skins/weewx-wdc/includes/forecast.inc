@@ -51,6 +51,9 @@
       <!--prettier-ignore-->
       #if $varExists('forecast') or $dwd_forecast
       #set forecast_tile_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-8"
+      #if 'forecast_radar_equal_width' in $Extras and $to_bool($Extras.forecast_radar_equal_width) and $DisplayOptions.get('layout', 'alternative') == 'alternative'
+        #set forecast_tile_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6"
+      #end if
       #if $DisplayOptions.get('layout', 'alternative') == 'classic'
         #set forecast_tile_classes = "bx--col-sm-4 bx--col-md-12 bx--col-lg-12 bx--col-xlg-12 bx--col-max-12"
       #end if
@@ -90,6 +93,9 @@
       <!--prettier-ignore-->
       #if $radar_externals or $show_warn
       #set radar_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-4"
+      #if 'forecast_radar_equal_width' in $Extras and $to_bool($Extras.forecast_radar_equal_width) and $DisplayOptions.get('layout', 'alternative') == 'alternative'
+        #set radar_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6"
+      #end if
       #if $DisplayOptions.get('layout', 'alternative') == 'classic'
         #set radar_classes = "bx--col-sm-4 bx--col-md-12 bx--col-lg-12 bx--col-xlg-12 bx--col-max-12"
       #end if
@@ -158,7 +164,7 @@
         #end if
         <div class="bx-ce-demo-devenv--tab-panels">
           #if 'radar_html' in $Extras
-          <div id="panel-radar" role="tabpanel" aria-labelledby="tab-radar" hidden>
+          <div id="panel-radar" role="tabpanel" aria-labelledby="tab-radar">
             <div class="bx--tile tile-radar-forecast">
               $Extras.radar_html
             </div>

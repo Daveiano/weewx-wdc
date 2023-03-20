@@ -27,6 +27,7 @@
   #silent $radar_externals_list.append('external_4')
 #end if
 
+<!--prettier-ignore-->
 #if ($varExists('forecast') and ($forecast_zambretti_active or $forecat_table_active)) or $radar_externals or $dwd_forecast
 <!--prettier-ignore-->
 <div class="bx--row">

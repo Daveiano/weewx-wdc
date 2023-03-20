@@ -97,6 +97,12 @@ jobs:
           name: artifacts-custom-binding-weewx-html
           path: test/test_install_report/artifacts-custom-binding-weewx-html/
 
+      - name: Upload mqtt html
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts-mqtt-weewx-html
+          path: test/test_install_report/artifacts-mqtt-weewx-html/
+
   playwright:
     needs: shunit2
     runs-on: ubuntu-latest
@@ -150,6 +156,12 @@ jobs:
         with:
           name: artifacts-custom-binding-weewx-html
           path: test/e2e-tests/artifacts-custom-binding-weewx-html
+
+      - name: Download mqtt html
+        uses: actions/download-artifact@v3
+        with:
+          name: artifacts-mqtt-weewx-html
+          path: test/e2e-tests/artifacts-mqtt-weewx-html
 
       - name: Run playwright tests
         run: yarn run test:e2e

@@ -179,7 +179,7 @@
           >
             <div class="bx--tile tile-radar-forecast">
               $Extras.external_1.source
-              <p class="bx--type-body-long-02" style="margin-top: 1rem;">$Extras.external_1.title_long</p>
+              <p class="bx--type-caption-01" style="margin-top: 0.25rem;">$Extras.external_1.title_long</p>
             </div>
           </div>
           #end if
@@ -191,7 +191,7 @@
           >
             <div class="bx--tile tile-radar-forecast">
               $Extras.external_2.source
-              <p class="bx--type-body-long-02" style="margin-top: 1rem;">$Extras.external_2.title_long</p>
+              <p class="bx--type-caption-01" style="margin-top: 0.25rem;">$Extras.external_2.title_long</p>
             </div>
           </div>
           #end if
@@ -203,7 +203,7 @@
           >
             <div class="bx--tile tile-radar-forecast">
               $Extras.external_3.source
-              <p class="bx--type-body-long-02" style="margin-top: 1rem;">$Extras.external_3.title_long</p>
+              <p class="bx--type-caption-01" style="margin-top: 0.25rem;">$Extras.external_3.title_long</p>
             </div>
           </div>
           #end if
@@ -215,7 +215,7 @@
           >
             <div class="bx--tile tile-radar-forecast">
               $Extras.external_4.source
-              <p class="bx--type-body-long-02" style="margin-top: 1rem;">$Extras.external_4.title_long</p>
+              <p class="bx--type-caption-01" style="margin-top: 0.25rem;">$Extras.external_4.title_long</p>
             </div>
           </div>
           #end if

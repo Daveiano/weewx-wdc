@@ -636,6 +636,11 @@ header.section-header {
   }
 }
 
+div[id^="panel"] .tile-radar-forecast {
+  padding-bottom: 0;
+  min-height: auto;
+}
+
 .forecast-tile {
   @include carbon--breakpoint-down(xlg) {
     margin-bottom: $spacing-06;

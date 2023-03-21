@@ -558,6 +558,6 @@ https://github.com/Daveiano/weewx-wdc/compare/v2.3.3...7da0c421941c8e61e5aaf2b6d
 
 # Next
 
-- MQTT driven stat tiles on index page GH-131
+- Live updates via MQTT driven stat tiles on index page GH-131
 
 ## Changes made to skin.conf since 3.0.1

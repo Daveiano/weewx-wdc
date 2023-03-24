@@ -5,7 +5,7 @@ test.describe("Stat tiles", () => {
     await page.goto("artifacts-alternative-weewx-html/public_html/index.html");
 
     const outTemp = page.locator(".stat-tile[data-test='outTemp']");
-    await expect(outTemp.locator(".value span")).toHaveText("20.9°C");
+    await expect(outTemp.locator(".value span.raw")).toHaveText("20.9°C");
     await expect(outTemp.locator("[data-test='min'] .stat-value")).toHaveText(
       "11.4°C"
     );

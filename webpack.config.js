@@ -9,6 +9,10 @@ module.exports = {
       __dirname,
       "skins/weewx-wdc/src/js/service-worker.ts"
     ),
+    "live-updates": path.resolve(
+      __dirname,
+      "skins/weewx-wdc/src/js/live-updates.ts"
+    ),
   },
   module: {
     rules: [

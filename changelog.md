@@ -558,6 +558,7 @@ https://github.com/Daveiano/weewx-wdc/compare/v2.3.3...7da0c421941c8e61e5aaf2b6d
 
 # Next
 
+- Live updates via MQTT driven stat tiles on front page GH-131
 - Add slot for webcam image(s) to front page. Add optional extra webcam page GH-127 and https://github.com/Daveiano/weewx-wdc/discussions/121#discussioncomment-5280575
 
 ## Changes made to skin.conf since 3.0.1

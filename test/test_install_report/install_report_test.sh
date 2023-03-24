@@ -42,6 +42,11 @@ oneTimeSetUp() {
         sleep 1
         mkdir "$DIR"/artifacts-custom-binding-weewx-html
     fi
+    if ! [ -d "$DIR"/artifacts-mqtt-weewx-html ] ; then
+        echo Creating artifacts-mqtt-weewx-html directory...
+        sleep 1
+        mkdir "$DIR"/artifacts-mqtt-weewx-html
+    fi
 }
 
 testBundling() {
@@ -183,6 +188,7 @@ testWeeReportRunCustomBinding() {
 
 testWeeReportRunWithoutWeewxForecast() {
     docker run --entrypoint "/start-without-forecast.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunWithoutWeewxForecast.txt 2>&1
+    docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
 
     output=$(cat "$DIR"/artifacts/testWeeReportRunWithoutWeewxForecast.txt)
 
@@ -192,6 +198,23 @@ testWeeReportRunWithoutWeewxForecast() {
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 44 files for report WdcReport in"
     assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx/public_html"
     assertContains "$output" "DEBUG user.weewx_wdc: weewx-forecast extension is not installed. Not providing any forecast data."
+
+    assertNotContains "$output" "failed with exception"
+    assertNotContains "$output" "Ignoring template"
+    assertNotContains "$output" "Caught unrecoverable exception"
+}
+
+testWeeReportRunMqtt() {
+    docker run --entrypoint "/start-mqtt.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunMqtt.txt 2>&1
+    docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-mqtt-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
+
+    output=$(cat "$DIR"/artifacts/testWeeReportRunMqtt.txt)
+
+    assertContains "$output" "Starting weewx reports (mqtt)"
+    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Generating as of last timestamp in the database."
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 44 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 19 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"

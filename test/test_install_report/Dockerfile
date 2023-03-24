@@ -19,13 +19,15 @@ COPY src/start-custom.sh /start-custom.sh
 COPY src/start-custom-binding.sh /start-custom-binding.sh
 COPY src/start-dwd.sh /start-dwd.sh
 COPY src/start-without-forecast.sh /start-without-forecast.sh
+COPY src/start-mqtt.sh /start-mqtt.sh
 RUN chmod +x /start.sh &&\
     chmod +x /start-classic.sh &&\
     chmod +x /start-without-forecast.sh &&\
     chmod +x /start-forecast.sh &&\
     chmod +x /start-custom.sh &&\
     chmod +x /start-custom-binding.sh &&\
-    chmod +x /start-dwd.sh
+    chmod +x /start-dwd.sh &&\
+    chmod +x /start-mqtt.sh
 
 # @see https://blog.nuvotex.de/running-syslog-in-a-container/
 RUN apt-get update &&\
@@ -73,6 +75,7 @@ COPY src/skin.conf ./skins/weewx-wdc/
 COPY src/skin-forecast.conf ./skins/weewx-wdc/
 COPY src/skin-custom.conf ./skins/weewx-wdc/
 COPY src/skin-dwd.conf ./skins/weewx-wdc/
+COPY src/skin-mqtt.conf ./skins/weewx-wdc/
 COPY src/skin-custom-binding.conf ./skins/weewx-wdc/
 COPY src/weewx-dwd.conf ./skins/weewx-wdc/
 

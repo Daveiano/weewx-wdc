@@ -43,6 +43,7 @@ If you like the look and feel of the skin please consider having a look at the o
 - Classic and alternative layout
 - Windrose chart
 - Dark mode
+- Support for up to 4 webcams
 
 ## [Demo](https://www.weewx-hbt.de)
 

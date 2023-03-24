@@ -558,4 +558,55 @@ https://github.com/Daveiano/weewx-wdc/compare/v2.3.3...7da0c421941c8e61e5aaf2b6d
 
 # Next
 
+- Add slot for webcam image(s) to front page. Add optional extra webcam page GH-127 and https://github.com/Daveiano/weewx-wdc/discussions/121#discussioncomment-5280575
+
 ## Changes made to skin.conf since 3.0.1
+
+Line 29, following:
+
+```diff
+#radar_html = ''
+#radar_heading = Recent radar
+
++# Set to True to have the Forecast tile and the radar/externals tile to have the same width.
++# Default is forecast = 2/3 and radar tile = 1/3.
++forecast_radar_equal_width = False
+
++# Include various external sources (eg. webcams) here.
++#[[external_1]]
++#    source = '<img src="http://your-server.com/uploads/webcam01.jpg" />'
++#    title = Webcam 1
++#    title_long = "Webcam 1, facing North"
+
++#[[external_2]]
++#    source = '<img src="http://your-server.com/uploads/webcam02.jpg" />'
++#    title = Webcam 2
++#    title_long = "Webcam 2, facing South"
+
++#[[external_3]]
++#    source = '<img src="http://your-server.com/uploads/webcam01.gif" />'
++#    title = Webcam 1
++#    title_long = "Webcam 1, Timelapse"
+
++#[[external_4]]
++#    source = '<img src="http://your-server.com/uploads/webcam02.gif" />'
++#    title = Webcam 2
++#    title_long = "Webcam 2, Timelapse"
+
+[[forecast_zambretti]]
+   enable = False
+```
+
+Line 508:
+
+```diff
+[[[about]]]
+   template = about.html.tmpl
+   title = About
++#[[[externals]]]
++   #template = externals.html.tmpl
++   #title = Webcams/Externals
+#[[[DWD]]]
+   #template = dwd.html.tmpl
+   #title = Vorhersage vom DWD
+```

@@ -44,6 +44,7 @@ If you like the look and feel of the skin please consider having a look at the o
 - Windrose chart
 - Dark mode
 - Live updates using [weewx-mqtt](https://github.com/matthewwall/weewx-mqtt)
+- Support for up to 4 webcams
 
 ## [Demo](https://www.weewx-hbt.de)
 

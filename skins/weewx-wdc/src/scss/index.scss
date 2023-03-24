@@ -333,6 +333,10 @@ main.user-page {
   a {
     color: $link-01;
   }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 header.page-header {
@@ -631,6 +635,11 @@ header.section-header {
     height: auto;
     margin: 0 auto;
   }
+}
+
+div[id^="panel"] .tile-radar-forecast {
+  padding-bottom: 0;
+  min-height: auto;
 }
 
 .forecast-tile {

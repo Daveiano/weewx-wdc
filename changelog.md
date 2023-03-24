@@ -556,7 +556,7 @@ https://github.com/Daveiano/weewx-wdc/compare/v2.3.3...7da0c421941c8e61e5aaf2b6d
 
 ## No changes made to skin.conf since 3.0.0
 
-# Next
+# 3.1.0
 
 - Live updates via MQTT driven stat tiles on front page GH-131
 - Add slot for webcam image(s) to front page. Add optional extra webcam page GH-127 and https://github.com/Daveiano/weewx-wdc/discussions/121#discussioncomment-5280575
@@ -572,6 +572,13 @@ Line 29, following:
 +# Set to True to have the Forecast tile and the radar/externals tile to have the same width.
 +# Default is forecast = 2/3 and radar tile = 1/3.
 +forecast_radar_equal_width = False
+
++[[mqtt]]
++     mqtt_websockets_enabled = 0
++     mqtt_websockets_host = "localhost"
++     mqtt_websockets_port = 9001
++     mqtt_websockets_ssl = 0
++     mqtt_websockets_topic = "weather/loop"
 
 +# Include various external sources (eg. webcams) here.
 +#[[external_1]]
@@ -611,3 +618,15 @@ Line 508:
    #template = dwd.html.tmpl
    #title = Vorhersage vom DWD
 ```
+
+Line 567:
+
+```diff
+[CopyGenerator]
+-    copy_once = dist/main.js, dist/main.css, plotly-custom-build.min.js, favicon.ico, manifest.json, icon-192x192.png, icon-256x256.png, icon-384x384.png, icon-512x512.png, service-worker.js, offline.html, dist/assets
++    copy_once = dist/main.js, dist/main.css, plotly-custom-build.min.js, dist/live-updates.js, favicon.ico, manifest.json, icon-192x192.png, icon-256x256.png, icon-384x384.png, icon-512x512.png, service-worker.js, offline.html, dist/assets
+```
+
+# Next
+
+## Changes made to skin.conf since 3.1.0

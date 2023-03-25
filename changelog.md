@@ -629,4 +629,6 @@ Line 567:
 
 # Next
 
+- Fixed visual padding bug in single radar tile on front page
+
 ## Changes made to skin.conf since 3.1.0

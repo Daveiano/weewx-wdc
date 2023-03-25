@@ -122,6 +122,14 @@
         #if $radar_externals
         <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v1.25.0/tabs.min.js"></script>
 
+        #if len($radar_externals_list) == 1
+          <style>
+            .radar-container .bx-ce-demo-devenv--tab-panels > div {
+              padding-bottom: 1rem;
+            }
+          </style>
+        #end if
+
         #if len($radar_externals_list) > 1
         <bx-tabs trigger-content="Select an item" value="$radar_externals_list[0]" type="container">
           #if 'radar_html' in $Extras

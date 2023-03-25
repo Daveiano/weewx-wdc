@@ -73,7 +73,7 @@ If you like the look and feel of the skin please consider having a look at the o
 
 ## Installation
 
-**Requires WeeWX >= 4.9 and Python 3**
+**Requires WeeWX >= 4.9 and Python >= 3.7**
 
 1. Download the [latest version](https://github.com/Daveiano/weewx-wdc/releases)
 

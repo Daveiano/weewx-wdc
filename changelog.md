@@ -629,6 +629,8 @@ Line 567:
 
 # Next
 
-- Fixed visual padding bug in single radar tile on front page
+- Bugfix: Visual padding bug in single radar tile on front page
+- Bugfix: Not working tabs for radar/webcams when used with enabled forecast extension
+- Bugfix: (MQTT) Handle observations with underscores GH-139
 
 ## Changes made to skin.conf since 3.1.0

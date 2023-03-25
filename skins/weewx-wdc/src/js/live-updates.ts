@@ -23,7 +23,8 @@ const notfication = websiteMessageContainer!.querySelector(
 );
 
 const _splitMQTTProp = (key: string): string[] => {
-  const underscoreObservations = /^(pm\d+_\d|lightning_[a-z]+_count|lightning_distance|lightning_energy)_(.+)/;
+  const underscoreObservations =
+    /^(pm\d+_\d|lightning_[a-z]+_count|lightning_distance|lightning_energy)_(.+)/;
   const matchedKey = key.match(underscoreObservations);
 
   if (Array.isArray(matchedKey)) {

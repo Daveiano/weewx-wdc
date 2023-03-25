@@ -122,7 +122,7 @@
   #if $show_hourly
   <script
     type="module"
-    src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/content-switcher.min.js"
+    src="https://1.www.s81c.com/common/carbon/web-components/version/v1.25.0/content-switcher.min.js"
   ></script>
   <div
     class="bx--col-sm-4 bx--col-md-8 bx--col-lg-4 bx--col-xlg-4 bx--col-max-4"

@@ -101,16 +101,6 @@
         #set radar_classes = "bx--col-sm-4 bx--col-md-12 bx--col-lg-12 bx--col-xlg-12 bx--col-max-12"
       #end if
 
-      #if len($radar_externals_list) > 1 and $DisplayOptions.get('layout', 'alternative') == 'alternative'
-      <style>
-        @media screen and (min-width: 1650px) {
-          .radar-container {
-            margin-top: -3rem;
-          }
-        }
-      </style>
-      #end if
-
       <!--prettier-ignore-->
       <div class="$radar_classes radar-container">
         #if $show_warn

@@ -22,6 +22,21 @@ const notfication = websiteMessageContainer!.querySelector(
   "bx-inline-notification"
 );
 
+const _splitMQTTProp = (key: string): string[] => {
+  const underscoreObservations = /^(pm\d+_\d|lightning_[a-z]+_count|lightning_distance|lightning_energy)_(.+)/;
+  const matchedKey = key.match(underscoreObservations);
+
+  if (Array.isArray(matchedKey)) {
+    const observation = matchedKey[1];
+    const splitted = matchedKey[2].split("_");
+    splitted.unshift(observation);
+
+    return splitted;
+  } else {
+    return key.split("_");
+  }
+};
+
 const _getUnitFromMQTTProp = (keySplitted: string[]): string => {
   let unitMQTT = "";
 
@@ -332,7 +347,7 @@ const onMessageArrived = (message: Message) => {
   for (const key in payLoad) {
     if (["dateTime", "usUnits", "interval"].includes(key)) continue;
 
-    const keySplitted = key.split("_");
+    const keySplitted = _splitMQTTProp(key);
     const observation = keySplitted[0];
     const unitMQTT = _getUnitFromMQTTProp(keySplitted);
 

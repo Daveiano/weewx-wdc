@@ -33,7 +33,7 @@ If you like the look and feel of the skin please consider having a look at the o
 - Day, week, month, year and all-time pages
 - Archive and NOAA Reports
 - Almanac
-- Translated for DE and EN
+- Translated for DE, EN and IT
 - Tabular representation with Carbon Data Tables
 - Climatological days
 - Calendar charts for rain days and average day temperature

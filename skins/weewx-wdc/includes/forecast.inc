@@ -33,16 +33,7 @@
 <div class="bx--row">
   <header class="bx--col section-header">
     <h2>
-      <!--prettier-ignore-->
-      #if $varExists('forecast') or $dwd_forecast
-        $gettext("Forecast")
-      #end if
-      #if ($varExists('forecast') or $dwd_forecast) and $radar_externals
-       &
-      #end if
-      #if $radar_externals
-        $gettext($Extras.get("radar_heading", "Recent radar"))
-      #end if
+      $gettext($Extras.get("forecast_radar_heading", "Forecast & Recent radar"))
     </h2>
   </header>
 </div>
@@ -124,7 +115,7 @@
         <bx-tabs trigger-content="Select an item" value="$radar_externals_list[0]" type="container">
           #if 'radar_html' in $Extras
           <bx-tab id="tab-radar" target="panel-radar" value="radar">
-            $gettext($Extras.get("radar_heading", "Recent radar"))
+            $gettext("Recent radar")
           </bx-tab>
           #end if
           #if 'external_1' in $Extras

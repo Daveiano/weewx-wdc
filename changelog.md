@@ -627,12 +627,12 @@ Line 567:
 +    copy_once = dist/main.js, dist/main.css, plotly-custom-build.min.js, dist/live-updates.js, favicon.ico, manifest.json, icon-192x192.png, icon-256x256.png, icon-384x384.png, icon-512x512.png, service-worker.js, offline.html, dist/assets
 ```
 
-# Next
+# 3.1.1
 
 - Bugfix: Visual padding bug in single radar tile on front page
 - Bugfix: Not working tabs for radar/webcams when used with enabled forecast extension
 - Bugfix: (MQTT) Handle observations with underscores GH-139
-- Allow user to set complete "Forecast & Radar" heading GH-141 **Note** `radar_heading` is replaced by `forecast_radar_heading`
+- Allow user to set complete "Forecast & Radar" heading GH-141, **Note:** `radar_heading` is replaced by `forecast_radar_heading`
 
 ## Changes made to skin.conf since 3.1.0
 
@@ -643,3 +643,7 @@ Line 27:
 +# The Foreacst/Radar/Webcam section heading.
 +#forecast_radar_heading = "Forecast & Recent radar"
 ```
+
+# Next
+
+## Changes made to skin.conf since 3.1.1

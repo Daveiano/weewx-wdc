@@ -59,7 +59,7 @@
             #end if
           #end if
 
-          $combined_diagram.label
+          $gettext($combined_diagram.label)
         </p>
         <div class="value">
           <!--prettier-ignore-->

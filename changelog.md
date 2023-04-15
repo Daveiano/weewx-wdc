@@ -647,5 +647,6 @@ Line 27:
 # Next
 
 - Bugfix: Adding 'Voltage' observations make icons disappear on today page GH-144
+- Added default Translation of combined diagram labels GH-149
 
 ## Changes made to skin.conf since 3.1.1

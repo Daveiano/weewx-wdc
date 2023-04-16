@@ -126,7 +126,7 @@ test.describe("Stat tiles", () => {
   test("Rain tile", async ({ page }) => {
     await page.goto("artifacts-alternative-weewx-html/public_html/week.html");
 
-    const rain = page.locator(".stat-tile[data-test='rain']");
+    let rain = page.locator(".stat-tile[data-test='rain']");
     await expect(rain.locator(".value span >> nth=0")).toContainText(
       "0.12 cm Totals"
     );
@@ -139,6 +139,22 @@ test.describe("Stat tiles", () => {
     await expect(
       rain.locator("[data-test='rain-rate-max'] .stat-value")
     ).toHaveText("0.30 cm/h");
+
+    await page.goto("artifacts-alternative-weewx-html/public_html/year.html");
+
+    rain = page.locator(".stat-tile[data-test='rain']");
+    await expect(rain.locator(".value span >> nth=0")).toContainText(
+      "18.74 cm Totals"
+    );
+    await expect(rain.locator("[data-test='min'] .stat-value")).toHaveCount(0);
+    await expect(rain.locator("[data-test='sum'] .stat-value")).toHaveCount(0);
+    await expect(rain.locator("[data-test='max'] .stat-value")).toHaveCount(0);
+    await expect(
+      rain.locator("[data-test='rain-days'] .stat-value")
+    ).toHaveText("65");
+    await expect(
+      rain.locator("[data-test='rain-rate-max'] .stat-value")
+    ).toHaveText("1.86 cm/h");
   });
 
   test("Custom Icons", async ({ page }) => {

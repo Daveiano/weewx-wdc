@@ -5,6 +5,7 @@
 #set $label_min = $get_labels('Min', $context)
 #set $label_max = $get_labels('Max', $context)
 #set $label_avg = $get_labels('Avg', $context)
+#set $show_rain_rate = 'rainRate' in $DisplayOptions.get('stat_tile_observations', []) and $partial_obs == "rain"
 #set $show_wind_dir = 'windDir' in $DisplayOptions.get('stat_tile_observations', []) and $partial_obs == "windSpeed" and not $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
 #set $show_wind_dir_ordinal = 'windDir' in $DisplayOptions.get('stat_tile_observations', []) and $partial_obs == "windSpeed" and $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
 #set $show_gust_dir = 'windGustDir' in $DisplayOptions.get('stat_tile_observations', []) and $partial_obs == "windGust" and not $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
@@ -131,15 +132,39 @@
     <!--prettier-ignore-->
     #if $context != 'day' and $get_show_sum($partial_obs)
       #if $partial_obs == 'rain'
-        <div class="bx--row" data-test="rain-days">
-          <div class="bx--col">
-            <p class="stat-label">$gettext("Rain days")</p>
-            <p class="stat-value">
+        #set $time_span = $get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding))
+        <div class="bx--row">
+          #if $context != 'yesterday'
+            <div class="bx--col" data-test="rain-days">
+              <p class="stat-label">$gettext("Rain days")</p>
+              <p class="stat-value">
+                <!--prettier-ignore-->
+                $get_climatological_day('rainDays', $time_span.start.raw, $time_span.end.raw)
+              </p>
+            </div>
+          #end if
+          #if $show_rain_rate
+          <div class="bx--col value-rain-rate-max" data-test="rain-rate-max">
+            <p class="stat-label">
+              #if $show_min_max_time
+              <bx-tooltip-definition
+                alignment="center"
+                body-text="$getattr(time_span, $partial_obs).maxtime.format($min_max_time_format)"
+                direction="top"
+              >
+                $gettext("Max") $obs.label.rainRate
+              </bx-tooltip-definition>
               <!--prettier-ignore-->
-              #set $time_span = $get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding))
-              $get_climatological_day('rainDays', $time_span.start.raw, $time_span.end.raw)
+              #else
+                $gettext("Max") $obs.label.rainRate
+              #end if
+            </p>
+            <!--prettier-ignore-->
+            <p class="stat-value">
+              <span class="value" style="display: inline;">$getattr($time_span, 'rainRate').max</span>
             </p>
           </div>
+        #end if
         </div>
       #else
         <div class="bx--row" data-test="avg">
@@ -158,74 +183,109 @@
       <!--prettier-ignore-->
       #end if
     #else
-    <div class="bx--row">
-      #if $get_show_min($partial_obs)
-      <div class="bx--col value-min" data-test="min">
-        <p class="stat-label">
-          <!--prettier-ignore-->
-          #if $show_min_max_time
-          <bx-tooltip-definition
-            alignment="center"
-            body-text="$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), $partial_obs).mintime.format($min_max_time_format)"
-            direction="top"
-          >
-            $gettext($label_min)
-          </bx-tooltip-definition>
-          <!--prettier-ignore-->
-          #else
-            $gettext($label_min)
-          #end if
-        </p>
-        <!--prettier-ignore-->
-        <p class="stat-value">
-          <span class="value" style="display: inline;">$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).min</span>
-        </p>
-      </div>
-      #end if
-      #if $get_show_sum($partial_obs)
-        <div class="bx--col value-max" data-test="max">
-          <p class="stat-label">
-            $gettext("Total week")
-          </p>
-          <!--prettier-ignore-->
-          <p class="stat-value">
-            <span class="value" style="display: inline;">$getattr($week, $skin_obs_key).sum</span>
-          </p>
-        </div>
-      #else
-        <div class="bx--col value-max" data-test="max">
+      <div class="bx--row">
+        #if $get_show_min($partial_obs)
+        <div class="bx--col value-min" data-test="min">
           <p class="stat-label">
             <!--prettier-ignore-->
             #if $show_min_max_time
             <bx-tooltip-definition
               alignment="center"
-              body-text="$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), $partial_obs).maxtime.format($min_max_time_format)"
+              body-text="$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), $partial_obs).mintime.format($min_max_time_format)"
               direction="top"
             >
-              $gettext($label_max)
+              $gettext($label_min)
             </bx-tooltip-definition>
             <!--prettier-ignore-->
             #else
-              $gettext($label_max)
+              $gettext($label_min)
             #end if
           </p>
           <!--prettier-ignore-->
           <p class="stat-value">
-            <span class="value" style="display: inline;">$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).max</span>
-
-            #if $show_wind_dir and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").has_data
-              <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").max</span>
-            #else if $show_wind_dir_ordinal and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").has_data
-              <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").max.ordinal_compass</span>
-            #else if $show_gust_dir and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").has_data
-              <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").max</span>
-            #else if $show_gust_dir_ordinal and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").has_data
-              <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").max.ordinal_compass</span>
-            #end if
+            <span class="value" style="display: inline;">$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).min</span>
           </p>
         </div>
-      #end if
-    </div>
+        #end if
+        #if $get_show_sum($partial_obs)
+          #if $partial_obs != 'rain'
+            <div class="bx--col value-total-week" data-test="total-week">
+              <p class="stat-label">
+                $gettext("Total week short")
+              </p>
+              <!--prettier-ignore-->
+              <p class="stat-value">
+                <span class="value" style="display: inline;">$getattr($week, $skin_obs_key).sum</span>
+              </p>
+            </div>
+          #end if
+          #if $show_rain_rate and not $daily_archive
+            <div class="bx--col value-rain-rate-max" data-test="rain-rate-current">
+              <p class="stat-label">
+                $obs.label.rainRate
+              </p>
+              <!--prettier-ignore-->
+              <p class="stat-value">
+                <span class="value" style="display: inline;">$getattr($current, 'rainRate')</span>
+              </p>
+            </div>
+          #end if
+          #if $show_rain_rate
+            <div class="bx--col value-rain-rate-max" data-test="rain-rate-max">
+              <p class="stat-label">
+                #if $show_min_max_time
+                <bx-tooltip-definition
+                  alignment="center"
+                  body-text="$getattr(time_span, $partial_obs).maxtime.format($min_max_time_format)"
+                  direction="top"
+                >
+                  $gettext("Max") $obs.label.rainRate
+                </bx-tooltip-definition>
+                <!--prettier-ignore-->
+                #else
+                  $gettext("Max") $obs.label.rainRate
+                #end if
+              </p>
+              <!--prettier-ignore-->
+              <p class="stat-value">
+                <span class="value" style="display: inline;">$getattr($day, 'rainRate').max</span>
+              </p>
+            </div>
+          #end if
+        #else
+          <div class="bx--col value-max" data-test="max">
+            <p class="stat-label">
+              <!--prettier-ignore-->
+              #if $show_min_max_time
+              <bx-tooltip-definition
+                alignment="center"
+                body-text="$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), $partial_obs).maxtime.format($min_max_time_format)"
+                direction="top"
+              >
+                $gettext($label_max)
+              </bx-tooltip-definition>
+              <!--prettier-ignore-->
+              #else
+                $gettext($label_max)
+              #end if
+            </p>
+            <!--prettier-ignore-->
+            <p class="stat-value">
+              <span class="value" style="display: inline;">$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).max</span>
+
+              #if $show_wind_dir and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").has_data
+                <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").max</span>
+              #else if $show_wind_dir_ordinal and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").has_data
+                <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").max.ordinal_compass</span>
+              #else if $show_gust_dir and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").has_data
+                <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").max</span>
+              #else if $show_gust_dir_ordinal and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").has_data
+                <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").max.ordinal_compass</span>
+              #end if
+            </p>
+          </div>
+        #end if
+      </div>
     #end if
   </div>
 </div>

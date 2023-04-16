@@ -128,7 +128,8 @@
         </p>
       </div>
     </div>
-    <!-- Main row -->
+    <!-- /Main row -->
+
     <!--prettier-ignore-->
     #if $context != 'day' and $get_show_sum($partial_obs)
       #if $partial_obs == 'rain'

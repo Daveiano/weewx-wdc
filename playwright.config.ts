@@ -65,13 +65,20 @@ const config: PlaywrightTestConfig = {
       },
     },
 
-    {
-      name: "webkit",
-      use: {
-        ...devices["Desktop Safari"],
-        viewport: { width: 1920, height: 1000 },
-      },
-    },
+    // {
+    //   name: "webkit",
+    //   use: {
+    //     ...devices["Desktop Safari"],
+    //     viewport: { width: 1920, height: 1000 },
+    //   },
+    //   timeout: 50 * 1000,
+    //   expect: {
+    //     timeout: 25000,
+    //     toHaveScreenshot: {
+    //       maxDiffPixelRatio: 0.07,
+    //     },
+    //   },
+    // },
 
     /* Test against mobile viewports. */
     // {

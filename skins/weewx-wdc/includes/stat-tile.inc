@@ -149,7 +149,7 @@
               #if $show_min_max_time
               <bx-tooltip-definition
                 alignment="center"
-                body-text="$getattr(time_span, $partial_obs).maxtime.format($min_max_time_format)"
+                body-text="$getattr($time_span, 'rainRate').maxtime.format($min_max_time_format)"
                 direction="top"
               >
                 $gettext("Max") $obs.label.rainRate
@@ -236,7 +236,7 @@
                 #if $show_min_max_time
                 <bx-tooltip-definition
                   alignment="center"
-                  body-text="$getattr(time_span, $partial_obs).maxtime.format($min_max_time_format)"
+                  body-text="$getattr($day, 'rainRate').maxtime.format($min_max_time_format)"
                   direction="top"
                 >
                   $gettext("Max") $obs.label.rainRate

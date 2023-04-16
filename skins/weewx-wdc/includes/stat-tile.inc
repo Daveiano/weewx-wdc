@@ -40,13 +40,12 @@
           <!--prettier-ignore-->
           <span class="stat-title-obs-value">
             #if $context == 'day' and not $daily_archive
-              <span class="raw">
-                #if $get_show_sum($partial_obs)
-                  $getattr($day($data_binding=$skin_obs_binding), $skin_obs_key).sum
-                #else
-                  $getattr($current($data_binding=$skin_obs_binding), $skin_obs_key)
-                #end if
-              </span>
+
+              #if $get_show_sum($partial_obs)
+              <span class="raw raw-sum">$getattr($day($data_binding=$skin_obs_binding), $skin_obs_key).sum</span>
+              #else
+              <span class="raw">$getattr($current($data_binding=$skin_obs_binding), $skin_obs_key)</span>
+              #end if
 
               #if $get_show_sum($partial_obs)
                 <span>$gettext("Total")</span>
@@ -221,7 +220,7 @@
             </div>
           #end if
           #if $show_rain_rate and not $daily_archive
-            <div class="bx--col value-rain-rate-max" data-test="rain-rate-current">
+            <div class="bx--col value-rain-rate-current" data-test="rain-rate-current">
               <p class="stat-label">
                 $obs.label.rainRate
               </p>

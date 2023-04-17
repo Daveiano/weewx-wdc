@@ -103,10 +103,16 @@
         #if $radar_externals
         <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v1.25.0/tabs.min.js"></script>
 
+        <style>
+          .radar-container .bx-ce-demo-devenv--tab-panels > div {
+            padding-bottom: 1rem;
+          }
+        </style>
+
         #if len($radar_externals_list) == 1
           <style>
-            .radar-container .bx-ce-demo-devenv--tab-panels > div {
-              padding-bottom: 1rem;
+            .radar-container .bx-ce-demo-devenv--tab-panels .bx--tile {
+              padding: 0;
             }
           </style>
         #end if

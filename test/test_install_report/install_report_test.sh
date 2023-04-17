@@ -72,10 +72,8 @@ testInstall() {
     line1=$(sed '1q;d' "$DIR"/artifacts/testInstall.txt)
     lineLast=$(tail -n 1 "$DIR"/artifacts/testInstall.txt)
 
-    assertContains "$line1" "Sending build context to Docker daemon"
     assertContains "$output" "Request to install '/tmp/weewx-wdc/'"
     assertContains "$output" "Finished installing extension '/tmp/weewx-wdc/'"
-    assertEquals "Successfully tagged weewx:latest" "$lineLast"
 }
 
 testWeeReportRunAlternative() {

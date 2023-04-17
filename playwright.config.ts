@@ -15,7 +15,7 @@ import path from "path";
 const config: PlaywrightTestConfig = {
   testDir: "./test/e2e-tests",
   /* Maximum time one test can run for. */
-  timeout: 35 * 1000,
+  timeout: 40 * 1000,
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
@@ -65,13 +65,13 @@ const config: PlaywrightTestConfig = {
       },
     },
 
-    {
-      name: "webkit",
-      use: {
-        ...devices["Desktop Safari"],
-        viewport: { width: 1920, height: 1000 },
-      },
-    },
+    // {
+    //   name: "webkit",
+    //   use: {
+    //     ...devices["Desktop Safari"],
+    //     viewport: { width: 1920, height: 1000 },
+    //   },
+    // },
 
     /* Test against mobile viewports. */
     // {

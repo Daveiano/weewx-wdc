@@ -21,8 +21,6 @@ class BasicInstaller(ExtensionInstaller):
                     "WdcReport": {
                         "skin": "weewx-wdc",
                         "enable": "true",
-                        "lang": "en",
-                        # 'unit_system': 'US'
                     }
                 }
             },

@@ -27,6 +27,7 @@
 #include "includes/forecast.inc"
 #end if
 
+<!--TODO: Outsource in include.tmpl-->
 <div class="bx--row">
   <!--prettier-ignore-->
   <header class="bx--col section-header">

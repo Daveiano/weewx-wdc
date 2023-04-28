@@ -1,15 +1,15 @@
 <!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
-#from datetime import datetime
+#from datetime import datetime, timedelta
 
 #attr $use_parameter_month = False
 #attr $use_parameter_year = False
+#attr $daily_archive = False
 
 #set $now = datetime.now().strftime("%x %X")
-#set $recent=$span($day_delta=30, boundary='midnight')
-#attr $context = 'month'
 #set $sensor_stat_tile_observations = $to_list($DisplayOptions.get('sensor_stat_tile_observations', ['rxCheckPercent', 'consBatteryVoltage']))
+#set $sensor_diagram_observations = $to_list($DisplayOptions.get('sensor_diagram_observations', ['rxCheckPercent', 'consBatteryVoltage']))
 
 <!DOCTYPE html>
 <html lang="$lang">
@@ -33,12 +33,74 @@
 
           <div class="bx--row">
             <!--prettier-ignore-->
+            #set $recent=$span($day_delta=1, boundary='midnight')
+            #set global $context = 'day'
             #for $sensor_obs in $sensor_stat_tile_observations
               #set $sensor_obs_binding = $get_data_binding($sensor_obs)
 
               #if $getattr(recent, $get_custom_data_binding_obs_key($sensor_obs)).has_data
                 #set global $partial_obs = $sensor_obs
                 #include "includes/stat-tile.inc"
+              #end if
+            #end for
+          </div>
+
+          <!--prettier-ignore-->
+          #set global $context = 'month'
+          #set $recent=$span($day_delta=30, boundary='midnight')
+
+          <!--TODO: Outsource in include.tmpl-->
+          <div class="bx--row">
+            <!--prettier-ignore-->
+            <header class="bx--col section-header">
+              #if $context == 'day' and not $daily_archive
+                <h2>$gettext("Last 24 hours")</h2>
+              #else if $context == 'day' and $daily_archive
+                <h2>$day.dateTime.format($get_time_format_dict['daily_archive'])</h2>
+              #else if $context == 'yesterday'
+                <h2>$gettext("Yesterday")</h2>
+              #else if $context == 'week'
+                <h2>$gettext("Last 7 days")</h2>
+                #set $start_date_header = datetime.fromtimestamp($current.dateTime.raw) - timedelta(days=7)
+                <h3>
+                  <!--prettier-ignore-->
+                  $start_date_header.strftime($get_time_format_dict['week']) - $current.dateTime.format($get_time_format_dict['week'])
+                </h3>
+              #else if $context == 'month' and not $use_parameter_month
+                <h2>$gettext("Last 30 days")</h2>
+                #set $start_date_header = datetime.fromtimestamp($current.dateTime.raw) - timedelta(days=30)
+                <h3>
+                  $start_date_header.strftime($get_time_format_dict['month']) - $current.dateTime.format($get_time_format_dict['month'])
+                </h3>
+              #else if $context == 'month' and $use_parameter_month
+                <h2>$month_name $year_name</h2>
+              #else if $context == 'year' and not $use_parameter_year
+                <h2>$gettext("Last 365 days")</h2>
+                #set $start_date_header = datetime.fromtimestamp($current.dateTime.raw) - timedelta(days=365)
+                <h3>
+                  $start_date_header.strftime($get_time_format_dict['year']) - $current.dateTime.format($get_time_format_dict['year'])
+                </h3>
+              #else if $context == 'year' and $use_parameter_year
+                <h2>$year_name</h2>
+              #else if $context == 'alltime'
+                <h2>$gettext("All Time")</h2>
+              #end if
+            </header>
+          </div>
+
+          <!-- prettier-ignore -->
+          <div class="bx--row">
+            #set $diagram_index = 0
+
+            #for $sensor_diagram_obs in $sensor_diagram_observations
+              #set $sensor_diagram_obs_binding = $get_data_binding($sensor_diagram_obs, $context)
+              #if $getattr($recent, $get_custom_data_binding_obs_key($sensor_diagram_obs)).has_data
+                #set global $partial_obs = $sensor_diagram_obs
+                #set global $diagram_index = $diagram_index
+
+                #include "includes/diagram-tile.inc"
+
+                #set $diagram_index = $diagram_index + 1
               #end if
             #end for
           </div>

@@ -188,6 +188,12 @@ class WdcGeneralUtil(SearchList):
 
         return False
 
+    def show_sensor_page(self):
+        if "sensor_status" in self.generator_to_date:
+            return True
+
+        return False
+
     def get_time_format_dict(self):
         return self.time_format
 

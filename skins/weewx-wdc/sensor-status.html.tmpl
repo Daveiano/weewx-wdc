@@ -10,6 +10,8 @@
 #set $now = datetime.now().strftime("%x %X")
 #set $sensor_stat_tile_observations = $to_list($DisplayOptions.get('sensor_stat_tile_observations', ['rxCheckPercent', 'consBatteryVoltage']))
 #set $sensor_diagram_observations = $to_list($DisplayOptions.get('sensor_diagram_observations', ['rxCheckPercent', 'consBatteryVoltage']))
+#set $sensor_batteries = $to_list($DisplayOptions.get('sensor_battery_status', ['outTempBatteryStatus', 'inTempBatteryStatus', 'rainBatteryStatus', 'windBatteryStatus', 'uvBatteryStatus', 'txBatteryStatus']))
+#set $sensor_diagram_period = $DisplayOptions.get('sensor_diagram_period', 'month')
 
 <!DOCTYPE html>
 <html lang="$lang">
@@ -31,10 +33,54 @@
             </header>
           </div>
 
+          <!--prettier-ignore-->
+          #set $recent=$span($day_delta=1, boundary='midnight')
+          #set global $context = 'day'
+
+          <!--prettier-ignore-->
+          <div class="bx--row" style="margin-bottom: 1.5rem">
+            <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/notification.min.js"></script>
+            #for $battery in $sensor_batteries
+              #if $getattr($recent, $battery).has_data
+                <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-4">
+                  #set $battery_raw = $getVar('current.%s.raw' % $battery)
+
+                  #if $battery_raw == 1
+                    <bx-inline-notification
+                      style="margin-bottom: .5rem"
+                      title="$obs.label[$battery]"
+                      subtitle="$gettext('Low')"
+                      kind="warning"
+                      hide-close-button
+                    >
+                    </bx-inline-notification>
+                  #else if $battery_raw is None
+                    <bx-inline-notification
+                      style="margin-bottom: .5rem"
+                      title="$obs.label[$battery]"
+                      subtitle="$gettext('Unknown')"
+                      kind="info"
+                      hide-close-button
+                    >
+                    </bx-inline-notification>
+                  #else
+                    <bx-inline-notification
+                      style="margin-bottom: .5rem"
+                      title="$obs.label[$battery]"
+                      subtitle="$gettext('Ok')"
+                      kind="success"
+                      hide-close-button
+                    >
+                    </bx-inline-notification>
+                  #end if
+
+                </div>
+              #end if
+            #end for
+          </div>
+
           <div class="bx--row">
             <!--prettier-ignore-->
-            #set $recent=$span($day_delta=1, boundary='midnight')
-            #set global $context = 'day'
             #for $sensor_obs in $sensor_stat_tile_observations
               #set $sensor_obs_binding = $get_data_binding($sensor_obs)
 
@@ -46,8 +92,8 @@
           </div>
 
           <!--prettier-ignore-->
-          #set global $context = 'month'
-          #set $recent=$span($day_delta=30, boundary='midnight')
+          #set global $context = $sensor_diagram_period
+          #set $recent=$span($day_delta=1, boundary='midnight')
 
           <!--TODO: Outsource in include.tmpl-->
           <div class="bx--row">

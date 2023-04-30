@@ -79,6 +79,7 @@
 #if 'table_tile_observations' in $DisplayOptions
 <div class="bx--row">
   <!-- prettier-ignore -->
+  #set global $table_obs = None
   #include "includes/data-table-tile.inc"
 </div>
 #end if

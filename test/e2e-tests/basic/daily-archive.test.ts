@@ -30,7 +30,7 @@ test.describe("Daily archive", () => {
       selector.getByRole("option").nth(9).click(),
     ]);
 
-    expect(page.url()).toContain("day-archive/day-2021-03-13.html");
+    expect(page.url()).toContain("day-archive/day-2021-10-25.html");
 
     await expect(page).toHaveScreenshot({ fullPage: true });
   });

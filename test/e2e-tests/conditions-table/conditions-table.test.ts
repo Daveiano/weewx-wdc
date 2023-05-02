@@ -9,7 +9,7 @@ test.describe("Conditions table", () => {
     const outTemp = conditionsTable.locator("[data-test='outTemp']");
     await expect(
       outTemp.locator("bx-structured-list-cell >> nth=1")
-    ).toHaveText("9.9°C");
+    ).toHaveText("7.0°C");
 
     await expect(
       outTemp.locator("bx-structured-list-cell >> nth=2")
@@ -22,11 +22,11 @@ test.describe("Conditions table", () => {
     const windSpeed = conditionsTable.locator("[data-test='windSpeed']");
     await expect(
       windSpeed.locator("bx-structured-list-cell >> nth=1")
-    ).toHaveText("6 km/h , SSW");
+    ).toHaveText("8 km/h , SSW");
 
     await expect(
       windSpeed.locator("bx-structured-list-cell >> nth=2")
-    ).toHaveText(/0 km\/h([\s\S]*) 03\/04\/21 19:57:00/);
+    ).toHaveText(/0 km\/h([\s\S]*) 10\/17\/21 00:24:00/);
 
     await expect(
       windSpeed.locator("bx-structured-list-cell >> nth=3")
@@ -34,7 +34,7 @@ test.describe("Conditions table", () => {
 
     const rain = conditionsTable.locator("[data-test='rain']");
     await expect(rain.locator("bx-structured-list-cell >> nth=1")).toHaveText(
-      "81.07 cm"
+      "30.01 cm"
     );
   });
 

@@ -36,7 +36,7 @@ test.describe("Basic page elements", () => {
       page.locator(
         "bx-side-nav bx-side-nav-items bx-side-nav-menu[title='2021'] bx-side-nav-menu-item"
       )
-    ).toHaveCount(10);
+    ).toHaveCount(3);
 
     // 2022 menu.
     await expect(

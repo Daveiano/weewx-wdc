@@ -14,7 +14,7 @@ test.describe("Climatological days", () => {
     const rainDays = table.locator("[data-test='rainDays']");
     await expect(
       rainDays.locator("bx-structured-list-cell >> nth=1")
-    ).toHaveText("208");
+    ).toHaveText("104");
     await expect(
       rainDays.locator("bx-structured-list-cell >> nth=2")
     ).toHaveText(/Rain > 0 cm/);
@@ -22,7 +22,7 @@ test.describe("Climatological days", () => {
     const summerDays = table.locator("[data-test='summerDays']");
     await expect(
       summerDays.locator("bx-structured-list-cell >> nth=1")
-    ).toHaveText("59");
+    ).toHaveText("18");
     await expect(
       summerDays.locator("bx-structured-list-cell >> nth=2")
     ).toHaveText(/Outside Temperaturemax ≥ 25°C/);
@@ -30,7 +30,7 @@ test.describe("Climatological days", () => {
     const hotDays = table.locator("[data-test='hotDays']");
     await expect(
       hotDays.locator("bx-structured-list-cell >> nth=1")
-    ).toHaveText("6");
+    ).toHaveText("2");
     await expect(
       hotDays.locator("bx-structured-list-cell >> nth=2")
     ).toHaveText(/Outside Temperaturemax ≥ 30°C/);
@@ -46,7 +46,7 @@ test.describe("Climatological days", () => {
     const tropicalNights = table.locator("[data-test='tropicalNights']");
     await expect(
       tropicalNights.locator("bx-structured-list-cell >> nth=1")
-    ).toHaveText("5");
+    ).toHaveText("1");
     await expect(
       tropicalNights.locator("bx-structured-list-cell >> nth=2")
     ).toHaveText(/Outside Temperaturemin ≥ 20°C/);
@@ -70,7 +70,7 @@ test.describe("Climatological days", () => {
     const frostDays = table.locator("[data-test='frostDays']");
     await expect(
       frostDays.locator("bx-structured-list-cell >> nth=1")
-    ).toHaveText("86");
+    ).toHaveText("65");
     await expect(
       frostDays.locator("bx-structured-list-cell >> nth=2")
     ).toHaveText(/Outside Temperaturemin < 0°C/);
@@ -120,7 +120,7 @@ test.describe("Climatological days", () => {
 
   test("Climatogram Year", async ({ page }) => {
     await page.goto(
-      "artifacts-alternative-weewx-html/public_html/year-2021.html"
+      "artifacts-alternative-weewx-html/public_html/year-2022.html"
     );
 
     const climatogram = page.locator("#panel-climatogram");

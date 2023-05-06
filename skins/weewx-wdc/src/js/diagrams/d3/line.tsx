@@ -443,7 +443,8 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
           "stroke-width",
           props.nivoProps.lineWidth ? props.nivoProps.lineWidth : 2
         )
-        .attr("d", lineGenerator(dataSet.data as any));
+        .attr("d", lineGenerator(dataSet.data as any))
+        .attr("data-test", `path-${props.observation[index]}`);
     });
 
     // Markers.
@@ -669,7 +670,11 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
     <>
       <Maximize onClick={handleFullScreen} />
       <div style={{ height: "100%", position: "relative" }}>
-        <svg ref={svgRef} xmlns="http://www.w3.org/2000/svg" />
+        <svg
+          ref={svgRef}
+          xmlns="http://www.w3.org/2000/svg"
+          data-test="d3-diagram-svg"
+        />
         <div
           ref={tooltipRef}
           className="d3-diagram-tooltip"

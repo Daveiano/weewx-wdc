@@ -40,6 +40,9 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
   const size: Size = useWindowSize();
   const [tooltip, setTooltip] = useState<Datum[]>([] as Datum[]);
 
+  const windDirOrdinals = (window as any).weewxWdcConfig.diagramWindDirOrdinals;
+  const ordinalCompass = (window as any).weewxWdcConfig.ordinalCompass;
+
   // @todo This adds one MutationObserver per LineDiagram. Add this to one
   //    general component which shares the state.
   const [darkMode, setDarkMode] = useState(
@@ -260,6 +263,11 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
 
       // Y Axis left.
       if (index === 0) {
+        const windDirAsOridnal =
+          props.observation.length === 1 &&
+          props.observation[0] === "windDir" &&
+          windDirOrdinals;
+
         svgElement
           .append("g")
           // @todo Wind direction degree/ordinal.
@@ -268,30 +276,34 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
               .axisLeft(yScale)
               .ticks(6)
               .tickFormat((d) => {
-                return d.toString();
+                return windDirAsOridnal
+                  ? ordinalCompass[Math.floor((d as number) / 22.5 + 0.5) % 16]
+                  : d.toString();
               })
               .tickSize(0)
               .tickPadding(6)
           );
 
-        // Y Axis Label.
-        svgElement
-          .append("g")
-          .attr(
-            "transform",
-            `translate(${
-              getAxisLeftLegendOffset(
-                props.observation[props.unit.indexOf(unit)]
-              ) + 2.25
-            }, ${height / 2}), rotate(-90)`
-          )
-          .append("text")
-          .attr("class", "axis-label-left")
-          .attr("text-anchor", "middle")
-          .attr("font-size", "0.75em")
-          .style("dominant-baseline", "central")
-          .style("font-family", "sans-serif")
-          .text(unit);
+        // Y Axis Label - only show if not windDir and windDirOrdinals is set.
+        if (!windDirAsOridnal) {
+          svgElement
+            .append("g")
+            .attr(
+              "transform",
+              `translate(${
+                getAxisLeftLegendOffset(
+                  props.observation[props.unit.indexOf(unit)]
+                ) + 2.25
+              }, ${height / 2}), rotate(-90)`
+            )
+            .append("text")
+            .attr("class", "axis-label-left")
+            .attr("text-anchor", "middle")
+            .attr("font-size", "0.75em")
+            .style("dominant-baseline", "central")
+            .style("font-family", "sans-serif")
+            .text(unit);
+        }
 
         // y Axis gutter.
         // @see https://stackoverflow.com/a/17871021

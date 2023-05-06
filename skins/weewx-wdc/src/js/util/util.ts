@@ -1,8 +1,6 @@
-import { Scale, ScaleLinearSpec } from "@nivo/scales";
 import { Margin } from "@nivo/core";
-import { Series } from "../diagrams/types";
 import dayjs from "dayjs";
-import { useState, useEffect, Ref, RefObject } from "react";
+import { useState, useEffect, RefObject } from "react";
 export interface Size {
   width: number | undefined;
   height: number | undefined;
@@ -50,39 +48,6 @@ export const useIsVisible = (ref: RefObject<SVGSVGElement>): boolean => {
   }, [ref]);
 
   return isIntersecting;
-};
-
-/**
- *
- * Not used anymore for d3 implemetation.
- */
-export const getyScale = (
-  data: Series[],
-  yScaleOffset: string,
-  yScaleMin?: string,
-  yScaleMax?: string
-): ScaleLinearSpec => {
-  let staticMin: "auto" | number | undefined = undefined;
-  let staticMax: "auto" | number | undefined = undefined;
-
-  if (yScaleMin) {
-    staticMin = yScaleMin === "auto" ? yScaleMin : parseFloat(yScaleMin);
-  }
-  if (yScaleMax) {
-    staticMax = yScaleMax === "auto" ? yScaleMax : parseFloat(yScaleMax);
-  }
-
-  return {
-    type: "linear",
-    min:
-      typeof staticMin === "number" || typeof staticMin === "string"
-        ? staticMin
-        : Math.min(...data.map((item) => item.y)) - parseFloat(yScaleOffset),
-    max:
-      typeof staticMax === "number" || typeof staticMax === "string"
-        ? staticMax
-        : Math.max(...data.map((item) => item.y)) + parseFloat(yScaleOffset),
-  };
 };
 
 export const getMargins = (obs: string): Margin => {

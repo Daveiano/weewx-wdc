@@ -17,7 +17,7 @@ export const addLegend = (
     x = 144,
     y = 1.5;
 
-  const legend = svgElement.append("g");
+  const legend = svgElement.append("g").attr("class", "legend");
 
   data.map((item, index) => {
     const legendItem = legend
@@ -65,9 +65,17 @@ export const addLegend = (
       .style("font-size", "11px");
   });
 
+  console.log(width);
+  console.log(legend.node());
+  console.log(legend.node()?.getBBox());
+
   legend.attr(
     "transform",
-    `translate(${width - (legend.node()?.getBBox().width as number)}, 0)`
+    `translate(${
+      width -
+      (legend.node()?.getBBox().width as number) -
+      (legend.node()?.getBBox().x as number)
+    }, 0)`
   );
 
   return legend;

@@ -231,15 +231,23 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
           (data) => data.unit === props.unit[index]
         );
 
-        // @todo Should be obs specific?
-        const yScaleMin = props.nivoProps.yScaleMin
-            ? parseFloat(props.nivoProps.yScaleMin)
+        const observationProps = props.nivoProps.obs
+          ? {
+              ...props.nivoProps,
+              ...Object.entries(props.nivoProps.obs).filter(
+                ([key, value]) => value.observation === props.observation[index]
+              )[0][1],
+            }
+          : props.nivoProps;
+
+        const yScaleMin = observationProps.yScaleMin
+            ? parseFloat(observationProps.yScaleMin)
             : d3.min(unitData?.data as Datum[], (d: any) => d.y) -
-              parseFloat(props.nivoProps.yScaleOffset),
-          yScaleMax = props.nivoProps.yScaleMax
-            ? parseFloat(props.nivoProps.yScaleMax)
+              parseFloat(observationProps.yScaleOffset),
+          yScaleMax = observationProps.yScaleMax
+            ? parseFloat(observationProps.yScaleMax)
             : d3.max(unitData?.data as Datum[], (d: any) => d.y) +
-              parseFloat(props.nivoProps.yScaleOffset),
+              parseFloat(observationProps.yScaleOffset),
           yScale = d3
             .scaleLinear()
             .domain([yScaleMin, yScaleMax])

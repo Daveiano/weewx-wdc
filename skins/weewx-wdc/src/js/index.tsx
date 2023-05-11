@@ -76,6 +76,7 @@ diagrams.forEach((diagram) => {
         data = [
           ...data,
           {
+            observation: diagramObservations[index],
             id: `${labels[index]} ${
               aggregate_types[index][0].toUpperCase() +
               aggregate_types[index].slice(1)
@@ -93,6 +94,7 @@ diagrams.forEach((diagram) => {
     } else {
       data = [
         {
+          observation: diagram.dataset.obs,
           id: diagram.dataset.obs,
           data: (window as any)[diagram.dataset.value]
             .map((item: number[]) => ({

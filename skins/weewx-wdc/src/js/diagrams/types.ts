@@ -6,6 +6,7 @@ interface Datum {
 }
 
 interface Serie {
+  observation: string;
   id: string | number;
   data: Datum[];
   [key: string]: any;
@@ -53,6 +54,9 @@ type DiagramBaseProps = {
       | "step"
       | "stepAfter"
       | "stepBefore";
+    obs?: {
+      [key: string]: any;
+    };
   };
 };
 

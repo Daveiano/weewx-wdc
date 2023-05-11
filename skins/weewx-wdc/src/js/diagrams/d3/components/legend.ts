@@ -65,10 +65,6 @@ export const addLegend = (
       .style("font-size", "11px");
   });
 
-  console.log(width);
-  console.log(legend.node());
-  console.log(legend.node()?.getBBox());
-
   legend.attr(
     "transform",
     `translate(${

@@ -268,21 +268,18 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
           props.observation[0] === "windDir" &&
           windDirOrdinals;
 
-        svgElement
-          .append("g")
-          // @todo Wind direction degree/ordinal.
-          .call(
-            d3
-              .axisLeft(yScale)
-              .ticks(6)
-              .tickFormat((d) => {
-                return windDirAsOridnal
-                  ? ordinalCompass[Math.floor((d as number) / 22.5 + 0.5) % 16]
-                  : d.toString();
-              })
-              .tickSize(0)
-              .tickPadding(6)
-          );
+        svgElement.append("g").call(
+          d3
+            .axisLeft(yScale)
+            .ticks(6)
+            .tickFormat((d) => {
+              return windDirAsOridnal
+                ? ordinalCompass[Math.floor((d as number) / 22.5 + 0.5) % 16]
+                : d.toString();
+            })
+            .tickSize(0)
+            .tickPadding(6)
+        );
 
         // Y Axis Label - only show if not windDir and windDirOrdinals is set.
         if (!windDirAsOridnal) {
@@ -329,41 +326,47 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
 
       // Only draw right axis if there are multiple units.
       if (index > 0) {
+        const windDirAsOridnal =
+          props.observation[index] === "windDir" && windDirOrdinals;
+
         svgElement
           .append("g")
           .attr("transform", "translate(" + width + ",0)")
-          // @todo Wind direction degree/ordinal.
           .call(
             d3
               .axisRight(yScale)
               .ticks(6)
               .tickFormat((d) => {
-                return d.toString();
+                return windDirAsOridnal
+                  ? ordinalCompass[Math.floor((d as number) / 22.5 + 0.5) % 16]
+                  : d.toString();
               })
               .tickSize(0)
               .tickPadding(6)
           );
 
-        // Y Axis Label.
-        svgElement
-          .append("g")
-          .attr(
-            "transform",
-            `translate(${
-              -getAxisLeftLegendOffset(
-                props.observation[props.unit.indexOf(unit)]
-              ) -
-              2.25 +
-              width
-            }, ${height / 2}), rotate(90)`
-          )
-          .append("text")
-          .attr("text-anchor", "middle")
-          .attr("class", "axis-label-right")
-          .attr("font-size", "0.75em")
-          .style("dominant-baseline", "central")
-          .style("font-family", "sans-serif")
-          .text(unit);
+        // Y Axis Label - only show if not windDir and windDirOrdinals is set.
+        if (!windDirAsOridnal) {
+          svgElement
+            .append("g")
+            .attr(
+              "transform",
+              `translate(${
+                -getAxisLeftLegendOffset(
+                  props.observation[props.unit.indexOf(unit)]
+                ) -
+                2.25 +
+                width
+              }, ${height / 2}), rotate(90)`
+            )
+            .append("text")
+            .attr("text-anchor", "middle")
+            .attr("class", "axis-label-right")
+            .attr("font-size", "0.75em")
+            .style("dominant-baseline", "central")
+            .style("font-family", "sans-serif")
+            .text(unit);
+        }
       }
 
       index++;
@@ -371,7 +374,16 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
 
     // Actual chart lines.
     props.data.forEach((dataSet: any, index: number) => {
-      const curve = getCurve(props.nivoProps.curve);
+      const observationProps = props.nivoProps.obs
+        ? {
+            ...props.nivoProps,
+            ...Object.entries(props.nivoProps.obs).filter(
+              ([key, value]) => value.observation === props.observation[index]
+            )[0][1],
+          }
+        : props.nivoProps;
+
+      const curve = getCurve(observationProps.curve);
 
       const yScale = scales[props.unit[index]]["y"],
         yScaleMin = scales[props.unit[index]]["yScaleMin"],
@@ -386,7 +398,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
           .curve(curve);
 
       // Dots.
-      if (props.nivoProps.enablePoints) {
+      if (observationProps.enablePoints) {
         svgElement
           .append("g")
           .selectAll("dot")
@@ -401,13 +413,13 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
           })
           .attr(
             "r",
-            props.nivoProps.pointSize ? props.nivoProps.pointSize / 2 : 2.5
+            observationProps.pointSize ? observationProps.pointSize / 2 : 2.5
           )
           .style("fill", colors[index]);
       }
 
       // Area.
-      if (props.nivoProps.enableArea) {
+      if (observationProps.enableArea) {
         svgElement
           .append("path")
           .datum(dataSet.data as any)
@@ -416,8 +428,8 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
             "fill-opacity",
             darkMode
               ? 0.75
-              : props.nivoProps.areaOpacity
-              ? props.nivoProps.areaOpacity
+              : observationProps.areaOpacity
+              ? observationProps.areaOpacity
               : 0.07
           )
           .attr("stroke-width", 0)
@@ -441,7 +453,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
         .attr("stroke", colors[index])
         .attr(
           "stroke-width",
-          props.nivoProps.lineWidth ? props.nivoProps.lineWidth : 2
+          observationProps.lineWidth ? observationProps.lineWidth : 2
         )
         .attr("d", lineGenerator(dataSet.data as any))
         .attr("data-test", `path-${props.observation[index]}`);

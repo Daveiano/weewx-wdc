@@ -483,7 +483,22 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
         );
       }
     } else {
-      // @todo Marker per unit.
+      props.nivoProps.obs &&
+        Object.entries(props.nivoProps.obs).forEach(
+          (obs: any, index: number) => {
+            if (obs[1].markerValue) {
+              addMarkers(
+                svgElement,
+                width,
+                scales[props.unit[index]]["y"],
+                props.unit[index],
+                obs[1].markerValue,
+                obs[1].markerColor,
+                obs[1].markerLabel
+              );
+            }
+          }
+        );
     }
 
     // Axis styling.

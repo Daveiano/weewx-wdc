@@ -231,6 +231,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
           (data) => data.unit === props.unit[index]
         );
 
+        // @todo Outsource.
         const observationProps = props.nivoProps.obs
           ? {
               ...props.nivoProps,
@@ -382,6 +383,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
 
     // Actual chart lines.
     props.data.forEach((dataSet: any, index: number) => {
+      // @todo Outsource.
       const observationProps = props.nivoProps.obs
         ? {
             ...props.nivoProps,

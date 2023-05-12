@@ -149,6 +149,17 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           if (props.chartTypes[index] === "bar") {
             dataGroupedByUnit[props.unit[index]] = [];
 
+            // @todo Outsource.
+            const observationProps = props.nivoProps.obs
+              ? {
+                  ...props.nivoProps,
+                  ...Object.entries(props.nivoProps.obs).filter(
+                    ([key, value]) =>
+                      value.observation === props.observation[index]
+                  )[0][1],
+                }
+              : props.nivoProps;
+
             const xScale = d3
               .scaleBand()
               .range([0, width])
@@ -156,7 +167,10 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
             // @todo Should be obs specific?
             // @todo Hard coded yScaleMax.
-            const yScaleMax = d3.max(serie.data, (d: any) => d.y) + 0.5,
+            const yScaleMax = observationProps.yScaleMax
+                ? parseFloat(observationProps.yScaleMax)
+                : d3.max(serie.data, (d: any) => d.y) +
+                  parseFloat(observationProps.yScaleOffset),
               yScale = d3
                 .scaleLinear()
                 // @todo yScaleMin, yScaleMax does not make sense to have this per chart, needs to be per obs.
@@ -181,6 +195,17 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           if (props.chartTypes[index] === "line") {
             dataGroupedByUnit[props.unit[index]] = [];
 
+            // @todo Outsource.
+            const observationProps = props.nivoProps.obs
+              ? {
+                  ...props.nivoProps,
+                  ...Object.entries(props.nivoProps.obs).filter(
+                    ([key, value]) =>
+                      value.observation === props.observation[index]
+                  )[0][1],
+                }
+              : props.nivoProps;
+
             const barScaleOffset =
                 scales[
                   props.unit[props.chartTypes.indexOf("bar")]
@@ -195,14 +220,14 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
                 ])
                 .range([barScaleOffset, width - barScaleOffset]),
               // @todo Should be obs specific?
-              yScaleMin = props.nivoProps.yScaleMin
-                ? parseFloat(props.nivoProps.yScaleMin)
-                : d3.min(combinedData, (d: any) => d.y) -
-                  parseFloat(props.nivoProps.yScaleOffset),
-              yScaleMax = props.nivoProps.yScaleMax
-                ? parseFloat(props.nivoProps.yScaleMax)
-                : d3.max(combinedData, (d: any) => d.y) +
-                  parseFloat(props.nivoProps.yScaleOffset),
+              yScaleMin = observationProps.yScaleMin
+                ? parseFloat(observationProps.yScaleMin)
+                : d3.min(serie.data, (d: any) => d.y) -
+                  parseFloat(observationProps.yScaleOffset),
+              yScaleMax = observationProps.yScaleMax
+                ? parseFloat(observationProps.yScaleMax)
+                : d3.max(serie.data, (d: any) => d.y) +
+                  parseFloat(observationProps.yScaleOffset),
               yScale = d3
                 .scaleLinear()
                 .domain([yScaleMin, yScaleMax])
@@ -352,8 +377,19 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
       // Draw Data.
       props.data.forEach((serie, index) => {
+        // @todo Outsource.
+        const observationProps = props.nivoProps.obs
+          ? {
+              ...props.nivoProps,
+              ...Object.entries(props.nivoProps.obs).filter(
+                ([key, value]) => value.observation === props.observation[index]
+              )[0][1],
+            }
+          : props.nivoProps;
+
         if (props.chartTypes[index] === "line") {
-          const curve = getCurve(props.nivoProps.curve);
+          const curve = getCurve(observationProps.curve);
+
           const lineGenerator = d3
             .line()
             .x(function (d: any) {
@@ -367,8 +403,9 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
               return scales[props.unit[index]]["y"](d.y);
             })
             .curve(curve);
+
           // Dots.
-          if (props.nivoProps.enablePoints) {
+          if (observationProps.enablePoints) {
             svgElement
               .append("g")
               .selectAll("dot")
@@ -383,13 +420,15 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
               })
               .attr(
                 "r",
-                props.nivoProps.pointSize ? props.nivoProps.pointSize / 2 : 2.5
+                observationProps.pointSize
+                  ? observationProps.pointSize / 2
+                  : 2.5
               )
               .style("fill", colors[index]);
           }
 
           // Area.
-          if (props.nivoProps.enableArea) {
+          if (observationProps.enableArea) {
             svgElement
               .append("path")
               .datum(serie.data as any)
@@ -398,8 +437,8 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
                 "fill-opacity",
                 darkMode
                   ? 0.75
-                  : props.nivoProps.areaOpacity
-                  ? props.nivoProps.areaOpacity
+                  : observationProps.areaOpacity
+                  ? observationProps.areaOpacity
                   : 0.07
               )
               .attr("stroke-width", 0)
@@ -427,7 +466,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             .attr("stroke", colors[index])
             .attr(
               "stroke-width",
-              props.nivoProps.lineWidth ? props.nivoProps.lineWidth : 2
+              observationProps.lineWidth ? observationProps.lineWidth : 2
             )
             .attr("d", lineGenerator(serie.data as any));
         }
@@ -452,7 +491,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             )
             .attr("fill", colors[index]);
 
-          if (props.nivoProps.enableLabel) {
+          if (observationProps.enableLabel) {
             svgElement
               .selectAll(".text")
               .data(serie.data.filter((d: any) => d.y > 0))

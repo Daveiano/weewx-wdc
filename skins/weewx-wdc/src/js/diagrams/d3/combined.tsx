@@ -62,23 +62,8 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
     return a.x - b.x;
   });
 
-  // @todo same as in bar.tsx
   // @see https://github.com/d3/d3-time-format
-  let dateTimeFormat = d3.timeFormat("%H:%M");
-  switch (props.context) {
-    case "week":
-      dateTimeFormat = d3.timeFormat("%d.%m");
-      break;
-    case "month":
-      dateTimeFormat = d3.timeFormat("%d.%m");
-      break;
-    case "year":
-      dateTimeFormat = d3.timeFormat("%d.%m");
-      break;
-    case "alltime":
-      dateTimeFormat = d3.timeFormat("%m.%Y");
-      break;
-  }
+  const dateTimeFormat = d3.timeFormat(props.nivoProps.bottom_date_time_format);
 
   const callback = (mutationsList: Array<MutationRecord>) => {
     mutationsList.forEach((mutation) => {
@@ -693,6 +678,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             tooltips={tooltip}
             color={colors}
             unit={typeof props.unit === "string" ? [props.unit] : props.unit}
+            dateTimeFormat={props.nivoProps.tooltip_date_time_format}
           />
         </div>
       </div>

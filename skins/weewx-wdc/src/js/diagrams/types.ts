@@ -55,6 +55,8 @@ type DiagramBaseProps = {
       | "stepAfter"
       | "stepBefore";
     color_dark?: string;
+    bottom_date_time_format: string;
+    tooltip_date_time_format: string;
     obs?: {
       [key: string]: any;
     };
@@ -65,6 +67,7 @@ type TooltipProps = {
   tooltips: Datum[];
   color: string[];
   unit: string[];
+  dateTimeFormat: string;
 };
 
 type WindRoseProps = {

@@ -93,32 +93,21 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
     }
   });
 
-  const timeDifferenceInMonths = getTimeDifferenceInMonths(combinedData);
-  let format = "%H:%M";
   let tickValues = 5;
 
   // @todo Optimize this.
   switch (props.context) {
     case "week":
-      format = "%d.%m";
       tickValues = 5;
       break;
     case "month":
-      format = "%d.%m";
       tickValues = small ? 3 : 5;
       break;
     case "year":
-      format = "%d.%m";
       tickValues = small ? 3 : 5;
       break;
     case "alltime":
-      if (timeDifferenceInMonths > 60) {
-        format = "%m.%y";
-        tickValues = small ? 3 : 5;
-      } else {
-        format = "%m.%y";
-        tickValues = small ? 3 : 5;
-      }
+      tickValues = small ? 3 : 5;
 
       break;
   }
@@ -189,7 +178,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
       .call(
         d3
           .axisBottom(xScale)
-          .ticks(tickValues, format)
+          .ticks(tickValues, props.nivoProps.bottom_date_time_format)
           .tickSize(0)
           .tickPadding(6)
       );
@@ -743,6 +732,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
             tooltips={tooltip}
             color={colors}
             unit={typeof props.unit === "string" ? [props.unit] : props.unit}
+            dateTimeFormat={props.nivoProps.tooltip_date_time_format}
           />
         </div>
       </div>

@@ -53,19 +53,12 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
   });
 
   // @see https://github.com/d3/d3-time-format
-  let dateTimeFormat = d3.timeFormat("%H:%M");
-  switch (props.context) {
-    case "week":
-      dateTimeFormat = d3.timeFormat("%d.%m");
-      break;
-    case "month":
-      dateTimeFormat = d3.timeFormat("%d.%m");
-      break;
-    case "year":
-    case "alltime":
-      dateTimeFormat = d3.timeFormat("%d.%m");
-      break;
-  }
+  const dateTimeFormatBottom = d3.timeFormat(
+    props.nivoProps.bottom_date_time_format
+  );
+  const dateTimeFormatTooltip = d3.timeFormat(
+    props.nivoProps.tooltip_date_time_format
+  );
 
   const callback = (mutationsList: Array<MutationRecord>) => {
     mutationsList.forEach((mutation) => {
@@ -144,7 +137,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
       .call(
         d3
           .axisBottom(xScale)
-          .tickFormat((d) => dateTimeFormat(new Date(parseInt(d) * 1000)))
+          .tickFormat((d) => dateTimeFormatBottom(new Date(parseInt(d) * 1000)))
           .tickSize(0)
           .tickPadding(6)
       )
@@ -377,8 +370,8 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
             className="diagram-tooltip"
           >
             <div style={{ marginBottom: "5px", whiteSpace: "nowrap" }}>
-              {dateTimeFormat(new Date(tooltip.x * 1000))} -{" "}
-              {dateTimeFormat(new Date(tooltip.end * 1000))}
+              {dateTimeFormatTooltip(new Date(tooltip.x * 1000))} -{" "}
+              {dateTimeFormatTooltip(new Date(tooltip.end * 1000))}
             </div>
             <div>
               {tooltip.y} {props.unit[0]}

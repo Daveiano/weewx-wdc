@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import color from "color";
 import { context, DiagramBaseProps } from "../../types";
-import dayjs from "dayjs";
 
 export const getAxisGridColor = (darkMode: boolean): string =>
   darkMode ? "#525252" : "#dddddd";
@@ -84,29 +83,4 @@ export const getCurve = (curveType: string): d3.CurveFactory => {
     }
   }
   return curve;
-};
-
-// @todo Use d3.timeFormat.
-export const getDateFormattedTooltip = (
-  date: number,
-  context: context
-): string => {
-  let format = "YYYY/MM/DD HH:mm";
-
-  switch (context) {
-    case "week":
-      format = "YYYY/MM/DD HH:mm";
-      break;
-    case "month":
-      format = "YYYY/MM/DD HH:mm";
-      break;
-    case "year":
-      format = "YYYY/MM/DD";
-      break;
-    case "alltime":
-      format = "YYYY/MM";
-      break;
-  }
-
-  return dayjs.unix(date).format(format);
 };

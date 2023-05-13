@@ -63,19 +63,20 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
   });
 
   // @todo same as in bar.tsx
-  let dateFormat = "HH:mm";
+  // @see https://github.com/d3/d3-time-format
+  let dateTimeFormat = d3.timeFormat("%H:%M");
   switch (props.context) {
     case "week":
-      dateFormat = "DD.MM";
+      dateTimeFormat = d3.timeFormat("%d.%m");
       break;
     case "month":
-      dateFormat = "DD.MM";
+      dateTimeFormat = d3.timeFormat("%d.%m");
       break;
     case "year":
-      dateFormat = "DD.MM";
+      dateTimeFormat = d3.timeFormat("%d.%m");
       break;
     case "alltime":
-      dateFormat = "MM.YYYY";
+      dateTimeFormat = d3.timeFormat("%m.%Y");
       break;
   }
 
@@ -259,7 +260,9 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             .axisBottom(scales[barCharUnit]["x"])
             .tickSize(0)
             .tickPadding(6)
-            .tickFormat((d: any) => dayjs.unix(d).format(dateFormat))
+            .tickFormat((d) =>
+              dateTimeFormat(new Date(parseInt(d as string) * 1000))
+            )
         )
         .selectAll("text")
         .style("text-anchor", "end")

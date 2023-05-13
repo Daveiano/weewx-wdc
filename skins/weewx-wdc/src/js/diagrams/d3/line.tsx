@@ -14,8 +14,8 @@ import {
   getMargins,
   getTimeDifferenceInMonths,
   Size,
+  useWindowSize,
 } from "../../util/util";
-import { useWindowSize } from "../../util/util";
 import { Tooltip } from "./components/tooltip";
 import { Maximize } from "../../assets/maximize";
 import { addMarkers } from "./components/marker";

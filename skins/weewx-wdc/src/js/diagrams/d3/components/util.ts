@@ -86,30 +86,7 @@ export const getCurve = (curveType: string): d3.CurveFactory => {
   return curve;
 };
 
-export const getDateFormattedChart = (
-  date: number,
-  context: context
-): string => {
-  let format = "%H:%M";
-
-  switch (context) {
-    case "week":
-      format = "DD.MM";
-      break;
-    case "month":
-      format = "DD.MM";
-      break;
-    case "year":
-      format = "DD.MM";
-      break;
-    case "alltime":
-      format = "DD.MM.YYYY";
-      break;
-  }
-
-  return dayjs.unix(date).format(format);
-};
-
+// @todo Use d3.timeFormat.
 export const getDateFormattedTooltip = (
   date: number,
   context: context

@@ -1,5 +1,4 @@
 import React from "react";
-import dayjs from "dayjs";
 
 import { context, TooltipProps } from "../../types";
 import { getDateFormattedTooltip } from "./util";

@@ -54,6 +54,7 @@ type DiagramBaseProps = {
       | "step"
       | "stepAfter"
       | "stepBefore";
+    color_dark?: string;
     obs?: {
       [key: string]: any;
     };

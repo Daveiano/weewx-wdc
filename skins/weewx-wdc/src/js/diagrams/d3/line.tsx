@@ -51,7 +51,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
 
   // Color handling
   const axisGridColor = getAxisGridColor(darkMode);
-  const colors = getColors(darkMode, props.nivoProps.enableArea, props.color);
+  const colors = getColors(darkMode, props.nivoProps, props.color);
 
   // Combine all data into one array and sort by x value.
   let combinedData: any[] = [];
@@ -425,7 +425,12 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
             "r",
             observationProps.pointSize ? observationProps.pointSize / 2 : 2.5
           )
-          .style("fill", colors[index]);
+          .style(
+            "fill",
+            darkMode && observationProps.color_dark
+              ? observationProps.color_dark
+              : colors[index]
+          );
       }
 
       // Area.
@@ -433,7 +438,12 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
         svgElement
           .append("path")
           .datum(dataSet.data as any)
-          .attr("fill", colors[index])
+          .attr(
+            "fill",
+            darkMode && observationProps.color_dark
+              ? observationProps.color_dark
+              : colors[index]
+          )
           .attr(
             "fill-opacity",
             darkMode
@@ -460,7 +470,12 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
       svgElement
         .append("path")
         .attr("fill", "none")
-        .attr("stroke", colors[index])
+        .attr(
+          "stroke",
+          darkMode && observationProps.color_dark
+            ? observationProps.color_dark
+            : colors[index]
+        )
         .attr(
           "stroke-width",
           observationProps.lineWidth ? observationProps.lineWidth : 2

@@ -37,7 +37,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
 
   // Color handling.
   const axisGridColor = getAxisGridColor(darkMode);
-  const colors = getColors(darkMode, props.nivoProps.enableArea, props.color);
+  const colors = getColors(darkMode, props.nivoProps, props.color);
 
   // Combine all data into one array and sort by x value.
   let combinedData: any[] = [];
@@ -205,6 +205,16 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
 
     // Actual chart bars.
     props.data.forEach((dataSet: any, index: number) => {
+      // @todo Outsource.
+      const observationProps = props.nivoProps.obs
+        ? {
+            ...props.nivoProps,
+            ...Object.entries(props.nivoProps.obs).filter(
+              ([key, value]) => value.observation === props.observation[index]
+            )[0][1],
+          }
+        : props.nivoProps;
+
       // Bars
       svgElement
         .selectAll("bars")
@@ -217,7 +227,12 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
         .attr("y", (d: any) => yScale(d.y))
         .attr("width", xScale.bandwidth() * 0.75)
         .attr("height", (d: any) => height - yScale(d.y))
-        .attr("fill", colors[index]);
+        .attr(
+          "fill",
+          darkMode && observationProps.color_dark
+            ? observationProps.color_dark
+            : colors[index]
+        );
 
       if (props.nivoProps.enableLabel) {
         svgElement

@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import color from "color";
-import { context } from "../../types";
+import { context, DiagramBaseProps } from "../../types";
 import dayjs from "dayjs";
 
 export const getAxisGridColor = (darkMode: boolean): string =>
@@ -12,11 +12,11 @@ export const chartTransition = "left 0.25s ease-in-out, top 0.35s ease-in-out";
 
 export const getColors = (
   darkMode: boolean,
-  enableArea: boolean,
+  chartProps: DiagramBaseProps["nivoProps"],
   colors: string[]
 ): string[] => {
   return darkMode
-    ? enableArea
+    ? chartProps.enableArea
       ? colors.map((c) =>
           color(c).lightness() <= getBackgroundColorDarkModeLightness * 2
             ? color(c).desaturate(0.1).lighten(0.75).hex()

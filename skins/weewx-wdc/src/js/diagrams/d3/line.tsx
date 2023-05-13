@@ -166,6 +166,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
 
     const svgElement = d3
       .select(svgRef.current)
+      .attr("data-test", "d3-diagram-svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
@@ -175,6 +176,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
     svgElement
       .append("g")
       .attr("transform", "translate(0," + height + ")")
+      .attr("data-test", "x-axis")
       .call(
         d3
           .axisBottom(xScale)
@@ -266,18 +268,21 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
           props.observation[0] === "windDir" &&
           windDirOrdinals;
 
-        svgElement.append("g").call(
-          d3
-            .axisLeft(yScale)
-            .ticks(6)
-            .tickFormat((d) => {
-              return windDirAsOridnal
-                ? ordinalCompass[Math.floor((d as number) / 22.5 + 0.5) % 16]
-                : d.toString();
-            })
-            .tickSize(0)
-            .tickPadding(6)
-        );
+        svgElement
+          .append("g")
+          .attr("data-test", "y-axis-left")
+          .call(
+            d3
+              .axisLeft(yScale)
+              .ticks(6)
+              .tickFormat((d) => {
+                return windDirAsOridnal
+                  ? ordinalCompass[Math.floor((d as number) / 22.5 + 0.5) % 16]
+                  : d.toString();
+              })
+              .tickSize(0)
+              .tickPadding(6)
+          );
 
         // Y Axis Label - only show if not windDir and windDirOrdinals is set.
         if (!windDirAsOridnal) {
@@ -329,6 +334,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
 
         svgElement
           .append("g")
+          .attr("data-test", "y-axis-right")
           .attr("transform", "translate(" + width + ",0)")
           .call(
             d3
@@ -459,6 +465,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
       svgElement
         .append("path")
         .attr("fill", "none")
+        .attr("data-test", `line-${props.observation[index]}`)
         .attr(
           "stroke",
           darkMode && observationProps.color_dark
@@ -469,8 +476,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
           "stroke-width",
           observationProps.lineWidth ? observationProps.lineWidth : 2
         )
-        .attr("d", lineGenerator(dataSet.data as any))
-        .attr("data-test", `path-${props.observation[index]}`);
+        .attr("d", lineGenerator(dataSet.data as any));
     });
 
     // Markers.

@@ -1,0 +1,1 @@
+<path fill="none" data-test="line-outTemp" stroke="#8B0000" stroke-width="2" d="M346.375,226.875L1039.125,103.125"></path>

@@ -115,6 +115,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
       const svgElement = d3
         .select(svgRef.current)
+        .attr("data-test", "d3-diagram-svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -240,6 +241,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       svgElement
         .append("g")
         .attr("transform", `translate(0, ${height})`)
+        .attr("data-test", "x-axis")
         .call(
           d3
             .axisBottom(scales[barCharUnit]["x"])
@@ -271,6 +273,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           svgElement
             .append("g")
             // @todo Wind direction degree/ordinal.
+            .attr("data-test", "y-axis-left")
             .call(
               d3
                 .axisLeft(value["y"])
@@ -326,6 +329,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         if (index > 0) {
           svgElement
             .append("g")
+            .attr("data-test", "y-axis-right")
             .attr("transform", "translate(" + width + ",0)")
             .call(
               d3
@@ -461,6 +465,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           svgElement
             .append("path")
             .attr("fill", "none")
+            .attr("data-test", `line-${props.observation[index]}`)
             .attr(
               "stroke",
               darkMode && observationProps.color_dark
@@ -480,6 +485,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             .selectAll("bars")
             .data(serie.data)
             .join("rect")
+            .attr("data-test", `bar-${props.observation[index]}`)
             .attr(
               "x",
               (d: any) =>
@@ -661,7 +667,11 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
     <>
       <Maximize onClick={handleFullScreen} />
       <div style={{ height: "100%", position: "relative" }}>
-        <svg ref={svgRef} xmlns="http://www.w3.org/2000/svg" />
+        <svg
+          ref={svgRef}
+          xmlns="http://www.w3.org/2000/svg"
+          data-test="d3-diagram-svg"
+        />
         <div
           ref={tooltipRef}
           className="d3-diagram-tooltip"

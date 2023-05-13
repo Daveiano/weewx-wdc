@@ -83,7 +83,7 @@ test.describe("Basic pages display", () => {
     await expect(page.locator("h1")).toHaveText("All time statistics");
     await expect(
       page.locator(
-        ".diagram-tile[data-test='appTemp'] svg[data-test='d3-diagram-svg'] g path[data-test='path-appTemp']"
+        ".diagram-tile[data-test='appTemp'] svg[data-test='d3-diagram-svg'] g path[data-test='line-appTemp']"
       )
     ).toBeVisible();
     await expect(page).toHaveScreenshot({ fullPage: true });
@@ -93,7 +93,7 @@ test.describe("Basic pages display", () => {
     await expect(page.locator("h1")).toHaveText("All time statistics");
     await expect(
       page.locator(
-        ".diagram-tile[data-test='appTemp'] svg[data-test='d3-diagram-svg'] g path[data-test='path-appTemp']"
+        ".diagram-tile[data-test='appTemp'] svg[data-test='d3-diagram-svg'] g path[data-test='line-appTemp']"
       )
     ).toBeVisible();
     await expect(page).toHaveScreenshot({ fullPage: true });
@@ -110,7 +110,7 @@ test("Dark mode", async ({ page }) => {
   );
   await expect(
     page.locator(
-      ".diagram-tile[data-test='appTemp'] svg[data-test='d3-diagram-svg'] g path[data-test='path-appTemp']"
+      ".diagram-tile[data-test='appTemp'] svg[data-test='d3-diagram-svg'] g path[data-test='line-appTemp']"
     )
   ).toBeVisible();
   await expect(page).toHaveScreenshot({ fullPage: true });
@@ -121,7 +121,7 @@ test("Dark mode", async ({ page }) => {
   await page.goto("artifacts-classic-weewx-html/public_html/statistics.html");
   await expect(
     page.locator(
-      ".diagram-tile[data-test='appTemp'] svg[data-test='d3-diagram-svg'] g path[data-test='path-appTemp']"
+      ".diagram-tile[data-test='appTemp'] svg[data-test='d3-diagram-svg'] g path[data-test='line-appTemp']"
     )
   ).toBeVisible();
   await expect(page).toHaveScreenshot({ fullPage: true });

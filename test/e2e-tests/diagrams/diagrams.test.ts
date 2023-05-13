@@ -446,4 +446,188 @@ test.describe("Diagrams", () => {
     await expect(pressureTemp).toHaveScreenshot();
     await expect(rainTemp).toHaveScreenshot();
   });
+
+  test("Legends", async ({ page }) => {
+    // Index Temp-Dew.
+    const tempDewLegend = page.locator(
+      ".diagram-tile[data-test='outTemp-dewpoint'] svg[data-test='d3-diagram-svg'] g.legend"
+    );
+    expect(
+      await tempDewLegend.evaluate((el) => el.outerHTML)
+    ).toMatchSnapshot();
+
+    // Month min-max-avg outTemp.
+    await page.goto("artifacts-alternative-weewx-html/public_html/month.html");
+    const outTempMinMaxAvg = page.locator(
+      ".diagram-tile[data-test='outTemp-outTemp-outTemp'] svg[data-test='d3-diagram-svg'] g.legend"
+    );
+    expect(
+      await outTempMinMaxAvg.evaluate((el) => el.outerHTML)
+    ).toMatchSnapshot();
+
+    // Stats climatogram.
+    await page.goto(
+      "artifacts-alternative-weewx-html/public_html/statistics.html"
+    );
+    await page.locator("bx-tab[value='climatogram']").click();
+    const climatogramLegend = page.locator(
+      ".diagram-tile[data-test='rain-outTemp'] svg[data-test='d3-diagram-svg'] g.legend"
+    );
+    expect(
+      await climatogramLegend.evaluate((el) => el.outerHTML)
+    ).toMatchSnapshot();
+  });
+
+  test("xAxis", async ({ page }) => {
+    // Index Temp-Dew.
+    const tempDewXAxis = page.locator(
+      ".diagram-tile[data-test='outTemp-dewpoint'] svg[data-test='d3-diagram-svg'] g[data-test='x-axis']"
+    );
+    expect(await tempDewXAxis.evaluate((el) => el.outerHTML)).toMatchSnapshot();
+
+    //Index rain.
+    const rainXAxis = page.locator(
+      ".diagram-tile[data-test='rain'] svg[data-test='d3-diagram-svg'] g[data-test='x-axis']"
+    );
+    expect(await rainXAxis.evaluate((el) => el.outerHTML)).toMatchSnapshot();
+
+    // Stats climatogram.
+    await page.goto(
+      "artifacts-alternative-weewx-html/public_html/statistics.html"
+    );
+    await page.locator("bx-tab[value='climatogram']").click();
+    const climatogramXAxis = page.locator(
+      ".diagram-tile[data-test='rain-outTemp'] svg[data-test='d3-diagram-svg'] g[data-test='x-axis']"
+    );
+    expect(
+      await climatogramXAxis.evaluate((el) => el.outerHTML)
+    ).toMatchSnapshot();
+  });
+
+  test("yAxis", async ({ page }) => {
+    // Index Temp-Dew.
+    const tempDewYAxis = page.locator(
+      ".diagram-tile[data-test='outTemp-dewpoint'] svg[data-test='d3-diagram-svg'] g[data-test='y-axis-left']"
+    );
+    expect(await tempDewYAxis.evaluate((el) => el.outerHTML)).toMatchSnapshot();
+
+    //Index rain.
+    const rainYAxis = page.locator(
+      ".diagram-tile[data-test='rain'] svg[data-test='d3-diagram-svg'] g[data-test='y-axis']"
+    );
+    expect(await rainYAxis.evaluate((el) => el.outerHTML)).toMatchSnapshot();
+
+    // Index windDir.
+    const windDirYAxisOridinal = page.locator(
+      ".diagram-tile[data-test='windDir'] svg[data-test='d3-diagram-svg'] g[data-test='y-axis-left']"
+    );
+    expect(
+      await windDirYAxisOridinal.evaluate((el) => el.outerHTML)
+    ).toMatchSnapshot();
+
+    // Stats climatogram.
+    await page.goto(
+      "artifacts-alternative-weewx-html/public_html/statistics.html"
+    );
+    await page.locator("bx-tab[value='climatogram']").click();
+    const climatogramYAxisLeft = page.locator(
+      ".diagram-tile[data-test='rain-outTemp'] svg[data-test='d3-diagram-svg'] g[data-test='y-axis-left']"
+    );
+    expect(
+      await climatogramYAxisLeft.evaluate((el) => el.outerHTML)
+    ).toMatchSnapshot();
+    const climatogramYAxisRight = page.locator(
+      ".diagram-tile[data-test='rain-outTemp'] svg[data-test='d3-diagram-svg'] g[data-test='y-axis-right']"
+    );
+    expect(
+      await climatogramYAxisRight.evaluate((el) => el.outerHTML)
+    ).toMatchSnapshot();
+  });
+
+  test("Line", async ({ page }) => {
+    // Index Temp-Dew.
+    const tempDew = page.locator(
+      ".diagram-tile[data-test='outTemp-dewpoint'] svg[data-test='d3-diagram-svg']"
+    );
+    expect(
+      await tempDew
+        .locator("path[data-test='line-outTemp']")
+        .evaluate((el) => el.outerHTML)
+    ).toMatchSnapshot();
+    expect(
+      await tempDew
+        .locator("path[data-test='line-dewpoint']")
+        .evaluate((el) => el.outerHTML)
+    ).toMatchSnapshot();
+
+    // Stats min-max-avg outTemp
+    await page.goto(
+      "artifacts-alternative-weewx-html/public_html/statistics.html"
+    );
+    const outTempMinMaxAvg = page.locator(
+      ".diagram-tile[data-test='outTemp-outTemp-outTemp'] svg[data-test='d3-diagram-svg']"
+    );
+    expect(
+      await outTempMinMaxAvg
+        .locator("path[data-test='line-outTemp'] >> nth=0")
+        .evaluate((el) => el.outerHTML)
+    ).toMatchSnapshot();
+    expect(
+      await outTempMinMaxAvg
+        .locator("path[data-test='line-outTemp'] >> nth=1")
+        .evaluate((el) => el.outerHTML)
+    ).toMatchSnapshot();
+    expect(
+      await outTempMinMaxAvg
+        .locator("path[data-test='line-outTemp'] >> nth=2")
+        .evaluate((el) => el.outerHTML)
+    ).toMatchSnapshot();
+
+    // Stats climatogram.
+    await page.locator("bx-tab[value='climatogram']").click();
+    const climatogram = page.locator(
+      ".diagram-tile[data-test='rain-outTemp'] svg[data-test='d3-diagram-svg']"
+    );
+    expect(
+      await climatogram
+        .locator("path[data-test='line-outTemp']")
+        .evaluate((el) => el.outerHTML)
+    ).toMatchSnapshot();
+  });
+
+  test("Bar", async ({ page }) => {
+    // Index rain.
+    const rain = page.locator(
+      ".diagram-tile[data-test='rain'] svg[data-test='d3-diagram-svg']"
+    );
+    expect(
+      await rain
+        .locator("rect[data-test='bar'] >> nth=1")
+        .evaluate((el) => el.outerHTML)
+    ).toMatchSnapshot();
+    expect(
+      await rain
+        .locator("rect[data-test='bar'] >> nth=5")
+        .evaluate((el) => el.outerHTML)
+    ).toMatchSnapshot();
+
+    // Stats climatogram.
+    await page.goto(
+      "artifacts-alternative-weewx-html/public_html/statistics.html"
+    );
+    await page.locator("bx-tab[value='climatogram']").click();
+    const climatogram = page.locator(
+      ".diagram-tile[data-test='rain-outTemp'] svg[data-test='d3-diagram-svg']"
+    );
+    expect(
+      await climatogram
+        .locator("rect[data-test='bar-rain'] >> nth=0")
+        .evaluate((el) => el.outerHTML)
+    ).toMatchSnapshot();
+    expect(
+      await climatogram
+        .locator("rect[data-test='bar-rain'] >> nth=1")
+        .evaluate((el) => el.outerHTML)
+    ).toMatchSnapshot();
+  });
 });

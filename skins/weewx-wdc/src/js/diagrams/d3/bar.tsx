@@ -125,6 +125,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
 
     const svgElement = d3
       .select(svgRef.current)
+      .attr("data-test", "d3-diagram-svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
@@ -134,6 +135,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
     svgElement
       .append("g")
       .attr("transform", "translate(0," + height + ")")
+      .attr("data-test", "x-axis")
       .call(
         d3
           .axisBottom(xScale)
@@ -148,16 +150,19 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
       .attr("transform", "rotate(-65)");
 
     // y Axis.
-    svgElement.append("g").call(
-      d3
-        .axisLeft(yScale)
-        .ticks(5)
-        .tickFormat((d) => {
-          return d.toString();
-        })
-        .tickSize(0)
-        .tickPadding(6)
-    );
+    svgElement
+      .append("g")
+      .attr("data-test", "y-axis")
+      .call(
+        d3
+          .axisLeft(yScale)
+          .ticks(5)
+          .tickFormat((d) => {
+            return d.toString();
+          })
+          .tickSize(0)
+          .tickPadding(6)
+      );
 
     // Y Axis Label.
     svgElement
@@ -217,6 +222,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
           "x",
           (d: any) => (xScale(d.x) as number) + xScale.bandwidth() * 0.125
         )
+        .attr("data-test", "bar")
         .attr("y", (d: any) => yScale(d.y))
         .attr("width", xScale.bandwidth() * 0.75)
         .attr("height", (d: any) => height - yScale(d.y))

@@ -1,0 +1,1 @@
+<rect x="39.140625" data-test="bar" y="190" width="26.09375" height="0" fill="#0198E1"></rect>

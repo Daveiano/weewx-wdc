@@ -34,6 +34,11 @@ jobs:
           node-version: "14"
           cache: "yarn"
 
+      - name: Set timezone
+        uses: szenius/set-timezone@v1.2
+        with:
+          timezoneLinux: "Europe/Berlin"
+
       - name: Install yarn and dependecies
         run: yarn install
 

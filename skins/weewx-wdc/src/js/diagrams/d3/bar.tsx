@@ -376,8 +376,14 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
             className="diagram-tooltip"
           >
             <div style={{ marginBottom: "5px", whiteSpace: "nowrap" }}>
-              {dateTimeFormatTooltip(new Date(tooltip.x * 1000))} -{" "}
-              {dateTimeFormatTooltip(new Date(tooltip.end * 1000))}
+              {props.context === "week" ? (
+                <>{dateTimeFormatTooltip(new Date(tooltip.x * 1000))}</>
+              ) : (
+                <>
+                  {dateTimeFormatTooltip(new Date(tooltip.x * 1000))} -{" "}
+                  {dateTimeFormatTooltip(new Date(tooltip.end * 1000))}
+                </>
+              )}
             </div>
             <div>
               {tooltip.y} {props.unit[0]}

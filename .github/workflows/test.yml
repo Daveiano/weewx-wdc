@@ -108,6 +108,12 @@ jobs:
           name: artifacts-mqtt-weewx-html
           path: test/test_install_report/artifacts-mqtt-weewx-html/
 
+      - name: Upload sensor status html
+        uses: actions/upload-artifact@v3
+        with:
+          name: artifacts-sensor-status-weewx-html
+          path: test/test_install_report/artifacts-sensor-status-weewx-html/
+
   playwright:
     needs: shunit2
     runs-on: ubuntu-latest
@@ -172,6 +178,12 @@ jobs:
         with:
           name: artifacts-mqtt-weewx-html
           path: test/e2e-tests/artifacts-mqtt-weewx-html
+
+      - name: Download sensor status html
+        uses: actions/download-artifact@v3
+        with:
+          name: artifacts-sensor-status-weewx-html
+          path: test/e2e-tests/artifacts-sensor-status-weewx-html
 
       - name: Run playwright tests
         run: yarn run test:e2e

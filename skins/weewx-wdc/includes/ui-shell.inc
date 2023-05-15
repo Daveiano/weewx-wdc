@@ -217,6 +217,46 @@
       </svg>
       <span>$gettext("Statistics")</span>
     </bx-side-nav-link>
+
+    <!--prettier-ignore-->
+    #if $show_sensor_page
+    <bx-side-nav-link href="$get_base_path(path='sensor-status.html')">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 32 32"
+        slot="title-icon"
+        width="16"
+        height="16"
+      >
+        <defs>
+          <style>
+            .cls-1 {
+              fill: none;
+            }
+          </style>
+        </defs>
+        <title>$gettext("Sensor Status")</title>
+        <rect x="15" y="12" width="2" height="18" />
+        <path d="M11.33,18.22a7,7,0,0,1,0-10.44l1.34,1.49a5,5,0,0,0,0,7.46Z" />
+        <path
+          d="M20.67,18.22l-1.34-1.49a5,5,0,0,0,0-7.46l1.34-1.49a7,7,0,0,1,0,10.44Z"
+        />
+        <path d="M8.4,21.8a11,11,0,0,1,0-17.6L9.6,5.8a9,9,0,0,0,0,14.4Z" />
+        <path
+          d="M23.6,21.8l-1.2-1.6a9,9,0,0,0,0-14.4l1.2-1.6a11,11,0,0,1,0,17.6Z"
+        />
+        <rect
+          data-name="&lt;Transparent Rectangle&gt;"
+          class="cls-1"
+          width="32"
+          height="32"
+        />
+      </svg>
+      <span>$gettext("Sensor Status")</span>
+    </bx-side-nav-link>
+    #end if
+
+    <!--prettier-ignore-->
     #for $static_page in $get_static_pages()
     <bx-side-nav-link href="$get_base_path(path=$static_page['link'])">
       <svg

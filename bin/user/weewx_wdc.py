@@ -218,6 +218,12 @@ class WdcGeneralUtil(SearchList):
 
         return "alltime"
 
+    def show_sensor_page(self):
+        if "sensor_status" in self.generator_to_date:
+            return True
+
+        return False
+
     def get_time_format_dict(self):
         return self.time_format
 
@@ -2031,13 +2037,14 @@ class WdcTableUtil(SearchList):
             if context == "year" or context == "alltime":
                 return "midnight"
 
-    def get_table_headers(self, start_ts, end_ts):
+    def get_table_headers(self, start_ts, end_ts, table_obs=None):
         """
         Returns tableheaders for use in carbon data table.
 
         Args:
             start_ts (Timestamp): Start timestamp.
             end_ts (Timestamp): End timestamp.
+            table_obs (list, optional): List of observations to use. Defaults to None.
 
         Returns:
             list: Carbon data table headers.
@@ -2048,7 +2055,12 @@ class WdcTableUtil(SearchList):
             "sortCycle": "tri-states-from-ascending",
         }]
 
-        for observation in self.table_obs:
+        obs = self.table_obs
+
+        if table_obs:
+            obs = table_obs
+
+        for observation in obs:
             observation_binding = self.general_util.get_data_binding(
                 observation)
             observation_key = self.general_util.get_custom_data_binding_obs_key(
@@ -2071,7 +2083,7 @@ class WdcTableUtil(SearchList):
 
         return carbon_headers
 
-    def get_table_rows(self, start_ts, end_ts, context):
+    def get_table_rows(self, start_ts, end_ts, context, table_obs=None):
         """
         Returns table values for use in carbon data table.
 
@@ -2079,6 +2091,7 @@ class WdcTableUtil(SearchList):
             start_ts (Timestamp): Start timestamp.
             end_ts (Timestamp): End timestamp.
             context (string): Day, week, month, year, alltime
+            table_obs (list|None): List of observations to include in table.
 
         Returns:
             list: Carbon data table rows.
@@ -2093,7 +2106,12 @@ class WdcTableUtil(SearchList):
             start_ts = startOfArchiveDay(start_ts)
             end_ts = startOfArchiveDay(end_ts)
 
-        for observation in self.table_obs:
+        obs = self.table_obs
+
+        if table_obs:
+            obs = table_obs
+
+        for observation in obs:
             observation_binding = self.general_util.get_data_binding(
                 observation)
             observation_key = self.general_util.get_custom_data_binding_obs_key(

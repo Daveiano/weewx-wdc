@@ -188,6 +188,36 @@ class WdcGeneralUtil(SearchList):
 
         return False
 
+    def get_context_key_from_time_span(self, start_ts, end_ts):
+        """
+        Get the context key from a given time span.
+
+        Args:
+            start_ts (int): The start timestamp
+            end_ts (int): The end timestamp
+
+        Returns:
+            str: The context key
+        """
+        if start_ts == end_ts:
+            return "day"
+
+        if end_ts - start_ts <= 86400:
+            return "day"
+
+        # Up to 2 weeks.
+        if end_ts - start_ts <= 1209600:
+            return "week"
+
+        # Up to 3 months.
+        if end_ts - start_ts <= 8035200:
+            return "month"
+
+        if end_ts - start_ts <= 31536000:
+            return "year"
+
+        return "alltime"
+
     def get_time_format_dict(self):
         return self.time_format
 
@@ -435,7 +465,7 @@ class WdcGeneralUtil(SearchList):
         elif observation == "forecast":
             return icon_path + "forecast.svg"
 
-        elif observation == "radiation" or observation == 'luminosity' or observation == 'maxSolarRad':
+        elif observation == "radiation" or observation == 'luminosity' or observation == 'maxSolarRad' or observation == 'sunshineDur':
             return icon_path + "radiation.svg"
 
         elif observation == "appTemp" or observation == "appTemp1":
@@ -458,6 +488,9 @@ class WdcGeneralUtil(SearchList):
 
         elif observation == "hail" or observation == "hailRate":
             return icon_path + "hail.svg"
+
+        elif observation == 'cloudcover':
+            return icon_path + "forecast/B2.svg"
 
         elif "leaf" in observation:
             return icon_path + "leaf.svg"

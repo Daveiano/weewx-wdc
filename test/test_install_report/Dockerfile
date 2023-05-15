@@ -78,6 +78,8 @@ COPY src/skin-dwd.conf ./skins/weewx-wdc/
 COPY src/skin-mqtt.conf ./skins/weewx-wdc/
 COPY src/skin-custom-binding.conf ./skins/weewx-wdc/
 COPY src/weewx-dwd.conf ./skins/weewx-wdc/
+COPY src/dwd.py ./bin/schemas/
+COPY src/dwd-extensions.py /tmp
 
 RUN sed -i -e 's/device_type = acurite-bridge/device_type = ecowitt-client\n    port = 9877\n    address = 0.0.0.0/g' weewx.conf &&\
     sed -i -z -e 's/skin = Seasons\n        enable = true/skin = Seasons\n        enable = false/g' weewx.conf &&\

@@ -26,7 +26,7 @@ type DiagramBaseProps = {
   color: string[];
   unit: string | string[];
   data: Serie[];
-  observation: string;
+  observation: string[];
   context: context;
   nivoProps: {
     areaOpacity?: number;

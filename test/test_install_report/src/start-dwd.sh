@@ -14,6 +14,11 @@ mv "${WEEWX_HOME}"/skins/weewx-wdc/skin-dwd.conf "${WEEWX_HOME}"/skins/weewx-wdc
 cat "${WEEWX_HOME}"/skins/weewx-wdc/weewx-dwd.conf >> "${WEEWX_HOME}"/weewx.conf
 sed -i -z -e "s|lang = en|lang = de|g" "${WEEWX_HOME}"/weewx.conf
 
+# @see https://github.com/roe-dl/weewx-DWD#wettervorhersage-als-diagramm
+sed -i '/schema = schemas.wview_extended.schema/a \[\[dwd_binding\]\]\n        database = dwd_sqlite\n        table_name = forecast\n        manager = weewx.manager.Manager\n        schema = schemas.dwd.schema\n' "${WEEWX_HOME}"/weewx.conf >/dev/null
+sed -i '/A SQLite database is simply a single file/a \[\[dwd_sqlite\]\]\n        database_name = dwd-forecast-O461.sdb\n        database_type = SQLite\n' "${WEEWX_HOME}"/weewx.conf >/dev/null
+cat /tmp/dwd-extensions.py >> "${WEEWX_HOME}"/bin/user/extensions.py
+
 # weewx-DWD installieren.
 cd /tmp && wget -nv -O "weewx-dwd.zip" "https://github.com/roe-dl/weewx-DWD/archive/refs/heads/master.zip"
 unzip /tmp/weewx-dwd.zip -d /tmp/weewx-dwd/
@@ -33,7 +38,7 @@ unzip /tmp/warnicons-dwd.zip -d /home/weewx/public_html/dwd/warn_icons
 /usr/local/bin/wget-dwd
 /usr/local/bin/dwd-warnings
 /usr/local/bin/dwd-cap-warnings --config=/home/weewx/weewx.conf --resolution=city
-/usr/local/bin/dwd-mosmix --config=/home/weewx/weewx.conf --daily --hourly O461
+/usr/local/bin/dwd-mosmix --config=/home/weewx/weewx.conf --daily --hourly --json --database O461
 
 ls -la /home/weewx/skins/weewx-wdc/dwd
 ls -la /home/weewx/public_html

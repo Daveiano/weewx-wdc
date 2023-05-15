@@ -47,7 +47,12 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
     document.documentElement.classList.contains("dark")
   );
   const axisGridColor = getAxisGridColor(darkMode);
-  const colors = getColors(darkMode, props.nivoProps, props.color);
+  const colors = getColors(
+    darkMode,
+    props.nivoProps,
+    props.color,
+    props.observation
+  );
 
   // Combine all data into one array and sort by x value.
   let combinedData: any[] = [];
@@ -60,6 +65,33 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
   }
   combinedData.sort((a, b) => {
     return a.x - b.x;
+  });
+
+  // Group data by unit.
+  const dataGroupedByUnit: { unit: string; data: Datum[] }[] = [
+    { unit: props.unit[0], data: props.data[0].data },
+  ];
+
+  props.unit.forEach((unit, index) => {
+    if (index === 0) {
+      return;
+    }
+
+    const alreadyGrouped = dataGroupedByUnit.find(
+      (group) => group.unit === unit
+    );
+
+    if (alreadyGrouped) {
+      alreadyGrouped.data = [...alreadyGrouped.data, ...props.data[index].data];
+      dataGroupedByUnit[
+        dataGroupedByUnit.findIndex((group) => group.unit === unit)
+      ] = alreadyGrouped;
+    } else {
+      dataGroupedByUnit.push({
+        unit: unit,
+        data: props.data[index].data,
+      });
+    }
   });
 
   // @see https://github.com/d3/d3-time-format
@@ -121,7 +153,8 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      const dataGroupedByUnit: any = {},
+      // dataGroupedByScale is used for drawing the y-Axis.
+      const dataGroupedByScale: any = {},
         scales: {
           [key: string]: any;
           x: any;
@@ -132,9 +165,9 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       // Group data per unit. First only process bar scales bc we need them later for the line scales.
       props.data.forEach((serie, index) => {
         // Unit not yet added/proccessed.
-        if (!dataGroupedByUnit[props.unit[index]]) {
+        if (!dataGroupedByScale[props.unit[index]]) {
           if (props.chartTypes[index] === "bar") {
-            dataGroupedByUnit[props.unit[index]] = [];
+            dataGroupedByScale[props.unit[index]] = [];
 
             // @todo Outsource.
             const observationProps = props.nivoProps.obs
@@ -147,6 +180,10 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
                 }
               : props.nivoProps;
 
+            const unitData = dataGroupedByUnit.find(
+              (data) => data.unit === props.unit[index]
+            );
+
             const xScale = d3
               .scaleBand()
               .range([0, width])
@@ -156,7 +193,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             // @todo Hard coded yScaleMax.
             const yScaleMax = observationProps.yScaleMax
                 ? parseFloat(observationProps.yScaleMax)
-                : d3.max(serie.data, (d: any) => d.y) +
+                : d3.max(unitData?.data as Datum[], (d: any) => d.y) +
                   parseFloat(observationProps.yScaleOffset),
               yScale = d3
                 .scaleLinear()
@@ -169,7 +206,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
               y: yScale,
             };
 
-            dataGroupedByUnit[props.unit[index]].push({
+            dataGroupedByScale[props.unit[index]].push({
               ...serie,
               unit: props.unit[index],
             });
@@ -178,9 +215,9 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       });
 
       props.data.forEach((serie, index) => {
-        if (!dataGroupedByUnit[props.unit[index]]) {
+        if (!dataGroupedByScale[props.unit[index]]) {
           if (props.chartTypes[index] === "line") {
-            dataGroupedByUnit[props.unit[index]] = [];
+            dataGroupedByScale[props.unit[index]] = [];
 
             // @todo Outsource.
             const observationProps = props.nivoProps.obs
@@ -192,6 +229,10 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
                   )[0][1],
                 }
               : props.nivoProps;
+
+            const unitData = dataGroupedByUnit.find(
+              (data) => data.unit === props.unit[index]
+            );
 
             const barScaleOffset =
                 scales[
@@ -209,11 +250,11 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
               // @todo Should be obs specific?
               yScaleMin = observationProps.yScaleMin
                 ? parseFloat(observationProps.yScaleMin)
-                : d3.min(serie.data, (d: any) => d.y) -
+                : d3.min(unitData?.data as Datum[], (d: any) => d.y) -
                   parseFloat(observationProps.yScaleOffset),
               yScaleMax = observationProps.yScaleMax
                 ? parseFloat(observationProps.yScaleMax)
-                : d3.max(serie.data, (d: any) => d.y) +
+                : d3.max(unitData?.data as Datum[], (d: any) => d.y) +
                   parseFloat(observationProps.yScaleOffset),
               yScale = d3
                 .scaleLinear()
@@ -226,7 +267,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
               yScaleMin,
             };
 
-            dataGroupedByUnit[props.unit[index]].push({
+            dataGroupedByScale[props.unit[index]].push({
               ...serie,
               unit: props.unit[index],
             });
@@ -416,12 +457,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
                   ? observationProps.pointSize / 2
                   : 2.5
               )
-              .style(
-                "fill",
-                darkMode && observationProps.color_dark
-                  ? observationProps.color_dark
-                  : colors[index]
-              );
+              .style("fill", colors[index]);
           }
 
           // Area.
@@ -429,12 +465,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             svgElement
               .append("path")
               .datum(serie.data as any)
-              .attr(
-                "fill",
-                darkMode && observationProps.color_dark
-                  ? observationProps.color_dark
-                  : colors[index]
-              )
+              .attr("fill", colors[index])
               .attr(
                 "fill-opacity",
                 darkMode
@@ -466,12 +497,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             .append("path")
             .attr("fill", "none")
             .attr("data-test", `line-${props.observation[index]}`)
-            .attr(
-              "stroke",
-              darkMode && observationProps.color_dark
-                ? observationProps.color_dark
-                : colors[index]
-            )
+            .attr("stroke", colors[index])
             .attr(
               "stroke-width",
               observationProps.lineWidth ? observationProps.lineWidth : 2
@@ -498,12 +524,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
               "height",
               (d: any) => height - scales[props.unit[index]]["y"](d.y)
             )
-            .attr(
-              "fill",
-              darkMode && observationProps.color_dark
-                ? observationProps.color_dark
-                : colors[index]
-            );
+            .attr("fill", colors[index]);
 
           if (observationProps.enableLabel) {
             svgElement

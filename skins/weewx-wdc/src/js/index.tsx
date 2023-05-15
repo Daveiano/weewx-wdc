@@ -47,7 +47,6 @@ diagrams.forEach((diagram) => {
     diagram.dataset.value &&
     diagram.dataset.labels &&
     diagram.dataset.aggregateType &&
-    diagram.dataset.obs &&
     diagram.dataset.context &&
     diagram.dataset.color &&
     diagram.dataset.diagram &&
@@ -94,8 +93,8 @@ diagrams.forEach((diagram) => {
     } else {
       data = [
         {
-          observation: diagram.dataset.obs,
-          id: diagram.dataset.obs,
+          observation: diagramObservations[0],
+          id: diagramObservations[0],
           data: (window as any)[diagram.dataset.value]
             .map((item: number[]) => ({
               x: item[0],
@@ -137,7 +136,7 @@ diagrams.forEach((diagram) => {
           color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
           unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
           data={data}
-          observation={diagram.dataset.obs}
+          observation={diagramObservations}
           context={diagram.dataset.context as context}
           nivoProps={nivoProps}
         />

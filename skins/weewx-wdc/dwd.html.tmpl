@@ -2,6 +2,7 @@
 #errorCatcher Echo
 #encoding UTF-8
 #import datetime
+#import time
 
 <!DOCTYPE html>
 <html lang="$lang">
@@ -80,6 +81,57 @@
                 </div>
               </div>
             </div>
+          </div>
+          #end if
+
+          <!--prettier-ignore-->
+          #if $DisplayOptions.get("diagrams", {}).get("combined_observations", {}).get('dwd_meteogram_1', None) is not None
+          <div class="bx--row">
+            <!--prettier-ignore-->
+            #attr $context = 'custom'
+            #set global $context_start_ts = $time.time()
+            #set $end_dt = $datetime.date.today() + $datetime.timedelta(days=11)
+            #set global $context_end_ts = $time.mktime($end_dt.timetuple())
+            #set global $diagram_classes_custom = "bx--col"
+
+            #set global $comb_obs = "dwd_meteogram_1"
+            #set global $combined_diagram = $DisplayOptions.get("diagrams", {}).get("combined_observations", {}).get('dwd_meteogram_1', {})
+            #set global $diagram_index = 9999
+            #include "includes/combined-diagram-tile.inc"
+          </div>
+          #end if
+
+          <!--prettier-ignore-->
+          #if $DisplayOptions.get("diagrams", {}).get("combined_observations", {}).get('dwd_meteogram_2', None) is not None
+          <div class="bx--row">
+            <!--prettier-ignore-->
+            #attr $context = 'custom'
+            #set global $context_start_ts = $time.time()
+            #set $end_dt = $datetime.date.today() + $datetime.timedelta(days=11)
+            #set global $context_end_ts = $time.mktime($end_dt.timetuple())
+            #set global $diagram_classes_custom = "bx--col"
+
+            #set global $comb_obs = "dwd_meteogram_2"
+            #set global $combined_diagram = $DisplayOptions.get("diagrams", {}).get("combined_observations", {}).get('dwd_meteogram_2', {})
+            #set global $diagram_index = 9999
+            #include "includes/combined-diagram-tile.inc"
+          </div>
+          #end if
+
+          <!--prettier-ignore-->
+          #if $DisplayOptions.get("diagrams", {}).get("combined_observations", {}).get('dwd_meteogram_3', None) is not None
+          <div class="bx--row">
+            <!--prettier-ignore-->
+            #attr $context = 'custom'
+            #set global $context_start_ts = $time.time()
+            #set $end_dt = $datetime.date.today() + $datetime.timedelta(days=11)
+            #set global $context_end_ts = $time.mktime($end_dt.timetuple())
+            #set global $diagram_classes_custom = "bx--col"
+
+            #set global $comb_obs = "dwd_meteogram_3"
+            #set global $combined_diagram = $DisplayOptions.get("diagrams", {}).get("combined_observations", {}).get('dwd_meteogram_3', {})
+            #set global $diagram_index = 9999
+            #include "includes/combined-diagram-tile.inc"
           </div>
           #end if
 

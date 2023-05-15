@@ -6,7 +6,6 @@ import React, {
   RefObject,
 } from "react";
 import * as d3 from "d3";
-import dayjs from "dayjs";
 
 import { DiagramBaseProps } from "../types";
 import { getAxisLeftLegendOffset, getMargins, Size } from "../../util/util";
@@ -37,7 +36,12 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
 
   // Color handling.
   const axisGridColor = getAxisGridColor(darkMode);
-  const colors = getColors(darkMode, props.nivoProps, props.color);
+  const colors = getColors(
+    darkMode,
+    props.nivoProps,
+    props.color,
+    props.observation
+  );
 
   // Combine all data into one array and sort by x value.
   let combinedData: any[] = [];
@@ -96,7 +100,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
         // Second axis on the right?
         right: unitCombinedDistinct.length > 1 ? 50 : 10,
         bottom: 40,
-        left: getMargins(props.observation).left - 2.5,
+        left: getMargins(props.observation[0]).left - 2.5,
       },
       width = svgRef.current?.parentElement
         ? svgRef.current?.parentElement.clientWidth - margin.left - margin.right
@@ -169,7 +173,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
       .append("g")
       .attr(
         "transform",
-        `translate(${getAxisLeftLegendOffset(props.observation) + 2.25}, ${
+        `translate(${getAxisLeftLegendOffset(props.observation[0]) + 2.25}, ${
           height / 2
         }), rotate(-90)`
       )
@@ -226,12 +230,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
         .attr("y", (d: any) => yScale(d.y))
         .attr("width", xScale.bandwidth() * 0.75)
         .attr("height", (d: any) => height - yScale(d.y))
-        .attr(
-          "fill",
-          darkMode && observationProps.color_dark
-            ? observationProps.color_dark
-            : colors[index]
-        );
+        .attr("fill", colors[index]);
 
       if (props.nivoProps.enableLabel) {
         svgElement

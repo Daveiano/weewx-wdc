@@ -12,26 +12,33 @@ export const chartTransition = "left 0.25s ease-in-out, top 0.35s ease-in-out";
 export const getColors = (
   darkMode: boolean,
   chartProps: DiagramBaseProps["nivoProps"],
-  colors: string[]
+  colors: string[],
+  observations: string[]
 ): string[] => {
-  return darkMode
-    ? chartProps.enableArea
-      ? colors.map((c) =>
-          color(c).lightness() <= getBackgroundColorDarkModeLightness * 2
-            ? color(c).desaturate(0.1).lighten(0.75).hex()
-            : c
-        )
-      : colors.map((c) => {
-          if (color(c).red() > 90) {
-            return color(c).desaturate(0.5).lighten(1.5).hex();
-          }
-          if (color(c).lightness() <= getBackgroundColorDarkModeLightness) {
-            return color(c).lighten(10).hex();
-          }
+  if (!darkMode) {
+    return colors;
+  }
 
-          return color(c).lighten(0.25).hex();
-        })
-    : colors;
+  return colors.map((c, index) => {
+    if (chartProps.obs && chartProps.obs[observations[index]].color_dark) {
+      return chartProps.obs[observations[index]].color_dark;
+    }
+
+    if (chartProps.enableArea) {
+      return color(c).lightness() <= getBackgroundColorDarkModeLightness * 2
+        ? color(c).desaturate(0.1).lighten(0.75).hex()
+        : c;
+    } else {
+      if (color(c).red() > 90) {
+        return color(c).desaturate(0.5).lighten(1.5).hex();
+      }
+      if (color(c).lightness() <= getBackgroundColorDarkModeLightness) {
+        return color(c).lighten(10).hex();
+      }
+
+      return color(c).lighten(0.25).hex();
+    }
+  });
 };
 
 export const getCurve = (curveType: string): d3.CurveFactory => {

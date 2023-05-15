@@ -60,9 +60,26 @@ const _updateStatTile = (
   unitMQTT: string
 ) => {
   // Update the main value.
-  statTile.querySelector(
-    ".stat-title-obs-value .raw"
-  )!.innerHTML = `${value}${unit}`;
+  const sumObs = statTile
+    .querySelector(".stat-title-obs-value .raw")
+    ?.classList.contains("raw-sum");
+
+  if (sumObs) {
+    // Use the dayXXX value (sum).
+    const sumValue =
+      payLoad[
+        `day${observation[0].toUpperCase()}${observation.slice(1)}_${unitMQTT}`
+      ];
+
+    statTile.querySelector(
+      ".stat-title-obs-value .raw"
+    )!.innerHTML = `${parseFloat(sumValue).toFixed(rounding)}${unit}`;
+  } else {
+    // Use the current value.
+    statTile.querySelector(
+      ".stat-title-obs-value .raw"
+    )!.innerHTML = `${value}${unit}`;
+  }
 
   // For eg. the windDir arrows on the windSpeed and gustSpeed tiles.
   const statTileDetail = statTile.querySelector(
@@ -182,6 +199,38 @@ const _updateStatTile = (
     sum.querySelector(".stat-value")!.textContent = `${parseFloat(
       sumValue
     ).toFixed(rounding)}${unit}`;
+  }
+
+  // rainRate handling - rainRate is displayed in the rain tile.
+  if (observation === "rain") {
+    let rainRate: number | null = null;
+    if (payLoad["rainRate_inch_per_hour"]) {
+      rainRate = parseFloat(payLoad["rainRate_inch_per_hour"]);
+    } else if (payLoad["rainRate_mm_per_hour"]) {
+      rainRate = parseFloat(payLoad["rainRate_mm_per_hour"]);
+    } else if (payLoad["rainRate_cm_per_hour"]) {
+      rainRate = parseFloat(payLoad["rainRate_cm_per_hour"]);
+    }
+
+    if (rainRate === null) return;
+
+    const rainRateCurrent = statTile.querySelector(".value-rain-rate-current"),
+      rainRateMax = statTile.querySelector(".value-rain-rate-max"),
+      rainRateMaxValue = rainRateMax
+        ? rainRateMax!.querySelector(".stat-value span.value")!.innerHTML
+        : "";
+
+    if (rainRateCurrent) {
+      rainRateCurrent.querySelector(
+        ".stat-value span.value"
+      )!.textContent = `${rainRate.toFixed(rounding)}${unit}`;
+    }
+
+    if (rainRateMax && rainRate > parseFloat(rainRateMaxValue)) {
+      rainRateMax.querySelector(
+        ".stat-value span.value"
+      )!.textContent = `${rainRate.toFixed(rounding)}${unit}`;
+    }
   }
 };
 

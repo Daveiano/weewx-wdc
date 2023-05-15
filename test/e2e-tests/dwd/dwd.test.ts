@@ -41,11 +41,9 @@ test.describe("DWD", () => {
 
   test("DWD Page", async ({ page }) => {
     await Promise.all([
-      // Waits for the next navigation.
-      // It is important to call waitForNavigation before click to set up waiting.
-      page.waitForNavigation(),
-      // Triggers a navigation after a timeout.
       page.locator("bx-side-nav").locator("role=listitem").nth(2).click(),
+      page.waitForURL("**/dwd.html"),
+      page.waitForLoadState("networkidle"),
     ]);
 
     await expect(

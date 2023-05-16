@@ -12,7 +12,6 @@ import { Datum, DiagramBaseProps } from "../types";
 import {
   getAxisLeftLegendOffset,
   getMargins,
-  getTimeDifferenceInMonths,
   Size,
   useWindowSize,
 } from "../../util/util";

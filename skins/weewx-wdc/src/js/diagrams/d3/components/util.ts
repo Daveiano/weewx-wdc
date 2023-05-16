@@ -20,8 +20,18 @@ export const getColors = (
   }
 
   return colors.map((c, index) => {
-    if (chartProps.obs && chartProps.obs[observations[index]].color_dark) {
-      return chartProps.obs[observations[index]].color_dark;
+    // @todo Outsource.
+    const observationProps = chartProps.obs
+      ? {
+          ...chartProps,
+          ...Object.entries(chartProps.obs).filter(
+            ([key, value]) => value.observation === observations[index]
+          )[0][1],
+        }
+      : chartProps;
+
+    if (observationProps.color_dark) {
+      return observationProps.color_dark;
     }
 
     if (chartProps.enableArea) {

@@ -649,5 +649,6 @@ Line 27:
 - Bugfix: Adding 'Voltage' observations make icons disappear on today page GH-144
 - Added default Translation of combined diagram labels GH-149
 - Added Sensor Status Page GH-154 (https://github.com/Daveiano/weewx-wdc/wiki/Sensor-Status-Page)
+- Combine rain and rainRate tile to get rid of $current.rain GH-147
 
 ## Changes made to skin.conf since 3.1.1

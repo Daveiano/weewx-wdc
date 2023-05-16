@@ -102,6 +102,8 @@ test.describe("Basic pages display", () => {
 
 test("Dark mode", async ({ page }) => {
   await page.goto("artifacts-alternative-weewx-html/public_html/index.html");
+
+  // Switch to dark theme.
   await page.locator("bx-header #header-global bx-btn").click();
   await expect(page).toHaveScreenshot({ fullPage: true });
 

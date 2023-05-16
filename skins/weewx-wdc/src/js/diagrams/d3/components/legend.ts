@@ -40,9 +40,10 @@ export const addLegend = (
       .attr("x", x)
       .attr("y", y)
       .attr("width", size)
+      .attr("data-testid", `legend-rect-${item.observation}`)
       .attr("height", size)
       .style("pointer-events", "none")
-      .style("fill", () => {
+      .attr("fill", () => {
         return colors[index];
       });
 

@@ -9,6 +9,22 @@ export const getBackgroundColorDarkModeLightness = color("#393939").lightness();
 
 export const chartTransition = "left 0.25s ease-in-out, top 0.35s ease-in-out";
 
+export const getObsPropsFromChartProps = (
+  chartProps: DiagramBaseProps["nivoProps"],
+  observation: string
+): DiagramBaseProps["nivoProps"] => {
+  const observationProps = chartProps.obs
+    ? {
+        ...chartProps,
+        ...Object.entries(chartProps.obs).filter(
+          ([key, value]) => value.observation === observation
+        )[0][1],
+      }
+    : chartProps;
+
+  return observationProps;
+};
+
 export const getColors = (
   darkMode: boolean,
   chartProps: DiagramBaseProps["nivoProps"],
@@ -20,15 +36,10 @@ export const getColors = (
   }
 
   return colors.map((c, index) => {
-    // @todo Outsource.
-    const observationProps = chartProps.obs
-      ? {
-          ...chartProps,
-          ...Object.entries(chartProps.obs).filter(
-            ([key, value]) => value.observation === observations[index]
-          )[0][1],
-        }
-      : chartProps;
+    const observationProps = getObsPropsFromChartProps(
+      chartProps,
+      observations[index]
+    );
 
     if (observationProps.color_dark) {
       return observationProps.color_dark;

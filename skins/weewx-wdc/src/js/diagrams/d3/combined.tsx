@@ -6,7 +6,6 @@ import React, {
   RefObject,
 } from "react";
 import * as d3 from "d3";
-import dayjs from "dayjs";
 
 import { Datum, DiagramBaseProps } from "../types";
 import {
@@ -21,6 +20,7 @@ import {
   getAxisGridColor,
   getColors,
   getCurve,
+  getObsPropsFromChartProps,
 } from "./components/util";
 import { Maximize } from "../../assets/maximize";
 import { Tooltip } from "./components/tooltip";
@@ -169,16 +169,10 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           if (props.chartTypes[index] === "bar") {
             dataGroupedByScale[props.unit[index]] = [];
 
-            // @todo Outsource.
-            const observationProps = props.nivoProps.obs
-              ? {
-                  ...props.nivoProps,
-                  ...Object.entries(props.nivoProps.obs).filter(
-                    ([key, value]) =>
-                      value.observation === props.observation[index]
-                  )[0][1],
-                }
-              : props.nivoProps;
+            const observationProps = getObsPropsFromChartProps(
+              props.nivoProps,
+              props.observation[index]
+            );
 
             const unitData = dataGroupedByUnit.find(
               (data) => data.unit === props.unit[index]
@@ -189,15 +183,12 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
               .range([0, width])
               .domain(serie.data.map((d: any) => d.x));
 
-            // @todo Should be obs specific?
-            // @todo Hard coded yScaleMax.
             const yScaleMax = observationProps.yScaleMax
                 ? parseFloat(observationProps.yScaleMax)
                 : d3.max(unitData?.data as Datum[], (d: any) => d.y) +
                   parseFloat(observationProps.yScaleOffset),
               yScale = d3
                 .scaleLinear()
-                // @todo yScaleMin, yScaleMax does not make sense to have this per chart, needs to be per obs.
                 .domain([0, yScaleMax])
                 .range([height, 0]);
 
@@ -219,16 +210,10 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           if (props.chartTypes[index] === "line") {
             dataGroupedByScale[props.unit[index]] = [];
 
-            // @todo Outsource.
-            const observationProps = props.nivoProps.obs
-              ? {
-                  ...props.nivoProps,
-                  ...Object.entries(props.nivoProps.obs).filter(
-                    ([key, value]) =>
-                      value.observation === props.observation[index]
-                  )[0][1],
-                }
-              : props.nivoProps;
+            const observationProps = getObsPropsFromChartProps(
+              props.nivoProps,
+              props.observation[index]
+            );
 
             const unitData = dataGroupedByUnit.find(
               (data) => data.unit === props.unit[index]
@@ -247,7 +232,6 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
                   ),
                 ])
                 .range([barScaleOffset, width - barScaleOffset]),
-              // @todo Should be obs specific?
               yScaleMin = observationProps.yScaleMin
                 ? parseFloat(observationProps.yScaleMin)
                 : d3.min(unitData?.data as Datum[], (d: any) => d.y) -
@@ -410,15 +394,10 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
       // Draw Data.
       props.data.forEach((serie, index) => {
-        // @todo Outsource.
-        const observationProps = props.nivoProps.obs
-          ? {
-              ...props.nivoProps,
-              ...Object.entries(props.nivoProps.obs).filter(
-                ([key, value]) => value.observation === props.observation[index]
-              )[0][1],
-            }
-          : props.nivoProps;
+        const observationProps = getObsPropsFromChartProps(
+          props.nivoProps,
+          props.observation[index]
+        );
 
         if (props.chartTypes[index] === "line") {
           const curve = getCurve(observationProps.curve);

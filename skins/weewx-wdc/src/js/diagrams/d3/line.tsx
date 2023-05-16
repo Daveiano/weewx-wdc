@@ -23,6 +23,7 @@ import {
   chartTransition,
   getColors,
   getCurve,
+  getObsPropsFromChartProps,
 } from "./components/util";
 import { addLegend } from "./components/legend";
 
@@ -226,15 +227,10 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
           (data) => data.unit === props.unit[index]
         );
 
-        // @todo Outsource.
-        const observationProps = props.nivoProps.obs
-          ? {
-              ...props.nivoProps,
-              ...Object.entries(props.nivoProps.obs).filter(
-                ([key, value]) => value.observation === props.observation[index]
-              )[0][1],
-            }
-          : props.nivoProps;
+        const observationProps = getObsPropsFromChartProps(
+          props.nivoProps,
+          props.observation[index]
+        );
 
         const yScaleMin = observationProps.yScaleMin
             ? parseFloat(observationProps.yScaleMin)
@@ -382,15 +378,10 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
 
     // Actual chart lines.
     props.data.forEach((dataSet: any, index: number) => {
-      // @todo Outsource.
-      const observationProps = props.nivoProps.obs
-        ? {
-            ...props.nivoProps,
-            ...Object.entries(props.nivoProps.obs).filter(
-              ([key, value]) => value.observation === props.observation[index]
-            )[0][1],
-          }
-        : props.nivoProps;
+      const observationProps = getObsPropsFromChartProps(
+        props.nivoProps,
+        props.observation[index]
+      );
 
       const curve = getCurve(observationProps.curve);
 

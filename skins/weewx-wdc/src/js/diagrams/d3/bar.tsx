@@ -207,16 +207,6 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
 
     // Actual chart bars.
     props.data.forEach((dataSet: any, index: number) => {
-      // @todo Outsource.
-      const observationProps = props.nivoProps.obs
-        ? {
-            ...props.nivoProps,
-            ...Object.entries(props.nivoProps.obs).filter(
-              ([key, value]) => value.observation === props.observation[index]
-            )[0][1],
-          }
-        : props.nivoProps;
-
       // Bars
       svgElement
         .selectAll("bars")

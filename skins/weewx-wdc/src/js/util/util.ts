@@ -59,6 +59,8 @@ export const getMargins = (obs: string): Margin => {
     left: 40,
   };
 
+  console.log("getMargins", obs);
+
   if (obs == "cloudbase" || obs == "rainRate") {
     margin.left = 50;
   }
@@ -68,7 +70,8 @@ export const getMargins = (obs: string): Margin => {
     obs === "altimeter" ||
     obs === "barometer" ||
     obs === "rain" ||
-    obs === "ET"
+    obs === "ET" ||
+    obs.includes("Voltage")
   ) {
     margin.left = 55;
   }
@@ -81,6 +84,10 @@ export const getMargins = (obs: string): Margin => {
 };
 
 export const getAxisLeftLegendOffset = (obs: string): number => {
+  if (obs.includes("Voltage")) {
+    return -50;
+  }
+
   switch (obs) {
     case "pressure":
     case "altimeter":

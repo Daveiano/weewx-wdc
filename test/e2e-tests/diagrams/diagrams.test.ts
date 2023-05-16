@@ -630,4 +630,34 @@ test.describe("Diagrams", () => {
         .evaluate((el) => el.outerHTML)
     ).toMatchSnapshot();
   });
+
+  test("Color handling", async ({ page }) => {
+    // Index Temp-Dew.
+    const tempDew = page.locator(
+      ".diagram-tile[data-test='outTemp-dewpoint'] svg[data-test='d3-diagram-svg']"
+    );
+    const ouTemp = tempDew.locator("path[data-test='line-outTemp']");
+    const dewPoint = tempDew.locator("path[data-test='line-dewpoint']");
+    const outTempLegendRect = tempDew.getByTestId("legend-rect-outTemp");
+    const dewPointLegendRect = tempDew.getByTestId("legend-rect-dewpoint");
+
+    // Light theme lines.
+    expect(await ouTemp.getAttribute("stroke")).toBe("#8B0000");
+    expect(await dewPoint.getAttribute("stroke")).toBe("#5F9EA0");
+
+    // Light theme legend
+    expect(await outTempLegendRect.getAttribute("fill")).toBe("#8B0000");
+    expect(await dewPointLegendRect.getAttribute("fill")).toBe("#5F9EA0");
+
+    // Switch to dark theme.
+    await page.locator("bx-header #header-global bx-btn").click();
+
+    // Dark theme.
+    expect(await ouTemp.getAttribute("stroke")).toBe("#D68585");
+    expect(await dewPoint.getAttribute("stroke")).toBe("green");
+
+    // Dark theme legend.
+    expect(await outTempLegendRect.getAttribute("fill")).toBe("#D68585");
+    expect(await dewPointLegendRect.getAttribute("fill")).toBe("green");
+  });
 });

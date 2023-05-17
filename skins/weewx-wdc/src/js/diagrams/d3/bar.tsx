@@ -14,8 +14,12 @@ import { Maximize } from "../../assets/maximize";
 import { addMarkers } from "./components/marker";
 import { getAxisGridColor, getColors } from "./components/util";
 
-export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
-  props: DiagramBaseProps
+type BarDiagramBaseProps = DiagramBaseProps & {
+  locale: d3.TimeLocaleObject;
+};
+
+export const D3BarDiagram: FunctionComponent<BarDiagramBaseProps> = (
+  props: BarDiagramBaseProps
 ): React.ReactElement => {
   const svgRef: RefObject<SVGSVGElement> = useRef(null);
   const tooltipRef: RefObject<HTMLDivElement> = useRef(null);
@@ -57,10 +61,10 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
   });
 
   // @see https://github.com/d3/d3-time-format
-  const dateTimeFormatBottom = d3.timeFormat(
+  const dateTimeFormatBottom = props.locale.format(
     props.nivoProps.bottom_date_time_format
   );
-  const dateTimeFormatTooltip = d3.timeFormat(
+  const dateTimeFormatTooltip = props.locale.format(
     props.nivoProps.tooltip_date_time_format
   );
 

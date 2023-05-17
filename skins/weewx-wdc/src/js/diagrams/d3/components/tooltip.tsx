@@ -1,5 +1,4 @@
 import React from "react";
-import * as d3 from "d3";
 
 import { context, TooltipProps } from "../../types";
 
@@ -10,7 +9,7 @@ export const Tooltip = (
     return <></>;
   }
 
-  const dateTimeFormat = d3.timeFormat(props.dateTimeFormat);
+  const dateTimeFormat = props.locale.format(props.dateTimeFormat);
 
   if (props.tooltips.length === 1) {
     return (

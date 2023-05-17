@@ -78,6 +78,30 @@ class WdcGeneralUtil(SearchList):
             "wx_binding"
         )
 
+    def get_locale(self):
+        """
+        Get the locale.
+
+        Returns:
+            str: The locale
+        """
+        try:
+            return self.skin_dict["DisplayOptions"]["date_time_locale"]
+        except KeyError:
+            report_lang = search_up(
+                self.generator.config_dict["StdReport"]["WdcReport"],
+                "lang",
+                "en"
+            )
+
+            if report_lang == "de":
+                return 'de-DE'
+
+            if report_lang == "it":
+                return 'it-IT'
+
+            return 'en-US'
+
     def get_custom_data_binding_obs_key(self, obs_key):
         """
         Get the observation key for a custom observation.

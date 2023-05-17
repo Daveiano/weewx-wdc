@@ -29,6 +29,7 @@ import { addLegend } from "./components/legend";
 
 type LineDiagramBaseProps = DiagramBaseProps & {
   unit: string[];
+  locale: d3.TimeLocaleObject;
 };
 
 export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
@@ -98,9 +99,12 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
     }
   });
 
-  let tickValues = 5;
+  // Locale handling.
+  const dateTimeFormat = props.locale.format(
+    props.nivoProps.bottom_date_time_format
+  );
 
-  // @todo Optimize this.
+  let tickValues = 5;
   switch (props.context) {
     case "week":
       tickValues = 5;
@@ -185,7 +189,8 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
       .call(
         d3
           .axisBottom(xScale)
-          .ticks(tickValues, props.nivoProps.bottom_date_time_format)
+          .ticks(tickValues)
+          .tickFormat((d) => dateTimeFormat(d as Date))
           .tickSize(0)
           .tickPadding(6)
       );
@@ -719,6 +724,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
             color={colors}
             unit={typeof props.unit === "string" ? [props.unit] : props.unit}
             dateTimeFormat={props.nivoProps.tooltip_date_time_format}
+            locale={props.locale}
           />
         </div>
       </div>

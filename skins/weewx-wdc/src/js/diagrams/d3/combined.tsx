@@ -31,6 +31,7 @@ type CombinedDiagramBaseProps = DiagramBaseProps & {
   chartTypes: string[];
   observation: string[];
   unit: string[];
+  locale: d3.TimeLocaleObject;
 };
 
 export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
@@ -96,7 +97,9 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
   });
 
   // @see https://github.com/d3/d3-time-format
-  const dateTimeFormat = d3.timeFormat(props.nivoProps.bottom_date_time_format);
+  const dateTimeFormat = props.locale.format(
+    props.nivoProps.bottom_date_time_format
+  );
 
   const callback = (mutationsList: Array<MutationRecord>) => {
     mutationsList.forEach((mutation) => {
@@ -722,6 +725,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             color={colors}
             unit={typeof props.unit === "string" ? [props.unit] : props.unit}
             dateTimeFormat={props.nivoProps.tooltip_date_time_format}
+            locale={props.locale}
           />
         </div>
       </div>

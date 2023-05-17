@@ -1,6 +1,8 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 
+import * as d3 from "d3";
+
 import { CarbonDataTableStateManager } from "carbon-data-table-state-manager";
 import type { context, Serie, Series } from "./diagrams/types";
 import { CalendarDiagram } from "./diagrams/calendar";
@@ -13,6 +15,32 @@ import { DWDForecast } from "./components/dwd-forecast";
 import { CombinedDiagram } from "./diagrams/d3/combined";
 import { D3BarDiagram } from "./diagrams/d3/bar";
 import { D3LineDiagram } from "./diagrams/d3/line";
+
+import type { locale } from "./diagrams/types";
+
+import localeDE from "./util/locale/de-DE.json";
+import localeEnUs from "./util/locale/en-US.json";
+import localeEnGb from "./util/locale/en-GB.json";
+import localeIT from "./util/locale/it-IT.json";
+
+const localeString: locale = (window as any).weewxWdcConfig.locale;
+
+let localeDefault: d3.TimeLocaleDefinition =
+  localeEnUs as d3.TimeLocaleDefinition;
+
+switch (localeString) {
+  case "de-DE":
+    localeDefault = localeDE as d3.TimeLocaleDefinition;
+    break;
+  case "en-GB":
+    localeDefault = localeEnGb as d3.TimeLocaleDefinition;
+    break;
+  case "it-IT":
+    localeDefault = localeIT as d3.TimeLocaleDefinition;
+    break;
+}
+
+const locale = d3.timeFormatDefaultLocale(localeDefault);
 
 const calendarDiagrams = document.querySelectorAll(
   "div.calendar-diagram-clim-wrap"
@@ -125,6 +153,7 @@ diagrams.forEach((diagram) => {
           observation={diagramObservations}
           context={diagram.dataset.context as context}
           nivoProps={nivoProps}
+          locale={locale}
         />
       );
     }
@@ -139,6 +168,7 @@ diagrams.forEach((diagram) => {
           observation={diagramObservations}
           context={diagram.dataset.context as context}
           nivoProps={nivoProps}
+          locale={locale}
         />
       );
     }
@@ -157,6 +187,7 @@ diagrams.forEach((diagram) => {
           context={diagram.dataset.context as context}
           nivoProps={nivoProps}
           chartTypes={diagramTypes}
+          locale={locale}
         />
       );
     }

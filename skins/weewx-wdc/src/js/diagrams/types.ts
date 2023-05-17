@@ -12,6 +12,8 @@ interface Serie {
   [key: string]: any;
 }
 
+type locale = "de-DE" | "en-US" | "en-GB" | "it-IT";
+
 type context = "day" | "week" | "month" | "year" | "alltime";
 
 type CalendarDiagramBaseProps = {
@@ -68,6 +70,7 @@ type TooltipProps = {
   color: string[];
   unit: string[];
   dateTimeFormat: string;
+  locale: d3.TimeLocaleObject;
 };
 
 type WindRoseProps = {
@@ -81,6 +84,7 @@ interface Series {
 }
 
 export {
+  locale,
   CalendarDiagramBaseProps,
   DiagramBaseProps,
   context,

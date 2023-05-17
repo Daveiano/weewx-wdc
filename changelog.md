@@ -650,5 +650,12 @@ Line 27:
 - Added default Translation of combined diagram labels GH-149
 - Added Sensor Status Page GH-154 (https://github.com/Daveiano/weewx-wdc/wiki/Sensor-Status-Page)
 - Combine rain and rainRate tile to get rid of $current.rain GH-147
+- Add `color_dark` to diagrams config to allow explicitly set chart colors in dark mode GH-163
+- Update of D3 charts / Remove nivo and switch to native D3 GH-117
+  - Support yScaleMin, yScaleMax, offset, enableArea, areaOpacity, enablePoints, curve, pointSize and lineWidth on a per observation basis, not per chart
+  - Fixed legend position
+  - Markers for multi-unit charts
+  - Configurable Date/Time for Axis and tooltips
+  - Fixed strange looking Climatogram (buggy yScale) for short periods (< 2 years)
 
 ## Changes made to skin.conf since 3.1.1

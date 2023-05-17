@@ -45,6 +45,7 @@ If you like the look and feel of the skin please consider having a look at the o
 - Dark mode
 - Live updates using [weewx-mqtt](https://github.com/matthewwall/weewx-mqtt)
 - Support for up to 4 webcams
+- Station statics page (Telemetry)
 
 ## [Demo](https://www.weewx-hbt.de)
 

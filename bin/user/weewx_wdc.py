@@ -78,6 +78,30 @@ class WdcGeneralUtil(SearchList):
             "wx_binding"
         )
 
+    def get_locale(self):
+        """
+        Get the locale.
+
+        Returns:
+            str: The locale
+        """
+        try:
+            return self.skin_dict["DisplayOptions"]["date_time_locale"]
+        except KeyError:
+            report_lang = search_up(
+                self.generator.config_dict["StdReport"]["WdcReport"],
+                "lang",
+                "en"
+            )
+
+            if report_lang == "de":
+                return 'de-DE'
+
+            if report_lang == "it":
+                return 'it-IT'
+
+            return 'en-US'
+
     def get_custom_data_binding_obs_key(self, obs_key):
         """
         Get the observation key for a custom observation.
@@ -187,6 +211,36 @@ class WdcGeneralUtil(SearchList):
             return True
 
         return False
+
+    def get_context_key_from_time_span(self, start_ts, end_ts):
+        """
+        Get the context key from a given time span.
+
+        Args:
+            start_ts (int): The start timestamp
+            end_ts (int): The end timestamp
+
+        Returns:
+            str: The context key
+        """
+        if start_ts == end_ts:
+            return "day"
+
+        if end_ts - start_ts <= 86400:
+            return "day"
+
+        # Up to 2 weeks.
+        if end_ts - start_ts <= 1209600:
+            return "week"
+
+        # Up to 3 months.
+        if end_ts - start_ts <= 8035200:
+            return "month"
+
+        if end_ts - start_ts <= 31536000:
+            return "year"
+
+        return "alltime"
 
     def show_sensor_page(self):
         if "sensor_status" in self.generator_to_date:
@@ -441,7 +495,7 @@ class WdcGeneralUtil(SearchList):
         elif observation == "forecast":
             return icon_path + "forecast.svg"
 
-        elif observation == "radiation" or observation == 'luminosity' or observation == 'maxSolarRad':
+        elif observation == "radiation" or observation == 'luminosity' or observation == 'maxSolarRad' or observation == 'sunshineDur':
             return icon_path + "radiation.svg"
 
         elif observation == "appTemp" or observation == "appTemp1":
@@ -464,6 +518,9 @@ class WdcGeneralUtil(SearchList):
 
         elif observation == "hail" or observation == "hailRate":
             return icon_path + "hail.svg"
+
+        elif observation == 'cloudcover':
+            return icon_path + "forecast/B2.svg"
 
         elif "leaf" in observation:
             return icon_path + "leaf.svg"

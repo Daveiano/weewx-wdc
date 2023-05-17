@@ -6,7 +6,6 @@ import React, {
   RefObject,
 } from "react";
 import * as d3 from "d3";
-import dayjs from "dayjs";
 
 import { Datum, DiagramBaseProps } from "../types";
 import {
@@ -21,15 +20,18 @@ import {
   getAxisGridColor,
   getColors,
   getCurve,
+  getObsPropsFromChartProps,
 } from "./components/util";
 import { Maximize } from "../../assets/maximize";
 import { Tooltip } from "./components/tooltip";
 import { addLegend } from "./components/legend";
+import { addMarkers } from "./components/marker";
 
 type CombinedDiagramBaseProps = DiagramBaseProps & {
   chartTypes: string[];
   observation: string[];
   unit: string[];
+  locale: d3.TimeLocaleObject;
 };
 
 export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
@@ -47,7 +49,12 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
     document.documentElement.classList.contains("dark")
   );
   const axisGridColor = getAxisGridColor(darkMode);
-  const colors = getColors(darkMode, props.nivoProps.enableArea, props.color);
+  const colors = getColors(
+    darkMode,
+    props.nivoProps,
+    props.color,
+    props.observation
+  );
 
   // Combine all data into one array and sort by x value.
   let combinedData: any[] = [];
@@ -62,22 +69,37 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
     return a.x - b.x;
   });
 
-  // @todo same as in bar.tsx
-  let dateFormat = "HH:mm";
-  switch (props.context) {
-    case "week":
-      dateFormat = "DD.MM";
-      break;
-    case "month":
-      dateFormat = "DD.MM";
-      break;
-    case "year":
-      dateFormat = "DD.MM";
-      break;
-    case "alltime":
-      dateFormat = "MM.YYYY";
-      break;
-  }
+  // Group data by unit.
+  const dataGroupedByUnit: { unit: string; data: Datum[] }[] = [
+    { unit: props.unit[0], data: props.data[0].data },
+  ];
+
+  props.unit.forEach((unit, index) => {
+    if (index === 0) {
+      return;
+    }
+
+    const alreadyGrouped = dataGroupedByUnit.find(
+      (group) => group.unit === unit
+    );
+
+    if (alreadyGrouped) {
+      alreadyGrouped.data = [...alreadyGrouped.data, ...props.data[index].data];
+      dataGroupedByUnit[
+        dataGroupedByUnit.findIndex((group) => group.unit === unit)
+      ] = alreadyGrouped;
+    } else {
+      dataGroupedByUnit.push({
+        unit: unit,
+        data: props.data[index].data,
+      });
+    }
+  });
+
+  // @see https://github.com/d3/d3-time-format
+  const dateTimeFormat = props.locale.format(
+    props.nivoProps.bottom_date_time_format
+  );
 
   const callback = (mutationsList: Array<MutationRecord>) => {
     mutationsList.forEach((mutation) => {
@@ -129,12 +151,14 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
       const svgElement = d3
         .select(svgRef.current)
+        .attr("data-test", "d3-diagram-svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      const dataGroupedByUnit: any = {},
+      // dataGroupedByScale is used for drawing the y-Axis.
+      const dataGroupedByScale: any = {},
         scales: {
           [key: string]: any;
           x: any;
@@ -145,21 +169,30 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       // Group data per unit. First only process bar scales bc we need them later for the line scales.
       props.data.forEach((serie, index) => {
         // Unit not yet added/proccessed.
-        if (!dataGroupedByUnit[props.unit[index]]) {
+        if (!dataGroupedByScale[props.unit[index]]) {
           if (props.chartTypes[index] === "bar") {
-            dataGroupedByUnit[props.unit[index]] = [];
+            dataGroupedByScale[props.unit[index]] = [];
+
+            const observationProps = getObsPropsFromChartProps(
+              props.nivoProps,
+              props.observation[index]
+            );
+
+            const unitData = dataGroupedByUnit.find(
+              (data) => data.unit === props.unit[index]
+            );
 
             const xScale = d3
               .scaleBand()
               .range([0, width])
               .domain(serie.data.map((d: any) => d.x));
 
-            // @todo Should be obs specific?
-            // @todo Hard coded yScaleMax.
-            const yScaleMax = d3.max(serie.data, (d: any) => d.y) + 0.5,
+            const yScaleMax = observationProps.yScaleMax
+                ? parseFloat(observationProps.yScaleMax)
+                : d3.max(unitData?.data as Datum[], (d: any) => d.y) +
+                  parseFloat(observationProps.yScaleOffset),
               yScale = d3
                 .scaleLinear()
-                // @todo yScaleMin, yScaleMax does not make sense to have this per chart, needs to be per obs.
                 .domain([0, yScaleMax])
                 .range([height, 0]);
 
@@ -168,7 +201,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
               y: yScale,
             };
 
-            dataGroupedByUnit[props.unit[index]].push({
+            dataGroupedByScale[props.unit[index]].push({
               ...serie,
               unit: props.unit[index],
             });
@@ -177,9 +210,18 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       });
 
       props.data.forEach((serie, index) => {
-        if (!dataGroupedByUnit[props.unit[index]]) {
+        if (!dataGroupedByScale[props.unit[index]]) {
           if (props.chartTypes[index] === "line") {
-            dataGroupedByUnit[props.unit[index]] = [];
+            dataGroupedByScale[props.unit[index]] = [];
+
+            const observationProps = getObsPropsFromChartProps(
+              props.nivoProps,
+              props.observation[index]
+            );
+
+            const unitData = dataGroupedByUnit.find(
+              (data) => data.unit === props.unit[index]
+            );
 
             const barScaleOffset =
                 scales[
@@ -194,15 +236,14 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
                   ),
                 ])
                 .range([barScaleOffset, width - barScaleOffset]),
-              // @todo Should be obs specific?
-              yScaleMin = props.nivoProps.yScaleMin
-                ? parseFloat(props.nivoProps.yScaleMin)
-                : d3.min(combinedData, (d: any) => d.y) -
-                  parseFloat(props.nivoProps.yScaleOffset),
-              yScaleMax = props.nivoProps.yScaleMax
-                ? parseFloat(props.nivoProps.yScaleMax)
-                : d3.max(combinedData, (d: any) => d.y) +
-                  parseFloat(props.nivoProps.yScaleOffset),
+              yScaleMin = observationProps.yScaleMin
+                ? parseFloat(observationProps.yScaleMin)
+                : d3.min(unitData?.data as Datum[], (d: any) => d.y) -
+                  parseFloat(observationProps.yScaleOffset),
+              yScaleMax = observationProps.yScaleMax
+                ? parseFloat(observationProps.yScaleMax)
+                : d3.max(unitData?.data as Datum[], (d: any) => d.y) +
+                  parseFloat(observationProps.yScaleOffset),
               yScale = d3
                 .scaleLinear()
                 .domain([yScaleMin, yScaleMax])
@@ -214,7 +255,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
               yScaleMin,
             };
 
-            dataGroupedByUnit[props.unit[index]].push({
+            dataGroupedByScale[props.unit[index]].push({
               ...serie,
               unit: props.unit[index],
             });
@@ -229,12 +270,15 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       svgElement
         .append("g")
         .attr("transform", `translate(0, ${height})`)
+        .attr("data-test", "x-axis")
         .call(
           d3
             .axisBottom(scales[barCharUnit]["x"])
             .tickSize(0)
             .tickPadding(6)
-            .tickFormat((d: any) => dayjs.unix(d).format(dateFormat))
+            .tickFormat((d) =>
+              dateTimeFormat(new Date(parseInt(d as string) * 1000))
+            )
         )
         .selectAll("text")
         .style("text-anchor", "end")
@@ -258,6 +302,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           svgElement
             .append("g")
             // @todo Wind direction degree/ordinal.
+            .attr("data-test", "y-axis-left")
             .call(
               d3
                 .axisLeft(value["y"])
@@ -313,6 +358,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         if (index > 0) {
           svgElement
             .append("g")
+            .attr("data-test", "y-axis-right")
             .attr("transform", "translate(" + width + ",0)")
             .call(
               d3
@@ -352,8 +398,14 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
       // Draw Data.
       props.data.forEach((serie, index) => {
+        const observationProps = getObsPropsFromChartProps(
+          props.nivoProps,
+          props.observation[index]
+        );
+
         if (props.chartTypes[index] === "line") {
-          const curve = getCurve(props.nivoProps.curve);
+          const curve = getCurve(observationProps.curve);
+
           const lineGenerator = d3
             .line()
             .x(function (d: any) {
@@ -367,8 +419,9 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
               return scales[props.unit[index]]["y"](d.y);
             })
             .curve(curve);
+
           // Dots.
-          if (props.nivoProps.enablePoints) {
+          if (observationProps.enablePoints) {
             svgElement
               .append("g")
               .selectAll("dot")
@@ -383,13 +436,15 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
               })
               .attr(
                 "r",
-                props.nivoProps.pointSize ? props.nivoProps.pointSize / 2 : 2.5
+                observationProps.pointSize
+                  ? observationProps.pointSize / 2
+                  : 2.5
               )
               .style("fill", colors[index]);
           }
 
           // Area.
-          if (props.nivoProps.enableArea) {
+          if (observationProps.enableArea) {
             svgElement
               .append("path")
               .datum(serie.data as any)
@@ -398,8 +453,8 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
                 "fill-opacity",
                 darkMode
                   ? 0.75
-                  : props.nivoProps.areaOpacity
-                  ? props.nivoProps.areaOpacity
+                  : observationProps.areaOpacity
+                  ? observationProps.areaOpacity
                   : 0.07
               )
               .attr("stroke-width", 0)
@@ -424,10 +479,11 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           svgElement
             .append("path")
             .attr("fill", "none")
+            .attr("data-test", `line-${props.observation[index]}`)
             .attr("stroke", colors[index])
             .attr(
               "stroke-width",
-              props.nivoProps.lineWidth ? props.nivoProps.lineWidth : 2
+              observationProps.lineWidth ? observationProps.lineWidth : 2
             )
             .attr("d", lineGenerator(serie.data as any));
         }
@@ -438,6 +494,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             .selectAll("bars")
             .data(serie.data)
             .join("rect")
+            .attr("data-test", `bar-${props.observation[index]}`)
             .attr(
               "x",
               (d: any) =>
@@ -452,7 +509,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             )
             .attr("fill", colors[index]);
 
-          if (props.nivoProps.enableLabel) {
+          if (observationProps.enableLabel) {
             svgElement
               .selectAll(".text")
               .data(serie.data.filter((d: any) => d.y > 0))
@@ -485,6 +542,38 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
       // Legend.
       addLegend(svgElement, width, props.data, props.unit, colors, true);
+
+      // Markers.
+      if (Object.entries(scales).length === 1) {
+        if (props.nivoProps.markerValue) {
+          addMarkers(
+            svgElement,
+            width,
+            scales[props.unit[0]]["y"],
+            props.unit[0],
+            props.nivoProps.markerValue,
+            props.nivoProps.markerColor,
+            props.nivoProps.markerLabel
+          );
+        }
+      } else {
+        props.nivoProps.obs &&
+          Object.entries(props.nivoProps.obs).forEach(
+            (obs: any, index: number) => {
+              if (obs[1].markerValue) {
+                addMarkers(
+                  svgElement,
+                  width,
+                  scales[props.unit[index]]["y"],
+                  props.unit[index],
+                  obs[1].markerValue,
+                  obs[1].markerColor,
+                  obs[1].markerLabel
+                );
+              }
+            }
+          );
+      }
 
       // Interactivity.
       // @see  http://www.d3noob.org/2014/07/my-favourite-tooltip-method-for-line.html
@@ -614,7 +703,11 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
     <>
       <Maximize onClick={handleFullScreen} />
       <div style={{ height: "100%", position: "relative" }}>
-        <svg ref={svgRef} xmlns="http://www.w3.org/2000/svg" />
+        <svg
+          ref={svgRef}
+          xmlns="http://www.w3.org/2000/svg"
+          data-test="d3-diagram-svg"
+        />
         <div
           ref={tooltipRef}
           className="d3-diagram-tooltip"
@@ -631,6 +724,8 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             tooltips={tooltip}
             color={colors}
             unit={typeof props.unit === "string" ? [props.unit] : props.unit}
+            dateTimeFormat={props.nivoProps.tooltip_date_time_format}
+            locale={props.locale}
           />
         </div>
       </div>

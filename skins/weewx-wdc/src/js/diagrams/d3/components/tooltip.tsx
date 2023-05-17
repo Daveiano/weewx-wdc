@@ -1,8 +1,6 @@
 import React from "react";
-import dayjs from "dayjs";
 
 import { context, TooltipProps } from "../../types";
-import { getDateFormattedTooltip } from "./util";
 
 export const Tooltip = (
   props: TooltipProps & { context: context }
@@ -10,6 +8,8 @@ export const Tooltip = (
   if (props.tooltips.length === 0) {
     return <></>;
   }
+
+  const dateTimeFormat = props.locale.format(props.dateTimeFormat);
 
   if (props.tooltips.length === 1) {
     return (
@@ -23,7 +23,7 @@ export const Tooltip = (
         className="diagram-tooltip"
       >
         <div style={{ marginBottom: "5px", whiteSpace: "nowrap" }}>
-          {getDateFormattedTooltip(props.tooltips[0].x, props.context)}
+          {dateTimeFormat(new Date(props.tooltips[0].x * 1000))}
         </div>
         <div>
           {props.tooltips[0].y} {props.unit[0]}
@@ -43,7 +43,7 @@ export const Tooltip = (
           whiteSpace: "nowrap",
         }}
       >
-        {getDateFormattedTooltip(props.tooltips[0].x, props.context)}
+        {dateTimeFormat(new Date(props.tooltips[0].x * 1000))}
       </header>
       {props.tooltips.map((item, index) => (
         <div

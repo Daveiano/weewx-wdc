@@ -1,9 +1,9 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 
+import * as d3 from "d3";
+
 import { CarbonDataTableStateManager } from "carbon-data-table-state-manager";
-import { BarDiagram } from "./diagrams/bar";
-import { LineDiagram } from "./diagrams/line";
 import type { context, Serie, Series } from "./diagrams/types";
 import { CalendarDiagram } from "./diagrams/calendar";
 import { StatisticsSelect } from "./components/statistics-select";
@@ -16,8 +16,31 @@ import { CombinedDiagram } from "./diagrams/d3/combined";
 import { D3BarDiagram } from "./diagrams/d3/bar";
 import { D3LineDiagram } from "./diagrams/d3/line";
 
-// FEATURE FLAG: Use D3 diagrams.
-const useD3Diagrams = (window as any).weewxWdcConfig.ENABLE_D3_DIAGRAMS;
+import type { locale } from "./diagrams/types";
+
+import localeDE from "./util/locale/de-DE.json";
+import localeEnUs from "./util/locale/en-US.json";
+import localeEnGb from "./util/locale/en-GB.json";
+import localeIT from "./util/locale/it-IT.json";
+
+const localeString: locale = (window as any).weewxWdcConfig.locale;
+
+let localeDefault: d3.TimeLocaleDefinition =
+  localeEnUs as d3.TimeLocaleDefinition;
+
+switch (localeString) {
+  case "de-DE":
+    localeDefault = localeDE as d3.TimeLocaleDefinition;
+    break;
+  case "en-GB":
+    localeDefault = localeEnGb as d3.TimeLocaleDefinition;
+    break;
+  case "it-IT":
+    localeDefault = localeIT as d3.TimeLocaleDefinition;
+    break;
+}
+
+const locale = d3.timeFormatDefaultLocale(localeDefault);
 
 const calendarDiagrams = document.querySelectorAll(
   "div.calendar-diagram-clim-wrap"
@@ -40,6 +63,7 @@ calendarDiagrams.forEach((diagram) => {
         color={JSON.parse((diagram.dataset.color as string).replace(/'/g, '"'))}
         observation={diagram.dataset.obs}
         heading={diagram.dataset.heading}
+        locale={locale}
       />
     );
   }
@@ -52,7 +76,6 @@ diagrams.forEach((diagram) => {
     diagram.dataset.value &&
     diagram.dataset.labels &&
     diagram.dataset.aggregateType &&
-    diagram.dataset.obs &&
     diagram.dataset.context &&
     diagram.dataset.color &&
     diagram.dataset.diagram &&
@@ -81,6 +104,7 @@ diagrams.forEach((diagram) => {
         data = [
           ...data,
           {
+            observation: diagramObservations[index],
             id: `${labels[index]} ${
               aggregate_types[index][0].toUpperCase() +
               aggregate_types[index].slice(1)
@@ -98,7 +122,8 @@ diagrams.forEach((diagram) => {
     } else {
       data = [
         {
-          id: diagram.dataset.obs,
+          observation: diagramObservations[0],
+          id: diagramObservations[0],
           data: (window as any)[diagram.dataset.value]
             .map((item: number[]) => ({
               x: item[0],
@@ -121,56 +146,32 @@ diagrams.forEach((diagram) => {
     }
 
     if (diagramTypesUnique.length === 1 && diagramTypesUnique[0] === "line") {
-      if (useD3Diagrams) {
-        root.render(
-          <D3LineDiagram
-            color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
-            unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
-            data={data}
-            observation={diagramObservations}
-            context={diagram.dataset.context as context}
-            nivoProps={nivoProps}
-          />
-        );
-      } else {
-        root.render(
-          <LineDiagram
-            color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
-            unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
-            data={data}
-            observation={diagram.dataset.obs}
-            context={diagram.dataset.context as context}
-            nivoProps={nivoProps}
-          />
-        );
-      }
+      root.render(
+        <D3LineDiagram
+          color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
+          unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
+          data={data}
+          observation={diagramObservations}
+          context={diagram.dataset.context as context}
+          nivoProps={nivoProps}
+          locale={locale}
+        />
+      );
     }
 
     // Bar diagrams.
     if (diagramTypesUnique.length === 1 && diagramTypesUnique[0] === "bar") {
-      if (useD3Diagrams) {
-        root.render(
-          <D3BarDiagram
-            color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
-            unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
-            data={data}
-            observation={diagram.dataset.obs}
-            context={diagram.dataset.context as context}
-            nivoProps={nivoProps}
-          />
-        );
-      } else {
-        root.render(
-          <BarDiagram
-            color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
-            unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
-            data={data}
-            observation={diagram.dataset.obs}
-            context={diagram.dataset.context as context}
-            nivoProps={nivoProps}
-          />
-        );
-      }
+      root.render(
+        <D3BarDiagram
+          color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
+          unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
+          data={data}
+          observation={diagramObservations}
+          context={diagram.dataset.context as context}
+          nivoProps={nivoProps}
+          locale={locale}
+        />
+      );
     }
 
     if (
@@ -187,6 +188,7 @@ diagrams.forEach((diagram) => {
           context={diagram.dataset.context as context}
           nivoProps={nivoProps}
           chartTypes={diagramTypes}
+          locale={locale}
         />
       );
     }

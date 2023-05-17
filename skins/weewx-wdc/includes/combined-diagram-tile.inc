@@ -15,6 +15,10 @@
   #set $diagram_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6"
 #end if
 
+#if $varExists('diagram_classes_custom')
+  #set $diagram_classes = $diagram_classes_custom
+#end if
+
 #if $comb_obs == "climatogram_year" or $comb_obs == "climatogram_statistics"
   #set $diagram_classes = "bx--col"
 #end if
@@ -61,8 +65,8 @@
 
           $gettext($combined_diagram.label)
         </p>
+        <!--prettier-ignore-->
         <div class="value">
-          <!--prettier-ignore-->
           #set $series_names = []
           #set $series_colors = []
           #set $series_labels = []
@@ -72,7 +76,6 @@
           #set $diagram_types = []
           #set $combined_index = 0
 
-          <!--prettier-ignore-->
           #for $combined_obs in $combined_diagram_obs.keys()
             #set $series_observation = $combined_diagram_obs[$combined_obs]
             #set $series_name = $series_observation + 'Series' + str($diagram_index) + str($combined_index)
@@ -86,42 +89,36 @@
             #silent $series_units.append($get_unit_label($get_unit_for_obs($combined_obs, $series_observation_key, $context, combined=$combined_diagram, combined_key=$comb_obs)))
             #silent $diagram_types.append($get_diagram($series_observation_key))
 
-          <!--prettier-ignore-->
           #if $context == 'month' and $use_parameter_month
-              #set $obs_context = $month($data_binding=$combined_obs_binding)
-              #set $start_ts=$obs_context.start.raw
-              #set $end_ts=$obs_context.end.raw
-              #set $context_key = $context
-          <!--prettier-ignore-->
+            #set $obs_context = $month($data_binding=$combined_obs_binding)
+            #set $start_ts=$obs_context.start.raw
+            #set $end_ts=$obs_context.end.raw
+            #set $context_key = $context
           #else if $context == 'year' and $use_parameter_year
-              #set $obs_context = $year($data_binding=$combined_obs_binding)
-              #set $start_ts=$obs_context.start.raw
-              #set $end_ts=$obs_context.end.raw
-              #set $context_key = $context
-            #else if $context == 'alltime'
-              #set $obs_context = $alltime($data_binding=$combined_obs_binding)
-              #set $start_ts=$obs_context.start.raw
-              #set $end_ts=$obs_context.end.raw
-              #set $context_key = $context
-            #else if $context == 'yesterday'
-              #set $obs_context = $yesterday($data_binding=$combined_obs_binding)
-              #set $start_ts=$obs_context.start.raw
-              #set $end_ts=$obs_context.end.raw
-              #set $context_key = $context
-            ## @todo Experimetal - use parameter for time_span.
-            #else if $context == 'dwd-forecast'
-              ## Now
-              #set $start_ts = time.time()
-              ## Now + 11 days
-              #set $end_dt = $datetime.date.today() + $datetime.timedelta(days=11)
-              #set $end_ts = $time.mktime($end_dt.timetuple())
-              #set $context_key = 'week'
-            #else
-              #set $obs_context = $span($data_binding=$combined_obs_binding ,$hour_delta=$get_hour_delta($context), $boundary=$get_diagram_boundary($context))
-              #set $start_ts=$obs_context.start.raw
-              #set $end_ts=$obs_context.end.raw
-              #set $context_key = $context
-            #end if
+            #set $obs_context = $year($data_binding=$combined_obs_binding)
+            #set $start_ts=$obs_context.start.raw
+            #set $end_ts=$obs_context.end.raw
+            #set $context_key = $context
+          #else if $context == 'alltime'
+            #set $obs_context = $alltime($data_binding=$combined_obs_binding)
+            #set $start_ts=$obs_context.start.raw
+            #set $end_ts=$obs_context.end.raw
+            #set $context_key = $context
+          #else if $context == 'yesterday'
+            #set $obs_context = $yesterday($data_binding=$combined_obs_binding)
+            #set $start_ts=$obs_context.start.raw
+            #set $end_ts=$obs_context.end.raw
+            #set $context_key = $context
+          #else if $context == 'custom'
+            #set $start_ts = $context_start_ts
+            #set $end_ts = $context_end_ts
+            #set $context_key = $get_context_key_from_time_span($start_ts, $end_ts)
+          #else
+            #set $obs_context = $span($data_binding=$combined_obs_binding ,$hour_delta=$get_hour_delta($context), $boundary=$get_diagram_boundary($context))
+            #set $start_ts=$obs_context.start.raw
+            #set $end_ts=$obs_context.end.raw
+            #set $context_key = $context
+          #end if
 
           <script>
             /* prettier-ignore */
@@ -138,10 +135,9 @@
             data-value="$series_names"
             data-color="$series_colors"
             data-unit="$series_units"
-            data-obs="$combined_diagram.obs[list($combined_diagram.obs.keys())[0]].observation"
             data-observations="$series_observations"
             data-diagram="$diagram_types"
-            data-context="$context"
+            data-context="$context_key"
             data-aggregate-type="$series_aggregate_type"
             data-nivo-props="$get_diagram_props($comb_obs, $context)"
           ></div>

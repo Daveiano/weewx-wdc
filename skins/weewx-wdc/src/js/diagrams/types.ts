@@ -6,10 +6,13 @@ interface Datum {
 }
 
 interface Serie {
+  observation: string;
   id: string | number;
   data: Datum[];
   [key: string]: any;
 }
+
+type locale = "de-DE" | "en-US" | "en-GB" | "it-IT";
 
 type context = "day" | "week" | "month" | "year" | "alltime";
 
@@ -19,13 +22,14 @@ type CalendarDiagramBaseProps = {
   data: Array<{ day: string; value: number }>;
   observation: string;
   heading: string;
+  locale: d3.TimeLocaleObject;
 };
 
 type DiagramBaseProps = {
   color: string[];
   unit: string | string[];
   data: Serie[];
-  observation: string;
+  observation: string[];
   context: context;
   nivoProps: {
     areaOpacity?: number;
@@ -53,6 +57,12 @@ type DiagramBaseProps = {
       | "step"
       | "stepAfter"
       | "stepBefore";
+    color_dark?: string;
+    bottom_date_time_format: string;
+    tooltip_date_time_format: string;
+    obs?: {
+      [key: string]: any;
+    };
   };
 };
 
@@ -60,6 +70,8 @@ type TooltipProps = {
   tooltips: Datum[];
   color: string[];
   unit: string[];
+  dateTimeFormat: string;
+  locale: d3.TimeLocaleObject;
 };
 
 type WindRoseProps = {
@@ -73,6 +85,7 @@ interface Series {
 }
 
 export {
+  locale,
   CalendarDiagramBaseProps,
   DiagramBaseProps,
   context,

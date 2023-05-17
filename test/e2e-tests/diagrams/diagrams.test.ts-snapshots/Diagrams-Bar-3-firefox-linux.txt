@@ -1,0 +1,1 @@
+<rect data-test="bar-rain" x="86.59375" y="158.9282428702852" width="519.5625" height="171.0717571297148" fill="#0198E1"></rect>

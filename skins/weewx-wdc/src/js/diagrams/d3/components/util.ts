@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import color from "color";
-import { context } from "../../types";
-import dayjs from "dayjs";
+import { context, DiagramBaseProps } from "../../types";
 
 export const getAxisGridColor = (darkMode: boolean): string =>
   darkMode ? "#525252" : "#dddddd";
@@ -10,29 +9,57 @@ export const getBackgroundColorDarkModeLightness = color("#393939").lightness();
 
 export const chartTransition = "left 0.25s ease-in-out, top 0.35s ease-in-out";
 
+export const getObsPropsFromChartProps = (
+  chartProps: DiagramBaseProps["nivoProps"],
+  observation: string
+): DiagramBaseProps["nivoProps"] => {
+  const observationProps = chartProps.obs
+    ? {
+        ...chartProps,
+        ...Object.entries(chartProps.obs).filter(
+          ([key, value]) => value.observation === observation
+        )[0][1],
+      }
+    : chartProps;
+
+  return observationProps;
+};
+
 export const getColors = (
   darkMode: boolean,
-  enableArea: boolean,
-  colors: string[]
+  chartProps: DiagramBaseProps["nivoProps"],
+  colors: string[],
+  observations: string[]
 ): string[] => {
-  return darkMode
-    ? enableArea
-      ? colors.map((c) =>
-          color(c).lightness() <= getBackgroundColorDarkModeLightness * 2
-            ? color(c).desaturate(0.1).lighten(0.75).hex()
-            : c
-        )
-      : colors.map((c) => {
-          if (color(c).red() > 90) {
-            return color(c).desaturate(0.5).lighten(1.5).hex();
-          }
-          if (color(c).lightness() <= getBackgroundColorDarkModeLightness) {
-            return color(c).lighten(10).hex();
-          }
+  if (!darkMode) {
+    return colors;
+  }
 
-          return color(c).lighten(0.25).hex();
-        })
-    : colors;
+  return colors.map((c, index) => {
+    const observationProps = getObsPropsFromChartProps(
+      chartProps,
+      observations[index]
+    );
+
+    if (observationProps.color_dark) {
+      return observationProps.color_dark;
+    }
+
+    if (chartProps.enableArea) {
+      return color(c).lightness() <= getBackgroundColorDarkModeLightness * 2
+        ? color(c).desaturate(0.1).lighten(0.75).hex()
+        : c;
+    } else {
+      if (color(c).red() > 90) {
+        return color(c).desaturate(0.5).lighten(1.5).hex();
+      }
+      if (color(c).lightness() <= getBackgroundColorDarkModeLightness) {
+        return color(c).lighten(10).hex();
+      }
+
+      return color(c).lighten(0.25).hex();
+    }
+  });
 };
 
 export const getCurve = (curveType: string): d3.CurveFactory => {
@@ -84,52 +111,4 @@ export const getCurve = (curveType: string): d3.CurveFactory => {
     }
   }
   return curve;
-};
-
-export const getDateFormattedChart = (
-  date: number,
-  context: context
-): string => {
-  let format = "%H:%M";
-
-  switch (context) {
-    case "week":
-      format = "DD.MM";
-      break;
-    case "month":
-      format = "DD.MM";
-      break;
-    case "year":
-      format = "DD.MM";
-      break;
-    case "alltime":
-      format = "DD.MM.YYYY";
-      break;
-  }
-
-  return dayjs.unix(date).format(format);
-};
-
-export const getDateFormattedTooltip = (
-  date: number,
-  context: context
-): string => {
-  let format = "YYYY/MM/DD HH:mm";
-
-  switch (context) {
-    case "week":
-      format = "YYYY/MM/DD HH:mm";
-      break;
-    case "month":
-      format = "YYYY/MM/DD HH:mm";
-      break;
-    case "year":
-      format = "YYYY/MM/DD";
-      break;
-    case "alltime":
-      format = "YYYY/MM";
-      break;
-  }
-
-  return dayjs.unix(date).format(format);
 };

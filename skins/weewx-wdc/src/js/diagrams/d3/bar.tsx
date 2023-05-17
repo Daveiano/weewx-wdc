@@ -6,7 +6,6 @@ import React, {
   RefObject,
 } from "react";
 import * as d3 from "d3";
-import dayjs from "dayjs";
 
 import { DiagramBaseProps } from "../types";
 import { getAxisLeftLegendOffset, getMargins, Size } from "../../util/util";
@@ -15,8 +14,12 @@ import { Maximize } from "../../assets/maximize";
 import { addMarkers } from "./components/marker";
 import { getAxisGridColor, getColors } from "./components/util";
 
-export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
-  props: DiagramBaseProps
+type BarDiagramBaseProps = DiagramBaseProps & {
+  locale: d3.TimeLocaleObject;
+};
+
+export const D3BarDiagram: FunctionComponent<BarDiagramBaseProps> = (
+  props: BarDiagramBaseProps
 ): React.ReactElement => {
   const svgRef: RefObject<SVGSVGElement> = useRef(null);
   const tooltipRef: RefObject<HTMLDivElement> = useRef(null);
@@ -37,7 +40,12 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
 
   // Color handling.
   const axisGridColor = getAxisGridColor(darkMode);
-  const colors = getColors(darkMode, props.nivoProps.enableArea, props.color);
+  const colors = getColors(
+    darkMode,
+    props.nivoProps,
+    props.color,
+    props.observation
+  );
 
   // Combine all data into one array and sort by x value.
   let combinedData: any[] = [];
@@ -52,20 +60,13 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
     return a.x - b.x;
   });
 
-  // @todo same as in combined.tsx
-  let dateFormat = "HH:mm";
-  switch (props.context) {
-    case "week":
-      dateFormat = "DD.MM";
-      break;
-    case "month":
-      dateFormat = "DD.MM";
-      break;
-    case "year":
-    case "alltime":
-      dateFormat = "DD.MM";
-      break;
-  }
+  // @see https://github.com/d3/d3-time-format
+  const dateTimeFormatBottom = props.locale.format(
+    props.nivoProps.bottom_date_time_format
+  );
+  const dateTimeFormatTooltip = props.locale.format(
+    props.nivoProps.tooltip_date_time_format
+  );
 
   const callback = (mutationsList: Array<MutationRecord>) => {
     mutationsList.forEach((mutation) => {
@@ -103,7 +104,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
         // Second axis on the right?
         right: unitCombinedDistinct.length > 1 ? 50 : 10,
         bottom: 40,
-        left: getMargins(props.observation).left - 2.5,
+        left: getMargins(props.observation[0]).left - 2.5,
       },
       width = svgRef.current?.parentElement
         ? svgRef.current?.parentElement.clientWidth - margin.left - margin.right
@@ -132,6 +133,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
 
     const svgElement = d3
       .select(svgRef.current)
+      .attr("data-test", "d3-diagram-svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
@@ -141,10 +143,11 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
     svgElement
       .append("g")
       .attr("transform", "translate(0," + height + ")")
+      .attr("data-test", "x-axis")
       .call(
         d3
           .axisBottom(xScale)
-          .tickFormat((d) => dayjs.unix(parseInt(d)).format(dateFormat))
+          .tickFormat((d) => dateTimeFormatBottom(new Date(parseInt(d) * 1000)))
           .tickSize(0)
           .tickPadding(6)
       )
@@ -155,23 +158,26 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
       .attr("transform", "rotate(-65)");
 
     // y Axis.
-    svgElement.append("g").call(
-      d3
-        .axisLeft(yScale)
-        .ticks(5)
-        .tickFormat((d) => {
-          return d.toString();
-        })
-        .tickSize(0)
-        .tickPadding(6)
-    );
+    svgElement
+      .append("g")
+      .attr("data-test", "y-axis")
+      .call(
+        d3
+          .axisLeft(yScale)
+          .ticks(5)
+          .tickFormat((d) => {
+            return d.toString();
+          })
+          .tickSize(0)
+          .tickPadding(6)
+      );
 
     // Y Axis Label.
     svgElement
       .append("g")
       .attr(
         "transform",
-        `translate(${getAxisLeftLegendOffset(props.observation) + 2.25}, ${
+        `translate(${getAxisLeftLegendOffset(props.observation[0]) + 2.25}, ${
           height / 2
         }), rotate(-90)`
       )
@@ -214,6 +220,7 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
           "x",
           (d: any) => (xScale(d.x) as number) + xScale.bandwidth() * 0.125
         )
+        .attr("data-test", "bar")
         .attr("y", (d: any) => yScale(d.y))
         .attr("width", xScale.bandwidth() * 0.75)
         .attr("height", (d: any) => height - yScale(d.y))
@@ -362,8 +369,14 @@ export const D3BarDiagram: FunctionComponent<DiagramBaseProps> = (
             className="diagram-tooltip"
           >
             <div style={{ marginBottom: "5px", whiteSpace: "nowrap" }}>
-              {dayjs.unix(tooltip.x).format(dateFormat)} -{" "}
-              {dayjs.unix(tooltip.end).format(dateFormat)}
+              {props.context === "week" ? (
+                <>{dateTimeFormatTooltip(new Date(tooltip.x * 1000))}</>
+              ) : (
+                <>
+                  {dateTimeFormatTooltip(new Date(tooltip.x * 1000))} -{" "}
+                  {dateTimeFormatTooltip(new Date(tooltip.end * 1000))}
+                </>
+              )}
             </div>
             <div>
               {tooltip.y} {props.unit[0]}

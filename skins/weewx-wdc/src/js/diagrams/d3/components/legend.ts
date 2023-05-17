@@ -17,7 +17,7 @@ export const addLegend = (
     x = 144,
     y = 1.5;
 
-  const legend = svgElement.append("g");
+  const legend = svgElement.append("g").attr("class", "legend");
 
   data.map((item, index) => {
     const legendItem = legend
@@ -40,9 +40,10 @@ export const addLegend = (
       .attr("x", x)
       .attr("y", y)
       .attr("width", size)
+      .attr("data-testid", `legend-rect-${item.observation}`)
       .attr("height", size)
       .style("pointer-events", "none")
-      .style("fill", () => {
+      .attr("fill", () => {
         return colors[index];
       });
 
@@ -67,7 +68,11 @@ export const addLegend = (
 
   legend.attr(
     "transform",
-    `translate(${width - (legend.node()?.getBBox().width as number)}, 0)`
+    `translate(${
+      width -
+      (legend.node()?.getBBox().width as number) -
+      (legend.node()?.getBBox().x as number)
+    }, 0)`
   );
 
   return legend;

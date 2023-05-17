@@ -26,7 +26,7 @@ If you like the look and feel of the skin please consider having a look at the o
 
 ## Key Features
 
-- Clear and beautiful UI thanks to [IBM Carbon](https://carbondesignsystem.com/) and [nivo](https://nivo.rocks/)
+- Clear and beautiful UI thanks to [IBM Carbon](https://carbondesignsystem.com/), [nivo](https://nivo.rocks/) and [D3.js](https://d3js.org/)
 - Configurable Statistic Tiles and Diagram tiles
 - Combinable diagrams via skin.conf
 - Responsive

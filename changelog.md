@@ -651,7 +651,7 @@ Line 27:
 - Added Sensor Status Page GH-154 (https://github.com/Daveiano/weewx-wdc/wiki/Sensor-Status-Page)
 - Combine rain and rainRate tile to get rid of $current.rain GH-147
 - Add `color_dark` to diagrams config to allow explicitly set chart colors in dark mode GH-163
-- Update of D3 charts / Remove nivo and switch to native D3 GH-117
+- Update of D3 charts / Remove nivo and switch to native [D3.js](https://d3js.org/) charts GH-117
   - Support yScaleMin, yScaleMax, offset, enableArea, areaOpacity, enablePoints, curve, pointSize and lineWidth on a per observation basis, not per chart
   - Fixed legend position
   - Markers for multi-unit charts
@@ -661,4 +661,6 @@ Line 27:
 
 ## Changes made to skin.conf since 3.1.1
 
-https://github.com/Daveiano/weewx-wdc/compare/v3.1.1...6dcc766f#diff-ba225fb627dcbf577d0d1fde0f18d93e8e2cf2097c37086cd28ef23e8e7bd820
+For a complete diff, please see:
+
+https://github.com/Daveiano/weewx-wdc/compare/v3.1.1...aaa72867#diff-ba225fb627dcbf577d0d1fde0f18d93e8e2cf2097c37086cd28ef23e8e7bd820

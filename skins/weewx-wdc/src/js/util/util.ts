@@ -59,8 +59,6 @@ export const getMargins = (obs: string): Margin => {
     left: 40,
   };
 
-  console.log("getMargins", obs);
-
   if (obs == "cloudbase" || obs == "rainRate") {
     margin.left = 50;
   }

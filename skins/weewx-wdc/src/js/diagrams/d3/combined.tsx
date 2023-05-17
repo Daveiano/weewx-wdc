@@ -25,6 +25,7 @@ import {
 import { Maximize } from "../../assets/maximize";
 import { Tooltip } from "./components/tooltip";
 import { addLegend } from "./components/legend";
+import { addMarkers } from "./components/marker";
 
 type CombinedDiagramBaseProps = DiagramBaseProps & {
   chartTypes: string[];
@@ -538,6 +539,38 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
       // Legend.
       addLegend(svgElement, width, props.data, props.unit, colors, true);
+
+      // Markers.
+      if (Object.entries(scales).length === 1) {
+        if (props.nivoProps.markerValue) {
+          addMarkers(
+            svgElement,
+            width,
+            scales[props.unit[0]]["y"],
+            props.unit[0],
+            props.nivoProps.markerValue,
+            props.nivoProps.markerColor,
+            props.nivoProps.markerLabel
+          );
+        }
+      } else {
+        props.nivoProps.obs &&
+          Object.entries(props.nivoProps.obs).forEach(
+            (obs: any, index: number) => {
+              if (obs[1].markerValue) {
+                addMarkers(
+                  svgElement,
+                  width,
+                  scales[props.unit[index]]["y"],
+                  props.unit[index],
+                  obs[1].markerValue,
+                  obs[1].markerColor,
+                  obs[1].markerLabel
+                );
+              }
+            }
+          );
+      }
 
       // Interactivity.
       // @see  http://www.d3noob.org/2014/07/my-favourite-tooltip-method-for-line.html

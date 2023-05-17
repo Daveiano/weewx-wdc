@@ -657,5 +657,8 @@ Line 27:
   - Markers for multi-unit charts
   - Configurable Date/Time for Axis and tooltips
   - Fixed strange looking Climatogram (buggy yScale) for short periods (< 2 years)
+  - Added localization for charts
 
 ## Changes made to skin.conf since 3.1.1
+
+https://github.com/Daveiano/weewx-wdc/compare/v3.1.1...6dcc766f#diff-ba225fb627dcbf577d0d1fde0f18d93e8e2cf2097c37086cd28ef23e8e7bd820

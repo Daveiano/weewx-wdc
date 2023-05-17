@@ -72,6 +72,7 @@ export const CalendarDiagram: FunctionComponent<CalendarDiagramBaseProps> = (
           value={data.value}
           unit={props.unit}
           color={data.color}
+          locale={props.locale}
         />
       )}
       legends={[

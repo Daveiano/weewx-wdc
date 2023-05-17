@@ -63,6 +63,7 @@ calendarDiagrams.forEach((diagram) => {
         color={JSON.parse((diagram.dataset.color as string).replace(/'/g, '"'))}
         observation={diagram.dataset.obs}
         heading={diagram.dataset.heading}
+        locale={locale}
       />
     );
   }

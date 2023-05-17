@@ -22,6 +22,7 @@ type CalendarDiagramBaseProps = {
   data: Array<{ day: string; value: number }>;
   observation: string;
   heading: string;
+  locale: d3.TimeLocaleObject;
 };
 
 type DiagramBaseProps = {

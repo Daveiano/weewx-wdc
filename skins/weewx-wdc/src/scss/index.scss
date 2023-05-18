@@ -228,10 +228,6 @@ html {
   overflow-x: hidden;
 }
 
-bx-header:not(:defined) {
-  display: none;
-}
-
 // Side nav width is $spacing-09.
 bx-header ~ bx-side-nav {
   margin-top: 3rem;

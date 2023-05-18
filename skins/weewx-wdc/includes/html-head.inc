@@ -5,14 +5,7 @@
 #set $diagrams_config = $DisplayOptions.get("diagrams", {})
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.6.0/webcomponents-loader.min.js"></script>
-<!-- <script>
-  window.WebComponents = window.WebComponents || {};
-  window.WebComponents.root = "node_modules/@webcomponents/webcomponentsjs/";
-</script> -->
-#if $get_windrose_enabled()
-<script src="$get_base_path(path='plotly-custom-build.min.js')" defer></script>
-#end if
+
 <link
   href="$get_base_path(path='dist/main.css')"
   rel="preload"
@@ -22,6 +15,16 @@
 <noscript
   ><link rel="stylesheet" href="$get_base_path(path='dist/main.css')"
 /></noscript>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.6.0/webcomponents-loader.min.js"></script>
+<!-- <script>
+  window.WebComponents = window.WebComponents || {};
+  window.WebComponents.root = "node_modules/@webcomponents/webcomponentsjs/";
+</script> -->
+#if $get_windrose_enabled()
+<script src="$get_base_path(path='plotly-custom-build.min.js')" defer></script>
+#end if
+
 <link
   rel="icon"
   type="image/x-icon"
@@ -86,6 +89,10 @@
 #if "heights" in $diagrams_config
 <!--prettier-ignore-->
 <style>
+  *:not(:defined) {
+    display: none;
+  }
+
   #if "alternative" in $diagrams_config.heights
     #if "height" in $diagrams_config.heights.alternative
       .diagram {

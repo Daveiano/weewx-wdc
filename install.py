@@ -11,7 +11,7 @@ def loader():
 class BasicInstaller(ExtensionInstaller):
     def __init__(self):
         super(BasicInstaller, self).__init__(
-            version="3.1.1",
+            version="3.2.0",
             name="weewx-wdc",
             description="Weather Data Center skin for WeeWX.",
             author="David Baetge",

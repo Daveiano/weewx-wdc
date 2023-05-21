@@ -644,7 +644,7 @@ Line 27:
 +#forecast_radar_heading = "Forecast & Recent radar"
 ```
 
-# Next
+# 3.2.0
 
 - Bugfix: Adding 'Voltage' observations make icons disappear on today page GH-144
 - Added default Translation of combined diagram labels GH-149
@@ -657,10 +657,14 @@ Line 27:
   - Markers for multi-unit charts
   - Configurable Date/Time for Axis and tooltips
   - Fixed strange looking Climatogram (buggy yScale) for short periods (< 2 years)
-  - Added localization for charts
+  - Added Date/Time localization for charts
 
 ## Changes made to skin.conf since 3.1.1
 
 For a complete diff, please see:
 
 https://github.com/Daveiano/weewx-wdc/compare/v3.1.1...aaa72867#diff-ba225fb627dcbf577d0d1fde0f18d93e8e2cf2097c37086cd28ef23e8e7bd820
+
+# Next
+
+## Changes made to skin.conf since 3.2.0

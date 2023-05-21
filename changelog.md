@@ -663,7 +663,7 @@ Line 27:
 
 For a complete diff, please see:
 
-https://github.com/Daveiano/weewx-wdc/compare/v3.1.1...aaa72867#diff-ba225fb627dcbf577d0d1fde0f18d93e8e2cf2097c37086cd28ef23e8e7bd820
+https://github.com/Daveiano/weewx-wdc/compare/v3.1.1...00c79357#diff-ba225fb627dcbf577d0d1fde0f18d93e8e2cf2097c37086cd28ef23e8e7bd820
 
 # Next
 

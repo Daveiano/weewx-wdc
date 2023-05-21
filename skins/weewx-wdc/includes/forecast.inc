@@ -107,6 +107,9 @@
           .radar-container .bx-ce-demo-devenv--tab-panels > div {
             padding-bottom: 1rem;
           }
+          .radar-container .bx-ce-demo-devenv--tab-panels > div > .bx--tile {
+            padding: 0;
+          }
         </style>
 
         #if len($radar_externals_list) == 1

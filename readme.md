@@ -1,6 +1,6 @@
 [![Tests](https://github.com/Daveiano/weewx-wdc/actions/workflows/test.yml/badge.svg)](https://github.com/Daveiano/weewx-wdc/actions/workflows/test.yml)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/Daveiano/weewx-wdc?label=latest%20release&sort=semver)
-![GitHub milestone](https://img.shields.io/github/milestones/issues-open/Daveiano/weewx-wdc/15)
+![GitHub milestone](https://img.shields.io/github/milestones/issues-open/Daveiano/weewx-wdc/16)
 ![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/Daveiano/weewx-wdc/latest)
 ![GitHub all releases](https://img.shields.io/github/downloads/Daveiano/weewx-wdc/total)
 ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/Daveiano/weewx-wdc)

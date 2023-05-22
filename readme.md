@@ -7,6 +7,8 @@
 
 # WeeWX Weather Data Center skin
 
+A Skin for [WeeWX](https://weewx.com/), Open source software for your weather station.
+
 - [WeeWX Weather Data Center skin](#weewx-weather-data-center-skin)
   - [Key Features](#key-features)
   - [Demo](#demo)

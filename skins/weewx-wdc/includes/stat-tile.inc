@@ -136,7 +136,7 @@
         <div class="bx--row">
           #if $context != 'yesterday'
             <div class="bx--col" data-test="rain-days">
-              <p class="stat-label">$gettext("Rain days")</p>
+              <p class="stat-label">$gettext("rainDays")</p>
               <p class="stat-value">
                 <!--prettier-ignore-->
                 $get_climatological_day('rainDays', $time_span.start.raw, $time_span.end.raw)

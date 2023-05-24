@@ -667,4 +667,6 @@ https://github.com/Daveiano/weewx-wdc/compare/v3.1.1...00c79357#diff-ba225fb627d
 
 # Next
 
+- Bugfix: Some observations with aggregate_imterval `sum` could be updated to `NaN` via MQTT under some circumstances GH-166
+
 ## Changes made to skin.conf since 3.2.0

@@ -71,6 +71,8 @@ const _updateStatTile = (
         `day${observation[0].toUpperCase()}${observation.slice(1)}_${unitMQTT}`
       ];
 
+    if (!sumValue) return;
+
     statTile.querySelector(
       ".stat-title-obs-value .raw"
     )!.innerHTML = `${parseFloat(sumValue).toFixed(rounding)}${unit}`;

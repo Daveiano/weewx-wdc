@@ -20,7 +20,7 @@
 ></script>
 <!--prettier-ignore-->
 <bx-tabs trigger-content="Select an item" value="table" type="container">
-  <bx-tab id="tab-table" target="panel-table" value="table">Table</bx-tab>
+  <bx-tab id="tab-table" target="panel-table" value="table">$gettext('Table')</bx-tab>
   #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'rain').has_data
   <bx-tab
     id="tab-diagram-rain"

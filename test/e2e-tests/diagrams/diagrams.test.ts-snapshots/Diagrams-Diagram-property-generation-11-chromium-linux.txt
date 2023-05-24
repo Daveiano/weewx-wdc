@@ -1,1 +1,1 @@
-['min', 'avg', 'max']
+['Min', 'Avg.', 'Max']

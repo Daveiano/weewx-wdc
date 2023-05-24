@@ -105,10 +105,7 @@ diagrams.forEach((diagram) => {
           ...data,
           {
             observation: diagramObservations[index],
-            id: `${labels[index]} ${
-              aggregate_types[index][0].toUpperCase() +
-              aggregate_types[index].slice(1)
-            }`,
+            id: `${labels[index]} ${aggregate_types[index]}`,
             data: (window as any)[serie]
               .map((item: number[]) => ({
                 x: item[0],

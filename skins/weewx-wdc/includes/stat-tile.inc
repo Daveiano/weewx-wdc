@@ -113,7 +113,7 @@
             #end if
             <!--prettier-ignore-->
             #if ($context != 'day' or $daily_archive) and not $get_show_sum($partial_obs) and not $get_show_max($partial_obs)
-            <span>$gettext("Avg.")</span>
+            <span>$gettext("Avg")</span>
             #end if
             <!--prettier-ignore-->
             #if ($context != 'day' or $daily_archive) and $get_show_sum($partial_obs)

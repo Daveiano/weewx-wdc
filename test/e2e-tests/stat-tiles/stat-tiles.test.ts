@@ -24,11 +24,11 @@ test.describe("Stat tiles", () => {
     await expect(windSpeed.locator("[data-test='min']")).toHaveCount(0);
 
     const rain = page.locator(".stat-tile[data-test='rain']");
-    await expect(rain.locator(".value > span")).toContainText("0.00 cm Totals");
+    await expect(rain.locator(".value > span")).toContainText("0.00 cm Total");
     await expect(
       rain.locator("[data-test='rain-rate-current'] .stat-value")
     ).toHaveText("0.00 cm/h");
-    await expect(rain.locator(".value > span")).toContainText("0.00 cm Totals");
+    await expect(rain.locator(".value > span")).toContainText("0.00 cm Total");
     await expect(
       rain.locator("[data-test='rain-rate-max'] .stat-value")
     ).toHaveText("0.00 cm/h");
@@ -45,7 +45,7 @@ test.describe("Stat tiles", () => {
 
     const et = page.locator(".stat-tile[data-test='ET']");
     await expect(et.locator(".value span.stat-title-obs-value")).toContainText(
-      "0.01 cm Totals"
+      "0.01 cm Total"
     );
     await expect(et.locator("[data-test='min']")).toHaveCount(0);
     await expect(et.locator("[data-test='max']")).toHaveCount(0);
@@ -128,7 +128,7 @@ test.describe("Stat tiles", () => {
 
     let rain = page.locator(".stat-tile[data-test='rain']");
     await expect(rain.locator(".value span >> nth=0")).toContainText(
-      "0.12 cm Totals"
+      "0.12 cm Total"
     );
     await expect(rain.locator("[data-test='min'] .stat-value")).toHaveCount(0);
     await expect(rain.locator("[data-test='sum'] .stat-value")).toHaveCount(0);
@@ -144,7 +144,7 @@ test.describe("Stat tiles", () => {
 
     rain = page.locator(".stat-tile[data-test='rain']");
     await expect(rain.locator(".value span >> nth=0")).toContainText(
-      "18.74 cm Totals"
+      "18.74 cm Total"
     );
     await expect(rain.locator("[data-test='min'] .stat-value")).toHaveCount(0);
     await expect(rain.locator("[data-test='sum'] .stat-value")).toHaveCount(0);

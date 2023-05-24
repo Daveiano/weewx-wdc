@@ -668,6 +668,7 @@ https://github.com/Daveiano/weewx-wdc/compare/v3.1.1...00c79357#diff-ba225fb627d
 # Next
 
 - Bugfix: Some observations with aggregate_imterval `sum` could be updated to `NaN` via MQTT under some circumstances GH-166
+- Bugfix: Minor Spelling Error on Some Tiles GH-168
 - Extended Webcams/Externals (see the updated [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Webcams-and-Externals-Page)) GH-167
 
   - **Attention:** You need to update your skin.conf if you were using the webcams/externals:

@@ -34,76 +34,60 @@
         <div class="bx--grid bx--grid--full-width">
           <div class="bx--row">
             <header class="bx--col page-header">
-              <h1>$gettext("Webcams/Externals")</h1>
+              <h1>$gettext($get_static_page_title("externals"))</h1>
             </header>
           </div>
 
+          #if 'description' in $Extras['externals']
+          <div class="bx--row">
+            <div class="bx--col">
+              <p class="bx--type-body-long-01">
+                $Extras['externals'].description
+              </p>
+            </div>
+          </div>
+          #end if
+
+          <!--prettier-ignore-->
+          #if 'externals' in $Extras
           <!--prettier-ignore-->
           <div class="bx--row">
-            #if 'external_1' in $Extras
-            <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6" style="margin-bottom: 1.25rem;">
+            <!--prettier-ignore-->
+            #for $external in $Extras['externals']
+            #if $external == 'description'
+              #continue
+            #end if
+            #if $to_bool($Extras['externals'][$external].show_on_page)
+            <div
+              class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6"
+              style="margin-bottom: 1.25rem"
+            >
+              <!--prettier-ignore-->
               <div class="bx--tile webcam-tile">
-                <h5 class="bx--type-caption-01" style="margin-bottom: 0;">
-                  $Extras.external_1.title_long
-                </h5>
+                  <h5 class="bx--type-caption-01" style="margin-bottom: 0">
+                    #if 'title_long' in $Extras['externals'][$external]
+                      $Extras['externals'][$external].title_long
+                    #end if
+                  </h5>
 
-                <h3 class="bx--type-productive-heading-03" style="margin-bottom: 1.25rem; font-weight: bold;">
-                  $Extras.external_1.title
-                </h3>
+                  <h3
+                    class="bx--type-productive-heading-03"
+                    style="margin-bottom: 1.25rem; font-weight: bold"
+                  >
+                    $Extras['externals'][$external].title
+                  </h3>
 
-                $Extras.external_1.source
-              </div>
+                  $Extras['externals'][$external].source
+
+                  <p class="bx--type-body-long-01" style="margin-top: 0.75rem; margin-bottom: 0;">
+                    $Extras['externals'][$external].description
+                  </p>
+                </div>
             </div>
             #end if
-
-            #if 'external_2' in $Extras
-            <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6" style="margin-bottom: 1.25rem;">
-              <div class="bx--tile">
-                <h5 class="bx--type-caption-01" style="margin-bottom: 0;">
-                  $Extras.external_2.title_long
-                </h5>
-
-                <h3 class="bx--type-productive-heading-03" style="margin-bottom: 1.25rem; font-weight: bold;">
-                  $Extras.external_2.title
-                </h3>
-
-                $Extras.external_2.source
-              </div>
-            </div>
-            #end if
-
-            #if 'external_3' in $Extras
-            <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6" style="margin-bottom: 1.25rem;">
-              <div class="bx--tile">
-                <h5 class="bx--type-caption-01" style="margin-bottom: 0;">
-                  $Extras.external_3.title_long
-                </h5>
-
-                <h3 class="bx--type-productive-heading-03" style="margin-bottom: 1.25rem; font-weight: bold;">
-                  $Extras.external_3.title
-                </h3>
-
-                $Extras.external_3.source
-              </div>
-            </div>
-            #end if
-
-            #if 'external_4' in $Extras
-            <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6" style="margin-bottom: 1.25rem;">
-              <div class="bx--tile">
-                <h5 class="bx--type-caption-01" style="margin-bottom: 0;">
-                  $Extras.external_4.title_long
-                </h5>
-
-                <h3 class="bx--type-productive-heading-03" style="margin-bottom: 1.25rem; font-weight: bold;">
-                  $Extras.external_4.title
-                </h3>
-
-                $Extras.external_4.source
-              </div>
-            </div>
-            #end if
+            #end for
           </div>
+          #end if
         </div>
       </section>
     </main>

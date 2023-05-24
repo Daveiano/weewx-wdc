@@ -668,5 +668,35 @@ https://github.com/Daveiano/weewx-wdc/compare/v3.1.1...00c79357#diff-ba225fb627d
 # Next
 
 - Bugfix: Some observations with aggregate_imterval `sum` could be updated to `NaN` via MQTT under some circumstances GH-166
+- Extended Webcams/Externals (see the updated [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Webcams-and-Externals-Page)) GH-167
+
+  - **Attention:** You need to update your skin.conf if you were using the webcams/externals:
+
+    Before:
+
+    ```
+    [Extras]
+       Include various external sources (eg. webcams) here.
+       [[external_1]]
+          source = '<img src="http://your-server.com/uploads/webcam01.jpg" />'
+          title = Webcam 1
+          title_long = "Webcam 1, facing North"
+    ```
+
+    After:
+
+    ```
+    [Extras]
+       # Include various external sources (eg. webcams) here.
+       [[externals]]
+       #  description = 'This description will be shown at the Webcams/Externals page.
+          [[[external_1]]]
+             source = '<img src="http://your-server.com/uploads/webcam01.jpg" />'
+             title = Webcam 1
+             title_long = "Webcam 1, facing North"
+             description = 'The image is updated every 80 seconds, nighttime every 100 seconds.'
+             show_on_front = True
+             show_on_page = True
+    ```
 
 ## Changes made to skin.conf since 3.2.0

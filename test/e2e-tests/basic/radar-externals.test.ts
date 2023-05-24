@@ -8,7 +8,7 @@ test.describe("Radar and Externals embeds", () => {
 
     await expect(radarExternalsTile).toBeVisible();
     await expect(radarExternalsTile.locator("bx-tabs")).toBeVisible();
-    await expect(radarExternalsTile.locator("bx-tabs bx-tab")).toHaveCount(5);
+    await expect(radarExternalsTile.locator("bx-tabs bx-tab")).toHaveCount(4);
 
     await expect(radarExternalsTile.locator("#panel-radar")).toBeVisible();
     await expect(
@@ -27,6 +27,8 @@ test.describe("Radar and Externals embeds", () => {
 
   test("Externals page", async ({ page }) => {
     await page.goto("artifacts-custom-weewx-html/public_html/externals.html");
+
+    await expect(page.locator(".bx--tile.webcam-tile")).toHaveCount(2);
 
     await expect(page).toHaveScreenshot({ fullPage: true });
   });

@@ -625,7 +625,8 @@ header.section-header {
 }
 
 .tile-radar-forecast {
-  img {
+  img,
+  video {
     width: 100%;
     display: block;
     height: auto;
@@ -937,6 +938,13 @@ bx-structured-list.forecast-list,
 .sidebar-heading {
   pointer-events: none;
   cursor: default;
+}
+
+.webcam-tile {
+  video {
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 body.theme-classic {

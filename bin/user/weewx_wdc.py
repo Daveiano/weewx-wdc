@@ -719,6 +719,7 @@ class WdcGeneralUtil(SearchList):
         for static_page in static_templates:
             static_pages.append(
                 {
+                    "name": static_page,
                     "title": static_templates[static_page]["title"],
                     "link": static_templates[static_page]["template"].replace(
                         ".tmpl", ""
@@ -727,6 +728,24 @@ class WdcGeneralUtil(SearchList):
             )
 
         return static_pages
+
+    def get_static_page_title(self, page):
+        """
+        Get static page title.
+
+        Args:
+            page (string): The page
+
+        Returns:
+            str: The page title
+        """
+        static_pages = self.get_static_pages()
+
+        for static_page in static_pages:
+            if static_page["name"] == page:
+                return static_page["title"]
+
+        return ''
 
     def get_ordinates(self):
         default_ordinate_names = [

@@ -8,23 +8,23 @@
 #set $warn_region_front = $Extras['weewx-DWD']['show_warnings_on_front'] if 'weewx-DWD' in $Extras and 'show_warnings_on_front' in $Extras['weewx-DWD'] else False
 #set $show_warn = True if $warn_region_front and $dwd_warning_has_warning($warn_region_front) else False
 
-#set $radar_externals = 'radar_html' in $Extras or 'external_1' in $Extras or 'external_2' in $Extras or 'external_3' in $Extras or 'external_4' in $Extras
+#set $externals_list = []
+#if 'externals' in $Extras and $len($Extras['externals']) > 0
+  #for $external in $Extras['externals']
+    #if $external == 'description'
+      #continue
+    #end if
+    #if $to_bool($Extras['externals'][$external].show_on_front)
+      #silent $externals_list.append($external)
+    #end if
+  #end for
+#end if
 
-#set $radar_externals_list = []
+#set $radar_externals = 'radar_html' in $Extras or $len($externals_list) > 0
+
+#set $radar_externals_list = $externals_list
 #if 'radar_html' in $Extras
-  #silent $radar_externals_list.append('radar')
-#end if
-#if 'external_1' in $Extras
-  #silent $radar_externals_list.append('external_1')
-#end if
-#if 'external_2' in $Extras
-  #silent $radar_externals_list.append('external_2')
-#end if
-#if 'external_3' in $Extras
-  #silent $radar_externals_list.append('external_3')
-#end if
-#if 'external_4' in $Extras
-  #silent $radar_externals_list.append('external_4')
+  #set $radar_externals_list = ['radar'] + $externals_list
 #end if
 
 <!--prettier-ignore-->
@@ -127,37 +127,13 @@
             $gettext("Recent radar")
           </bx-tab>
           #end if
-          #if 'external_1' in $Extras
-          <bx-tab
-            id="tab-external_1"
-            target="panel-external_1"
-            value="external_1"
-            >$Extras.external_1.title</bx-tab
-          >
-          #end if
-          #if 'external_2' in $Extras
-          <bx-tab
-            id="tab-external_2"
-            target="panel-external_2"
-            value="external_2"
-            >$Extras.external_2.title</bx-tab
-          >
-          #end if
-          #if 'external_3' in $Extras
-          <bx-tab
-            id="tab-external_3"
-            target="panel-external_3"
-            value="external_3"
-            >$Extras.external_3.title</bx-tab
-          >
-          #end if
-          #if 'external_4' in $Extras
-          <bx-tab
-            id="tab-external_4"
-            target="panel-external_4"
-            value="external_4"
-            >$Extras.external_4.title</bx-tab
-          >
+
+          #if len($externals_list) > 0
+            #for $external in $externals_list
+              <bx-tab id="tab-$external" target="panel-$external" value="$external">
+                $Extras['externals'][$external].title
+              </bx-tab>
+            #end for
           #end if
         </bx-tabs>
         #end if
@@ -169,53 +145,16 @@
             </div>
           </div>
           #end if
-          #if 'external_1' in $Extras
-          <div
-            id="panel-external_1"
-            role="tabpanel"
-            aria-labelledby="tab-external_1"
-          >
-            <div class="bx--tile tile-radar-forecast">
-              $Extras.external_1.source
-              <p class="bx--type-caption-01" style="margin-top: 0.25rem;">$Extras.external_1.title_long</p>
-            </div>
-          </div>
-          #end if
-          #if 'external_2' in $Extras
-          <div
-            id="panel-external_2"
-            role="tabpanel"
-            aria-labelledby="tab-external_2"
-          >
-            <div class="bx--tile tile-radar-forecast">
-              $Extras.external_2.source
-              <p class="bx--type-caption-01" style="margin-top: 0.25rem;">$Extras.external_2.title_long</p>
-            </div>
-          </div>
-          #end if
-          #if 'external_3' in $Extras
-          <div
-            id="panel-external_3"
-            role="tabpanel"
-            aria-labelledby="tab-external_3"
-          >
-            <div class="bx--tile tile-radar-forecast">
-              $Extras.external_3.source
-              <p class="bx--type-caption-01" style="margin-top: 0.25rem;">$Extras.external_3.title_long</p>
-            </div>
-          </div>
-          #end if
-          #if 'external_4' in $Extras
-          <div
-            id="panel-external_4"
-            role="tabpanel"
-            aria-labelledby="tab-external_4"
-          >
-            <div class="bx--tile tile-radar-forecast">
-              $Extras.external_4.source
-              <p class="bx--type-caption-01" style="margin-top: 0.25rem;">$Extras.external_4.title_long</p>
-            </div>
-          </div>
+
+          #if len($externals_list) > 0
+            #for $external in $externals_list
+              <div id="panel-$external" role="tabpanel" aria-labelledby="tab-$external">
+                <div class="bx--tile tile-radar-forecast">
+                  $Extras['externals'][$external].source
+                  <p class="bx--type-caption-01" style="margin-top: 0.25rem;">$Extras['externals'][$external].title_long</p>
+                </div>
+              </div>
+            #end for
           #end if
         </div>
 

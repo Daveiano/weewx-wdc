@@ -669,6 +669,7 @@ https://github.com/Daveiano/weewx-wdc/compare/v3.1.1...00c79357#diff-ba225fb627d
 
 - Bugfix: Some observations with aggregate_imterval `sum` could be updated to `NaN` via MQTT under some circumstances GH-166
 - Bugfix: Minor Spelling Error on Some Tiles GH-168
+- Bugfix: Getting the chart properties if observation is not included in [diagrams] config GH-172
 - Added/fixed some more translations (Chart legends, Stats page)
 - Extended Webcams/Externals (see the updated [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Webcams-and-Externals-Page)) GH-167
 

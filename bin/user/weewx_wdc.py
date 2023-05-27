@@ -1438,7 +1438,10 @@ class WdcDiagramUtil(SearchList):
                 **diagram_context_props
             }
         else:
-            return diagram_base_props
+            return {
+                **diagram_base_props,
+                **diagram_context_props
+            }
 
     def get_windrose_data(self, start_ts, end_ts, context):
         """

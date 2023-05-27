@@ -1423,7 +1423,8 @@ class WdcDiagramUtil(SearchList):
             diagram_context_props = accumulateLeaves(
                 diagrams_config[context]['observations'][obs], max_level=3)
         except KeyError:
-            diagram_context_props = {}
+            diagram_context_props = accumulateLeaves(
+                diagrams_config[context]['observations'], max_level=2)
 
         if obs in diagrams_config:
             return {

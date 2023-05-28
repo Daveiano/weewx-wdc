@@ -234,6 +234,19 @@ bx-header ~ bx-side-nav {
   height: calc(100% - 3rem);
 }
 
+bx-side-nav {
+  z-index: 1400;
+  @include carbon--breakpoint-down(lg) {
+    z-index: 1600;
+  }
+}
+
+body.theme-classic {
+  bx-side-nav {
+    z-index: 1600;
+  }
+}
+
 .bx--header__name {
   text-overflow: ellipsis;
   overflow: hidden;
@@ -921,10 +934,16 @@ bx-structured-list.forecast-list,
   white-space: nowrap;
 }
 
+.main.bx--content {
+  position: relative;
+  z-index: 1500;
+}
+
 @include carbon--breakpoint-up(lg) {
-  section.main.bx--content,
+  .main.bx--content,
   #footer {
-    padding-left: 16rem;
+    margin-left: 16rem;
+    padding-left: 0;
     padding-right: 1rem;
   }
 }
@@ -981,16 +1000,17 @@ body.theme-classic {
   }
   .main.bx--content,
   #footer {
+    margin-left: 0;
     padding-left: 0;
     padding-right: 0;
 
     @include carbon--breakpoint-up(md) {
-      padding-left: 2rem;
+      margin-left: 2rem;
       padding-right: 0rem;
       margin-right: -1rem;
     }
     @include carbon--breakpoint-up(lg) {
-      padding-left: 2rem;
+      margin-left: 2rem;
       padding-right: 1rem;
       margin-right: 0;
     }
@@ -1011,9 +1031,10 @@ body.theme-classic {
 
 body.theme-alternative {
   @include carbon--breakpoint-down(lg) {
-    section.main.bx--content,
+    .main.bx--content,
     #footer {
       padding-left: 0;
+      margin-left: 0;
       padding-right: 0;
     }
   }

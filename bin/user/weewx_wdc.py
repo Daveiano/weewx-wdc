@@ -273,7 +273,10 @@ class WdcGeneralUtil(SearchList):
             else:
                 return unit_label
         except KeyError:
-            return ' ' + unit
+            if unit is not None:
+                return ' ' + unit
+            else:
+                return ''
 
     def get_unit_for_obs(self, observation, observation_key, context, combined=None, combined_key=None):
         """

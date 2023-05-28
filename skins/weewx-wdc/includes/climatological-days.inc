@@ -1,6 +1,7 @@
 <!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
+#from datetime import datetime
 #set $show_climatogram_year = $context == 'year' and $DisplayOptions.get("climatogram_enable_year_stats", False)
 #set $show_climatogram_alltime = $context == 'alltime' and $DisplayOptions.get("climatogram_enable_stats", False)
 
@@ -95,6 +96,31 @@
           </bx-structured-list-cell>
         </bx-structured-list-row>
         #end for
+
+        <bx-structured-list-row data-test="total-number">
+          <bx-structured-list-cell
+            ><strong
+              >$gettext("Total number of days")</strong
+            ></bx-structured-list-cell
+          >
+          <bx-structured-list-cell>
+            <!--prettier-ignore-->
+            #set $start_dt = datetime.fromtimestamp($alltime.start.raw)
+            #set $end_dt = datetime.fromtimestamp($latest.dateTime.raw)
+            #set $delta = $end_dt - $start_dt
+            $delta.days
+          </bx-structured-list-cell>
+          <bx-structured-list-cell>
+            <div data-floating-menu-container style="position: relative">
+              <bx-tooltip>
+                <bx-tooltip-body>
+                  <strong>$gettext("Total number of days")</strong>
+                </bx-tooltip-body>
+              </bx-tooltip>
+            </div>
+            <span></span>
+          </bx-structured-list-cell>
+        </bx-structured-list-row>
       </bx-structured-list-body>
     </bx-structured-list>
   </div>

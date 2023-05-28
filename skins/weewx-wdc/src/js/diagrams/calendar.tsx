@@ -97,7 +97,7 @@ export const CalendarDiagram: FunctionComponent<CalendarDiagramBaseProps> = (
       <div
         className="calendar-diagram"
         // @todo Add responsive style.
-        style={{ height: `${(yearDiff + 1) * (small ? 25 : 14)}vw` }}
+        style={{ height: `${(yearDiff + 1) * (small ? 25 : 11)}vw` }}
       >
         <Maximize onClick={handle.enter} />
         {calendarDiagram}

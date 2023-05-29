@@ -132,6 +132,49 @@
     aria-labelledby="tab-diagram-rain"
     hidden
   >
+    <bx-structured-list class="clim-days-extended-table">
+      <bx-structured-list-head>
+        <bx-structured-list-header-row>
+          <bx-structured-list-header-cell
+            >$gettext('Rain Statistics')</bx-structured-list-header-cell
+          >
+        </bx-structured-list-header-row>
+      </bx-structured-list-head>
+      <bx-structured-list-body>
+        <!--prettier-ignore-->
+        #if $context == 'alltime'
+        <bx-structured-list-row>
+          <bx-structured-list-cell
+            >$gettext("Last rain")</bx-structured-list-cell
+          >
+          <!--prettier-ignore-->
+          <bx-structured-list-cell>
+            $last_rain.format("%x, %X") ($gettext("Time since last rain"): $time_since_last_rain.long_form)
+          </bx-structured-list-cell>
+        </bx-structured-list-row>
+        <!--prettier-ignore-->
+        #end if
+        <!--prettier-ignore-->
+        <bx-structured-list-row>
+          <bx-structured-list-cell>
+            $gettext("Most consecutive days with rain")
+          </bx-structured-list-cell>
+          <bx-structured-list-cell>
+            $most_days_with_rain.start.format('%x') - $most_days_with_rain.end.format('%x') ($most_days_with_rain.days_with_rain_delta.day.format("%.0f"), $most_days_with_rain.amount)
+          </bx-structured-list-cell>
+        </bx-structured-list-row>
+        <!--prettier-ignore-->
+        <bx-structured-list-row>
+          <bx-structured-list-cell>
+            $gettext("Most consecutive days without rain")
+          </bx-structured-list-cell>
+          <bx-structured-list-cell>
+            $most_days_without_rain.start.format('%x') - $most_days_without_rain.end.format('%x') ($most_days_without_rain.days_without_rain_delta.day.format("%.0f"))
+          </bx-structured-list-cell>
+        </bx-structured-list-row>
+      </bx-structured-list-body>
+    </bx-structured-list>
+
     <script>
       /* prettier-ignore */
       #set $obs_context = $get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday)

@@ -18,7 +18,7 @@
 
 <script
   type="module"
-  src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/tooltip.min.js"
+  src="https://1.www.s81c.com/common/carbon/web-components/version/v1.27.0/tooltip.min.js"
 ></script>
 
 <div class="bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-3 bx--col-max-2">
@@ -135,13 +135,31 @@
         #set $time_span = $get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding))
         <div class="bx--row">
           #if $context != 'yesterday'
-            <div class="bx--col" data-test="rain-days">
-              <p class="stat-label">$gettext("rainDays")</p>
-              <p class="stat-value">
-                <!--prettier-ignore-->
-                $get_climatological_day('rainDays', $time_span.start.raw, $time_span.end.raw)
-              </p>
-            </div>
+            #if $context == 'alltime'
+              <div class="bx--col" data-test="rain-days">
+                <p class="stat-label">
+                  <bx-tooltip-definition
+                    alignment="center"
+                    body-text="$gettext('Time since last rain:') $time_since_last_rain.long_form"
+                    direction="top"
+                  >
+                  $gettext("Last rain")
+                  </bx-tooltip-definition>
+                </p>
+                <p class="stat-value">
+                  <!--prettier-ignore-->
+                  $last_rain.format("%x")
+                </p>
+              </div>
+            #else
+              <div class="bx--col" data-test="rain-days">
+                <p class="stat-label">$gettext("rainDays")</p>
+                <p class="stat-value">
+                  <!--prettier-ignore-->
+                  $get_climatological_day('rainDays', $time_span.start.raw, $time_span.end.raw)
+                </p>
+              </div>
+            #end if
           #end if
           #if $show_rain_rate
           <div class="bx--col value-rain-rate-max" data-test="rain-rate-max">

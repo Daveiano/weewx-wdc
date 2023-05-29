@@ -1,13 +1,14 @@
 # coding: utf-8
 #
-#    Copyright (c) 2023 David Baetge <david.baetge@gmail.com>
+#    Copyright (c) 2023 David Baetge <david.baetge@gmail.com>,
+#      Vince Skahan (last_rain and time_since_last_rain),
+#      Pat O'Brien (Consecutive Days With/Without Rain)
 #
 #    Distributed under the terms of the GNU Public License (GPLv3)
 #
-#    @see http://weewx.com/docs/sle.html
-#
 import datetime
 import calendar
+import pprint
 import time
 import os
 import json
@@ -58,7 +59,20 @@ except ImportError:
         logmsg(syslog.LOG_ERR, msg)
 
 
-class LastRainTags(SearchList):
+class RainTags(SearchList):
+    """"
+    Code for last_rain and time_since_last_rain is taken
+    (and slightly modified) from
+    https://github.com/vinceskahan/vds-weewx-lastrain-extension
+
+    reused massively from wdSearchX3.py in weewx-wd 1.0 at Gary's suggestion
+
+    some code also reused_from/stolen_from/insulting weewx station.py
+    per Tom's suggestion
+
+    Basic concpet of most_days_with_rain and most_days_without_rain is partially
+    copied from https://github.com/poblabs/weewx-belchertown
+    """
 
     def __init__(self, generator):
         SearchList.__init__(self, generator)
@@ -78,7 +92,20 @@ class LastRainTags(SearchList):
         Returns:
           last_rain:            A ValueHelper containing the datetime of the last rain
           time_since_last_rain: A ValueHelper containing the seconds since last rain
+          most_days_with_rain:  A dict containing
+            start                   A ValueHelper containing the datetime of the start of the period
+            end                     A ValueHelper containing the datetime of the end of the period
+            amount                  A ValueHelper containing the amount of rain in the period
+            days_with_rain          The number of days with rain (raw int value)
+            days_with_rain_delta    A ValueHelper containing the number of seconds in the period
+          most_days_without_rain: A dict containing
+            start                   A ValueHelper containing the datetime of the start of the period
+            end                     A ValueHelper containing the datetime of the end of the period
+            days_without_rain       The number of days without rain (raw int value)
+            days_without_rain_delta A ValueHelper containing the number of seconds in the period
         """
+
+        wx_manager = db_lookup()
 
         ##
         # Get date and time of last rain
@@ -91,7 +118,8 @@ class LastRainTags(SearchList):
 
         # Get ts for day of last rain from statsdb
         # Value returned is ts for midnight on the day the rain occurred
-        _row = db_lookup().getSql("SELECT MAX(dateTime) FROM archive_day_rain WHERE sum > 0")
+        _row = wx_manager.getSql(
+            "SELECT MAX(dateTime) FROM archive_day_rain WHERE sum > 0")
 
         last_rain_ts = _row[0]
         # Now if we found a ts then use it to limit our search on the archive
@@ -100,8 +128,8 @@ class LastRainTags(SearchList):
 
         if last_rain_ts is not None:
             try:
-                _row = db_lookup().getSql("SELECT MAX(dateTime) FROM archive WHERE rain > 0 AND dateTime > ? AND dateTime <= ?",
-                                          (last_rain_ts, last_rain_ts + 86400))
+                _row = wx_manager.getSql("SELECT MAX(dateTime) FROM archive WHERE rain > 0 AND dateTime > ? AND dateTime <= ?",
+                                         (last_rain_ts, last_rain_ts + 86400))
                 last_rain_ts = _row[0]
             except:
                 last_rain_ts = None
@@ -122,18 +150,157 @@ class LastRainTags(SearchList):
 
         # Wrap our ts in a ValueHelper
         delta_time_vt = (delta_time, 'second', 'group_deltatime')
-        try:
-            # 4.6.0 breaking change - must specify either context='short_delta' or context='long_delta'
-            delta_time_vh = ValueHelper(delta_time_vt, context='long_delta',
-                                        formatter=self.generator.formatter, converter=self.generator.converter)
-        except:
-            # this works for prior to 4.6.0
-            delta_time_vh = ValueHelper(
-                delta_time_vt, formatter=self.generator.formatter, converter=self.generator.converter)
 
-        # Create a small dictionary with the tag names (keys) we want to use
+        delta_time_vh = ValueHelper(delta_time_vt, context='long_delta',
+                                    formatter=self.generator.formatter, converter=self.generator.converter)
+
+        ##
+        # Get date and value of most consecutive days with rain
+        ##
+        at_days_with_rain_total = 0
+        at_days_with_rain_total_amount = 0
+        at_days_without_rain_total = 0
+        at_days_with_rain_output = []
+        at_days_without_rain_output = []
+        # TODO: Filter per year.
+        at_rain_query = wx_manager.genSql(
+            "SELECT dateTime, sum FROM archive_day_rain WHERE count > 0;"
+        )
+
+        # Create empty list and append at_rain_query rows.
+        rain_query_list = []
+        with_rain_period = None
+        without_rain_period = None
+
+        for row in at_rain_query:
+            rain_query_list.append(row)
+
+        for index in range(len(rain_query_list)):
+            row = rain_query_list[index]
+            # Original MySQL way: CASE WHEN sum!=0 THEN @total+1 ELSE 0 END
+            # pprint.pprint(row)
+            if row[1] != 0:
+                with_period_end = False
+                at_days_with_rain_total += 1
+                at_days_with_rain_total_amount = at_days_with_rain_total_amount + \
+                    row[1]
+
+                # Create rain period if not exists.
+                if at_days_with_rain_total == 1:
+                    with_rain_period = {
+                        "start": row[0],
+                        "end": row[0],
+                        "days_with_rain": at_days_with_rain_total,
+                        "amount": row[1],
+                    }
+
+                # Update period
+                if at_days_with_rain_total > 1:
+                    with_rain_period["end"] = row[0]
+                    with_rain_period["days_with_rain"] = at_days_with_rain_total
+                    with_rain_period["amount"] = at_days_with_rain_total_amount
+
+            else:
+                at_days_with_rain_total = 0
+                at_days_with_rain_total_amount = 0
+                with_period_end = True
+
+            # Original MySQL way: CASE WHEN sum=0 THEN @total+1 ELSE 0 END
+            if row[1] == 0:
+                without_period_end = False
+                at_days_without_rain_total += 1
+
+                # Create rain period if not exists.
+                if at_days_without_rain_total == 1:
+                    without_rain_period = {
+                        "start": row[0],
+                        "end": row[0],
+                        "days_without_rain": at_days_without_rain_total,
+                    }
+
+                # Update period
+                if at_days_without_rain_total > 1:
+                    without_rain_period["end"] = row[0]
+                    without_rain_period["days_without_rain"] = at_days_without_rain_total
+            else:
+                at_days_without_rain_total = 0
+                without_period_end = True
+
+            # Rain period ended, append to output.
+            if with_rain_period is not None and with_period_end is True:
+                # Tranform raw amount value to ValueHelper.
+                rain_vt = (with_rain_period["amount"], 'inch', 'group_rain')
+                rain_vh = ValueHelper(
+                    rain_vt, formatter=self.generator.formatter, converter=self.generator.converter)
+
+                with_rain_period["amount"] = rain_vh
+
+                # Transform raw days_with_rain value to ValueHelper.
+                delta_time = with_rain_period['end'] - \
+                    with_rain_period['start'] + 86400
+                delta_time_vt = (delta_time, 'second', 'group_deltatime')
+                delta_time_vh = ValueHelper(delta_time_vt,
+                                            formatter=self.generator.formatter, converter=self.generator.converter)
+                with_rain_period["days_with_rain_delta"] = delta_time_vh
+
+                # Tranform raw start and end value to ValueHelper.
+                start_vt = (with_rain_period["start"],
+                            'unix_epoch', 'group_time')
+                start_vh = ValueHelper(
+                    start_vt, formatter=self.generator.formatter, converter=self.generator.converter)
+                end_vt = (with_rain_period["end"], 'unix_epoch', 'group_time')
+                end_vh = ValueHelper(
+                    end_vt, formatter=self.generator.formatter, converter=self.generator.converter)
+
+                with_rain_period["start"] = start_vh
+                with_rain_period["end"] = end_vh
+
+                at_days_with_rain_output.append(with_rain_period)
+                with_rain_period = None
+
+            # No rain period ended, append to output.
+            if without_rain_period is not None and without_period_end is True:
+                # Transform raw days_with_rain value to ValueHelper.
+                delta_time = without_rain_period['end'] - \
+                    without_rain_period['start'] + 86400
+                delta_time_vt = (delta_time, 'second', 'group_deltatime')
+                delta_time_vh = ValueHelper(delta_time_vt,
+                                            formatter=self.generator.formatter, converter=self.generator.converter)
+                without_rain_period["days_without_rain_delta"] = delta_time_vh
+
+                # Tranform raw start and end value to ValueHelper.
+                start_vt = (without_rain_period["start"],
+                            'unix_epoch', 'group_time')
+                start_vh = ValueHelper(
+                    start_vt, formatter=self.generator.formatter, converter=self.generator.converter)
+                end_vt = (without_rain_period["end"],
+                          'unix_epoch', 'group_time')
+                end_vh = ValueHelper(
+                    end_vt, formatter=self.generator.formatter, converter=self.generator.converter)
+
+                without_rain_period["start"] = start_vh
+                without_rain_period["end"] = end_vh
+
+                at_days_without_rain_output.append(without_rain_period)
+                without_rain_period = None
+
+        if len(at_days_with_rain_output) > 0:
+            at_days_with_rain = max(
+                at_days_with_rain_output, key=lambda x: x['days_with_rain'])
+        else:
+            at_days_with_rain = (0, 0)
+        if len(at_days_without_rain_output) > 0:
+            at_days_without_rain = max(
+                at_days_without_rain_output, key=lambda x: x['days_without_rain'])
+        else:
+            at_days_without_rain = (0, 0)
+
         search_list_extension = {
-            'last_rain': last_rain_vh,  'time_since_last_rain':  delta_time_vh}
+            'last_rain': last_rain_vh,
+            'time_since_last_rain':  delta_time_vh,
+            'most_days_with_rain': at_days_with_rain,
+            "most_days_without_rain": at_days_without_rain
+        }
 
         return [search_list_extension]
 

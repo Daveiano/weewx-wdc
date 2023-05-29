@@ -417,6 +417,13 @@ header.section-header {
   }
 }
 
+.clim-days-extended-table {
+  @include carbon--breakpoint-up(xlg) {
+    display: block;
+    max-width: 75%;
+  }
+}
+
 .obs-stat-tile {
   margin-bottom: $spacing-05;
   h3 {

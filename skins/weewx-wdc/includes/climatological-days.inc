@@ -170,7 +170,7 @@
             $most_days_with_rain.start.format('%x') -
             $most_days_with_rain.end.format('%x')
             ($most_days_with_rain.days_with_rain_delta.day.format("%.0f"),
-            $most_days_with_rain.amount)
+            $gettext("Total"): $most_days_with_rain.amount)
           </bx-structured-list-cell>
         </bx-structured-list-row>
         #end if

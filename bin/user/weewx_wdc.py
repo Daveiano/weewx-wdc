@@ -162,18 +162,23 @@ class RainTags(SearchList):
         at_days_without_rain_total = 0
         at_days_with_rain_output = []
         at_days_without_rain_output = []
-        # TODO: Filter per year.
         at_rain_query = wx_manager.genSql(
             "SELECT dateTime, sum FROM archive_day_rain WHERE count > 0;"
         )
 
         # Create empty list and append at_rain_query rows.
         rain_query_list = []
+        years = []
         with_rain_period = None
         without_rain_period = None
 
         for row in at_rain_query:
             rain_query_list.append(row)
+            # Get all years from records.
+            year = datetime.datetime.fromtimestamp(
+                row[0]).strftime('%Y')
+            if year not in years:
+                years.append(year)
 
         for index in range(len(rain_query_list)):
             row = rain_query_list[index]
@@ -287,13 +292,37 @@ class RainTags(SearchList):
         if len(at_days_with_rain_output) > 0:
             at_days_with_rain = max(
                 at_days_with_rain_output, key=lambda x: x['days_with_rain'])
+
+            # Add values for all years.
+            for year in years:
+                at_days_with_rain_output_per_year = list(filter(
+                    lambda x: datetime.datetime.fromtimestamp(x['start'].raw).strftime('%Y') == year, at_days_with_rain_output))
+
+                if len(at_days_with_rain_output_per_year) > 0:
+                    at_days_with_rain[year] = max(
+                        at_days_with_rain_output_per_year, key=lambda x: x['days_with_rain'])
+                else:
+                    at_days_with_rain[year] = None
+
         else:
-            at_days_with_rain = (0, 0)
+            at_days_with_rain = None
+
         if len(at_days_without_rain_output) > 0:
             at_days_without_rain = max(
                 at_days_without_rain_output, key=lambda x: x['days_without_rain'])
+
+            # Add values for all years.
+            for year in years:
+                at_days_without_rain_output_per_year = list(filter(
+                    lambda x: datetime.datetime.fromtimestamp(x['start'].raw).strftime('%Y') == year, at_days_without_rain_output))
+
+                if len(at_days_without_rain_output_per_year) > 0:
+                    at_days_without_rain[year] = max(
+                        at_days_without_rain_output_per_year, key=lambda x: x['days_without_rain'])
+                else:
+                    at_days_without_rain[year] = None
         else:
-            at_days_without_rain = (0, 0)
+            at_days_without_rain = None
 
         search_list_extension = {
             'last_rain': last_rain_vh,

@@ -5,6 +5,14 @@
 #set $show_climatogram_year = $context == 'year' and $DisplayOptions.get("climatogram_enable_year_stats", False)
 #set $show_climatogram_alltime = $context == 'alltime' and $DisplayOptions.get("climatogram_enable_stats", False)
 
+#if $context == 'year'
+  #set $year_rain_table = $year.dateTime.format('%Y')
+  #set $most_days_with_rain = $most_days_with_rain[$year_rain_table]
+  #set $most_days_without_rain = $most_days_without_rain[$year_rain_table]
+#end if
+
+#set $show_rain_stats_table = $context == 'alltime' or ($most_days_with_rain is not None or $most_days_without_rain is not None)
+
 <script
   type="module"
   src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/structured-list.min.js"
@@ -132,6 +140,7 @@
     aria-labelledby="tab-diagram-rain"
     hidden
   >
+    #if $show_rain_stats_table
     <bx-structured-list class="clim-days-extended-table">
       <bx-structured-list-head>
         <bx-structured-list-header-row>
@@ -140,40 +149,46 @@
           >
         </bx-structured-list-header-row>
       </bx-structured-list-head>
+      <!--prettier-ignore-->
       <bx-structured-list-body>
-        <!--prettier-ignore-->
         #if $context == 'alltime'
         <bx-structured-list-row>
           <bx-structured-list-cell
             >$gettext("Last rain")</bx-structured-list-cell
           >
-          <!--prettier-ignore-->
           <bx-structured-list-cell>
             $last_rain.format("%x, %X") ($gettext("Time since last rain"): $time_since_last_rain.long_form)
           </bx-structured-list-cell>
         </bx-structured-list-row>
-        <!--prettier-ignore-->
         #end if
-        <!--prettier-ignore-->
+        #if $most_days_with_rain is not None
         <bx-structured-list-row>
           <bx-structured-list-cell>
             $gettext("Most consecutive days with rain")
           </bx-structured-list-cell>
           <bx-structured-list-cell>
-            $most_days_with_rain.start.format('%x') - $most_days_with_rain.end.format('%x') ($most_days_with_rain.days_with_rain_delta.day.format("%.0f"), $most_days_with_rain.amount)
+            $most_days_with_rain.start.format('%x') -
+            $most_days_with_rain.end.format('%x')
+            ($most_days_with_rain.days_with_rain_delta.day.format("%.0f"),
+            $most_days_with_rain.amount)
           </bx-structured-list-cell>
         </bx-structured-list-row>
-        <!--prettier-ignore-->
+        #end if
+        #if $most_days_without_rain is not None
         <bx-structured-list-row>
           <bx-structured-list-cell>
             $gettext("Most consecutive days without rain")
           </bx-structured-list-cell>
           <bx-structured-list-cell>
-            $most_days_without_rain.start.format('%x') - $most_days_without_rain.end.format('%x') ($most_days_without_rain.days_without_rain_delta.day.format("%.0f"))
+            $most_days_without_rain.start.format('%x') -
+            $most_days_without_rain.end.format('%x')
+            ($most_days_without_rain.days_without_rain_delta.day.format("%.0f"))
           </bx-structured-list-cell>
         </bx-structured-list-row>
+        #end if
       </bx-structured-list-body>
     </bx-structured-list>
+    #end if
 
     <script>
       /* prettier-ignore */

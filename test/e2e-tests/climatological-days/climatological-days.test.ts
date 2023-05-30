@@ -99,7 +99,7 @@ test.describe("Climatological days", () => {
       "06/20/22, 17:00:00"
     );
     await expect(rainTable.getByTestId("most-days-with-rain")).toContainText(
-      "12/12/21 - 12/20/21 (9 days, 0.94 cm)"
+      "12/12/21 - 12/20/21 (9 days, Total: 0.94 cm)"
     );
     await expect(rainTable.getByTestId("most-days-without-rain")).toContainText(
       "04/26/22 - 05/15/22 (20 days)"
@@ -114,7 +114,7 @@ test.describe("Climatological days", () => {
 
     await expect(rainTable.getByTestId("last-rain")).toHaveCount(0);
     await expect(rainTable.getByTestId("most-days-with-rain")).toContainText(
-      "12/12/21 - 12/20/21 (9 days, 0.94 cm)"
+      "12/12/21 - 12/20/21 (9 days, Total: 0.94 cm)"
     );
     await expect(rainTable.getByTestId("most-days-without-rain")).toContainText(
       "10/27/21 - 10/31/21 (5 days)"
@@ -129,7 +129,7 @@ test.describe("Climatological days", () => {
 
     await expect(rainTable.getByTestId("last-rain")).toHaveCount(0);
     await expect(rainTable.getByTestId("most-days-with-rain")).toContainText(
-      "01/22/22 - 01/26/22 (5 days, 1.05 cm)"
+      "01/22/22 - 01/26/22 (5 days, Total: 1.05 cm)"
     );
     await expect(rainTable.getByTestId("most-days-without-rain")).toContainText(
       "	04/26/22 - 05/15/22 (20 days)"

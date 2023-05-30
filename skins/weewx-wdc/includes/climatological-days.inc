@@ -45,7 +45,7 @@
     target="panel-diagram-temp-avg"
     value="diagram-temp-avg"
   >
-    $gettext('Avg.') $obs.label.outTemp
+    $gettext('Avg') $obs.label.outTemp
   </bx-tab>
   #end if
   #if $show_climatogram_year or $show_climatogram_alltime
@@ -224,7 +224,7 @@
       data-obs="outTemp"
       data-unit="$unit.label.outTemp"
       data-color="$get_calendar_color('outTemp')"
-      data-heading="${obs.label.outTemp} $gettext('Avg.')"
+      data-heading="$gettext('Avg') ${obs.label.outTemp}"
     ></div>
   </div>
   #end if

@@ -11,7 +11,7 @@
   #set $most_days_without_rain = $most_days_without_rain[$year_rain_table]
 #end if
 
-#set $show_rain_stats_table = $context == 'alltime' or ($most_days_with_rain is not None or $most_days_without_rain is not None)
+#set $show_rain_stats_table = ($context == 'alltime' and $to_bool($DisplayOptions.get('show_last_rain', True))) or (($most_days_with_rain is not None and $to_bool($DisplayOptions.get('show_most_days_with_rain', 'True'))) or ($most_days_without_rain is not None and $to_bool($DisplayOptions.get('show_most_days_without_rain', 'True'))))
 
 <script
   type="module"
@@ -151,7 +151,7 @@
       </bx-structured-list-head>
       <!--prettier-ignore-->
       <bx-structured-list-body>
-        #if $context == 'alltime'
+        #if $context == 'alltime' and $to_bool($DisplayOptions.get('show_last_rain', True))
         <bx-structured-list-row>
           <bx-structured-list-cell
             >$gettext("Last rain")</bx-structured-list-cell
@@ -161,7 +161,7 @@
           </bx-structured-list-cell>
         </bx-structured-list-row>
         #end if
-        #if $most_days_with_rain is not None
+        #if $most_days_with_rain is not None and $to_bool($DisplayOptions.get('show_most_days_with_rain', True))
         <bx-structured-list-row>
           <bx-structured-list-cell>
             $gettext("Most consecutive days with rain")
@@ -174,7 +174,7 @@
           </bx-structured-list-cell>
         </bx-structured-list-row>
         #end if
-        #if $most_days_without_rain is not None
+        #if $most_days_without_rain is not None and $to_bool($DisplayOptions.get('show_most_days_without_rain', True))
         <bx-structured-list-row>
           <bx-structured-list-cell>
             $gettext("Most consecutive days without rain")

@@ -151,8 +151,8 @@ class RainTags(SearchList):
         # Wrap our ts in a ValueHelper
         delta_time_vt = (delta_time, 'second', 'group_deltatime')
 
-        delta_time_vh = ValueHelper(delta_time_vt, context='long_delta',
-                                    formatter=self.generator.formatter, converter=self.generator.converter)
+        last_rain_delta_time_vh = ValueHelper(delta_time_vt, context='long_delta',
+                                              formatter=self.generator.formatter, converter=self.generator.converter)
 
         ##
         # Get date and value of most consecutive days with rain
@@ -326,7 +326,7 @@ class RainTags(SearchList):
 
         search_list_extension = {
             'last_rain': last_rain_vh,
-            'time_since_last_rain':  delta_time_vh,
+            'time_since_last_rain':  last_rain_delta_time_vh,
             'most_days_with_rain': at_days_with_rain,
             "most_days_without_rain": at_days_without_rain
         }

@@ -156,7 +156,7 @@
           <bx-structured-list-cell
             >$gettext("Last rain")</bx-structured-list-cell
           >
-          <bx-structured-list-cell>
+          <bx-structured-list-cell data-testid="last-rain">
             $last_rain.format("%x, %X") ($gettext("Time since last rain"): $time_since_last_rain.long_form)
           </bx-structured-list-cell>
         </bx-structured-list-row>
@@ -166,7 +166,7 @@
           <bx-structured-list-cell>
             $gettext("Most consecutive days with rain")
           </bx-structured-list-cell>
-          <bx-structured-list-cell>
+          <bx-structured-list-cell data-testid="most-days-with-rain">
             $most_days_with_rain.start.format('%x') -
             $most_days_with_rain.end.format('%x')
             ($most_days_with_rain.days_with_rain_delta.day.format("%.0f"),
@@ -179,7 +179,7 @@
           <bx-structured-list-cell>
             $gettext("Most consecutive days without rain")
           </bx-structured-list-cell>
-          <bx-structured-list-cell>
+          <bx-structured-list-cell data-testid="most-days-without-rain">
             $most_days_without_rain.start.format('%x') -
             $most_days_without_rain.end.format('%x')
             ($most_days_without_rain.days_without_rain_delta.day.format("%.0f"))

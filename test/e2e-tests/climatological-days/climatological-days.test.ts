@@ -86,6 +86,56 @@ test.describe("Climatological days", () => {
     expect(await rainDays.locator("> script").innerText()).toMatchSnapshot();
   });
 
+  test("Rain Stats table", async ({ page }) => {
+    // Stats page.
+    const rainTable = page
+      .getByRole("tabpanel", { name: "Rain days" })
+      .locator(".clim-days-extended-table");
+
+    await page.getByRole("tab", { name: "Rain days" }).click();
+    await expect(rainTable).toBeVisible();
+
+    await expect(rainTable.getByTestId("last-rain")).toContainText(
+      "06/20/22, 17:00:00"
+    );
+    await expect(rainTable.getByTestId("most-days-with-rain")).toContainText(
+      "12/12/21 - 12/20/21 (9 days, 0.94 cm)"
+    );
+    await expect(rainTable.getByTestId("most-days-without-rain")).toContainText(
+      "04/26/22 - 05/15/22 (20 days)"
+    );
+
+    // 2021.
+    await page.goto(
+      "artifacts-alternative-weewx-html/public_html/year-2021.html"
+    );
+    await page.getByRole("tab", { name: "Rain days" }).click();
+    await expect(rainTable).toBeVisible();
+
+    await expect(rainTable.getByTestId("last-rain")).toHaveCount(0);
+    await expect(rainTable.getByTestId("most-days-with-rain")).toContainText(
+      "12/12/21 - 12/20/21 (9 days, 0.94 cm)"
+    );
+    await expect(rainTable.getByTestId("most-days-without-rain")).toContainText(
+      "10/27/21 - 10/31/21 (5 days)"
+    );
+
+    // 2022.
+    await page.goto(
+      "artifacts-alternative-weewx-html/public_html/year-2022.html"
+    );
+    await page.getByRole("tab", { name: "Rain days" }).click();
+    await expect(rainTable).toBeVisible();
+
+    await expect(rainTable.getByTestId("last-rain")).toHaveCount(0);
+    await expect(rainTable.getByTestId("most-days-with-rain")).toContainText(
+      "01/22/22 - 01/26/22 (5 days, 1.05 cm)"
+    );
+    await expect(rainTable.getByTestId("most-days-without-rain")).toContainText(
+      "	04/26/22 - 05/15/22 (20 days)"
+    );
+  });
+
   test("Avg outside temp", async ({ page }) => {
     const avgTemp = page.locator("#panel-diagram-temp-avg");
 

@@ -351,15 +351,17 @@
         #set $summary = $forecast.weather_summary($forecast_source, $period.event_ts.raw, periods=$periods)
         <bx-structured-list-cell class="index-$x">
           <!--prettier-ignore-->
-          <table cellspacing="0" cellpadding="0" width="100%">
+          <table cellspacing="0" cellpadding="0" width="100%" style="border-spacing: 5px; border-collapse: separate;">
             <!--prettier-ignore-->
             #for $tide in $tides
               #if $summary.event_ts.raw <= $tide.event_ts.raw < $summary.event_ts.raw + $summary.duration
+              <!--TODO: Determine how switch between foot/meter -->
+              #set $height = $tide.offset.raw / 3.281
               <tr>
                 <td style="font-size: 100%">$tide.event_ts.format('%H:%M')</td>
                 <td class="tide-hilo" style="font-size: 100%">$tide.hilo</td>
                 <td style="font-size: 100%; text-align: right">
-                  $tide.offset.nolabel('%.1f')
+                  #echo '%.2f' % $height
                 </td>
               </tr>
               <!--prettier-ignore-->
@@ -679,15 +681,17 @@
         #for $x, $period in enumerate($periods)
         <bx-structured-list-cell class="index-$x">
           <!--prettier-ignore-->
-          <table cellspacing="0" cellpadding="0" width="100%">
+          <table cellspacing="0" cellpadding="0" width="100%" style="border-spacing: 5px; border-collapse: separate;">
             <!--prettier-ignore-->
             #for $tide in $tides
               #if $period.event_ts.raw <= $tide.event_ts.raw < $period.event_ts.raw + $period.duration
+              <!--TODO: Determine how switch between foot/meter -->
+              #set $height = $tide.offset.raw / 3.281
               <tr>
                 <td style="font-size: 100%">$tide.event_ts.format('%H:%M')</td>
                 <td class="tide-hilo" style="font-size: 100%">$tide.hilo</td>
                 <td style="font-size: 100%; text-align: right">
-                  $tide.offset.nolabel('%.1f')
+                  #echo '%.2f' % $height
                 </td>
               </tr>
               <!--prettier-ignore-->

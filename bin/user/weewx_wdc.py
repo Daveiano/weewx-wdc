@@ -1414,7 +1414,7 @@ class WdcDiagramUtil(SearchList):
             context (string): Day, week, month, year, alltime
 
         Returns:
-            dict: Nivo props.
+            dict: Diagram props for d3.js.
         """
         if context == "yesterday":
             context = "day"
@@ -1426,8 +1426,11 @@ class WdcDiagramUtil(SearchList):
             diagram_context_props = accumulateLeaves(
                 diagrams_config[context]['observations'][obs], max_level=3)
         except KeyError:
-            diagram_context_props = accumulateLeaves(
-                diagrams_config[context]['observations'], max_level=2)
+            try:
+                diagram_context_props = accumulateLeaves(
+                    diagrams_config[context]['observations'], max_level=2)
+            except KeyError:
+                diagram_context_props = {}
 
         if obs in diagrams_config:
             return {
@@ -1438,8 +1441,8 @@ class WdcDiagramUtil(SearchList):
         elif obs in diagrams_config["combined_observations"]:
             return {
                 **diagram_base_props,
+                **diagram_context_props,
                 **diagrams_config["combined_observations"][obs],
-                **diagram_context_props
             }
         else:
             return {

@@ -1,0 +1,114 @@
+<!--prettier-ignore-->
+#errorCatcher Echo
+#encoding UTF-8
+#from datetime import datetime, timedelta
+
+#attr $use_parameter_month = False
+#attr $use_parameter_year = False
+#attr $daily_archive = False
+
+#set $now = datetime.now().strftime("%x %X")
+#set $computer_monitor_stat_tile_observations = $to_list($DisplayOptions.get('computer_monitor_tile_observations', ['cpu_user', 'cpu_system', 'load1', 'load5', 'load15']))
+#set $computer_monitor_diagram_observations = $to_list($DisplayOptions.get('computer_monitor_diagram_observations', ['cpu_user', 'cpu_system', 'load1', 'load5', 'load15']))
+#set $computer_monitor_diagram_period = $DisplayOptions.get('computer_monitor_diagram_period', 'day')
+
+<!DOCTYPE html>
+<html lang="$lang">
+  <head>
+    #include "includes/html-head.inc"
+    <title>$station.location - $gettext("Computer Monitor")</title>
+  </head>
+
+  <body class="theme-$DisplayOptions.get('layout', 'alternative')">
+    #include "includes/ui-shell.inc"
+
+    <main>
+      <section class="main bx--content">
+        <div class="bx--grid bx--grid--full-width">
+          <div class="bx--row">
+            <header class="bx--col page-header">
+              <h1>$gettext("Computer Monitor")</h1>
+              <h2>$now</h2>
+            </header>
+          </div>
+
+          <!--prettier-ignore-->
+          #set $recent=$span($day_delta=1, boundary='midnight')
+          #set global $context = 'day'
+
+          <div class="bx--row">
+            <!--prettier-ignore-->
+            #for $computer_monitor_obs in $computer_monitor_stat_tile_observations
+              #set $computer_monitor_obs_binding = $get_data_binding($computer_monitor_obs)
+
+              #if $getattr($recent($data_binding=$computer_monitor_obs_binding), $get_custom_data_binding_obs_key($computer_monitor_obs)).has_data
+                #set global $partial_obs = $computer_monitor_obs
+                #include "includes/stat-tile.inc"
+              #end if
+            #end for
+          </div>
+
+          <!--prettier-ignore-->
+          #set global $context = $computer_monitor_diagram_period
+          #set $recent=$span($day_delta=1, boundary='midnight')
+
+          <!--prettier-ignore-->
+          <div class="bx--row">
+            #include "includes/section-heading.inc"
+          </div>
+
+          <!-- prettier-ignore -->
+          <div class="bx--row">
+            #set $diagram_index = 0
+            #set $diagrams_config = $DisplayOptions.get("diagrams", {})
+            #set $diagram_context_config = $DisplayOptions.get("diagrams", {}).get($context, {}).get('observations', {})
+            #if "combined_observations" in $diagrams_config
+              #set $combined = $diagrams_config.combined_observations
+            #else
+              #set $combined = {}
+            #end if
+
+            #for $computer_monitor_diagram_obs in $computer_monitor_diagram_observations
+              #if $computer_monitor_diagram_obs in $combined.keys()
+                #set $combined_diagram = $combined[$computer_monitor_diagram_obs]
+                #for $combined_obs in $combined_diagram.obs.keys()
+                  #set $skin_obs_binding = $get_data_binding_combined_diagram($combined_obs, $combined_diagram, $computer_monitor_diagram_obs, $context)
+
+                  #if $getattr($recent($data_binding=$skin_obs_binding), $get_custom_data_binding_obs_key($combined_diagram.obs[$combined_obs].observation)).has_data
+                    #set global $comb_obs = $computer_monitor_diagram_obs
+                    #set global $combined_diagram = $combined_diagram
+                    #set global $diagram_index = $diagram_index
+                    #include "includes/combined-diagram-tile.inc"
+                    #set $diagram_index = $diagram_index + 1
+                    #break
+                  #end if
+                #end for
+              #else
+                #set $computer_monitor_diagram_obs_binding = $get_data_binding($computer_monitor_diagram_obs, $context)
+                #if $getattr($recent($data_binding=$computer_monitor_diagram_obs_binding), $get_custom_data_binding_obs_key($computer_monitor_diagram_obs)).has_data
+                  #set global $partial_obs = $computer_monitor_diagram_obs
+                  #set global $diagram_index = $diagram_index
+
+                  #include "includes/diagram-tile.inc"
+
+                  #set $diagram_index = $diagram_index + 1
+                #end if
+              #end if
+            #end for
+          </div>
+
+          #if 'computer_monitor_table_observations' in $DisplayOptions
+          <div class="bx--row">
+            <!-- prettier-ignore -->
+            #set global $table_obs = $DisplayOptions.get('computer_monitor_table_observations')
+            #include "includes/data-table-tile.inc"
+          </div>
+          #end if
+        </div>
+      </section>
+    </main>
+    #include "includes/footer.inc"
+
+    <script src="$get_base_path(path='dist/main.js')" defer></script>
+  </body>
+</html>

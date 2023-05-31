@@ -84,7 +84,7 @@
             #for $sensor_obs in $sensor_stat_tile_observations
               #set $sensor_obs_binding = $get_data_binding($sensor_obs)
 
-              #if $getattr(recent, $get_custom_data_binding_obs_key($sensor_obs)).has_data
+              #if $getattr($recent($data_binding=$sensor_obs_binding), $get_custom_data_binding_obs_key($sensor_obs)).has_data
                 #set global $partial_obs = $sensor_obs
                 #include "includes/stat-tile.inc"
               #end if
@@ -117,7 +117,7 @@
                 #for $combined_obs in $combined_diagram.obs.keys()
                   #set $skin_obs_binding = $get_data_binding_combined_diagram($combined_obs, $combined_diagram, $sensor_diagram_obs, $context)
 
-                  #if $getattr($recent, $get_custom_data_binding_obs_key($combined_diagram.obs[$combined_obs].observation)).has_data
+                  #if $getattr($recent($data_binding=$skin_obs_binding), $get_custom_data_binding_obs_key($combined_diagram.obs[$combined_obs].observation)).has_data
                     #set global $comb_obs = $sensor_diagram_obs
                     #set global $combined_diagram = $combined_diagram
                     #set global $diagram_index = $diagram_index
@@ -128,7 +128,7 @@
                 #end for
               #else
                 #set $sensor_diagram_obs_binding = $get_data_binding($sensor_diagram_obs, $context)
-                #if $getattr($recent, $get_custom_data_binding_obs_key($sensor_diagram_obs)).has_data
+                #if $getattr($recent($data_binding=$sensor_diagram_obs_binding), $get_custom_data_binding_obs_key($sensor_diagram_obs)).has_data
                   #set global $partial_obs = $sensor_diagram_obs
                   #set global $diagram_index = $diagram_index
 

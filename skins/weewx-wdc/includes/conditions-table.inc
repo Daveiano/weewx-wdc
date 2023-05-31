@@ -61,7 +61,7 @@
                 <bx-structured-list-cell class="cell-value">
                   <!--prettier-ignore-->
                   #if $context == 'day'
-                    <span>$getattr($current($data_binding=$skin_obs_binding), $skin_obs_key)</span>
+                    <span>$getattr($latest($data_binding=$skin_obs_binding), $skin_obs_key)</span>
 
                     #if $show_wind_dir and $current.windDir.has_data
                       <span class="stat-wind-dir stat-detail">, $current.windDir</span>

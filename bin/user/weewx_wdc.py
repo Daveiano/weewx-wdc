@@ -1350,15 +1350,28 @@ class WdcDiagramUtil(SearchList):
         except KeyError:
             rounding = None
 
+        unit = self.general_util.get_unit_for_obs(
+            observation, observation_key, context)
+
+        # Fallback to a simple string parsing of [[StringFormats]].
+        if rounding is None:
+            try:
+                unit_string_format = self.skin_dict["Units"]["StringFormats"][unit]
+
+                # Careful! Potential for bugs here.
+                for c in unit_string_format:
+                    if c.isdigit():
+                        rounding = c
+                        break
+            except KeyError:
+                rounding = None
+
         if rounding is not None:
             return int(rounding)
 
         # Default roundings.
         if context is None:
             context = 'day'
-
-        unit = self.general_util.get_unit_for_obs(
-            observation, observation_key, context)
 
         if observation == "UV" or observation == "cloudbase":
             return 0

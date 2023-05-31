@@ -218,7 +218,7 @@
               </p>
               <!--prettier-ignore-->
               <p class="stat-value">
-                <span class="value" style="display: inline;">$getattr($week, $skin_obs_key).sum</span>
+                <span class="value" style="display: inline;">$getattr($week, $skin_obs_key).sum.format("%." + $rounding + "f")</span>
               </p>
             </div>
           #end if

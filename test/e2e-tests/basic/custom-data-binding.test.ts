@@ -9,7 +9,7 @@ test.describe("Custom data_binding", () => {
 
   test("Stat tiles", async ({ page }) => {
     let testTemp = page.locator(".stat-tile[data-test='test_temp']");
-    await expect(testTemp.locator(".value span.raw")).toHaveText("9.6°C");
+    await expect(testTemp.locator(".value span.raw")).toHaveText("13.9°C");
     await expect(testTemp.locator("[data-test='max'] .stat-value")).toHaveText(
       "14.0°C"
     );

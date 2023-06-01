@@ -8,8 +8,8 @@
 #attr $daily_archive = False
 
 #set $now = datetime.now().strftime("%x %X")
-#set $computer_monitor_stat_tile_observations = $to_list($DisplayOptions.get('computer_monitor_stat_tile_observations', ['cpu_user', 'cpu_system', 'load1', 'load5', 'load15', 'mem_used', 'mem_free', 'net_eth0_rbytes', 'net_eth0_rpackets', 'net_eth0_tbytes', 'net_eth0_tpackets', 'net_wlan0_rbytes', 'net_wlan0_rpackets', 'net_wlan0_tbytes', 'net_wlan0_tpackets', 'proc_active', 'proc_total', 'cpu_temp']))
-#set $computer_monitor_diagram_observations = $to_list($DisplayOptions.get('computer_monitor_diagram_observations', ['cpu_user', 'cpu_system', 'load1', 'mem_used', 'proc_active', 'net_eth0_rbytes', 'net_eth0_tbytes', 'net_wlan0_rbytes', 'net_wlan0_tbytes', 'cpu_temp']))
+#set $computer_monitor_stat_tile_observations = $to_list($DisplayOptions.get('computer_monitor_stat_tile_observations', ['cpu_user', 'cpu_system', 'cpu_temp', 'load1', 'load5', 'load15', 'mem_used', 'mem_free', 'net_eth0_rbytes', 'net_eth0_rpackets', 'net_eth0_tbytes', 'net_eth0_tpackets', 'net_wlan0_rbytes', 'net_wlan0_rpackets', 'net_wlan0_tbytes', 'net_wlan0_tpackets', 'proc_active', 'proc_total']))
+#set $computer_monitor_diagram_observations = $to_list($DisplayOptions.get('computer_monitor_diagram_observations', ['cpu_user', 'cpu_system', 'cpu_temp', 'load1', 'mem_used', 'proc_active', 'net_eth0_rbytes', 'net_eth0_tbytes', 'net_wlan0_rbytes', 'net_wlan0_tbytes']))
 #set $computer_monitor_diagram_period = $DisplayOptions.get('computer_monitor_diagram_period', 'week')
 
 <!DOCTYPE html>

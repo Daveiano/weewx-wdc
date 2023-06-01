@@ -248,6 +248,12 @@ class WdcGeneralUtil(SearchList):
 
         return False
 
+    def show_cmon_page(self):
+        if "computer_monitor" in self.generator_to_date:
+            return True
+
+        return False
+
     def get_time_format_dict(self):
         return self.time_format
 

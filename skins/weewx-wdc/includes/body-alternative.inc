@@ -48,6 +48,9 @@
     #set $combined_diagram = $combined[$skin_obs]
     #for $combined_obs in $combined_diagram.obs.keys()
       #set $skin_obs_binding = $get_data_binding_combined_diagram($combined_obs, $combined_diagram, $skin_obs, $context)
+
+      ## I dont know why but $alltime($data_binding=$skin_obs_binding) crashes on the month-%Y-%m and year-%Y pages:
+      ## ValueError: start time (1654034700) is greater than stop time (1640991600)
       #set $alltime_tag = $alltime($data_binding=$skin_obs_binding) if $context == 'alltime' else None
 
       #if $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $get_custom_data_binding_obs_key($combined_diagram.obs[$combined_obs].observation)).has_data

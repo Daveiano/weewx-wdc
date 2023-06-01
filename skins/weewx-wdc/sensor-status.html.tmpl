@@ -7,11 +7,110 @@
 #attr $use_parameter_year = False
 #attr $daily_archive = False
 
+#set $layout = $DisplayOptions.get('layout', 'alternative')
+#set $diagrams_config = $DisplayOptions.get("diagrams", {})
+
 #set $now = datetime.now().strftime("%x %X")
 #set $sensor_stat_tile_observations = $to_list($DisplayOptions.get('sensor_stat_tile_observations', ['rxCheckPercent', 'consBatteryVoltage']))
 #set $sensor_diagram_observations = $to_list($DisplayOptions.get('sensor_diagram_observations', ['rxCheckPercent', 'consBatteryVoltage']))
 #set $sensor_batteries = $to_list($DisplayOptions.get('sensor_battery_status', ['outTempBatteryStatus', 'inTempBatteryStatus', 'rainBatteryStatus', 'windBatteryStatus', 'uvBatteryStatus', 'txBatteryStatus']))
 #set $sensor_diagram_period = $DisplayOptions.get('sensor_diagram_period', 'month')
+
+<!--prettier-ignore-->
+#def diagrams($context, $diagrams_config, $diagram_obs)
+  #set $diagram_index = 0
+  #if "combined_observations" in $diagrams_config
+    #set $combined = $diagrams_config.combined_observations
+  #else
+    #set $combined = {}
+  #end if
+
+  #for $skin_obs in $diagram_obs
+    #if $skin_obs in $combined.keys()
+      #set $combined_diagram = $combined[$skin_obs]
+      #for $combined_obs in $combined_diagram.obs.keys()
+        #set $skin_obs_binding = $get_data_binding_combined_diagram($combined_obs, $combined_diagram, $skin_obs, $context)
+
+        ## I dont know why but $alltime($data_binding=$skin_obs_binding) crashes on the month-%Y-%m and year-%Y pages:
+        ## ValueError: start time (1654034700) is greater than stop time (1640991600)
+        #set $alltime_tag = $alltime($data_binding=$skin_obs_binding) if $context == 'alltime' else None
+
+        #if $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $get_custom_data_binding_obs_key($combined_diagram.obs[$combined_obs].observation)).has_data
+          #set global $comb_obs = $skin_obs
+          #set global $combined_diagram = $combined_diagram
+          #set global $diagram_index = $diagram_index
+          #include "includes/combined-diagram-tile.inc"
+          #set $diagram_index = $diagram_index + 1
+          #break
+        #end if
+      #end for
+    #else
+      #set $skin_obs_binding = $get_data_binding($skin_obs, $context)
+      #set $alltime_tag = $alltime($data_binding=$skin_obs_binding) if $context == 'alltime' else None
+      #if $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $get_custom_data_binding_obs_key($skin_obs)).has_data or (($skin_obs == 'windDir' or $skin_obs == 'windRose') and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'windSpeed').has_data)
+        #set global $partial_obs = $skin_obs
+        #set global $diagram_index = $diagram_index
+        #if $skin_obs == 'windRose'
+          #include "includes/diagram-tile-wind-rose.inc"
+        #else
+          #include "includes/diagram-tile.inc"
+        #end if
+        #set $diagram_index = $diagram_index + 1
+      #end if
+    #end if
+  #end for
+#end def
+
+<!--prettier-ignore-->
+#def batteries($sensor_batteries, $layout)
+#set $recent=$span($day_delta=1, boundary='midnight')
+#if $layout == 'alternative'
+#set $classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-4"
+#else
+#set $classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-12 bx--col-max-6"
+#end if
+<!--prettier-ignore-->
+<script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/notification.min.js"></script>
+<!--prettier-ignore-->
+#for $battery in $sensor_batteries
+  #if $getattr($recent, $battery).has_data
+<!--prettier-ignore-->
+<div class="$classes">
+    #set $battery_raw = $getVar('current.%s.raw' % $battery)
+
+    #if $battery_raw == 1
+      <bx-inline-notification
+        style="margin-bottom: .5rem"
+        title="$obs.label[$battery]"
+        subtitle="$gettext('Low')"
+        kind="warning"
+        hide-close-button
+      >
+      </bx-inline-notification>
+    #else if $battery_raw is None
+      <bx-inline-notification
+        style="margin-bottom: .5rem"
+        title="$obs.label[$battery]"
+        subtitle="$gettext('Unknown')"
+        kind="info"
+        hide-close-button
+      >
+      </bx-inline-notification>
+    #else
+      <bx-inline-notification
+        style="margin-bottom: .5rem"
+        title="$obs.label[$battery]"
+        subtitle="$gettext('Ok')"
+        kind="success"
+        hide-close-button
+      >
+      </bx-inline-notification>
+    #end if
+  </div>
+<!--prettier-ignore-->
+#end if
+#end for
+#end def
 
 <!DOCTYPE html>
 <html lang="$lang">
@@ -20,7 +119,7 @@
     <title>$station.location - $gettext("Sensor Status")</title>
   </head>
 
-  <body class="theme-$DisplayOptions.get('layout', 'alternative')">
+  <body class="theme-$layout">
     #include "includes/ui-shell.inc"
 
     <main>
@@ -34,58 +133,54 @@
           </div>
 
           <!--prettier-ignore-->
-          #set $recent=$span($day_delta=1, boundary='midnight')
+          #if $layout == 'classic'
+          <!--prettier-ignore-->
+          <div class="bx--row">
+            <div
+              class="bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-4 bx--col-max-4 layout-col"
+            >
+              #set global $context = 'day'
+              #set global $stat_obs = $sensor_stat_tile_observations
+              #include 'includes/conditions-table.inc'
+
+              <div class="bx--row">
+                $batteries($sensor_batteries, $layout)
+              </div>
+
+            </div>
+
+            <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-8 bx--col-max-8 layout-col">
+              <div class="bx--row">
+                $diagrams($sensor_diagram_period, $diagrams_config, $sensor_diagram_observations)
+              </div>
+            </div>
+          </div>
+          <div class="bx--row">
+            <!-- prettier-ignore -->
+            #if 'sensor_table_observations' in $DisplayOptions
+            <div class="bx--row">
+              <!-- prettier-ignore -->
+              #set global $table_obs = $DisplayOptions.get('sensor_table_observations')
+              #include "includes/data-table-tile.inc"
+            </div>
+            #end if
+          </div>
+          #else
+          <!--prettier-ignore-->
           #set global $context = 'day'
 
-          <!--prettier-ignore-->
           <div class="bx--row" style="margin-bottom: 1.5rem">
-            <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/notification.min.js"></script>
-            #for $battery in $sensor_batteries
-              #if $getattr($recent, $battery).has_data
-                <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-4">
-                  #set $battery_raw = $getVar('current.%s.raw' % $battery)
-
-                  #if $battery_raw == 1
-                    <bx-inline-notification
-                      style="margin-bottom: .5rem"
-                      title="$obs.label[$battery]"
-                      subtitle="$gettext('Low')"
-                      kind="warning"
-                      hide-close-button
-                    >
-                    </bx-inline-notification>
-                  #else if $battery_raw is None
-                    <bx-inline-notification
-                      style="margin-bottom: .5rem"
-                      title="$obs.label[$battery]"
-                      subtitle="$gettext('Unknown')"
-                      kind="info"
-                      hide-close-button
-                    >
-                    </bx-inline-notification>
-                  #else
-                    <bx-inline-notification
-                      style="margin-bottom: .5rem"
-                      title="$obs.label[$battery]"
-                      subtitle="$gettext('Ok')"
-                      kind="success"
-                      hide-close-button
-                    >
-                    </bx-inline-notification>
-                  #end if
-
-                </div>
-              #end if
-            #end for
+            $batteries($sensor_batteries, $layout)
           </div>
 
           <div class="bx--row">
             <!--prettier-ignore-->
-            #for $sensor_obs in $sensor_stat_tile_observations
-              #set $sensor_obs_binding = $get_data_binding($sensor_obs)
+            #for $obs in $sensor_stat_tile_observations
+              #set $binding = $get_data_binding($obs)
+              #set $alltime_tag = $alltime($data_binding=$binding) if $context == 'alltime' else None
 
-              #if $getattr($recent($data_binding=$sensor_obs_binding), $get_custom_data_binding_obs_key($sensor_obs)).has_data
-                #set global $partial_obs = $sensor_obs
+              #if $getattr($get_time_span_from_context($context, $day($data_binding=$binding), $week($data_binding=$binding), $month($data_binding=$binding), $year($data_binding=$binding), $alltime_tag, $yesterday($data_binding=$binding)), $get_custom_data_binding_obs_key($obs)).has_data
+                #set global $partial_obs = $obs
                 #include "includes/stat-tile.inc"
               #end if
             #end for
@@ -93,7 +188,6 @@
 
           <!--prettier-ignore-->
           #set global $context = $sensor_diagram_period
-          #set $recent=$span($day_delta=1, boundary='midnight')
 
           <!--prettier-ignore-->
           <div class="bx--row">
@@ -102,51 +196,19 @@
 
           <!-- prettier-ignore -->
           <div class="bx--row">
-            #set $diagram_index = 0
-            #set $diagrams_config = $DisplayOptions.get("diagrams", {})
-            #set $diagram_context_config = $DisplayOptions.get("diagrams", {}).get($context, {}).get('observations', {})
-            #if "combined_observations" in $diagrams_config
-              #set $combined = $diagrams_config.combined_observations
-            #else
-              #set $combined = {}
-            #end if
-
-            #for $sensor_diagram_obs in $sensor_diagram_observations
-              #if $sensor_diagram_obs in $combined.keys()
-                #set $combined_diagram = $combined[$sensor_diagram_obs]
-                #for $combined_obs in $combined_diagram.obs.keys()
-                  #set $skin_obs_binding = $get_data_binding_combined_diagram($combined_obs, $combined_diagram, $sensor_diagram_obs, $context)
-
-                  #if $getattr($recent($data_binding=$skin_obs_binding), $get_custom_data_binding_obs_key($combined_diagram.obs[$combined_obs].observation)).has_data
-                    #set global $comb_obs = $sensor_diagram_obs
-                    #set global $combined_diagram = $combined_diagram
-                    #set global $diagram_index = $diagram_index
-                    #include "includes/combined-diagram-tile.inc"
-                    #set $diagram_index = $diagram_index + 1
-                    #break
-                  #end if
-                #end for
-              #else
-                #set $sensor_diagram_obs_binding = $get_data_binding($sensor_diagram_obs, $context)
-                #if $getattr($recent($data_binding=$sensor_diagram_obs_binding), $get_custom_data_binding_obs_key($sensor_diagram_obs)).has_data
-                  #set global $partial_obs = $sensor_diagram_obs
-                  #set global $diagram_index = $diagram_index
-
-                  #include "includes/diagram-tile.inc"
-
-                  #set $diagram_index = $diagram_index + 1
-                #end if
-              #end if
-            #end for
+            $diagrams($context, $diagrams_config, $sensor_diagram_observations)
           </div>
 
+          <!-- prettier-ignore -->
           #if 'sensor_table_observations' in $DisplayOptions
           <div class="bx--row">
             <!-- prettier-ignore -->
             #set global $table_obs = $DisplayOptions.get('sensor_table_observations')
             #include "includes/data-table-tile.inc"
           </div>
+          <!--prettier-ignore-->
           #end if
+        #end if
         </div>
       </section>
     </main>

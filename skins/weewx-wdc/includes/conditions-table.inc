@@ -16,6 +16,18 @@
 #set $show_min_max_time = $context == 'year' or $context == 'alltime' or ($context == 'day' and $to_bool($DisplayOptions.get('show_min_max_time_day', False))) or ($context == 'yesterday' and $to_bool($DisplayOptions.get('show_min_max_time_yesterday', False))) or ($context == 'week' and $to_bool($DisplayOptions.get('show_min_max_time_week', False))) or ($context == 'month' and $to_bool($DisplayOptions.get('show_min_max_time_month', False)))
 #set $min_max_time_format = $get_time_format_dict['day'] if $context == 'day' or $context == 'yesterday' else $get_time_format_dict['stats']
 
+#set $show_sum_table = False
+
+#for $skin_obs in $stat_obs
+  #set $skin_obs_binding = $get_data_binding($skin_obs)
+  #set $skin_obs_key = $get_custom_data_binding_obs_key($skin_obs)
+  #set $alltime_tag = $alltime($data_binding=$skin_obs_binding) if $context == 'alltime' else None
+  #if $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).has_data and $get_show_sum($skin_obs) and $skin_obs != 'windDir' and $skin_obs != 'windGustDir'
+    #set $show_sum_table = True
+    #break
+  #end if
+#end for
+
 <div class="bx--tile obs-stat-tile">
   <div class="bx--row">
     <div class="bx--col">
@@ -44,15 +56,16 @@
         </bx-structured-list-head>
         <!--prettier-ignore-->
         <bx-structured-list-body>
-          #for $skin_obs in $DisplayOptions.get('stat_tile_observations')
+          #for $skin_obs in $stat_obs
             #set $skin_obs_binding = $get_data_binding($skin_obs)
             #set $skin_obs_key = $get_custom_data_binding_obs_key($skin_obs)
             #set $alltime_tag = None if $use_parameter_year or $use_parameter_month else $alltime($data_binding=$skin_obs_binding)
             #if $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).has_data and not $get_show_sum($skin_obs) and $skin_obs != 'windDir' and $skin_obs != 'windGustDir'
-              #set $show_wind_dir = 'windDir' in $DisplayOptions.get('stat_tile_observations', []) and $skin_obs == "windSpeed" and not $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
-              #set $show_wind_dir_ordinal = 'windDir' in $DisplayOptions.get('stat_tile_observations', []) and $skin_obs == "windSpeed" and $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
-              #set $show_gust_dir = 'windGustDir' in $DisplayOptions.get('stat_tile_observations', []) and $skin_obs == "windGust" and not $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
-              #set $show_gust_dir_ordinal = 'windGustDir' in $DisplayOptions.get('stat_tile_observations', []) and $skin_obs == "windGust" and $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
+              #set $show_wind_dir = 'windDir' in $stat_obs and $skin_obs == "windSpeed" and not $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
+              #set $show_wind_dir_ordinal = 'windDir' in $stat_obs and $skin_obs == "windSpeed" and $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
+              #set $show_gust_dir = 'windGustDir' in $stat_obs and $skin_obs == "windGust" and not $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
+              #set $show_gust_dir_ordinal = 'windGustDir' in $stat_obs and $skin_obs == "windGust" and $to_bool($DisplayOptions.get('stat_tile_winddir_ordinal', True))
+              #set $rounding = $str($get_rounding($skin_obs, $skin_obs_key))
               <div class="mobile-header">
                 <div class="label">$obs.label[$skin_obs]</div>
               </div>
@@ -61,7 +74,7 @@
                 <bx-structured-list-cell class="cell-value">
                   <!--prettier-ignore-->
                   #if $context == 'day'
-                    <span>$getattr($latest($data_binding=$skin_obs_binding), $skin_obs_key)</span>
+                    <span>$getattr($latest($data_binding=$skin_obs_binding), $skin_obs_key).format("%." + $rounding + "f")</span>
 
                     #if $show_wind_dir and $current.windDir.has_data
                       <span class="stat-wind-dir stat-detail">, $current.windDir</span>
@@ -74,11 +87,11 @@
                     #end if
                   #else
                     #if $get_show_sum($skin_obs)
-                      $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).sum
+                      $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).sum.format("%." + $rounding + "f")
                     #else if $get_show_max($skin_obs)
-                      $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).max
+                      $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).max.format("%." + $rounding + "f")
                     #else
-                        $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).avg
+                        $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).avg.format("%." + $rounding + "f")
 
                         #if $show_wind_dir and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").has_data
                           <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").avg</span>
@@ -94,7 +107,7 @@
                 </bx-structured-list-cell>
                 <!--prettier-ignore-->
                 <bx-structured-list-cell class="cell-min">
-                  <span>$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).min</span>
+                  <span>$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).min.format("%." + $rounding + "f")</span>
 
                   #if show_min_max_time
                     <span class="date">$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).mintime.format($min_max_time_format)</span>
@@ -102,7 +115,7 @@
                 </bx-structured-list-cell>
                 <!--prettier-ignore-->
                 <bx-structured-list-cell class="cell-max">
-                  <span>$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).max</span>
+                  <span>$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).max.format("%." + $rounding + "f")</span>
 
                   #if $show_wind_dir and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").has_data
                     <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").max</span>
@@ -126,6 +139,7 @@
     </div>
   </div>
 
+  #if $show_sum_table
   <div class="bx--row">
     <div class="bx--col">
       <h3>$gettext($label_totals)</h3>
@@ -138,16 +152,17 @@
         </bx-structured-list-head>
         <!--prettier-ignore-->
         <bx-structured-list-body>
-          #for $skin_obs in $DisplayOptions.get('stat_tile_observations')
+          #for $skin_obs in $stat_obs
             #set $skin_obs_binding = $get_data_binding($skin_obs)
             #set $skin_obs_key = $get_custom_data_binding_obs_key($skin_obs)
             #set $alltime_tag = None if $use_parameter_year or $use_parameter_month else $alltime($data_binding=$skin_obs_binding)
             #if $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).has_data and $get_show_sum($skin_obs)
+              #set $rounding = $str($get_rounding($skin_obs, $skin_obs_key))
               <bx-structured-list-row data-aggregation="sum" data-test="$skin_obs" data-observation="$skin_obs_key" data-unit="$get_unit_label($get_unit_for_obs($skin_obs, $skin_obs_key, $context))" data-rounding="$get_rounding($skin_obs, $skin_obs_key)">
                 <bx-structured-list-cell class="keep-cell">$obs.label[$skin_obs]</bx-structured-list-cell>
                 <!--prettier-ignore-->
                 <bx-structured-list-cell class="cell-value">
-                  $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).sum
+                  $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).sum.format("%." + $rounding + "f")
                 </bx-structured-list-cell>
               </bx-structured-list-row>
             #end if
@@ -156,4 +171,5 @@
       </bx-structured-list>
     </div>
   </div>
+  #end if
 </div>

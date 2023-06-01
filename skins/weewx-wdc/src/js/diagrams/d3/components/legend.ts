@@ -49,7 +49,11 @@ export const addLegend = (
 
     legendItem
       .selectAll("legend-text")
-      .data(showUnits ? [`${item.id} (${units[index].trim()})`] : [item.id])
+      .data(
+        showUnits && units[index]
+          ? [`${item.id} (${units[index].trim()})`]
+          : [item.id]
+      )
       .enter()
       .append("text")
       .attr("x", x - 10)

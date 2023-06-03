@@ -6,10 +6,10 @@
 #set $diagrams_config = $DisplayOptions.get("diagrams", {})
 #set global $layout = 'alternative'
 
+#set $stat_tiles_xaggs_same_row = []
+#set $stat_tiles_xaggs_extra_row = []
 #if 'stat_tiles_xaggs' in $DisplayOptions
   #set $stat_tiles_xaggs = $DisplayOptions.stat_tiles_xaggs
-  #set $stat_tiles_xaggs_same_row = []
-  #set $stat_tiles_xaggs_extra_row = []
 
   #for $xaggs in $stat_tiles_xaggs
     #if $context != "day" and ('avg_context' not in $stat_tiles_xaggs[$xaggs] or $context not in $stat_tiles_xaggs[$xaggs]['avg_context'])
@@ -50,11 +50,13 @@
   #end for
 
   <!--prettier-ignore-->
-  #set global $hide_xaggs_heading = False
-  #for $stat_xaggs in $stat_tiles_xaggs_same_row
-    #set global $stat_xaggs = $stat_xaggs
-    #include "includes/stat-tile-xaggs.inc"
-  #end for
+  #if $stat_tiles_xaggs_same_row
+    #set global $hide_xaggs_heading = False
+    #for $stat_xaggs in $stat_tiles_xaggs_same_row
+      #set global $stat_xaggs = $stat_xaggs
+      #include "includes/stat-tile-xaggs.inc"
+    #end for
+  #end if
 </div>
 
 <!--prettier-ignore-->

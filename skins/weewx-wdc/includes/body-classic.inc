@@ -4,9 +4,9 @@
 #set $diagrams_config = $DisplayOptions.get("diagrams", {})
 #set global $layout = 'classic'
 
+#set $stat_tiles_xaggs_classic = []
 #if 'stat_tiles_xaggs' in $DisplayOptions
   #set $stat_tiles_xaggs = $DisplayOptions.stat_tiles_xaggs
-  #set $stat_tiles_xaggs_classic = []
 
   #for $xaggs in $stat_tiles_xaggs
     #if $context != "day" and ('avg_context' not in $stat_tiles_xaggs[$xaggs] or $context not in $stat_tiles_xaggs[$xaggs]['avg_context'])

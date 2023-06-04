@@ -1269,6 +1269,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/underscore@npm:^1.11.5":
+  version: 1.11.5
+  resolution: "@types/underscore@npm:1.11.5"
+  checksum: 6cd928c436bd65a7b544c979e0958762816dc3fd4f0d430d055faa1e914336568c3a8dd52350760c16ecc37be71d40b0792012bae455d8c5d63e50f02986c9e2
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/eslint-plugin@npm:^5.22.0":
   version: 5.59.6
   resolution: "@typescript-eslint/eslint-plugin@npm:5.59.6"
@@ -5579,6 +5586,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"underscore@npm:^1.13.6":
+  version: 1.13.6
+  resolution: "underscore@npm:1.13.6"
+  checksum: d5cedd14a9d0d91dd38c1ce6169e4455bb931f0aaf354108e47bd46d3f2da7464d49b2171a5cf786d61963204a42d01ea1332a903b7342ad428deaafaf70ec36
+  languageName: node
+  linkType: hard
+
 "unique-filename@npm:^2.0.0":
   version: 2.0.1
   resolution: "unique-filename@npm:2.0.1"
@@ -5833,6 +5847,7 @@ __metadata:
     "@types/react": ^18.0.8
     "@types/react-dom": ^18.0.3
     "@types/react-plotly.js": ^2.5.1
+    "@types/underscore": ^1.11.5
     "@typescript-eslint/eslint-plugin": ^5.22.0
     "@typescript-eslint/parser": ^5.22.0
     carbon-components: 10.25.0
@@ -5864,6 +5879,7 @@ __metadata:
     ts-loader: ^9.3.1
     ts-node: ^10.9.1
     typescript: 4.9
+    underscore: ^1.13.6
     use-debounce: ^8.0.1
     webpack: ^5.76.0
     webpack-bundle-analyzer: ^4.5.0

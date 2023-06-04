@@ -22,6 +22,7 @@ import localeDE from "./util/locale/de-DE.json";
 import localeEnUs from "./util/locale/en-US.json";
 import localeEnGb from "./util/locale/en-GB.json";
 import localeIT from "./util/locale/it-IT.json";
+import { D3GaugeDiagram } from "./diagrams/d3/gauge";
 
 const localeString: locale = (window as any).weewxWdcConfig.locale;
 
@@ -64,6 +65,25 @@ calendarDiagrams.forEach((diagram) => {
         observation={diagram.dataset.obs}
         heading={diagram.dataset.heading}
         locale={locale}
+      />
+    );
+  }
+});
+
+const gauges = document.querySelectorAll(".diagram-tile.gauge div.diagram");
+
+gauges.forEach((gauge) => {
+  if (gauge instanceof HTMLElement && gauge.dataset.value) {
+    const root = createRoot(gauge);
+    const gaugeData = (window as any)[gauge.dataset.value];
+
+    root.render(
+      <D3GaugeDiagram
+        current={gaugeData.current}
+        min={gaugeData.min}
+        max={gaugeData.max}
+        unit={gaugeData.unit}
+        obs={gaugeData.obs}
       />
     );
   }

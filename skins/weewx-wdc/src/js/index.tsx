@@ -84,6 +84,7 @@ gauges.forEach((gauge) => {
         max={gaugeData.max}
         unit={gaugeData.unit}
         obs={gaugeData.obs}
+        rounding={gaugeData.rounding}
       />
     );
   }

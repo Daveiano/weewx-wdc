@@ -20,6 +20,7 @@ type GaugeDiagramBaseProps = {
   max: number;
   unit: string;
   obs: string;
+  rounding: number;
 };
 
 export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
@@ -94,13 +95,13 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     const margin = 30,
       rotation = 0,
       thickness = 0.1,
-      arc = 1,
+      arc = 1.25,
       ticksNumber = 7,
       color_scheme = "interpolateRdYlBu",
-      color_step = 100,
-      tick_color = "#FFFFFF",
-      needle_color = "#000000",
-      needlePercent = 0.25,
+      color_step = 120,
+      tick_color = darkMode ? "#393939" : "#ffffff", //darkMode ? "#525252" : "#dddddd",
+      needle_color = darkMode ? "#f4f4f4" : "#dddddd",
+      needleValue = props.current,
       center = {
         x: dimensions.width / 2,
         y: dimensions.height - margin,
@@ -120,10 +121,17 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       scales = {
         lineRadial: d3.lineRadial(),
         subArcScale: d3.arc(),
+        gaugeArcScale: d3.arc(),
         needleScale: d3.scaleLinear(),
       };
 
     let gradient = [];
+
+    // TODO: Configurable yScaleMin and yScaleMax, yScaleOffset.
+    const scaleMax = Math.round(props.max + 25),
+      scaleMin = Math.round(props.min - 25);
+
+    console.log(scaleMin, scaleMax);
 
     // Set radii
     const base = dimensions.height - 2 * margin;
@@ -143,12 +151,14 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     // Set ticks
     const sub_arc_ticks =
         (angles.end_angle - angles.start_angle) / (ticksNumber - 1),
-      tick_pct = 100 / (ticksNumber - 1);
+      tick_pct = (scaleMax - scaleMin) / (ticksNumber - 1);
 
     const ticks = d3.range(ticksNumber).map(function (d) {
       const sub_angle = angles.start_angle + sub_arc_ticks * d;
       return {
-        label: (tick_pct * d).toFixed(0) + props.unit.replace("&#176;", "°"),
+        label:
+          (scaleMin + d * tick_pct).toFixed(1) +
+          props.unit.replace("&#176;", "°"),
         angle: sub_angle,
         coordinates: [
           [sub_angle, radii.inner],
@@ -157,8 +167,8 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       };
     });
 
-    // Set gradient
-    const c = d3.scaleSequential(["blue", "red"]), //d3[color_scheme],
+    // Set gradient, @see https://observablehq.com/@d3/color-schemes
+    const c = d3.interpolateTurbo, //d3.interpolateGreys, //d3.scaleSequential(["blue", "red"]), //d3[color_scheme],
       samples = color_step,
       total_arc = angles.end_angle - angles.start_angle,
       sub_arc_gradient = total_arc / samples;
@@ -167,6 +177,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       const sub_color = d / (samples - 1),
         sub_start_angle = angles.start_angle + sub_arc_gradient * d,
         sub_end_angle = sub_start_angle + sub_arc_gradient;
+
       return {
         fill: c(sub_color),
         start: sub_start_angle,
@@ -186,8 +197,16 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
 
     scales.needleScale = d3
       .scaleLinear()
-      .domain([0, 1])
+      .domain([scaleMin, scaleMax])
       .range([angles.start_angle, angles.end_angle]);
+
+    // From scaleMin to actual needle value.
+    scales.gaugeArcScale = d3
+      .arc()
+      .innerRadius(radii.inner + 1)
+      .outerRadius(radii.base)
+      .startAngle(angles.start_angle)
+      .endAngle(scales.needleScale(needleValue));
 
     const svgElement = d3
       .select(svgRef.current)
@@ -195,6 +214,14 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .attr("height", dimensions.height)
       .append("g")
       .attr("viewBox", [0, 0, dimensions.width, dimensions.height]);
+
+    svgElement
+      .append("filter")
+      .attr("id", "desaturate")
+      .append("feColorMatrix")
+      .attr("type", "saturate")
+      .attr("in", "SourceGraphic")
+      .attr("values", ".25");
 
     const gaugeChart = svgElement
       .append("g")
@@ -211,7 +238,16 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .attr("d", scales.subArcScale as any)
       .attr("fill", (d) => d.fill)
       .attr("stroke-width", 0.5)
-      .attr("stroke", (d) => d.fill);
+      .attr("stroke", (d) => d.fill)
+      .attr(
+        "filter",
+        (d) => d.end > scales.needleScale(needleValue) && "url(#desaturate)"
+      );
+
+    // gaugeChart
+    //   .append("path")
+    //   .attr("d", scales.gaugeArcScale as any)
+    //   .attr("fill", "white");
 
     gaugeChart
       .append("g")
@@ -252,7 +288,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .append("g")
       .attr("class", "needle")
       .selectAll("path")
-      .data([needlePercent])
+      .data([needleValue])
       .enter()
       .append("path")
       .attr("d", (d) =>
@@ -262,7 +298,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
         ])
       )
       .attr("stroke", needle_color)
-      .attr("stroke-width", 6)
+      .attr("stroke-width", 4)
       .attr("stroke-linecap", "round");
 
     gaugeChart
@@ -270,10 +306,18 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .append("circle")
       .attr("cx", 0)
       .attr("cy", 0)
-      .attr("r", radii.cap)
-      .attr("stroke", needle_color)
-      .attr("stroke-width", 6)
-      .style("fill", "white");
+      .attr("r", radii.cap / 2)
+      //.attr("stroke", needle_color)
+      //.attr("stroke-width", 6)
+      .style("fill", needle_color);
+
+    gaugeChart
+      .append("text")
+      .text(
+        props.current.toFixed(props.rounding) +
+          props.unit.replace("&#176;", "°")
+      )
+      .attr("dy", "1.5em");
   }, [props.current, props.min, props.max, darkMode, dimensions]);
 
   return (

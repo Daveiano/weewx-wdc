@@ -35,6 +35,7 @@
                 max: $getattr($span(time_delta=$int($DisplayOptions.get("gauge_tiles_day_aggregate_interval", 21600))), $partial_obs_key).max.nolabel('%.2f').replace(',','.'),
                 obs: '$obs.label[$partial_obs]',
                 unit: "$get_unit_label($get_unit_for_obs($partial_obs, $partial_obs_key, $context))",
+                rounding: $get_rounding($partial_obs, $partial_obs_key),
             }
           </script>
           #end if

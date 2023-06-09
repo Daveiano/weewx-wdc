@@ -378,6 +378,19 @@ class WdcGeneralUtil(SearchList):
 
             return 'en-US'
 
+    def getValueHelper(self, value_vt):
+        """
+        Get a value helper for a value_vt.
+
+        Args:
+            value_vt (tuple): A value tuple
+
+        Returns:
+            obj: A value helper
+        """
+        value_vt = self.generator.converter.convert(value_vt)
+        return ValueHelper(value_t=value_vt, formatter=self.generator.formatter)
+
     def get_custom_data_binding_obs_key(self, obs_key):
         """
         Get the observation key for a custom observation.

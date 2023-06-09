@@ -2,7 +2,35 @@
 #errorCatcher Echo
 #encoding UTF-8
 #from datetime import datetime, timedelta
+
 #set $diagrams_config = $DisplayOptions.get("diagrams", {})
+#set global $layout = 'alternative'
+
+#set $stat_tiles_xaggs_same_row = []
+#set $stat_tiles_xaggs_extra_row = []
+#if 'stat_tiles_xaggs' in $DisplayOptions
+  #set $stat_tiles_xaggs = $DisplayOptions.stat_tiles_xaggs
+
+  #for $xaggs in $stat_tiles_xaggs
+    #if $context != "day" and ('avg_context' not in $stat_tiles_xaggs[$xaggs] or $context not in $stat_tiles_xaggs[$xaggs]['avg_context'])
+      #continue
+    #end if
+
+    #set $xaggs_to_append = {'obs': $xaggs, **$stat_tiles_xaggs[$xaggs]}
+
+    #if $context == "day"
+      #silent $xaggs_to_append['aggregate_types'] = $list(filter(lambda aggregate_type: 'historical' in aggregate_type, $xaggs_to_append['aggregate_types']))
+    #else
+      #silent $xaggs_to_append['aggregate_types'] = $list(filter(lambda aggregate_type: 'historical' not in aggregate_type, $xaggs_to_append['aggregate_types']))
+    #end if
+
+    #if $to_bool($stat_tiles_xaggs[$xaggs]['show_extra_row']) is True
+      #silent $stat_tiles_xaggs_extra_row.append($xaggs_to_append)
+    #else
+      #silent $stat_tiles_xaggs_same_row.append($xaggs_to_append)
+    #end if
+  #end for
+#end if
 
 <div class="bx--row">
   <!--prettier-ignore-->
@@ -20,7 +48,36 @@
       #end if
     #end if
   #end for
+
+  <!--prettier-ignore-->
+  #if $stat_tiles_xaggs_same_row
+    #set global $hide_xaggs_heading = False
+    #for $stat_xaggs in $stat_tiles_xaggs_same_row
+      #set global $stat_xaggs = $stat_xaggs
+      #include "includes/stat-tile-xaggs.inc"
+    #end for
+  #end if
 </div>
+
+<!--prettier-ignore-->
+#if $stat_tiles_xaggs_extra_row
+#set global $hide_xaggs_heading = True
+<!--prettier-ignore-->
+<header class="bx--col section-header">
+  #if $context == 'day'
+  <h2>$gettext("Historical values for today")</h2>
+  #else
+  <h2>$gettext("Historical values")</h2>
+  #end if
+</header>
+<!--prettier-ignore-->
+<div class="bx--row">
+  #for $stat_xaggs in $stat_tiles_xaggs_extra_row
+    #set global $stat_xaggs = $stat_xaggs
+    #include "includes/stat-tile-xaggs.inc"
+  #end for
+</div>
+#end if
 
 <!--prettier-ignore-->
 #if $context == "day" and $daily_archive == False

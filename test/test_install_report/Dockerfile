@@ -21,6 +21,7 @@ COPY src/start-dwd.sh /start-dwd.sh
 COPY src/start-without-forecast.sh /start-without-forecast.sh
 COPY src/start-mqtt.sh /start-mqtt.sh
 COPY src/start-sensor.sh /start-sensor.sh
+COPY src/start-cmon.sh /start-cmon.sh
 RUN chmod +x /start.sh &&\
     chmod +x /start-classic.sh &&\
     chmod +x /start-without-forecast.sh &&\
@@ -29,7 +30,8 @@ RUN chmod +x /start.sh &&\
     chmod +x /start-custom-binding.sh &&\
     chmod +x /start-dwd.sh &&\
     chmod +x /start-mqtt.sh &&\
-    chmod +x /start-sensor.sh
+    chmod +x /start-sensor.sh &&\
+    chmod +x /start-cmon.sh
 
 # @see https://blog.nuvotex.de/running-syslog-in-a-container/
 RUN apt-get update &&\
@@ -54,6 +56,7 @@ RUN git clone https://github.com/wolfcw/libfaketime.git &&\
 RUN wget -nv -O "weewx-${WEEWX_VERSION}.tar.gz" "https://github.com/weewx/weewx/archive/refs/tags/v${WEEWX_VERSION}.tar.gz" &&\
     wget -nv -O "weewx-interceptor.zip" "https://github.com/matthewwall/weewx-interceptor/archive/master.zip" &&\
     wget -nv -O "weewx-forecast.zip" "https://github.com/chaunceygardiner/weewx-forecast/archive/refs/heads/master.zip" &&\
+    wget -nv -O "weewx-cmon.zip" "https://github.com/bellrichm/weewx-cmon/archive/refs/heads/master.zip" &&\
     tar xfz "weewx-${WEEWX_VERSION}.tar.gz"
 
 COPY src/weewx-wdc.zip /tmp/weewx-wdc.zip
@@ -70,6 +73,7 @@ WORKDIR ${WEEWX_HOME}
 
 RUN bin/wee_extension --install /tmp/weewx-interceptor.zip &&\
     bin/wee_extension --install /tmp/weewx-forecast.zip &&\
+    bin/wee_extension --install /tmp/weewx-cmon.zip &&\
     bin/wee_extension --install /tmp/weewx-wdc/ &&\
     bin/wee_config --reconfigure --driver=user.interceptor --no-prompt
 
@@ -80,9 +84,11 @@ COPY src/skin-dwd.conf ./skins/weewx-wdc/
 COPY src/skin-mqtt.conf ./skins/weewx-wdc/
 COPY src/skin-custom-binding.conf ./skins/weewx-wdc/
 COPY src/skin-sensor-status.conf ./skins/weewx-wdc/
+COPY src/skin-cmon.conf ./skins/weewx-wdc/
 COPY src/weewx-dwd.conf ./skins/weewx-wdc/
 COPY src/dwd.py ./bin/schemas/
 COPY src/dwd-extensions.py /tmp
+COPY src/cmon-extensions.py /tmp
 
 RUN sed -i -e 's/device_type = acurite-bridge/device_type = ecowitt-client\n    port = 9877\n    address = 0.0.0.0/g' weewx.conf &&\
     sed -i -z -e 's/skin = Seasons\n        enable = true/skin = Seasons\n        enable = false/g' weewx.conf &&\
@@ -91,5 +97,7 @@ RUN sed -i -e 's/device_type = acurite-bridge/device_type = ecowitt-client\n    
 ADD src/weewx-db_06_23_2022_08_00.tar ./archive
 ADD src/weewx-generated-2022-06-23.tar.xz ./archive
 ADD src/weewx-sensor-status.tar.xz ./archive
+ADD src/weewx-cmon.tar.xz ./archive
+ADD src/cmon.tar.xz ./archive
 
 ENTRYPOINT [ "/start.sh" ]

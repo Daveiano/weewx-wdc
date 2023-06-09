@@ -48,6 +48,8 @@ If you like the look and feel of the skin please consider having a look at the o
 - Live updates using [weewx-mqtt](https://github.com/matthewwall/weewx-mqtt)
 - Support for up to 4 webcams
 - Station statics page (Telemetry)
+- Configurable historical data via [weewx-xaggs](https://github.com/tkeffer/weewx-xaggs)
+- Support for [weewx-cmon](https://github.com/matthewwall/weewx-cmon)
 
 ## [Demo](https://www.weewx-hbt.de)
 
@@ -138,3 +140,7 @@ Thanks to [ngulden](https://github.com/ngulden) for the [niculskin](https://gith
 
 The config, NOAA Reports and some templating ideas and concepts are based on the original Standard and Seasons
 weewx skins by Tom Keffer and the weewx contributors.
+
+Thanks to vince for the great [lastrain-extension](https://github.com/vinceskahan/vds-weewx-lastrain-extension)! The code of the Search list extension is completely based on his extension.
+
+Thanks to Pat O'Brien for the [basic concept](https://github.com/poblabs/weewx-belchertown/blob/master/bin/user/belchertown.py#L923) of the code to get the most consecutive days with/without rain!

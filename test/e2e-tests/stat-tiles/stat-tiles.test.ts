@@ -155,6 +155,14 @@ test.describe("Stat tiles", () => {
     await expect(
       rain.locator("[data-test='rain-rate-max'] .stat-value")
     ).toHaveText("1.86 cm/h");
+
+    // Last rain.
+    await page.goto(
+      "artifacts-alternative-weewx-html/public_html/statistics.html"
+    );
+    await expect(
+      rain.locator("[data-test='rain-days'] .stat-value")
+    ).toHaveText("06/20/22");
   });
 
   test("Custom Icons", async ({ page }) => {

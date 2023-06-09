@@ -1,8 +1,17 @@
 <!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
+#from datetime import datetime
 #set $show_climatogram_year = $context == 'year' and $DisplayOptions.get("climatogram_enable_year_stats", False)
 #set $show_climatogram_alltime = $context == 'alltime' and $DisplayOptions.get("climatogram_enable_stats", False)
+
+#if $context == 'year'
+  #set $year_rain_table = $year.dateTime.format('%Y')
+  #set $most_days_with_rain = None if $most_days_with_rain is None or $year_rain_table not in $most_days_with_rain else $most_days_with_rain[$year_rain_table]
+  #set $most_days_without_rain = None if $most_days_without_rain is None or $year_rain_table not in $most_days_without_rain else $most_days_without_rain[$year_rain_table]
+#end if
+
+#set $show_rain_stats_table = ($context == 'alltime' and $to_bool($DisplayOptions.get('show_last_rain', True))) or (($most_days_with_rain is not None and $to_bool($DisplayOptions.get('show_most_days_with_rain', 'True'))) or ($most_days_without_rain is not None and $to_bool($DisplayOptions.get('show_most_days_without_rain', 'True'))))
 
 <script
   type="module"
@@ -36,7 +45,7 @@
     target="panel-diagram-temp-avg"
     value="diagram-temp-avg"
   >
-    $gettext('Avg.') $obs.label.outTemp
+    $gettext('Avg') $obs.label.outTemp
   </bx-tab>
   #end if
   #if $show_climatogram_year or $show_climatogram_alltime
@@ -95,6 +104,31 @@
           </bx-structured-list-cell>
         </bx-structured-list-row>
         #end for
+
+        <bx-structured-list-row data-test="total-number">
+          <bx-structured-list-cell
+            ><strong
+              >$gettext("Total number of days")</strong
+            ></bx-structured-list-cell
+          >
+          <bx-structured-list-cell>
+            <!--prettier-ignore-->
+            #set $start_dt = datetime.fromtimestamp($alltime.start.raw)
+            #set $end_dt = datetime.fromtimestamp($latest.dateTime.raw)
+            #set $delta = $end_dt - $start_dt
+            $delta.days
+          </bx-structured-list-cell>
+          <bx-structured-list-cell>
+            <div data-floating-menu-container style="position: relative">
+              <bx-tooltip>
+                <bx-tooltip-body>
+                  <strong>$gettext("Total number of days")</strong>
+                </bx-tooltip-body>
+              </bx-tooltip>
+            </div>
+            <span></span>
+          </bx-structured-list-cell>
+        </bx-structured-list-row>
       </bx-structured-list-body>
     </bx-structured-list>
   </div>
@@ -106,6 +140,56 @@
     aria-labelledby="tab-diagram-rain"
     hidden
   >
+    #if $show_rain_stats_table
+    <bx-structured-list class="clim-days-extended-table">
+      <bx-structured-list-head>
+        <bx-structured-list-header-row>
+          <bx-structured-list-header-cell
+            >$gettext('Rain Statistics')</bx-structured-list-header-cell
+          >
+        </bx-structured-list-header-row>
+      </bx-structured-list-head>
+      <!--prettier-ignore-->
+      <bx-structured-list-body>
+        #if $context == 'alltime' and $to_bool($DisplayOptions.get('show_last_rain', True)) and $last_rain is not None
+        <bx-structured-list-row>
+          <bx-structured-list-cell
+            >$gettext("Last rain")</bx-structured-list-cell
+          >
+          <bx-structured-list-cell data-testid="last-rain">
+            $last_rain.format("%x, %X") ($gettext("Time since last rain"): $time_since_last_rain.long_form)
+          </bx-structured-list-cell>
+        </bx-structured-list-row>
+        #end if
+        #if $most_days_with_rain is not None and $to_bool($DisplayOptions.get('show_most_days_with_rain', True))
+        <bx-structured-list-row>
+          <bx-structured-list-cell>
+            $gettext("Most consecutive days with rain")
+          </bx-structured-list-cell>
+          <bx-structured-list-cell data-testid="most-days-with-rain">
+            $most_days_with_rain.start.format('%x') -
+            $most_days_with_rain.end.format('%x')
+            ($most_days_with_rain.days_with_rain_delta.day.format("%.0f"),
+            $gettext("Total"): $most_days_with_rain.amount)
+          </bx-structured-list-cell>
+        </bx-structured-list-row>
+        #end if
+        #if $most_days_without_rain is not None and $to_bool($DisplayOptions.get('show_most_days_without_rain', True))
+        <bx-structured-list-row>
+          <bx-structured-list-cell>
+            $gettext("Most consecutive days without rain")
+          </bx-structured-list-cell>
+          <bx-structured-list-cell data-testid="most-days-without-rain">
+            $most_days_without_rain.start.format('%x') -
+            $most_days_without_rain.end.format('%x')
+            ($most_days_without_rain.days_without_rain_delta.day.format("%.0f"))
+          </bx-structured-list-cell>
+        </bx-structured-list-row>
+        #end if
+      </bx-structured-list-body>
+    </bx-structured-list>
+    #end if
+
     <script>
       /* prettier-ignore */
       #set $obs_context = $get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday)
@@ -140,7 +224,7 @@
       data-obs="outTemp"
       data-unit="$unit.label.outTemp"
       data-color="$get_calendar_color('outTemp')"
-      data-heading="${obs.label.outTemp} $gettext('Avg.')"
+      data-heading="$gettext('Avg') ${obs.label.outTemp}"
     ></div>
   </div>
   #end if

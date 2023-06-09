@@ -52,6 +52,11 @@ oneTimeSetUp() {
         sleep 1
         mkdir "$DIR"/artifacts-sensor-status-weewx-html
     fi
+    if ! [ -d "$DIR"/artifacts-cmon-weewx-html ] ; then
+        echo Creating artifacts-cmon-weewx-html directory...
+        sleep 1
+        mkdir "$DIR"/artifacts-cmon-weewx-html
+    fi
 }
 
 testBundling() {
@@ -228,6 +233,7 @@ testWeeReportRunMqtt() {
 testWeeReportRunSensorStatus() {
     docker run --entrypoint "/start-sensor.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunSensorStatus.txt 2>&1
     docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-sensor-status-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
+    docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
 
     output=$(cat "$DIR"/artifacts/testWeeReportRunSensorStatus.txt)
 
@@ -235,6 +241,23 @@ testWeeReportRunSensorStatus() {
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating as of last timestamp in the database."
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 16 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 19 files to /home/weewx/public_html"
+
+    assertNotContains "$output" "failed with exception"
+    assertNotContains "$output" "Ignoring template"
+    assertNotContains "$output" "Caught unrecoverable exception"
+}
+
+testWeeReportRunCMNON() {
+    docker run --entrypoint "/start-cmon.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunCMON.txt 2>&1
+    docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-cmon-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
+
+    output=$(cat "$DIR"/artifacts/testWeeReportRunCMON.txt)
+
+    assertContains "$output" "Starting weewx reports (CMON)"
+    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Generating as of last timestamp in the database."
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 13 files for report WdcReport in"
     assertContains "$output" "INFO weewx.reportengine: Copied 19 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"

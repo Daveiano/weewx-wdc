@@ -48,6 +48,8 @@ If you like the look and feel of the skin please consider having a look at the o
 - Live updates using [weewx-mqtt](https://github.com/matthewwall/weewx-mqtt)
 - Support for up to 4 webcams
 - Station statics page (Telemetry)
+- Configurable historical data via [weewx-xaggs](https://github.com/tkeffer/weewx-xaggs)
+- Support for [weewx-cmon](https://github.com/matthewwall/weewx-cmon)
 
 ## [Demo](https://www.weewx-hbt.de)
 

@@ -671,6 +671,7 @@ https://github.com/Daveiano/weewx-wdc/compare/v3.1.1...00c79357#diff-ba225fb627d
 - Bugfix: Minor Spelling Error on Some Tiles GH-168
 - Bugfix: Getting the chart properties if observation is not included in [diagrams] config GH-172
 - Added/fixed some more translations (Chart legends, Stats page)
+- Extend Stats/Climatological days table. Added rain stats (last rain, most consecutive days of rain) GH-171
 - Extended Webcams/Externals (see the updated [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Webcams-and-Externals-Page)) GH-167
 
   - **Attention:** You need to update your skin.conf if you were using the webcams/externals:

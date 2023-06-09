@@ -6,7 +6,7 @@
 
 <script
   type="module"
-  src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/ui-shell.min.js"
+  src="https://1.www.s81c.com/common/carbon/web-components/version/v1.27.0/ui-shell.min.js"
 ></script>
 <script
   type="module"

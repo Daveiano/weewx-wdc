@@ -7,8 +7,8 @@
 
 #if $context == 'year'
   #set $year_rain_table = $year.dateTime.format('%Y')
-  #set $most_days_with_rain = $most_days_with_rain[$year_rain_table]
-  #set $most_days_without_rain = $most_days_without_rain[$year_rain_table]
+  #set $most_days_with_rain = None if $most_days_with_rain is None or $year_rain_table not in $most_days_with_rain else $most_days_with_rain[$year_rain_table]
+  #set $most_days_without_rain = None if $most_days_without_rain is None or $year_rain_table not in $most_days_without_rain else $most_days_without_rain[$year_rain_table]
 #end if
 
 #set $show_rain_stats_table = ($context == 'alltime' and $to_bool($DisplayOptions.get('show_last_rain', True))) or (($most_days_with_rain is not None and $to_bool($DisplayOptions.get('show_most_days_with_rain', 'True'))) or ($most_days_without_rain is not None and $to_bool($DisplayOptions.get('show_most_days_without_rain', 'True'))))
@@ -151,7 +151,7 @@
       </bx-structured-list-head>
       <!--prettier-ignore-->
       <bx-structured-list-body>
-        #if $context == 'alltime' and $to_bool($DisplayOptions.get('show_last_rain', True))
+        #if $context == 'alltime' and $to_bool($DisplayOptions.get('show_last_rain', True)) and $last_rain is not None
         <bx-structured-list-row>
           <bx-structured-list-cell
             >$gettext("Last rain")</bx-structured-list-cell

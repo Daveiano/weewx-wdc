@@ -50,6 +50,7 @@ export const useIsVisible = (ref: RefObject<SVGSVGElement>): boolean => {
   return isIntersecting;
 };
 
+// TODO: Somehow get width of axis.
 export const getMargins = (obs: string): Margin => {
   // These are nivo margin, not d3!
   const margin = {
@@ -74,33 +75,27 @@ export const getMargins = (obs: string): Margin => {
     margin.left = 55;
   }
 
+  // cmon
+  if (obs === "mem_used") {
+    margin.left = 70;
+  }
+  if (obs === "cpu_user" || obs === "cpu_system" || obs === "cpu_idle") {
+    margin.left = 60;
+  }
   if (obs === "radiation") {
     margin.left = 45;
+  }
+  if (obs.includes("net_eth0") || obs.includes("net_wlan0")) {
+    margin.left = 65;
   }
 
   return margin;
 };
 
 export const getAxisLeftLegendOffset = (obs: string): number => {
-  if (obs.includes("Voltage")) {
-    return -50;
-  }
+  const margins = getMargins(obs);
 
-  switch (obs) {
-    case "pressure":
-    case "altimeter":
-    case "barometer":
-    case "ET":
-    case "rain":
-      return -50;
-    case "cloudbase":
-    case "rainRate":
-      return -45;
-    case "radiation":
-      return -40;
-    default:
-      return -35;
-  }
+  return (margins.left - 5) * -1;
 };
 
 export const getTimeDifferenceInMonths = (data: string | any[]): number => {

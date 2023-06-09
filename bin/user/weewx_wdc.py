@@ -537,6 +537,12 @@ class WdcGeneralUtil(SearchList):
 
         return False
 
+    def show_cmon_page(self):
+        if "computer_monitor" in self.generator_to_date:
+            return True
+
+        return False
+
     def get_time_format_dict(self):
         return self.time_format
 
@@ -562,7 +568,10 @@ class WdcGeneralUtil(SearchList):
             else:
                 return unit_label
         except KeyError:
-            return ' ' + unit
+            if unit is not None:
+                return ' ' + unit
+            else:
+                return ''
 
     def get_unit_for_obs(self, observation, observation_key, context, combined=None, combined_key=None):
         """
@@ -1636,15 +1645,28 @@ class WdcDiagramUtil(SearchList):
         except KeyError:
             rounding = None
 
+        unit = self.general_util.get_unit_for_obs(
+            observation, observation_key, context)
+
+        # Fallback to a simple string parsing of [[StringFormats]].
+        if rounding is None:
+            try:
+                unit_string_format = self.skin_dict["Units"]["StringFormats"][unit]
+
+                # Careful! Potential for bugs here.
+                for c in unit_string_format:
+                    if c.isdigit():
+                        rounding = c
+                        break
+            except KeyError:
+                rounding = None
+
         if rounding is not None:
             return int(rounding)
 
         # Default roundings.
         if context is None:
             context = 'day'
-
-        unit = self.general_util.get_unit_for_obs(
-            observation, observation_key, context)
 
         if observation == "UV" or observation == "cloudbase":
             return 0

@@ -668,9 +668,11 @@ https://github.com/Daveiano/weewx-wdc/compare/v3.1.1...00c79357#diff-ba225fb627d
 # Next
 
 - Bugfix: Some observations with aggregate_imterval `sum` could be updated to `NaN` via MQTT under some circumstances GH-166
-- Bugfix: Minor Spelling Error on Some Tiles GH-168
 - Bugfix: Getting the chart properties if observation is not included in [diagrams] config GH-172
+- Bugfix: Minor Spelling Error on Some Tiles GH-168
 - Added/fixed some more translations (Chart legends, Stats page)
+- Support for weewx-cmon GH-169
+- Add support for Classic layout on Sensor Status page
 - Add support for weewx-xaggs (configurable tiles to show historical data) GH-170
 - Extend Stats/Climatological days table. Added rain stats (last rain, most consecutive days of rain) GH-171
 - Extended Webcams/Externals (see the updated [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Webcams-and-Externals-Page)) GH-167

@@ -1,0 +1,158 @@
+<!--prettier-ignore-->
+#errorCatcher Echo
+#encoding UTF-8
+#from datetime import datetime, timedelta
+
+#attr $use_parameter_month = False
+#attr $use_parameter_year = False
+#attr $daily_archive = False
+
+#set $layout = $DisplayOptions.get('layout', 'alternative')
+#set $diagrams_config = $DisplayOptions.get("diagrams", {})
+
+#set $now = datetime.now().strftime("%x %X")
+#set $computer_monitor_stat_tile_observations = $to_list($DisplayOptions.get('computer_monitor_stat_tile_observations', ['cpu_user', 'cpu_system', 'cpu_temp', 'load1', 'load5', 'load15', 'mem_used', 'mem_free', 'net_eth0_rbytes', 'net_eth0_rpackets', 'net_eth0_tbytes', 'net_eth0_tpackets', 'net_wlan0_rbytes', 'net_wlan0_rpackets', 'net_wlan0_tbytes', 'net_wlan0_tpackets', 'proc_active', 'proc_total']))
+#set $computer_monitor_diagram_observations = $to_list($DisplayOptions.get('computer_monitor_diagram_observations', ['cpu_user', 'cpu_system', 'cpu_temp', 'load1', 'mem_used', 'proc_active', 'net_eth0_rbytes', 'net_eth0_tbytes', 'net_wlan0_rbytes', 'net_wlan0_tbytes']))
+#set $computer_monitor_diagram_period = $DisplayOptions.get('computer_monitor_diagram_period', 'week')
+
+<!--prettier-ignore-->
+#def diagrams($context, $diagrams_config, $diagram_obs)
+  #set $diagram_index = 0
+  #if "combined_observations" in $diagrams_config
+    #set $combined = $diagrams_config.combined_observations
+  #else
+    #set $combined = {}
+  #end if
+
+  #for $skin_obs in $diagram_obs
+    #if $skin_obs in $combined.keys()
+      #set $combined_diagram = $combined[$skin_obs]
+      #for $combined_obs in $combined_diagram.obs.keys()
+        #set $skin_obs_binding = $get_data_binding_combined_diagram($combined_obs, $combined_diagram, $skin_obs, $context)
+
+        ## I dont know why but $alltime($data_binding=$skin_obs_binding) crashes on the month-%Y-%m and year-%Y pages:
+        ## ValueError: start time (1654034700) is greater than stop time (1640991600)
+        #set $alltime_tag = $alltime($data_binding=$skin_obs_binding) if $context == 'alltime' else None
+
+        #if $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $get_custom_data_binding_obs_key($combined_diagram.obs[$combined_obs].observation)).has_data
+          #set global $comb_obs = $skin_obs
+          #set global $combined_diagram = $combined_diagram
+          #set global $diagram_index = $diagram_index
+          #include "includes/combined-diagram-tile.inc"
+          #set $diagram_index = $diagram_index + 1
+          #break
+        #end if
+      #end for
+    #else
+      #set $skin_obs_binding = $get_data_binding($skin_obs, $context)
+      #set $alltime_tag = $alltime($data_binding=$skin_obs_binding) if $context == 'alltime' else None
+      #if $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $get_custom_data_binding_obs_key($skin_obs)).has_data or (($skin_obs == 'windDir' or $skin_obs == 'windRose') and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'windSpeed').has_data)
+        #set global $partial_obs = $skin_obs
+        #set global $diagram_index = $diagram_index
+        #if $skin_obs == 'windRose'
+          #include "includes/diagram-tile-wind-rose.inc"
+        #else
+          #include "includes/diagram-tile.inc"
+        #end if
+        #set $diagram_index = $diagram_index + 1
+      #end if
+    #end if
+  #end for
+#end def
+
+<!DOCTYPE html>
+<html lang="$lang">
+  <head>
+    #include "includes/html-head.inc"
+    <title>$station.location - $gettext("Computer Monitor")</title>
+  </head>
+
+  <body class="theme-$layout">
+    #include "includes/ui-shell.inc"
+
+    <main>
+      <section class="main bx--content">
+        <div class="bx--grid bx--grid--full-width">
+          <div class="bx--row">
+            <header class="bx--col page-header">
+              <h1>$gettext("Computer Monitor")</h1>
+              <h2>$now</h2>
+            </header>
+          </div>
+
+          <!--prettier-ignore-->
+          #if $layout == 'classic'
+          <!--prettier-ignore-->
+          <div class="bx--row">
+            <div
+              class="bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-4 bx--col-max-4 layout-col"
+            >
+              #set global $context = 'day'
+              #set global $stat_obs = $computer_monitor_stat_tile_observations
+              #include 'includes/conditions-table.inc'
+            </div>
+
+            <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-8 bx--col-max-8 layout-col">
+              <div class="bx--row">
+                $diagrams($computer_monitor_diagram_period, $diagrams_config, $computer_monitor_diagram_observations)
+              </div>
+            </div>
+          </div>
+          <div class="bx--row">
+            <!-- prettier-ignore -->
+            #if 'computer_monitor_table_observations' in $DisplayOptions
+            <div class="bx--row">
+              <!-- prettier-ignore -->
+              #set global $table_obs = $DisplayOptions.get('computer_monitor_table_observations')
+              #include "includes/data-table-tile.inc"
+            </div>
+            #end if
+          </div>
+          #else
+          <!--prettier-ignore-->
+          #set global $context = 'day'
+
+          <div class="bx--row">
+            <!--prettier-ignore-->
+            #for $obs in $computer_monitor_stat_tile_observations
+              #set $binding = $get_data_binding($obs)
+              #set $alltime_tag = $alltime($data_binding=$binding) if $context == 'alltime' else None
+
+              #if $getattr($get_time_span_from_context($context, $day($data_binding=$binding), $week($data_binding=$binding), $month($data_binding=$binding), $year($data_binding=$binding), $alltime_tag, $yesterday($data_binding=$binding)), $get_custom_data_binding_obs_key($obs)).has_data
+                #set global $partial_obs = $obs
+                #include "includes/stat-tile.inc"
+              #end if
+            #end for
+          </div>
+
+          <!--prettier-ignore-->
+          #set global $context = $computer_monitor_diagram_period
+
+          <!--prettier-ignore-->
+          <div class="bx--row">
+            #include "includes/section-heading.inc"
+          </div>
+
+          <!-- prettier-ignore -->
+          <div class="bx--row">
+            $diagrams($context, $diagrams_config, $computer_monitor_diagram_observations)
+          </div>
+
+          <!-- prettier-ignore -->
+          #if 'computer_monitor_table_observations' in $DisplayOptions
+          <div class="bx--row">
+            <!-- prettier-ignore -->
+            #set global $table_obs = $DisplayOptions.get('computer_monitor_table_observations')
+            #include "includes/data-table-tile.inc"
+          </div>
+          <!--prettier-ignore-->
+          #end if
+        #end if
+        </div>
+      </section>
+    </main>
+    #include "includes/footer.inc"
+
+    <script src="$get_base_path(path='dist/main.js')" defer></script>
+  </body>
+</html>

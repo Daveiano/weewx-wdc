@@ -351,7 +351,7 @@
         #set $summary = $forecast.weather_summary($forecast_source, $period.event_ts.raw, periods=$periods)
         <bx-structured-list-cell class="index-$x">
           <!--prettier-ignore-->
-          <table cellspacing="0" cellpadding="0" width="100%">
+          <table cellspacing="0" cellpadding="0" width="100%" style="border-spacing: 5px; border-collapse: separate;">
             <!--prettier-ignore-->
             #for $tide in $tides
               #if $summary.event_ts.raw <= $tide.event_ts.raw < $summary.event_ts.raw + $summary.duration
@@ -679,7 +679,7 @@
         #for $x, $period in enumerate($periods)
         <bx-structured-list-cell class="index-$x">
           <!--prettier-ignore-->
-          <table cellspacing="0" cellpadding="0" width="100%">
+          <table cellspacing="0" cellpadding="0" width="100%" style="border-spacing: 5px; border-collapse: separate;">
             <!--prettier-ignore-->
             #for $tide in $tides
               #if $period.event_ts.raw <= $tide.event_ts.raw < $period.event_ts.raw + $period.duration

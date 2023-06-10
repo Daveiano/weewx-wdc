@@ -100,7 +100,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       color_scheme = "interpolateRdYlBu",
       color_step = 120,
       tick_color = darkMode ? "#393939" : "#ffffff", //darkMode ? "#525252" : "#dddddd",
-      needle_color = darkMode ? "#f4f4f4" : "#dddddd",
+      needle_color = darkMode ? "#f4f4f4" : "#161616",
       needleValue = props.current,
       center = {
         x: dimensions.width / 2,
@@ -212,8 +212,12 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .select(svgRef.current)
       .attr("width", dimensions.width)
       .attr("height", dimensions.height)
-      .append("g")
-      .attr("viewBox", [0, 0, dimensions.width, dimensions.height]);
+      .attr("viewBox", [
+        -margin * 2,
+        arc >= 1 ? -margin : margin,
+        dimensions.width + 4 * margin,
+        dimensions.height * arc + 2 * margin,
+      ]);
 
     svgElement
       .append("filter")
@@ -265,6 +269,46 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .attr("fill", "none");
 
     gaugeChart
+      .append("g")
+      .attr("class", "current-tick")
+      .selectAll("path")
+      .data([
+        {
+          coordinates: [
+            [scales.needleScale(props.min), radii.inner - 10],
+            [scales.needleScale(props.min), radii.outer_tick + 5],
+          ],
+          label: "min",
+          color: "blue",
+        },
+        {
+          coordinates: [
+            [scales.needleScale(props.max), radii.inner - 10],
+            [scales.needleScale(props.max), radii.outer_tick + 5],
+          ],
+          label: "max",
+          color: "red",
+        },
+        {
+          coordinates: [
+            [scales.needleScale(needleValue), radii.inner - 5],
+            [scales.needleScale(needleValue), radii.outer_tick],
+          ],
+          label: "current",
+          color: needle_color,
+        },
+      ])
+      .enter()
+      .append("g")
+      .attr("class", (d: any) => `tick-${d.label}`)
+      .append("path")
+      .attr("d", (d: any) => scales.lineRadial(d.coordinates))
+      .attr("stroke", (d: any) => d.color)
+      .attr("stroke-width", (d: any) => (d.label === "current" ? 6 : 4))
+      .attr("stroke-linecap", "round")
+      .attr("fill", "none");
+
+    gaugeChart
       .select("g.gauge-ticks")
       .selectAll("text")
       .data(ticks)
@@ -281,35 +325,35 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       )
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
-      .attr("font-size", "0.67em")
+      .attr("font-size", "15px")
       .text((d) => d.label);
 
-    gaugeChart
-      .append("g")
-      .attr("class", "needle")
-      .selectAll("path")
-      .data([needleValue])
-      .enter()
-      .append("path")
-      .attr("d", (d) =>
-        scales.lineRadial([
-          [0, 0],
-          [scales.needleScale(d), radii.outer_tick],
-        ])
-      )
-      .attr("stroke", needle_color)
-      .attr("stroke-width", 4)
-      .attr("stroke-linecap", "round");
+    // gaugeChart
+    //   .append("g")
+    //   .attr("class", "needle")
+    //   .selectAll("path")
+    //   .data([needleValue])
+    //   .enter()
+    //   .append("path")
+    //   .attr("d", (d) =>
+    //     scales.lineRadial([
+    //       [0, 0],
+    //       [scales.needleScale(d), radii.outer_tick],
+    //     ])
+    //   )
+    //   .attr("stroke", needle_color)
+    //   .attr("stroke-width", 10)
+    //   .attr("stroke-linecap", "round");
 
-    gaugeChart
-      .select("g.needle")
-      .append("circle")
-      .attr("cx", 0)
-      .attr("cy", 0)
-      .attr("r", radii.cap / 2)
-      //.attr("stroke", needle_color)
-      //.attr("stroke-width", 6)
-      .style("fill", needle_color);
+    // gaugeChart
+    //   .select("g.needle")
+    //   .append("circle")
+    //   .attr("cx", 0)
+    //   .attr("cy", 0)
+    //   .attr("r", radii.cap / 2)
+    //   //.attr("stroke", needle_color)
+    //   //.attr("stroke-width", 6)
+    //   .style("fill", needle_color);
 
     gaugeChart
       .append("text")
@@ -317,7 +361,10 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
         props.current.toFixed(props.rounding) +
           props.unit.replace("&#176;", "°")
       )
-      .attr("dy", "1.5em");
+      .attr("text-anchor", "middle")
+      .attr("font-size", "2.5rem")
+      .attr("font-weight", "bold")
+      .attr("alignment-baseline", "middle");
   }, [props.current, props.min, props.max, darkMode, dimensions]);
 
   return (

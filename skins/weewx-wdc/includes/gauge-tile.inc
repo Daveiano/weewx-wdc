@@ -40,7 +40,11 @@
           </script>
           #end if
 
-          <div class="diagram" data-value="$series_name"></div>
+          <div
+            class="diagram"
+            data-value="$series_name"
+            style="height: 300px"
+          ></div>
         </div>
       </div>
     </div>

@@ -167,24 +167,6 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       };
     });
 
-    // Set gradient, @see https://observablehq.com/@d3/color-schemes
-    const c = d3.interpolateTurbo, //d3.interpolateGreys, //d3.scaleSequential(["blue", "red"]), //d3[color_scheme],
-      samples = color_step,
-      total_arc = angles.end_angle - angles.start_angle,
-      sub_arc_gradient = total_arc / samples;
-
-    gradient = d3.range(samples).map(function (d) {
-      const sub_color = d / (samples - 1),
-        sub_start_angle = angles.start_angle + sub_arc_gradient * d,
-        sub_end_angle = sub_start_angle + sub_arc_gradient;
-
-      return {
-        fill: c(sub_color),
-        start: sub_start_angle,
-        end: sub_end_angle,
-      };
-    });
-
     // Set scales
     scales.lineRadial = d3.lineRadial();
 
@@ -206,7 +188,30 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .innerRadius(radii.inner + 1)
       .outerRadius(radii.base)
       .startAngle(angles.start_angle)
-      .endAngle(scales.needleScale(needleValue));
+      .endAngle(angles.end_angle);
+
+    const valueMinAngle = scales.needleScale(props.min),
+      valueMaxAngle = scales.needleScale(props.max);
+
+    // Set gradient, @see https://observablehq.com/@d3/color-schemes
+    const c = d3[color_scheme], //d3.interpolateTurbo, //d3.interpolateGreys, //d3.scaleSequential(["blue", "red"]), //d3[color_scheme],
+      samples = color_step,
+      total_arc = valueMaxAngle - valueMinAngle,
+      sub_arc_gradient = total_arc / samples;
+
+    gradient = d3.range(samples).map(function (d) {
+      const sub_color = d / (samples - 1),
+        sub_start_angle = valueMinAngle + sub_arc_gradient * d,
+        sub_end_angle = sub_start_angle + sub_arc_gradient;
+
+      console.log(sub_color);
+
+      return {
+        fill: c(1 - sub_color),
+        start: sub_start_angle,
+        end: sub_end_angle,
+      };
+    });
 
     const svgElement = d3
       .select(svgRef.current)
@@ -233,6 +238,11 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .attr("transform", `translate(${center.x}, ${center.y})`);
 
     gaugeChart
+      .append("path")
+      .attr("d", scales.gaugeArcScale as any)
+      .attr("fill", darkMode ? "#666666" : "#afafaf");
+
+    gaugeChart
       .append("g")
       .attr("class", "gauge-arc")
       .selectAll("path")
@@ -242,16 +252,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .attr("d", scales.subArcScale as any)
       .attr("fill", (d) => d.fill)
       .attr("stroke-width", 0.5)
-      .attr("stroke", (d) => d.fill)
-      .attr(
-        "filter",
-        (d) => d.end > scales.needleScale(needleValue) && "url(#desaturate)"
-      );
-
-    // gaugeChart
-    //   .append("path")
-    //   .attr("d", scales.gaugeArcScale as any)
-    //   .attr("fill", "white");
+      .attr("stroke", (d) => d.fill);
 
     gaugeChart
       .append("g")
@@ -265,46 +266,6 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .attr("d", (d: any) => scales.lineRadial(d.coordinates))
       .attr("stroke", tick_color)
       .attr("stroke-width", 2)
-      .attr("stroke-linecap", "round")
-      .attr("fill", "none");
-
-    gaugeChart
-      .append("g")
-      .attr("class", "current-tick")
-      .selectAll("path")
-      .data([
-        {
-          coordinates: [
-            [scales.needleScale(props.min), radii.inner - 10],
-            [scales.needleScale(props.min), radii.outer_tick + 5],
-          ],
-          label: "min",
-          color: "blue",
-        },
-        {
-          coordinates: [
-            [scales.needleScale(props.max), radii.inner - 10],
-            [scales.needleScale(props.max), radii.outer_tick + 5],
-          ],
-          label: "max",
-          color: "red",
-        },
-        {
-          coordinates: [
-            [scales.needleScale(needleValue), radii.inner - 5],
-            [scales.needleScale(needleValue), radii.outer_tick],
-          ],
-          label: "current",
-          color: needle_color,
-        },
-      ])
-      .enter()
-      .append("g")
-      .attr("class", (d: any) => `tick-${d.label}`)
-      .append("path")
-      .attr("d", (d: any) => scales.lineRadial(d.coordinates))
-      .attr("stroke", (d: any) => d.color)
-      .attr("stroke-width", (d: any) => (d.label === "current" ? 6 : 4))
       .attr("stroke-linecap", "round")
       .attr("fill", "none");
 
@@ -327,6 +288,46 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .attr("text-anchor", "middle")
       .attr("font-size", "15px")
       .text((d) => d.label);
+
+    gaugeChart
+      .append("g")
+      .attr("class", "current-ticks")
+      .selectAll("path")
+      .data([
+        {
+          coordinates: [
+            [scales.needleScale(props.min), radii.inner + 2],
+            [scales.needleScale(props.min), radii.outer_tick - 6],
+          ],
+          label: "min",
+          color: "#313695",
+        },
+        {
+          coordinates: [
+            [scales.needleScale(props.max), radii.inner + 2],
+            [scales.needleScale(props.max), radii.outer_tick - 6],
+          ],
+          label: "max",
+          color: "#a50026",
+        },
+        {
+          coordinates: [
+            [scales.needleScale(needleValue), radii.inner + 2],
+            [scales.needleScale(needleValue), radii.outer_tick - 6],
+          ],
+          label: "current",
+          color: needle_color,
+        },
+      ])
+      .enter()
+      .append("g")
+      .attr("class", (d: any) => `tick-${d.label}`)
+      .append("path")
+      .attr("d", (d: any) => scales.lineRadial(d.coordinates))
+      .attr("stroke", (d: any) => d.color)
+      .attr("stroke-width", (d: any) => (d.label === "current" ? 6 : 4))
+      .attr("stroke-linecap", "round")
+      .attr("fill", "none");
 
     // gaugeChart
     //   .append("g")
@@ -362,9 +363,54 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
           props.unit.replace("&#176;", "°")
       )
       .attr("text-anchor", "middle")
+      .attr("dx", 0)
+      .attr("dy", -30)
       .attr("font-size", "2.5rem")
       .attr("font-weight", "bold")
       .attr("alignment-baseline", "middle");
+
+    const legendMin = gaugeChart
+      .append("g")
+      .attr("class", "gauge-legend-min")
+      .attr("dx", -10)
+      .attr("dy", -10)
+      .attr("transform", `translate(${-10}, ${30})`);
+
+    legendMin
+      .append("text")
+      .text(
+        props.min.toFixed(props.rounding) + props.unit.replace("&#176;", "°")
+      )
+      .attr("text-anchor", "end")
+      .attr("font-size", "1.25rem")
+      .attr("alignment-baseline", "middle");
+
+    const chevronDown = legendMin
+      .append("polygon")
+      .attr("fill", darkMode ? "#f4f4f4" : "#afafaf")
+      .attr("points", "16,28 9,21 10.4,19.6 16,25.2 21.6,19.6 23,21 ");
+
+    chevronDown
+      .append("rect")
+      .attr("id", "_Transparent_Rectangle_")
+      .attr("class", "st0")
+      .attr("width", "32")
+      .attr("height", "32");
+
+    gaugeChart
+      .append("text")
+      .text(
+        `Max: ${props.max.toFixed(props.rounding)}${props.unit.replace(
+          "&#176;",
+          "°"
+        )}`
+      )
+      .attr("text-anchor", "start")
+      .attr("dx", 10)
+      .attr("dy", -10)
+      .attr("font-size", "1.25rem")
+      .attr("alignment-baseline", "middle")
+      .attr("transform", `translate(${-10}, ${30})`);
   }, [props.current, props.min, props.max, darkMode, dimensions]);
 
   return (

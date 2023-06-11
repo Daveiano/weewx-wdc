@@ -105,6 +105,8 @@
         </bx-structured-list-row>
         #end for
 
+        <!--prettier-ignore-->
+        #if $context == 'alltime'
         <bx-structured-list-row data-test="total-number">
           <bx-structured-list-cell
             ><strong
@@ -129,6 +131,7 @@
             <span></span>
           </bx-structured-list-cell>
         </bx-structured-list-row>
+        #end if
       </bx-structured-list-body>
     </bx-structured-list>
   </div>

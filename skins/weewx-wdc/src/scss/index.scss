@@ -584,6 +584,16 @@ header.section-header {
 
 .diagram-tile {
   margin-bottom: $spacing-05;
+  &.gauge {
+    .diagram {
+      // height: 200px;
+      // @include carbon--breakpoint-up(md) {
+      //   height: 300px;
+      // }
+      aspect-ratio: 12 / 8.5;
+      height: auto;
+    }
+  }
   &.combined {
     .label {
       span {

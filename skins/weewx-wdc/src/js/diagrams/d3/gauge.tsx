@@ -21,6 +21,12 @@ type GaugeDiagramBaseProps = {
   unit: string;
   obs: string;
   rounding: number;
+  properties: {
+    min?: string;
+    max?: string;
+    tick_number: string;
+    arc: string;
+  };
 };
 
 export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
@@ -52,8 +58,6 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     if (diagram.current) {
       const parent = diagram.current.parentElement as HTMLElement;
 
-      console.log(parent);
-
       setDimensions({
         width: diagram.current.clientWidth,
         height: diagram.current.clientHeight,
@@ -83,7 +87,6 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     deg = 180 / pi;
 
   console.log(props);
-  console.log(dimensions);
 
   useEffect(() => {
     if (dimensions.width === 0 || dimensions.height === 0) {
@@ -95,8 +98,8 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     const margin = 30,
       rotation = 0,
       thickness = 0.1,
-      arc = 1.25,
-      ticksNumber = 7,
+      arc = parseFloat(props.properties.arc),
+      ticksNumber = parseInt(props.properties.tick_number),
       color_scheme = "interpolateRdYlBu",
       color_step = 120,
       tick_color = darkMode ? "#393939" : "#ffffff", //darkMode ? "#525252" : "#dddddd",
@@ -128,8 +131,12 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     let gradient = [];
 
     // TODO: Configurable yScaleMin and yScaleMax, yScaleOffset.
-    const scaleMax = Math.round(props.max + 25),
-      scaleMin = Math.round(props.min - 25);
+    const scaleMax = props.properties.max
+        ? parseFloat(props.properties.max)
+        : Math.round(props.max + 25),
+      scaleMin = props.properties.min
+        ? parseFloat(props.properties.min)
+        : Math.round(props.min - 25);
 
     console.log(scaleMin, scaleMax);
 
@@ -203,8 +210,6 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       const sub_color = d / (samples - 1),
         sub_start_angle = valueMinAngle + sub_arc_gradient * d,
         sub_end_angle = sub_start_angle + sub_arc_gradient;
-
-      console.log(sub_color);
 
       return {
         fill: c(1 - sub_color),
@@ -364,7 +369,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       )
       .attr("text-anchor", "middle")
       .attr("dx", 0)
-      .attr("dy", -30)
+      .attr("dy", -40)
       .attr("font-size", "2.5rem")
       .attr("font-weight", "bold")
       .attr("alignment-baseline", "middle");
@@ -372,45 +377,54 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     const legendMin = gaugeChart
       .append("g")
       .attr("class", "gauge-legend-min")
-      .attr("dx", -10)
-      .attr("dy", -10)
-      .attr("transform", `translate(${-10}, ${30})`);
+      .attr("transform", `translate(${-110}, ${0})`)
+      .attr("width", 100);
+
+    const chevronDown = legendMin
+      .append("polygon")
+      .attr("transform", `translate(${0}, ${-30})`)
+      .attr("fill", darkMode ? "#f4f4f4" : "#afafaf")
+      .attr("points", "16,28 9,21 10.4,19.6 16,25.2 21.6,19.6 23,21 ");
+
+    chevronDown
+      .append("rect")
+      .attr("class", "st0")
+      .attr("width", "32")
+      .attr("height", "32");
 
     legendMin
       .append("text")
       .text(
         props.min.toFixed(props.rounding) + props.unit.replace("&#176;", "°")
       )
-      .attr("text-anchor", "end")
-      .attr("font-size", "1.25rem")
-      .attr("alignment-baseline", "middle");
+      .attr("transform", `translate(${35}, ${0})`)
+      .attr("font-size", "1.25rem");
 
-    const chevronDown = legendMin
+    const legendMax = gaugeChart
+      .append("g")
+      .attr("class", "gauge-legend-max")
+      .attr("transform", `translate(${30}, ${0})`)
+      .attr("width", 130);
+
+    const chevronUp = legendMax
       .append("polygon")
+      .attr("transform", `translate(${-30}, ${-15})`)
       .attr("fill", darkMode ? "#f4f4f4" : "#afafaf")
-      .attr("points", "16,28 9,21 10.4,19.6 16,25.2 21.6,19.6 23,21 ");
+      .attr("points", "16,4 9,11 10.4,12.4 16,6.8 21.6,12.4 23,11 ");
 
-    chevronDown
+    chevronUp
       .append("rect")
-      .attr("id", "_Transparent_Rectangle_")
       .attr("class", "st0")
       .attr("width", "32")
       .attr("height", "32");
 
-    gaugeChart
+    legendMax
       .append("text")
       .text(
-        `Max: ${props.max.toFixed(props.rounding)}${props.unit.replace(
-          "&#176;",
-          "°"
-        )}`
+        props.max.toFixed(props.rounding) + props.unit.replace("&#176;", "°")
       )
-      .attr("text-anchor", "start")
-      .attr("dx", 10)
-      .attr("dy", -10)
-      .attr("font-size", "1.25rem")
-      .attr("alignment-baseline", "middle")
-      .attr("transform", `translate(${-10}, ${30})`);
+      .attr("transform", `translate(${5}, ${0})`)
+      .attr("font-size", "1.25rem");
   }, [props.current, props.min, props.max, darkMode, dimensions]);
 
   return (

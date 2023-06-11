@@ -1758,6 +1758,43 @@ class WdcDiagramUtil(SearchList):
                 **diagram_context_props
             }
 
+    def get_gauge_diagram_props(self, obs, context):
+        """
+        Get gauge props from skin.conf.
+
+        Args:
+            obs (string): Observation
+            context (string): Day, week, month, year, alltime
+
+        Returns:
+            dict: Diagram props for d3.js.
+        """
+        if context == "yesterday":
+            context = "day"
+
+        diagrams_config = self.skin_dict["DisplayOptions"]["Gauges"][context][obs]
+
+        return accumulateLeaves(diagrams_config, max_level=2)
+
+    def get_gauge_diagram_prop(self, obs, prop, context):
+        """
+        Get gauge prop from skin.conf.
+
+        Args:
+            obs (string): Observation
+            prop (string): Prop
+            context (string): Day, week, month, year, alltime
+
+        Returns:
+            sring|number: Diagram prop for d3.js.
+        """
+        if context == "yesterday":
+            context = "day"
+
+        diagrams_config = self.skin_dict["DisplayOptions"]["Gauges"][context][obs]
+
+        return search_up(diagrams_config, prop, None)
+
     def get_windrose_data(self, start_ts, end_ts, context):
         """
         Get data for rendering wind rose in JS.

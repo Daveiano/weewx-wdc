@@ -60,11 +60,11 @@
 </div>
 
 <!--prettier-ignore-->
-#if 'gauge_tile_observations' in $DisplayOptions
+#if 'Gauges' in $DisplayOptions and $context in $DisplayOptions['Gauges']
 #set $gauges_index = 0
 <!--prettier-ignore-->
 <div class="bx--row">
-  #for $gauge_obs in $to_list($DisplayOptions.get('gauge_tile_observations'))
+#for $gauge_obs in $DisplayOptions['Gauges'][$context]
     #set $gauge_obs_binding = $get_data_binding($gauge_obs)
 
     ## I dont know why but $alltime($data_binding=$skin_obs_binding) crashes on the month-%Y-%m and year-%Y pages:
@@ -80,7 +80,7 @@
   #end for
 </div>
 #end if
-    
+
 <!--prettier-ignore-->
 #if $stat_tiles_xaggs_extra_row
 #set global $hide_xaggs_heading = True

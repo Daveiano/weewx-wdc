@@ -22,6 +22,11 @@ const notfication = websiteMessageContainer!.querySelector(
   "bx-inline-notification"
 );
 
+const dependentObs = {
+  windSpeed: "windDir",
+  windGust: "windGustDir",
+};
+
 const _splitMQTTProp = (key: string): string[] => {
   const underscoreObservations =
     /^(pm\d+_\d|lightning_[a-z]+_count|lightning_distance|lightning_energy)_(.+)/;
@@ -84,37 +89,46 @@ const _updateStatTile = (
   }
 
   // For eg. the windDir arrows on the windSpeed and gustSpeed tiles.
-  const statTileDetail = statTile.querySelector(
+  const statTileDetail = statTile.querySelector<HTMLElement>(
     ".stat-title-obs-value .stat-detail"
   );
 
   // Re-append the detail.
   if (statTileDetail) {
     if (
-      (observation === "windSpeed" || observation === "windGust") &&
-      payLoad["windDir"]
+      (observation === "windSpeed" && !payLoad["windDir"]) ||
+      (observation === "windGust" && !payLoad["windGustDir"])
     ) {
+      statTileDetail.style.display = "none";
+    }
+
+    if (
+      (observation === "windSpeed" && payLoad["windDir"]) ||
+      (observation === "windGust" && payLoad["windGustDir"])
+    ) {
+      statTileDetail.style.display = "inline";
+
       const ordinal =
         ordinalCompass[
-          Math.floor(parseInt(payLoad["windDir"]) / 22.5 + 0.5) % 16
+          Math.floor(
+            parseInt(payLoad[dependentObs[observation]]) / 22.5 + 0.5
+          ) % 16
         ];
 
-      if (statTile.querySelector(".stat-title-obs-value .stat-detail")) {
-        statTile.querySelector(
-          ".stat-title-obs-value .stat-detail .value-detail"
-        )!.textContent = ordinal;
+      if (statTileDetail) {
+        statTileDetail.querySelector(".value-detail")!.textContent = ordinal;
       }
 
       (
-        statTile.querySelector(
-          ".stat-title-obs-value .stat-detail svg"
-        ) as HTMLElement
-      ).style.transform = `rotate(${parseInt(payLoad["windDir"]) + 90}deg)`;
+        statTileDetail.querySelector("svg") as SVGElement
+      ).style.transform = `rotate(${
+        parseInt(payLoad[dependentObs[observation]]) + 90
+      }deg)`;
     }
   }
 
   // Update min/max if available.
-  const min = statTile.querySelector(".value-min"),
+  const min = statTile.querySelector<HTMLElement>(".value-min"),
     minValue = min
       ? min!.querySelector(".stat-value span.value")!.innerHTML
       : "";
@@ -136,12 +150,26 @@ const _updateStatTile = (
 
     // windDir.
     if (
-      (observation === "windSpeed" || observation === "windGust") &&
-      payLoad["windDir"]
+      (observation === "windSpeed" && !payLoad["windDir"]) ||
+      (observation === "windGust" && !payLoad["windGustDir"])
     ) {
+      (
+        min.querySelector(".stat-wind-dir.stat-detail") as HTMLElement
+      ).style.display = "none";
+    }
+    if (
+      (observation === "windSpeed" && payLoad["windDir"]) ||
+      (observation === "windGust" && payLoad["windGustDir"])
+    ) {
+      (
+        min.querySelector(".stat-wind-dir.stat-detail") as HTMLElement
+      ).style.display = "inline";
+
       const ordinal =
         ordinalCompass[
-          Math.floor(parseInt(payLoad["windDir"]) / 22.5 + 0.5) % 16
+          Math.floor(
+            parseInt(payLoad[dependentObs[observation]]) / 22.5 + 0.5
+          ) % 16
         ];
 
       if (min.querySelector(".stat-wind-dir.stat-detail")) {
@@ -174,12 +202,25 @@ const _updateStatTile = (
 
     // windDir.
     if (
-      (observation === "windSpeed" || observation === "windGust") &&
-      payLoad["windDir"]
+      (observation === "windSpeed" && !payLoad["windDir"]) ||
+      (observation === "windGust" && !payLoad["windGustDir"])
     ) {
+      (
+        max.querySelector(".stat-wind-dir.stat-detail") as HTMLElement
+      ).style.display = "none";
+    }
+    if (
+      (observation === "windSpeed" && payLoad["windDir"]) ||
+      (observation === "windGust" && payLoad["windGustDir"])
+    ) {
+      (
+        max.querySelector(".stat-wind-dir.stat-detail") as HTMLElement
+      ).style.display = "inline";
       const ordinal =
         ordinalCompass[
-          Math.floor(parseInt(payLoad["windDir"]) / 22.5 + 0.5) % 16
+          Math.floor(
+            parseInt(payLoad[dependentObs[observation]]) / 22.5 + 0.5
+          ) % 16
         ];
 
       if (max.querySelector(".stat-wind-dir.stat-detail")) {
@@ -258,28 +299,33 @@ const _updateTableRow = (
   // Re-append the detail.
   if (tableRowDetail) {
     if (
-      (observation === "windSpeed" || observation === "windGust") &&
-      payLoad["windDir"]
+      (observation === "windSpeed" && !payLoad["windDir"]) ||
+      (observation === "windGust" && !payLoad["windGustDir"])
     ) {
+      (tableRowDetail as HTMLElement).style.display = "none";
+    }
+    if (
+      (observation === "windSpeed" && payLoad["windDir"]) ||
+      (observation === "windGust" && payLoad["windGustDir"])
+    ) {
+      (tableRowDetail as HTMLElement).style.display = "inline";
       const ordinal =
         ordinalCompass[
-          Math.floor(parseInt(payLoad["windDir"]) / 22.5 + 0.5) % 16
+          Math.floor(
+            parseInt(payLoad[dependentObs[observation]]) / 22.5 + 0.5
+          ) % 16
         ];
 
-      if (
-        tableRow.querySelector(
-          "bx-structured-list-cell.cell-value .stat-detail"
-        )
-      ) {
-        tableRow.querySelector(
-          "bx-structured-list-cell.cell-value .stat-detail"
-        )!.textContent = `, ${ordinal}`;
+      if (tableRowDetail) {
+        tableRowDetail.textContent = `, ${ordinal}`;
       }
     }
   }
 
   // Update min/max.
-  const min = tableRow.querySelector("bx-structured-list-cell.cell-min"),
+  const min = tableRow.querySelector<HTMLElement>(
+      "bx-structured-list-cell.cell-min"
+    ),
     minValueSpan = tableRow.querySelector(
       "bx-structured-list-cell.cell-min > span"
     )!,
@@ -298,12 +344,25 @@ const _updateTableRow = (
 
     // windDir.
     if (
-      (observation === "windSpeed" || observation === "windGust") &&
-      payLoad["windDir"]
+      (observation === "windSpeed" && !payLoad["windDir"]) ||
+      (observation === "windGust" && !payLoad["windGustDir"])
     ) {
+      (
+        min.querySelector(".stat-wind-dir.stat-detail") as HTMLElement
+      ).style.display = "none";
+    }
+    if (
+      (observation === "windSpeed" && payLoad["windDir"]) ||
+      (observation === "windGust" && payLoad["windGustDir"])
+    ) {
+      (
+        min.querySelector(".stat-wind-dir.stat-detail") as HTMLElement
+      ).style.display = "inline";
       const ordinal =
         ordinalCompass[
-          Math.floor(parseInt(payLoad["windDir"]) / 22.5 + 0.5) % 16
+          Math.floor(
+            parseInt(payLoad[dependentObs[observation]]) / 22.5 + 0.5
+          ) % 16
         ];
 
       if (min.querySelector(".stat-wind-dir.stat-detail")) {
@@ -332,12 +391,25 @@ const _updateTableRow = (
 
     // windDir.
     if (
-      (observation === "windSpeed" || observation === "windGust") &&
-      payLoad["windDir"]
+      (observation === "windSpeed" && !payLoad["windDir"]) ||
+      (observation === "windGust" && !payLoad["windGustDir"])
     ) {
+      (
+        max.querySelector(".stat-wind-dir.stat-detail") as HTMLElement
+      ).style.display = "none";
+    }
+    if (
+      (observation === "windSpeed" && payLoad["windDir"]) ||
+      (observation === "windGust" && payLoad["windGustDir"])
+    ) {
+      (
+        max.querySelector(".stat-wind-dir.stat-detail") as HTMLElement
+      ).style.display = "inline";
       const ordinal =
         ordinalCompass[
-          Math.floor(parseInt(payLoad["windDir"]) / 22.5 + 0.5) % 16
+          Math.floor(
+            parseInt(payLoad[dependentObs[observation]]) / 22.5 + 0.5
+          ) % 16
         ];
 
       if (max.querySelector(".stat-wind-dir.stat-detail")) {

@@ -84,6 +84,9 @@
                       <span class="stat-wind-dir stat-detail">, $current.windGustDir</span>
                     #else if $show_gust_dir_ordinal and $current.windGustDir.has_data
                       <span class="stat-wind-dir stat-detail">, $current.windGustDir.ordinal_compass</span>
+                    <!--Empty block for usage in MQTT-->
+                    #else if (($show_wind_dir or $show_wind_dir_ordinal) and not $current.windDir.has_data) or (($show_gust_dir or $show_gust_dir_ordinal) and not $current.windGustDir.has_data)
+                      <span class="stat-wind-dir stat-detail"></span>
                     #end if
                   #else
                     #if $get_show_sum($skin_obs)
@@ -117,14 +120,20 @@
                 <bx-structured-list-cell class="cell-max">
                   <span>$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).max.format("%." + $rounding + "f")</span>
 
-                  #if $show_wind_dir and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").has_data
-                    <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").max</span>
-                  #else if $show_wind_dir_ordinal and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").has_data
-                    <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir").max.ordinal_compass</span>
-                  #else if $show_gust_dir and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windGustDir").has_data
-                    <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windGustDir").max</span>
-                  #else if $show_gust_dir_ordinal and $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windGustDir").has_data
-                    <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windGustDir").max.ordinal_compass</span>
+                  #set $windDir_binded = $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windDir")
+                  #set $gustDir_binded = $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), "windGustDir")
+
+                  #if $show_wind_dir and $windDir_binded.has_data
+                    <span class="stat-wind-dir stat-detail">, $windDir_binded.max</span>
+                  #else if $show_wind_dir_ordinal and $windDir_binded.has_data
+                    <span class="stat-wind-dir stat-detail">, $windDir_binded.max.ordinal_compass</span>
+                  #else if $show_gust_dir and $gustDir_binded.has_data
+                    <span class="stat-wind-dir stat-detail">, $gustDir_binded.max</span>
+                  #else if $show_gust_dir_ordinal and $gustDir_binded.has_data
+                    <span class="stat-wind-dir stat-detail">, $gustDir_binded.max.ordinal_compass</span>
+                  <!--Empty block for usage in MQTT-->
+                  #else if (($show_wind_dir or $show_wind_dir_ordinal) and not $windDir_binded.has_data) or (($show_gust_dir or $show_gust_dir_ordinal) and not $gustDir_binded.has_data)
+                    <span class="stat-wind-dir stat-detail"></span>
                   #end if
 
                   #if $show_min_max_time

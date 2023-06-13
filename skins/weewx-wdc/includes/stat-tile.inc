@@ -78,6 +78,13 @@
                   #include "includes/icons/wind-direction.inc"
                   <span class="value-detail">$current.windGustDir.ordinal_compass</span>
                 </span>
+              <!--Empty block for usage in MQTT-->
+              #else if (($show_wind_dir or $show_wind_dir_ordinal) and not $current.windDir.has_data) or (($show_gust_dir or $show_gust_dir_ordinal) and not $current.windGustDir.has_data)
+                <span class="stat-wind-dir stat-detail">
+                  #set global $windDir_deg = 0
+                  #include "includes/icons/wind-direction.inc"
+                  <span class="value-detail"></span>
+                </span>
               #end if
             #else
               #if $get_show_sum($partial_obs)
@@ -294,14 +301,21 @@
             <p class="stat-value">
               <span class="value" style="display: inline;">$getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), $skin_obs_key).max.format("%." + $rounding + "f")</span>
 
-              #if $show_wind_dir and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").has_data
-                <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").max</span>
-              #else if $show_wind_dir_ordinal and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").has_data
-                <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir").max.ordinal_compass</span>
-              #else if $show_gust_dir and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").has_data
-                <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").max</span>
-              #else if $show_gust_dir_ordinal and $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").has_data
-                <span class="stat-wind-dir stat-detail">, $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir").max.ordinal_compass</span>
+              ## TODO: Add this refactoring to all windDir/gust blocks!
+              #set $windDir_binded = $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windDir")
+              #set $gustDir_binded = $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding)), "windGustDir")
+
+              #if $show_wind_dir and $windDir_binded.has_data
+                <span class="stat-wind-dir stat-detail">, $windDir_binded.max</span>
+              #else if $show_wind_dir_ordinal and $windDir_binded.has_data
+                <span class="stat-wind-dir stat-detail">, $windDir_binded.max.ordinal_compass</span>
+              #else if $show_gust_dir and $gustDir_binded.has_data
+                <span class="stat-wind-dir stat-detail">, $gustDir_binded.max</span>
+              #else if $show_gust_dir_ordinal and $gustDir_binded.has_data
+                <span class="stat-wind-dir stat-detail">, $gustDir_binded.max.ordinal_compass</span>
+              <!--Empty block for usage in MQTT-->
+              #else if (($show_wind_dir or $show_wind_dir_ordinal) and not $windDir_binded.has_data) or (($show_gust_dir or $show_gust_dir_ordinal) and not $gustDir_binded.has_data)
+                <span class="stat-wind-dir stat-detail"></span>
               #end if
             </p>
           </div>

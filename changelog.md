@@ -671,6 +671,7 @@ https://github.com/Daveiano/weewx-wdc/compare/v3.1.1...00c79357#diff-ba225fb627d
 - Bugfix: Getting the chart properties if observation is not included in [diagrams] config GH-172
 - Bugfix: Minor Spelling Error on Some Tiles GH-168
 - Added/fixed some more translations (Chart legends, Stats page)
+- Bugfix: (MQTT) Wind Speed Direction and Wind Gust Direction are Equal/Change At Same Time GH-177
 - Support for weewx-cmon GH-169
 - Add support for Classic layout on Sensor Status page
 - Add support for weewx-xaggs (configurable tiles to show historical data) GH-170

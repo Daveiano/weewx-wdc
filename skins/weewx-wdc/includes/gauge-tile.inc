@@ -11,19 +11,10 @@
 #set $series_name = $partial_obs + 'GaugeSeries' + str($gauges_index)
 
 <div class="$diagram_classes">
-  <div class="bx--tile diagram-tile gauge" data-test="$partial_obs">
+  <div class="diagram-tile gauge" data-test="$partial_obs">
     <div class="bx--row">
       <div class="bx--col">
         <!--prettier-ignore-->
-        <p class="label">
-          #set $icon = $get_icon($partial_obs_key, $use_diagram_config=True, $context=$context)
-          #if $icon != 'none' and "includes/icons/" in $icon and '.svg' in $icon
-            #include $icon
-          #elif $icon != 'none' and "includes/icons/" not in $icon
-            <img src="$icon" alt="$obs.label[$partial_obs]" />
-          #end if
-          $obs.label[$partial_obs]
-        </p>
         <div class="value">
           <!--prettier-ignore-->
           #if $context == 'day'
@@ -36,7 +27,8 @@
                 obs: '$obs.label[$partial_obs]',
                 unit: "$get_unit_label($get_unit_for_obs($partial_obs, $partial_obs_key, $context))",
                 rounding: $get_rounding($partial_obs, $partial_obs_key),
-                properties: $get_gauge_diagram_props($partial_obs, $context)
+                properties: $get_gauge_diagram_props($partial_obs, $context),
+                label: "$obs.label[$partial_obs]"
             }
           </script>
           #end if

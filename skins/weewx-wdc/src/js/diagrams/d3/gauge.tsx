@@ -21,6 +21,7 @@ type GaugeDiagramBaseProps = {
   unit: string;
   obs: string;
   rounding: number;
+  label: string;
   properties: {
     min?: string;
     max?: string;
@@ -189,7 +190,6 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .domain([scaleMin, scaleMax])
       .range([angles.start_angle, angles.end_angle]);
 
-    // From scaleMin to actual needle value.
     scales.gaugeArcScale = d3
       .arc()
       .innerRadius(radii.inner + 1)
@@ -241,6 +241,27 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .append("g")
       .attr("class", "gauge-container")
       .attr("transform", `translate(${center.x}, ${center.y})`);
+
+    // Use a triangle to indicate the current value.
+    const triangle = d3.symbol().type(d3.symbolTriangle).size(100);
+
+    gaugeChart
+      .append("g")
+      .attr("class", "needle")
+      .selectAll("path")
+      .data([needleValue])
+      .enter()
+      .append("path")
+      .attr("d", triangle)
+      .attr("fill", needle_color)
+      .attr("stroke", "none")
+      .attr("stroke-width", 1)
+      .attr("stroke-linecap", "round")
+      .attr("transform", (d: any) => {
+        return `translate(${radii.inner * Math.sin(scales.needleScale(d)) - 1},
+                        ${-radii.inner * Math.cos(scales.needleScale(d)) - 1}),
+            rotate(${180 + scales.needleScale(d) * deg})`;
+      });
 
     gaugeChart
       .append("path")
@@ -317,8 +338,8 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
         },
         {
           coordinates: [
-            [scales.needleScale(needleValue), radii.inner + 2],
-            [scales.needleScale(needleValue), radii.outer_tick - 6],
+            [scales.needleScale(needleValue), radii.inner],
+            [scales.needleScale(needleValue), radii.outer_tick - 9],
           ],
           label: "current",
           color: needle_color,
@@ -330,36 +351,25 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .append("path")
       .attr("d", (d: any) => scales.lineRadial(d.coordinates))
       .attr("stroke", (d: any) => d.color)
-      .attr("stroke-width", (d: any) => (d.label === "current" ? 6 : 4))
+      .attr("stroke-width", (d: any) => (d.label === "current" ? 8 : 4))
       .attr("stroke-linecap", "round")
       .attr("fill", "none");
 
     // gaugeChart
     //   .append("g")
-    //   .attr("class", "needle")
-    //   .selectAll("path")
-    //   .data([needleValue])
-    //   .enter()
     //   .append("path")
-    //   .attr("d", (d) =>
+    //   .attr(
+    //     "d",
     //     scales.lineRadial([
-    //       [0, 0],
-    //       [scales.needleScale(d), radii.outer_tick],
+    //       [scales.needleScale(needleValue), radii.inner - 120],
+    //       [scales.needleScale(needleValue), radii.inner - 10],
     //     ])
     //   )
-    //   .attr("stroke", needle_color)
-    //   .attr("stroke-width", 10)
-    //   .attr("stroke-linecap", "round");
-
-    // gaugeChart
-    //   .select("g.needle")
-    //   .append("circle")
-    //   .attr("cx", 0)
-    //   .attr("cy", 0)
-    //   .attr("r", radii.cap / 2)
-    //   //.attr("stroke", needle_color)
-    //   //.attr("stroke-width", 6)
-    //   .style("fill", needle_color);
+    //   .attr("stroke", darkMode ? "#666666" : "#afafaf")
+    //   .attr("stroke-width", 4)
+    //   .attr("stroke-linecap", "round")
+    //   .attr("fill", "none")
+    //   .attr("class", "tick-needle");
 
     gaugeChart
       .append("text")
@@ -377,7 +387,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     const legendMin = gaugeChart
       .append("g")
       .attr("class", "gauge-legend-min")
-      .attr("transform", `translate(${-110}, ${0})`)
+      .attr("transform", `translate(${-125}, ${0})`)
       .attr("width", 100);
 
     const chevronDown = legendMin
@@ -403,7 +413,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     const legendMax = gaugeChart
       .append("g")
       .attr("class", "gauge-legend-max")
-      .attr("transform", `translate(${30}, ${0})`)
+      .attr("transform", `translate(${35}, ${0})`)
       .attr("width", 130);
 
     const chevronUp = legendMax
@@ -425,6 +435,18 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       )
       .attr("transform", `translate(${5}, ${0})`)
       .attr("font-size", "1.25rem");
+
+    // Observation label, eg. Outside Temperature.
+    gaugeChart
+      .append("text")
+      .text(props.label)
+      .attr("class", "gauge-label")
+      .attr("transform", `translate(${0}, ${25})`)
+      .attr("width", 350)
+      .attr("text-anchor", "middle")
+      .attr("font-size", "1.25rem")
+      .attr("font-weight", "bold")
+      .attr("alignment-baseline", "middle");
   }, [props.current, props.min, props.max, darkMode, dimensions]);
 
   return (

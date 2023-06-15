@@ -13,6 +13,7 @@ import React, {
 } from "react";
 
 import * as d3 from "d3";
+import he from "he";
 
 type GaugeDiagramBaseProps = {
   current: number;
@@ -25,6 +26,7 @@ type GaugeDiagramBaseProps = {
   properties: {
     min?: string;
     max?: string;
+    offset: string;
     tick_number: string;
     arc: string;
   };
@@ -57,8 +59,6 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
 
   const handleScreenSizeChange = useCallback(() => {
     if (diagram.current) {
-      const parent = diagram.current.parentElement as HTMLElement;
-
       setDimensions({
         width: diagram.current.clientWidth,
         height: diagram.current.clientHeight,
@@ -96,7 +96,8 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
 
     d3.select(svgRef.current).selectChildren().remove();
 
-    const margin = 30,
+    // TODO:: margin = 0 does not work.
+    const margin = 27,
       rotation = 0,
       thickness = 0.1,
       arc = parseFloat(props.properties.arc),
@@ -131,15 +132,12 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
 
     let gradient = [];
 
-    // TODO: Configurable yScaleMin and yScaleMax, yScaleOffset.
     const scaleMax = props.properties.max
         ? parseFloat(props.properties.max)
-        : Math.round(props.max + 25),
+        : Math.round(props.max + parseFloat(props.properties.offset)),
       scaleMin = props.properties.min
         ? parseFloat(props.properties.min)
-        : Math.round(props.min - 25);
-
-    console.log(scaleMin, scaleMax);
+        : Math.round(props.min - parseFloat(props.properties.offset));
 
     // Set radii
     const base = dimensions.height - 2 * margin;
@@ -165,8 +163,8 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       const sub_angle = angles.start_angle + sub_arc_ticks * d;
       return {
         label:
-          (scaleMin + d * tick_pct).toFixed(1) +
-          props.unit.replace("&#176;", "°"),
+          (scaleMin + d * tick_pct).toFixed(props.rounding) +
+          he.decode(props.unit),
         angle: sub_angle,
         coordinates: [
           [sub_angle, radii.inner],
@@ -371,12 +369,10 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     //   .attr("fill", "none")
     //   .attr("class", "tick-needle");
 
+    // Current value as text.
     gaugeChart
       .append("text")
-      .text(
-        props.current.toFixed(props.rounding) +
-          props.unit.replace("&#176;", "°")
-      )
+      .text(props.current.toFixed(props.rounding) + he.decode(props.unit))
       .attr("text-anchor", "middle")
       .attr("dx", 0)
       .attr("dy", -40)
@@ -387,53 +383,39 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     const legendMin = gaugeChart
       .append("g")
       .attr("class", "gauge-legend-min")
-      .attr("transform", `translate(${-125}, ${0})`)
-      .attr("width", 100);
+      .attr("transform", `translate(${-125}, ${0})`);
 
-    const chevronDown = legendMin
+    const legendMinX = -25;
+
+    legendMin
       .append("polygon")
-      .attr("transform", `translate(${0}, ${-30})`)
+      .attr("transform", `translate(${-30}, ${legendMinX})`)
       .attr("fill", darkMode ? "#f4f4f4" : "#afafaf")
       .attr("points", "16,28 9,21 10.4,19.6 16,25.2 21.6,19.6 23,21 ");
 
-    chevronDown
-      .append("rect")
-      .attr("class", "st0")
-      .attr("width", "32")
-      .attr("height", "32");
-
     legendMin
       .append("text")
-      .text(
-        props.min.toFixed(props.rounding) + props.unit.replace("&#176;", "°")
-      )
-      .attr("transform", `translate(${35}, ${0})`)
+      .text(props.min.toFixed(props.rounding) + he.decode(props.unit))
+      .attr("alignment-baseline", "middle")
+      .attr("transform", `translate(${0}, ${0})`)
       .attr("font-size", "1.25rem");
 
     const legendMax = gaugeChart
       .append("g")
       .attr("class", "gauge-legend-max")
-      .attr("transform", `translate(${35}, ${0})`)
-      .attr("width", 130);
+      .attr("transform", `translate(${35}, ${0})`);
 
-    const chevronUp = legendMax
+    legendMax
       .append("polygon")
-      .attr("transform", `translate(${-30}, ${-15})`)
+      .attr("transform", `translate(${0}, ${-10})`)
       .attr("fill", darkMode ? "#f4f4f4" : "#afafaf")
       .attr("points", "16,4 9,11 10.4,12.4 16,6.8 21.6,12.4 23,11 ");
 
-    chevronUp
-      .append("rect")
-      .attr("class", "st0")
-      .attr("width", "32")
-      .attr("height", "32");
-
     legendMax
       .append("text")
-      .text(
-        props.max.toFixed(props.rounding) + props.unit.replace("&#176;", "°")
-      )
-      .attr("transform", `translate(${5}, ${0})`)
+      .text(props.max.toFixed(props.rounding) + he.decode(props.unit))
+      .attr("transform", `translate(${30}, ${0})`)
+      .attr("alignment-baseline", "middle")
       .attr("font-size", "1.25rem");
 
     // Observation label, eg. Outside Temperature.
@@ -441,12 +423,29 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .append("text")
       .text(props.label)
       .attr("class", "gauge-label")
-      .attr("transform", `translate(${0}, ${25})`)
+      .attr("transform", `translate(${0}, ${35})`)
       .attr("width", 350)
       .attr("text-anchor", "middle")
       .attr("font-size", "1.25rem")
       .attr("font-weight", "bold")
+      .attr("dy", -120)
       .attr("alignment-baseline", "middle");
+
+    // Center legends.
+    const legendMinDimensions = legendMin.node()!.getBBox(),
+      legendMaxDimensions = legendMax.node()!.getBBox(),
+      legendWidth = legendMinDimensions.width + legendMaxDimensions.width;
+
+    legendMin
+      .attr("transform", `translate(${-legendWidth / 2}, ${0})`)
+      .attr("width", legendMinDimensions.width);
+
+    legendMax
+      .attr(
+        "transform",
+        `translate(${legendWidth / 2 - legendMaxDimensions.width}, ${0})`
+      )
+      .attr("width", legendMaxDimensions.width);
   }, [props.current, props.min, props.max, darkMode, dimensions]);
 
   return (

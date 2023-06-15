@@ -11,7 +11,7 @@
 #set $series_name = $partial_obs + 'GaugeSeries' + str($gauges_index)
 
 <div class="$diagram_classes">
-  <div class="diagram-tile gauge" data-test="$partial_obs">
+  <div class="bx--tile diagram-tile gauge" data-test="$partial_obs">
     <div class="bx--row">
       <div class="bx--col">
         <!--prettier-ignore-->

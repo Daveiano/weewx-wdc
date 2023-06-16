@@ -96,8 +96,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
 
     d3.select(svgRef.current).selectChildren().remove();
 
-    // TODO:: margin = 0 does not work.
-    const margin = 27,
+    const margin = 0,
       rotation = 0,
       thickness = 0.1,
       arc = parseFloat(props.properties.arc),
@@ -220,12 +219,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .select(svgRef.current)
       .attr("width", dimensions.width)
       .attr("height", dimensions.height)
-      .attr("viewBox", [
-        -margin * 2,
-        arc >= 1 ? -margin : margin,
-        dimensions.width + 4 * margin,
-        dimensions.height * arc + 2 * margin,
-      ]);
+      .attr("viewBox", [0, 0, dimensions.width, dimensions.height]);
 
     svgElement
       .append("filter")
@@ -243,29 +237,31 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     // Use a triangle to indicate the current value.
     const triangle = d3.symbol().type(d3.symbolTriangle).size(100);
 
-    gaugeChart
-      .append("g")
-      .attr("class", "needle")
-      .selectAll("path")
-      .data([needleValue])
-      .enter()
-      .append("path")
-      .attr("d", triangle)
-      .attr("fill", needle_color)
-      .attr("stroke", "none")
-      .attr("stroke-width", 1)
-      .attr("stroke-linecap", "round")
-      .attr("transform", (d: any) => {
-        return `translate(${radii.inner * Math.sin(scales.needleScale(d)) - 1},
-                        ${-radii.inner * Math.cos(scales.needleScale(d)) - 1}),
-            rotate(${180 + scales.needleScale(d) * deg})`;
-      });
+    // gaugeChart
+    //   .append("g")
+    //   .attr("class", "needle")
+    //   .selectAll("path")
+    //   .data([needleValue])
+    //   .enter()
+    //   .append("path")
+    //   .attr("d", triangle)
+    //   .attr("fill", needle_color)
+    //   .attr("stroke", "none")
+    //   .attr("stroke-width", 1)
+    //   .attr("stroke-linecap", "round")
+    //   .attr("transform", (d: any) => {
+    //     return `translate(${radii.inner * Math.sin(scales.needleScale(d)) - 1},
+    //                     ${-radii.inner * Math.cos(scales.needleScale(d)) - 1}),
+    //         rotate(${180 + scales.needleScale(d) * deg})`;
+    //});
 
+    // Background scale.
     gaugeChart
       .append("path")
       .attr("d", scales.gaugeArcScale as any)
       .attr("fill", darkMode ? "#666666" : "#afafaf");
 
+    // Gradient scale (from min to max).
     gaugeChart
       .append("g")
       .attr("class", "gauge-arc")
@@ -320,7 +316,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .data([
         {
           coordinates: [
-            [scales.needleScale(props.min), radii.inner + 2],
+            [scales.needleScale(props.min), radii.inner],
             [scales.needleScale(props.min), radii.outer_tick - 6],
           ],
           label: "min",
@@ -328,7 +324,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
         },
         {
           coordinates: [
-            [scales.needleScale(props.max), radii.inner + 2],
+            [scales.needleScale(props.max), radii.inner],
             [scales.needleScale(props.max), radii.outer_tick - 6],
           ],
           label: "max",
@@ -337,7 +333,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
         {
           coordinates: [
             [scales.needleScale(needleValue), radii.inner],
-            [scales.needleScale(needleValue), radii.outer_tick - 9],
+            [scales.needleScale(needleValue), radii.outer_tick - 6],
           ],
           label: "current",
           color: needle_color,
@@ -349,8 +345,8 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .append("path")
       .attr("d", (d: any) => scales.lineRadial(d.coordinates))
       .attr("stroke", (d: any) => d.color)
-      .attr("stroke-width", (d: any) => (d.label === "current" ? 8 : 4))
-      .attr("stroke-linecap", "round")
+      .attr("stroke-width", (d: any) => (d.label === "current" ? 6 : 4))
+      .attr("stroke-linecap", "butt")
       .attr("fill", "none");
 
     // gaugeChart
@@ -446,6 +442,21 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
         `translate(${legendWidth / 2 - legendMaxDimensions.width}, ${0})`
       )
       .attr("width", legendMaxDimensions.width);
+
+    // Set viewBox.
+    const gaugeContainerDimensions = gaugeChart.node()!.getBBox();
+    svgElement.attr("viewBox", [
+      0,
+      0,
+      dimensions.width,
+      gaugeContainerDimensions.height + 2 * margin,
+    ]);
+    gaugeChart.attr(
+      "transform",
+      `translate(${dimensions.width / 2}, ${
+        -gaugeContainerDimensions.y + margin
+      })`
+    );
   }, [props.current, props.min, props.max, darkMode, dimensions]);
 
   return (

@@ -68,8 +68,8 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       });
 
       if (
-        diagram.current.clientWidth < 250 ||
-        diagram.current.clientHeight < 250
+        diagram.current.clientWidth < 300 ||
+        diagram.current.clientHeight < 200
       ) {
         setSmall(true);
       } else {
@@ -189,7 +189,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       }
 
       return {
-        label: small ? truncate(label, 5) : label,
+        label: small ? truncate(label, 7) : label,
         angle: sub_angle,
         coordinates: [
           [sub_angle, radii.inner],
@@ -355,28 +355,30 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .attr("fill", "none");
 
     // Needle.
-    gaugeChart
-      .append("g")
-      .append("path")
-      .attr(
-        "d",
-        scales.lineRadial([
-          [scales.needleScale(needleValue), radii.inner - 120],
-          [scales.needleScale(needleValue), radii.inner - 10],
-        ])
-      )
-      .attr("stroke", darkMode ? "#666666" : "#afafaf")
-      .attr("stroke-width", 5)
-      .attr("stroke-linecap", "round")
-      .attr("fill", "none")
-      .attr("class", "tick-needle");
+    if (!small) {
+      gaugeChart
+        .append("g")
+        .append("path")
+        .attr(
+          "d",
+          scales.lineRadial([
+            [scales.needleScale(needleValue), radii.inner - 120],
+            [scales.needleScale(needleValue), radii.inner - 10],
+          ])
+        )
+        .attr("stroke", darkMode ? "#666666" : "#afafaf")
+        .attr("stroke-width", 5)
+        .attr("stroke-linecap", "round")
+        .attr("fill", "none")
+        .attr("class", "tick-needle");
+    }
 
     // Use a triangle to indicate the current value.
     const triangle = d3.symbol().type(d3.symbolTriangle).size(100);
 
     gaugeChart
       .append("g")
-      .attr("class", "needle")
+      .attr("class", "needle-triangle")
       .selectAll("path")
       .data([needleValue])
       .enter()
@@ -400,7 +402,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .attr("text-anchor", "middle")
       .attr("dx", 0)
       .attr("dy", "-0.95em")
-      .attr("font-size", "2.5em")
+      .attr("font-size", small ? "2em" : "2.5em")
       .attr("font-weight", "bold")
       .attr("alignment-baseline", "middle");
 
@@ -422,7 +424,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .text(props.min.toFixed(props.rounding) + he.decode(props.unit))
       .attr("alignment-baseline", "middle")
       .attr("transform", `translate(${0}, ${0})`)
-      .attr("font-size", "1.25em");
+      .attr("font-size", small ? "1em" : "1.25em");
 
     const legendMax = textWrap
       .append("g")
@@ -440,7 +442,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .text(props.max.toFixed(props.rounding) + he.decode(props.unit))
       .attr("transform", `translate(${30}, ${0})`)
       .attr("alignment-baseline", "middle")
-      .attr("font-size", "1.25em");
+      .attr("font-size", small ? "1em" : "1.25em");
 
     // Observation label, eg. Outside Temperature.
     textWrap
@@ -449,34 +451,63 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .attr("class", "gauge-label")
       .attr("width", 350)
       .attr("text-anchor", "middle")
-      .attr("font-size", "1.25em")
+      .attr("font-size", small ? "1em" : "1.25em")
       .attr("font-weight", "bold")
-      // TODO: em value for small
-      .attr("dy", small ? 5 : "-4.25em")
+      .attr("dy", "-4.25em")
       .attr("alignment-baseline", "middle");
 
     // Center legends.
     const legendMinDimensions = legendMin.node()!.getBBox(),
-      legendMaxDimensions = legendMax.node()!.getBBox(),
-      legendWidth = legendMinDimensions.width + legendMaxDimensions.width;
+      legendMaxDimensions = legendMax.node()!.getBBox();
 
-    legendMin
-      .attr("transform", `translate(${-legendWidth / 2}, ${0})`)
-      .attr("width", legendMinDimensions.width);
+    let legendWidth = legendMinDimensions.width + legendMaxDimensions.width;
 
-    legendMax
-      .attr(
-        "transform",
-        `translate(${legendWidth / 2 - legendMaxDimensions.width}, ${0})`
-      )
-      .attr("width", legendMaxDimensions.width);
+    // // Reduce width (margin) for small gauges.
+    // if (small) {
+    //   legendWidth = legendWidth - 25;
+    // }
 
-    // Optimize text for arc >= 1.97.
+    if (small) {
+      // Legends centered on top of each other.
+      legendMin
+        .attr(
+          "transform",
+          `translate(${-legendMinDimensions.width / 2 + 23}, ${30})`
+        )
+        .attr("width", legendMinDimensions.width);
+
+      legendMax
+        .attr(
+          "transform",
+          `translate(${-legendMaxDimensions.width / 2 - 7}, ${5})`
+        )
+        .attr("width", legendMaxDimensions.width);
+    } else {
+      // Legends centered side by side.
+      legendMin
+        .attr("transform", `translate(${-legendWidth / 2 + 5}, ${0})`)
+        .attr("width", legendMinDimensions.width);
+
+      legendMax
+        .attr(
+          "transform",
+          `translate(${legendWidth / 2 - legendMaxDimensions.width + 5}, ${0})`
+        )
+        .attr("width", legendMaxDimensions.width);
+    }
+    // Optimize text display.
     if (arc >= 1.97) {
       const textWrapDimensions = textWrap.node()!.getBBox();
       textWrap.attr(
         "transform",
         `translate(${0}, ${textWrapDimensions.height / 2}), scale(${1.25})`
+      );
+    }
+    if (arc < 1.97 && small) {
+      const textWrapDimensions = textWrap.node()!.getBBox();
+      textWrap.attr(
+        "transform",
+        `translate(${0}, ${textWrapDimensions.height / 4})`
       );
     }
 
@@ -485,12 +516,12 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     svgElement.attr("viewBox", [
       0,
       0,
-      dimensions.width,
+      gaugeContainerDimensions.width + 2 * margin,
       gaugeContainerDimensions.height + 2 * margin,
     ]);
     gaugeChart.attr(
       "transform",
-      `translate(${dimensions.width / 2}, ${
+      `translate(${-gaugeContainerDimensions.x + margin}, ${
         -gaugeContainerDimensions.y + margin
       })`
     );

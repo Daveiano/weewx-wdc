@@ -2,9 +2,10 @@
 #errorCatcher Echo
 #encoding UTF-8
 
-#set diagram_classes = "bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-6 bx--col-max-2"
+#set $diagram_classes_half = "bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-3 bx--col-max-2"
+#set $diagram_classes = "bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-3 bx--col-max-4"
 #if $DisplayOptions.get('layout', 'alternative') == 'classic'
-  #set diagram_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6"
+  #set $diagram_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6"
 #end if
 
 #set $partial_obs_key = $get_custom_data_binding_obs_key($partial_obs)

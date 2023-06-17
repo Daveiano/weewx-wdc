@@ -21,7 +21,7 @@ import {
   getColors,
   getCurve,
   getObsPropsFromChartProps,
-} from "./components/util";
+} from "./../../util/util";
 import { Maximize } from "../../assets/maximize";
 import { Tooltip } from "./components/tooltip";
 import { addLegend } from "./components/legend";

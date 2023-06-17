@@ -12,7 +12,7 @@ import { getAxisLeftLegendOffset, getMargins, Size } from "../../util/util";
 import { useWindowSize } from "../../util/util";
 import { Maximize } from "../../assets/maximize";
 import { addMarkers } from "./components/marker";
-import { getAxisGridColor, getColors } from "./components/util";
+import { getAxisGridColor, getColors } from "./../../util/util";
 
 type BarDiagramBaseProps = DiagramBaseProps & {
   locale: d3.TimeLocaleObject;

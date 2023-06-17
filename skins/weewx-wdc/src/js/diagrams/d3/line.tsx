@@ -24,7 +24,7 @@ import {
   getColors,
   getCurve,
   getObsPropsFromChartProps,
-} from "./components/util";
+} from "./../../util/util";
 import { addLegend } from "./components/legend";
 
 type LineDiagramBaseProps = DiagramBaseProps & {

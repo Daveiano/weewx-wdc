@@ -104,7 +104,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
 
   const margin = small ? 0 : 10,
     rotation = 0,
-    thickness = 0.1,
+    thickness = 0.15,
     arc = parseFloat(props.properties.arc),
     ticksNumber = parseInt(props.properties.tick_number),
     color_scheme = "interpolateRdYlBu",
@@ -182,10 +182,10 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       }
 
       if (arc >= 1.97 && d == ticksNumber - 1) {
-        label = `${
+        label = `${label} / ${
           (scaleMin + 0 * tick_pct).toFixed(props.rounding) +
           he.decode(props.unit)
-        } / ${label}`;
+        }`;
       }
 
       return {
@@ -356,21 +356,21 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
 
     // Needle.
     if (!small) {
-      gaugeChart
-        .append("g")
-        .append("path")
-        .attr(
-          "d",
-          scales.lineRadial([
-            [scales.needleScale(needleValue), radii.inner - 120],
-            [scales.needleScale(needleValue), radii.inner - 10],
-          ])
-        )
-        .attr("stroke", darkMode ? "#666666" : "#afafaf")
-        .attr("stroke-width", 5)
-        .attr("stroke-linecap", "round")
-        .attr("fill", "none")
-        .attr("class", "tick-needle");
+      // gaugeChart
+      //   .append("g")
+      //   .append("path")
+      //   .attr(
+      //     "d",
+      //     scales.lineRadial([
+      //       [scales.needleScale(needleValue), radii.inner - 120],
+      //       [scales.needleScale(needleValue), radii.inner - 10],
+      //     ])
+      //   )
+      //   .attr("stroke", darkMode ? "#666666" : "#afafaf")
+      //   .attr("stroke-width", 5)
+      //   .attr("stroke-linecap", "round")
+      //   .attr("fill", "none")
+      //   .attr("class", "tick-needle");
     }
 
     // Use a triangle to indicate the current value.
@@ -451,9 +451,9 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .attr("class", "gauge-label")
       .attr("width", 350)
       .attr("text-anchor", "middle")
-      .attr("font-size", small ? "1em" : "1.25em")
+      .attr("font-size", small ? "1.15em" : "1.25em")
       .attr("font-weight", "bold")
-      .attr("dy", "-4.25em")
+      .attr("dy", small ? "-3.75em" : "-4.25em")
       .attr("alignment-baseline", "middle");
 
     // Center legends.

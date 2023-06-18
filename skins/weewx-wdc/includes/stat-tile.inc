@@ -22,7 +22,15 @@
   src="https://1.www.s81c.com/common/carbon/web-components/version/v1.27.0/tooltip.min.js"
 ></script>
 
-<div class="bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-3 bx--col-max-2">
+<!--prettier-ignore-->
+#set $gauges_display = $DisplayOptions.get('gauges_display', 'before')
+#set $show_gauges = 'Gauges' in $DisplayOptions and $context in $DisplayOptions['Gauges']
+#set $col_classes = "bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-3 bx--col-max-2"
+#if $show_gauges and $gauges_display == 'mixed'
+  #set $col_classes = "bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-4 bx--col-max-3"
+#end if
+
+<div class="$col_classes">
   <!--prettier-ignore-->
   <div class="bx--tile stat-tile" data-test="$partial_obs" data-observation="$skin_obs_key" data-unit="$get_unit_label($get_unit_for_obs($partial_obs, $skin_obs_key, $context))" data-rounding="$rounding">
     <!-- Main row -->

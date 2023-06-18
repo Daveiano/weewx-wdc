@@ -2,10 +2,26 @@
 #errorCatcher Echo
 #encoding UTF-8
 
-#set $diagram_classes_half = "bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-3 bx--col-max-2"
-#set $diagram_classes = "bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-3 bx--col-max-4"
-#if $DisplayOptions.get('layout', 'alternative') == 'classic'
-  #set $diagram_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6"
+#set $layout = $DisplayOptions.get('layout', 'alternative')
+#set $gauges_size = $DisplayOptions.get('gauges_size', "small")
+
+#set $gauges_display = $DisplayOptions.get('gauges_display', 'before')
+#set $diagram_classes = "bx--col-sm-4 bx--col-md-4 bx--col-lg-4 bx--col-xlg-3 bx--col-max-2"
+#if $layout == 'classic'
+  #set $diagram_classes = "bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-3 bx--col-max-3"
+#end if
+
+#if $gauges_size == "middle" and $layout == 'alternative'
+  #set $diagram_classes = "bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-4 bx--col-max-3"
+#end if
+#if $gauges_size == "large" and $layout == 'alternative'
+  #set $diagram_classes = "bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-6 bx--col-max-4"
+#end if
+#if $gauges_size == "middle" and $layout == 'classic'
+  #set $diagram_classes = "bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-4 bx--col-max-4"
+#end if
+#if $gauges_size == "large" and $layout == 'classic'
+  #set $diagram_classes = "bx--col-sm-4 bx--col-md-4 bx--col-lg-12 bx--col-xlg-6 bx--col-max-6"
 #end if
 
 #set $partial_obs_key = $get_custom_data_binding_obs_key($partial_obs)

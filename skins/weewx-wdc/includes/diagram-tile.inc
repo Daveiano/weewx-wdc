@@ -26,6 +26,7 @@
           #set $series_name = $partial_obs + 'Series' + str($diagram_index)
           #set $partial_obs_binding = $get_data_binding($partial_obs, $context)
 
+          <!--TODO: Implement custom context logic from combined-diagram-tile template-->
           <!--prettier-ignore-->
           #if $context == 'month' and $use_parameter_month
             #set $obs_context = $month($data_binding=$partial_obs_binding)

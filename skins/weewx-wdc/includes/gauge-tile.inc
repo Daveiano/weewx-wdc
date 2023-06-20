@@ -30,7 +30,7 @@
 #set $obs_data_binding = $get_data_binding($partial_obs)
 
 <div class="$diagram_classes">
-  <div class="bx--tile diagram-tile gauge" data-test="$partial_obs">
+  <div class="bx--tile diagram-tile gauge" data-test="$series_name">
     <div class="bx--row">
       <div class="bx--col">
         <!--prettier-ignore-->

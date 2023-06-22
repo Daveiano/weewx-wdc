@@ -31,6 +31,9 @@ type GaugeDiagramBaseProps = {
     offset: string;
     tick_number: string;
     arc: string;
+    mode: "invert" | "normal";
+    color_scheme: string;
+    invert_color_scheme: string;
   };
 };
 
@@ -99,15 +102,11 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     rad = pi / 180,
     deg = 180 / pi;
 
-  //console.log(props);
-  console.log(dimensions);
-
   const margin = small ? 0 : 10,
     rotation = 0,
     thickness = 0.15,
     arc = parseFloat(props.properties.arc),
     ticksNumber = parseInt(props.properties.tick_number),
-    color_scheme = "interpolateRdYlBu",
     color_step = 120,
     tick_color = darkMode ? "#393939" : "#ffffff", //darkMode ? "#525252" : "#dddddd",
     needle_color = darkMode ? "#f4f4f4" : "#161616",
@@ -134,8 +133,6 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       gaugeArcScale: d3.arc(),
       needleScale: d3.scaleLinear(),
     };
-
-  let gradient = [];
 
   const scaleMax = props.properties.max
       ? parseFloat(props.properties.max)
@@ -223,19 +220,41 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     const valueMinAngle = scales.needleScale(props.min),
       valueMaxAngle = scales.needleScale(props.max);
 
+    d3.schemeGreens;
+
     // Set gradient, @see https://observablehq.com/@d3/color-schemes
-    const c = d3[color_scheme], //d3.interpolateTurbo, //d3.interpolateGreys, //d3.scaleSequential(["blue", "red"]), //d3[color_scheme],
+    /* @ts-ignore */
+    const c = d3[props.properties.color_scheme], //d3.interpolateTurbo, //d3.interpolateGreys, //d3.scaleSequential(["blue", "red"]), //d3[color_scheme],
       samples = color_step,
       total_arc = valueMaxAngle - valueMinAngle,
       sub_arc_gradient = total_arc / samples;
 
-    gradient = d3.range(samples).map(function (d) {
+    const gradient = d3.range(samples).map(function (d) {
       const sub_color = d / (samples - 1),
         sub_start_angle = valueMinAngle + sub_arc_gradient * d,
         sub_end_angle = sub_start_angle + sub_arc_gradient;
 
       return {
-        fill: c(1 - sub_color),
+        fill: parseInt(props.properties.invert_color_scheme)
+          ? c(1 - sub_color)
+          : c(sub_color),
+        start: sub_start_angle,
+        end: sub_end_angle,
+      };
+    });
+
+    const total_arc_full = angles.end_angle - angles.start_angle,
+      sub_arc_gradient_full = total_arc_full / samples;
+
+    const gradientFull = d3.range(samples).map(function (d) {
+      const sub_color = d / (samples - 1),
+        sub_start_angle = angles.start_angle + sub_arc_gradient_full * d,
+        sub_end_angle = sub_start_angle + sub_arc_gradient_full;
+
+      return {
+        fill: parseInt(props.properties.invert_color_scheme)
+          ? c(1 - sub_color)
+          : c(sub_color),
         start: sub_start_angle,
         end: sub_end_angle,
       };
@@ -260,24 +279,75 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .attr("class", "gauge-container")
       .attr("transform", `translate(${center.x}, ${center.y})`);
 
-    // Background scale.
-    gaugeChart
-      .append("path")
-      .attr("d", scales.gaugeArcScale as any)
-      .attr("fill", darkMode ? "#666666" : "#afafaf");
+    if (props.properties.mode === "invert") {
+      // Gradient scale.
+      gaugeChart
+        .append("g")
+        .attr("class", "gauge-arc")
+        .selectAll("path")
+        .data(gradientFull)
+        .enter()
+        .append("path")
+        .attr("d", scales.subArcScale as any)
+        .attr("fill", (d) => d.fill)
+        .attr("stroke-width", 0.5)
+        .attr("stroke", (d) => d.fill);
 
-    // Gradient scale (from min to max).
-    gaugeChart
-      .append("g")
-      .attr("class", "gauge-arc")
-      .selectAll("path")
-      .data(gradient)
-      .enter()
-      .append("path")
-      .attr("d", scales.subArcScale as any)
-      .attr("fill", (d) => d.fill)
-      .attr("stroke-width", 0.5)
-      .attr("stroke", (d) => d.fill);
+      // Darken from start to min value.
+      gaugeChart
+        .append("path")
+        .attr(
+          "d",
+          d3
+            .arc()
+            .innerRadius(radii.inner + 1)
+            .outerRadius(radii.base)
+            .startAngle(angles.start_angle)
+            .endAngle(scales.needleScale(props.min)) as any
+        )
+        .attr("fill", darkMode ? "#666666" : "#afafaf")
+        .style("opacity", 0.85)
+        .attr("stroke-width", 0.5)
+        .attr("stroke", darkMode ? "#666666" : "#afafaf");
+      //.attr("filter", "url(#desaturate)");
+
+      // Darken from max to end.
+      gaugeChart
+        .append("path")
+        .attr(
+          "d",
+          d3
+            .arc()
+            .innerRadius(radii.inner + 1)
+            .outerRadius(radii.base)
+            .startAngle(scales.needleScale(props.max))
+            .endAngle(angles.end_angle) as any
+        )
+        .attr("fill", darkMode ? "#666666" : "#afafaf")
+        .style("opacity", 0.85)
+        .attr("filter", "url(#desaturate)")
+        .attr("stroke-width", 0.5)
+        .attr("stroke", darkMode ? "#666666" : "#afafaf");
+    } else {
+      // Background scale.
+      gaugeChart
+        .append("path")
+        .attr("d", scales.gaugeArcScale as any)
+        .attr("fill", darkMode ? "#666666" : "#afafaf");
+
+      // Gradient scale (from min to max).
+      gaugeChart
+        .append("g")
+        .attr("class", "gauge-arc")
+        .selectAll("path")
+        .data(gradient)
+        .enter()
+        .append("path")
+        .attr("d", scales.subArcScale as any)
+        .attr("fill", (d) => d.fill)
+        .attr("stroke-width", 0.5)
+        .attr("stroke", (d) => d.fill);
+    }
 
     gaugeChart
       .append("g")

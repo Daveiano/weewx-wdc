@@ -1,0 +1,14 @@
+
+            // TODO: Implement custom context logic from combined-diagram-tile template
+            var outTempGaugeSeries0 = {
+                  current: 20.94,
+
+                  min: 11.51,
+                  max: 21.37,
+                obs: 'Outside Temperature',
+                unit: "&#176;C",
+                rounding: 1,
+                properties: {'tick_number': '7', 'arc': '1.2', 'offset': '20', 'aggregate_interval': '21600', 'min': '-20', 'max': '40'},
+                label: "Outside Temperature"
+            }
+          

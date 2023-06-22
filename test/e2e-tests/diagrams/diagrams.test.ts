@@ -436,6 +436,13 @@ test.describe("Diagrams", () => {
       await rainTemp.locator(".value script >> nth=2").innerText()
     ).toMatchSnapshot();
 
+    // Make combined diagram visible.
+    await page.evaluate(() => window.scrollBy(0, 250));
+    const rainTempSVG = rainTemp.locator(".value .diagram div svg > g"),
+      pressureTempSVG = pressureTemp.locator(".value .diagram div svg > g");
+    await pressureTempSVG.waitFor();
+    await rainTempSVG.waitFor();
+
     // Text axis labels.
     await expect(pressureTemp.locator(".axis-label-left")).toHaveText("°C");
     await expect(pressureTemp.locator(".axis-label-right")).toHaveText(" mbar");

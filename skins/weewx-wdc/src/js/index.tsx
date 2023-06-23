@@ -75,18 +75,19 @@ const gauges = document.querySelectorAll(".diagram-tile.gauge div.diagram");
 gauges.forEach((gauge) => {
   if (gauge instanceof HTMLElement && gauge.dataset.value) {
     const root = createRoot(gauge);
-    const gaugeData = (window as any)[gauge.dataset.value];
+    const gaugeDataInit = (window as any)[gauge.dataset.value];
 
     root.render(
       <D3GaugeDiagram
-        current={gaugeData.current}
-        min={gaugeData.min}
-        max={gaugeData.max}
-        unit={gaugeData.unit}
-        obs={gaugeData.obs}
-        rounding={gaugeData.rounding}
-        properties={gaugeData.properties}
-        label={gaugeData.label}
+        current={gaugeDataInit.current}
+        min={gaugeDataInit.min}
+        max={gaugeDataInit.max}
+        unit={gaugeDataInit.unit}
+        obs={gaugeDataInit.obs}
+        rounding={gaugeDataInit.rounding}
+        properties={gaugeDataInit.properties}
+        label={gaugeDataInit.label}
+        seriesName={gauge.dataset.value}
       />
     );
   }

@@ -25,6 +25,7 @@ type GaugeDiagramBaseProps = {
   obs: string;
   rounding: number;
   label: string;
+  seriesName: string;
   properties: {
     min?: string;
     max?: string;
@@ -40,6 +41,10 @@ type GaugeDiagramBaseProps = {
 export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
   props: GaugeDiagramBaseProps
 ): React.ReactElement => {
+  const [current, setCurrent] = useState(props.current);
+  const [min, setMin] = useState(props.min);
+  const [max, setMax] = useState(props.max);
+
   const svgRef: RefObject<SVGSVGElement> = useRef(null);
   const diagram = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -91,6 +96,30 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
   useEffect(() => {
     handleScreenSizeChange();
 
+    // MQTT handling.
+    const gaugeData = (window as any)[props.seriesName];
+    const gaugeProxy = new Proxy(gaugeData, {
+      set: function (target, key, value) {
+        console.log(`${String(key)} set to ${value}`);
+        target[key] = value;
+
+        if (String(key) === "current") {
+          setCurrent(parseFloat(value));
+        }
+
+        if (String(key) === "min" && parseFloat(value) < min) {
+          setMin(parseFloat(value));
+        }
+
+        if (String(key) === "max" && parseFloat(value) > max) {
+          setMax(parseFloat(value));
+        }
+
+        return true;
+      },
+    });
+    (window as any)[props.seriesName] = gaugeProxy;
+
     const mutationObserver = new MutationObserver(callback);
     mutationObserver.observe(document.documentElement, { attributes: true });
     return () => {
@@ -110,7 +139,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     color_step = 120,
     tick_color = darkMode ? "#393939" : "#ffffff", //darkMode ? "#525252" : "#dddddd",
     needle_color = darkMode ? "#f4f4f4" : "#161616",
-    needleValue = props.current,
+    needleValue = current,
     center = {
       x: dimensions.width / 2,
       y: dimensions.height - margin,
@@ -136,10 +165,10 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
 
   const scaleMax = props.properties.max
       ? parseFloat(props.properties.max)
-      : Math.round(props.max + parseFloat(props.properties.offset)),
+      : Math.round(max + parseFloat(props.properties.offset)),
     scaleMin = props.properties.min
       ? parseFloat(props.properties.min)
-      : Math.round(props.min - parseFloat(props.properties.offset));
+      : Math.round(min - parseFloat(props.properties.offset));
 
   useEffect(() => {
     if (dimensions.width === 0 || dimensions.height === 0) {
@@ -217,8 +246,8 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .startAngle(angles.start_angle)
       .endAngle(angles.end_angle);
 
-    const valueMinAngle = scales.needleScale(props.min),
-      valueMaxAngle = scales.needleScale(props.max);
+    const valueMinAngle = scales.needleScale(min),
+      valueMaxAngle = scales.needleScale(max);
 
     d3.schemeGreens;
 
@@ -303,7 +332,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
             .innerRadius(radii.inner + 1)
             .outerRadius(radii.base)
             .startAngle(angles.start_angle)
-            .endAngle(scales.needleScale(props.min)) as any
+            .endAngle(scales.needleScale(min)) as any
         )
         .attr("fill", darkMode ? "#666666" : "#afafaf")
         .style("opacity", 0.85)
@@ -320,7 +349,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
             .arc()
             .innerRadius(radii.inner + 1)
             .outerRadius(radii.base)
-            .startAngle(scales.needleScale(props.max))
+            .startAngle(scales.needleScale(max))
             .endAngle(angles.end_angle) as any
         )
         .attr("fill", darkMode ? "#666666" : "#afafaf")
@@ -391,16 +420,16 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .data([
         {
           coordinates: [
-            [scales.needleScale(props.min), radii.inner],
-            [scales.needleScale(props.min), radii.outer_tick - 6],
+            [scales.needleScale(min), radii.inner],
+            [scales.needleScale(min), radii.outer_tick - 6],
           ],
           label: "min",
           color: "#313695",
         },
         {
           coordinates: [
-            [scales.needleScale(props.max), radii.inner],
-            [scales.needleScale(props.max), radii.outer_tick - 6],
+            [scales.needleScale(max), radii.inner],
+            [scales.needleScale(max), radii.outer_tick - 6],
           ],
           label: "max",
           color: "#a50026",
@@ -468,7 +497,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     // Current value as text.
     textWrap
       .append("text")
-      .text(props.current.toFixed(props.rounding) + he.decode(props.unit))
+      .text(current.toFixed(props.rounding) + he.decode(props.unit))
       .attr("text-anchor", "middle")
       .attr("dx", 0)
       .attr("dy", "-0.95em")
@@ -491,7 +520,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
 
     legendMin
       .append("text")
-      .text(props.min.toFixed(props.rounding) + he.decode(props.unit))
+      .text(min.toFixed(props.rounding) + he.decode(props.unit))
       .attr("alignment-baseline", "middle")
       .attr("transform", `translate(${0}, ${0})`)
       .attr("font-size", small ? "1em" : "1.25em");
@@ -509,7 +538,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
 
     legendMax
       .append("text")
-      .text(props.max.toFixed(props.rounding) + he.decode(props.unit))
+      .text(max.toFixed(props.rounding) + he.decode(props.unit))
       .attr("transform", `translate(${30}, ${0})`)
       .attr("alignment-baseline", "middle")
       .attr("font-size", small ? "1em" : "1.25em");
@@ -530,7 +559,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     const legendMinDimensions = legendMin.node()!.getBBox(),
       legendMaxDimensions = legendMax.node()!.getBBox();
 
-    let legendWidth = legendMinDimensions.width + legendMaxDimensions.width;
+    const legendWidth = legendMinDimensions.width + legendMaxDimensions.width;
 
     // // Reduce width (margin) for small gauges.
     // if (small) {
@@ -595,7 +624,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
         -gaugeContainerDimensions.y + margin
       })`
     );
-  }, [props.current, props.min, props.max, darkMode, dimensions]);
+  }, [current, min, max, darkMode, dimensions]);
 
   return (
     <>

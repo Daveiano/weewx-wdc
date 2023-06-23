@@ -1,0 +1,14 @@
+
+            // TODO: Implement custom context logic from combined-diagram-tile template
+            var windDirGaugeSeries3 = {
+                  current: 198.48,
+
+                  min: 14.00,
+                  max: 359.00,
+                obs: 'Wind Direction',
+                unit: "&#176;",
+                rounding: 0,
+                properties: {'tick_number': '7', 'arc': '2', 'offset': '20', 'mode': 'normal', 'color_scheme': 'interpolateRdBu', 'invert_color_scheme': '1', 'min': '0', 'max': '360'},
+                label: "Wind Direction"
+            }
+          

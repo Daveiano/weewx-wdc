@@ -3,6 +3,26 @@
 #encoding UTF-8
 #set $diagrams_config = $DisplayOptions.get("diagrams", {})
 #set global $layout = 'classic'
+#set $gauges_display = $DisplayOptions.get('gauges_display', 'before')
+#set $show_gauges = 'Gauges' in $DisplayOptions and $context in $DisplayOptions['Gauges']
+
+#def render_gauges($gauge_config)
+  #set $gauges_index = 0
+  #for $gauge_obs in $gauge_config
+    #set $gauge_obs_binding = $get_data_binding($gauge_obs)
+
+    ## I dont know why but $alltime($data_binding=$skin_obs_binding) crashes on the month-%Y-%m and year-%Y pages:
+    ## ValueError: start time (1654034700) is greater than stop time (1640991600)
+    #set $alltime_tag = None if $use_parameter_year or $use_parameter_month else $alltime($data_binding=$gauge_obs_binding)
+
+    #if $getattr($get_time_span_from_context($context, $day($data_binding=$gauge_obs_binding), $week($data_binding=$gauge_obs_binding), $month($data_binding=$gauge_obs_binding), $year($data_binding=$gauge_obs_binding), $alltime_tag, $yesterday($data_binding=$gauge_obs_binding)), $get_custom_data_binding_obs_key($gauge_obs)).has_data
+      #set global $gauges_index = $gauges_index
+      #set global $partial_obs = $gauge_obs
+      #include "includes/gauge-tile.inc"
+      #set $gauges_index = $gauges_index + 1
+    #end if
+  #end for
+#end def
 
 #set $stat_tiles_xaggs_classic = []
 #if 'stat_tiles_xaggs' in $DisplayOptions
@@ -59,6 +79,15 @@
 
 
   <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-8 bx--col-max-8 layout-col">
+
+    <!--prettier-ignore-->
+    #if $show_gauges
+    <!--prettier-ignore-->
+    <div class="bx--row">
+    $render_gauges($DisplayOptions['Gauges'][$context])
+    </div>
+    #end if
+
     <div class="bx--row">
     <!-- prettier-ignore -->
     #set $diagram_index = 0

@@ -485,6 +485,23 @@ const onMessageArrived = (message: Message) => {
       `.obs-stat-tile bx-structured-list-row[data-observation="${observation}"]`
     );
 
+    const gaugeTile = document.querySelector(
+      `.diagram-tile.gauge[data-observation="${observation}"]`
+    );
+
+    if (gaugeTile) {
+      const gaugeTileSeriesName = gaugeTile.getAttribute("data-test")!;
+      (window as any)[gaugeTileSeriesName].current = payLoad[key];
+
+      if (payLoad[key] < (window as any)[gaugeTileSeriesName].min) {
+        (window as any)[gaugeTileSeriesName].min = payLoad[key];
+      }
+
+      if (payLoad[key] > (window as any)[gaugeTileSeriesName].max) {
+        (window as any)[gaugeTileSeriesName].max = payLoad[key];
+      }
+    }
+
     if (statTile) {
       const statTileUnit = statTile.getAttribute("data-unit")!;
       const statTileRounding =

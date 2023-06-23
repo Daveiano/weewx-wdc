@@ -257,6 +257,8 @@ const _updateStatTile = (
 
     if (rainRate === null) return;
 
+    const rainRateUnit = statTile.getAttribute("data-unit-rain-rate")!;
+
     const rainRateCurrent = statTile.querySelector(".value-rain-rate-current"),
       rainRateMax = statTile.querySelector(".value-rain-rate-max"),
       rainRateMaxValue = rainRateMax
@@ -266,13 +268,13 @@ const _updateStatTile = (
     if (rainRateCurrent) {
       rainRateCurrent.querySelector(
         ".stat-value span.value"
-      )!.textContent = `${rainRate.toFixed(rounding)}${unit}`;
+      )!.textContent = `${rainRate.toFixed(rounding)}${rainRateUnit}`;
     }
 
     if (rainRateMax && rainRate > parseFloat(rainRateMaxValue)) {
       rainRateMax.querySelector(
         ".stat-value span.value"
-      )!.textContent = `${rainRate.toFixed(rounding)}${unit}`;
+      )!.textContent = `${rainRate.toFixed(rounding)}${rainRateUnit}`;
     }
   }
 };

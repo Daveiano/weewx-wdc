@@ -24,7 +24,16 @@
 
 <div class="bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-3 bx--col-max-2">
   <!--prettier-ignore-->
-  <div class="bx--tile stat-tile" data-test="$partial_obs" data-observation="$skin_obs_key" data-unit="$get_unit_label($get_unit_for_obs($partial_obs, $skin_obs_key, $context))" data-rounding="$rounding">
+  <div
+  class="bx--tile stat-tile"
+  data-test="$partial_obs"
+  data-observation="$skin_obs_key"
+  data-unit="$get_unit_label($get_unit_for_obs($partial_obs, $skin_obs_key, $context))"
+  data-rounding="$rounding"
+  #if $show_rain_rate
+    data-unit-rain-rate="$get_unit_label($get_unit_for_obs('rainRate', 'rainRate', $context))"
+  #end if
+  >
     <!-- Main row -->
     <div class="bx--row">
       <div class="bx--col">

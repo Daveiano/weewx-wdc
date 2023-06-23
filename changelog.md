@@ -675,6 +675,7 @@ https://github.com/Daveiano/weewx-wdc/compare/v3.1.1...00c79357#diff-ba225fb627d
 - Add support for Classic layout on Sensor Status page
 - Add support for weewx-xaggs (configurable tiles to show historical data) GH-170
 - Extend Stats/Climatological days table. Added rain stats (last rain, most consecutive days of rain) GH-171
+- New Chart Type: Gauge GH-155
 - Extended Webcams/Externals (see the updated [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Webcams-and-Externals-Page)) GH-167
 
   - **Attention:** You need to update your skin.conf if you were using the webcams/externals:

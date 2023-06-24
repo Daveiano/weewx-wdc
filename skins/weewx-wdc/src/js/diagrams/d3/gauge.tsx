@@ -41,7 +41,10 @@ type GaugeDiagramBaseProps = {
 export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
   props: GaugeDiagramBaseProps
 ): React.ReactElement => {
-  const [current, setCurrent] = useState(props.current);
+  const [current, setCurrent] = useState(
+    isNaN(props.current) ? 0 : props.current
+  );
+
   const [min, setMin] = useState(props.min);
   const [max, setMax] = useState(props.max);
 

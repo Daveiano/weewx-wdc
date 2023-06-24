@@ -79,9 +79,9 @@ gauges.forEach((gauge) => {
 
     root.render(
       <D3GaugeDiagram
-        current={gaugeDataInit.current}
-        min={gaugeDataInit.min}
-        max={gaugeDataInit.max}
+        current={parseFloat(gaugeDataInit.current)}
+        min={parseFloat(gaugeDataInit.min)}
+        max={parseFloat(gaugeDataInit.max)}
         unit={gaugeDataInit.unit}
         obs={gaugeDataInit.obs}
         rounding={gaugeDataInit.rounding}

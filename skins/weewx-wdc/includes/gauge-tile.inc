@@ -44,22 +44,22 @@
             // TODO: Implement custom context logic from combined-diagram-tile template
             var $series_name = {
                 #if $context == 'day' and not $daily_archive
-                  current: $getattr($current, $partial_obs_key).nolabel('%.2f').replace(',','.'),
+                  current: "$getattr($current, $partial_obs_key).nolabel('%.2f').replace(',','.')",
                 #else if $context == 'day' and $daily_archive
-                  current: $getattr($day, $partial_obs_key).avg.nolabel('%.2f').replace(',','.'),
+                  current: "$getattr($day, $partial_obs_key).avg.nolabel('%.2f').replace(',','.')",
                 #else
-                  current: $getattr($gauge_obs_binding, 'avg').nolabel('%.2f').replace(',','.'),
+                  current: "$getattr($gauge_obs_binding, 'avg').nolabel('%.2f').replace(',','.')",
                 #end if
 
                 #if $context == 'day' and $daily_archive
-                  min: $getattr($day, $partial_obs_key).min.nolabel('%.2f').replace(',','.'),
-                  max: $getattr($day, $partial_obs_key).max.nolabel('%.2f').replace(',','.'),
+                  min: "$getattr($day, $partial_obs_key).min.nolabel('%.2f').replace(',','.')",
+                  max: "$getattr($day, $partial_obs_key).max.nolabel('%.2f').replace(',','.')",
                 #else if $context == 'day' and not $daily_archive
-                  min: $getattr($span(time_delta=$int($get_gauge_diagram_prop($partial_obs, 'aggregate_interval', $context))), $partial_obs_key).min.nolabel('%.2f').replace(',','.'),
-                  max: $getattr($span(time_delta=$int($get_gauge_diagram_prop($partial_obs, 'aggregate_interval', $context))), $partial_obs_key).max.nolabel('%.2f').replace(',','.'),
+                  min: "$getattr($span(time_delta=$int($get_gauge_diagram_prop($partial_obs, 'aggregate_interval', $context))), $partial_obs_key).min.nolabel('%.2f').replace(',','.')",
+                  max: "$getattr($span(time_delta=$int($get_gauge_diagram_prop($partial_obs, 'aggregate_interval', $context))), $partial_obs_key).max.nolabel('%.2f').replace(',','.')",
                 #else
-                  min: $getattr($gauge_obs_binding, 'min').nolabel('%.2f').replace(',','.'),
-                  max: $getattr($gauge_obs_binding, 'max').nolabel('%.2f').replace(',','.'),
+                  min: "$getattr($gauge_obs_binding, 'min').nolabel('%.2f').replace(',','.')",
+                  max: "$getattr($gauge_obs_binding, 'max').nolabel('%.2f').replace(',','.')",
                 #end if
                 obs: '$obs.label[$partial_obs]',
                 unit: "$get_unit_label($get_unit_for_obs($partial_obs, $partial_obs_key, $context))",

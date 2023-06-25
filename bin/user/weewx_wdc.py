@@ -1795,15 +1795,6 @@ class WdcDiagramUtil(SearchList):
 
         value = search_up(diagrams_config, prop, None)
 
-        # For week, month, year and alltime use the actual timespan in seconds.
-        if (prop == "aggregate_interval" and value is None):
-            if context == "week":
-                return 3600 * 24 * 7
-            if context == "month":
-                return 3600 * 24 * 30
-            if context == "year":
-                return 3600 * 24 * 365
-
         return value
 
     def get_windrose_data(self, start_ts, end_ts, context):

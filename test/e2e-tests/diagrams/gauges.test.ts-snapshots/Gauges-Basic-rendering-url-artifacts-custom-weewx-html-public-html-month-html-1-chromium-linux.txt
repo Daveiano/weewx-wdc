@@ -3,8 +3,8 @@
             var outTempGaugeSeries0 = {
                   current: "18.20",
 
-                  min: "8.11",
-                  max: "37.39",
+                min: "8.11",
+                max: "37.39",
                 obs: 'Outside Temperature',
                 unit: "&#176;C",
                 rounding: 1,

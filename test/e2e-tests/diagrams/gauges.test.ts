@@ -5,8 +5,8 @@ test.describe("Gauges", () => {
     {
       url: "artifacts-custom-weewx-html/public_html/index.html",
       current: "20.9°C",
-      min: "11.5°C",
-      max: "21.4°C",
+      min: "11.4°C",
+      max: "21.5°C",
       title: "Outside Temperature",
     },
     {
@@ -22,8 +22,8 @@ test.describe("Gauges", () => {
     {
       url: "artifacts-custom-weewx-html/public_html/index.html",
       current: "177°",
-      min: "146°",
-      max: "177°",
+      min: "130°",
+      max: "183°",
       title: "Wind Direction",
     },
     {

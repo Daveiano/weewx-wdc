@@ -3,12 +3,12 @@
             var outTempGaugeSeries0 = {
                   current: "20.94",
 
-                  min: "11.51",
-                  max: "21.37",
+                min: "11.39",
+                max: "21.50",
                 obs: 'Outside Temperature',
                 unit: "&#176;C",
                 rounding: 1,
-                properties: {'tick_number': '7', 'arc': '1.2', 'offset': '20', 'mode': 'normal', 'color_scheme': 'interpolateRdBu', 'invert_color_scheme': '1', 'aggregate_interval': '21600', 'min': '-20', 'max': '40'},
+                properties: {'tick_number': '7', 'arc': '1.2', 'offset': '20', 'mode': 'normal', 'color_scheme': 'interpolateRdBu', 'invert_color_scheme': '1', 'min': '-20', 'max': '40'},
                 label: "Outside Temperature"
             }
           

@@ -51,7 +51,7 @@
             data-value="$series_name"
             data-unit="$getattr($unit.label, $partial_obs)"
             data-obs="$partial_obs"
-            data-diagram="$get_diagram($partial_obs)"
+            data-diagram="$get_diagram($partial_obs, $context)"
             data-context="$context"
             data-aggregate-type="['$get_aggregate_type($partial_obs, $context)']"
             data-nivo-props="$get_diagram_props($partial_obs, $context)"

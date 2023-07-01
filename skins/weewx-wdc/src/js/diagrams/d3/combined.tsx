@@ -30,6 +30,7 @@ import { addMarkers } from "./components/marker";
 type CombinedDiagramBaseProps = DiagramBaseProps & {
   chartTypes: string[];
   observation: string[];
+  observationCombinedKeys: string[];
   unit: string[];
   locale: d3.TimeLocaleObject;
 };
@@ -53,7 +54,8 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
     darkMode,
     props.nivoProps,
     props.color,
-    props.observation
+    props.observation,
+    props.observationCombinedKeys
   );
 
   // Combine all data into one array and sort by x value.
@@ -169,13 +171,14 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       // Group data per unit. First only process bar scales bc we need them later for the line scales.
       props.data.forEach((serie, index) => {
         // Unit not yet added/proccessed.
-        if (!dataGroupedByScale[props.unit[index]]) {
+        if (!dataGroupedByScale[`${props.unit[index]}|bar`]) {
           if (props.chartTypes[index] === "bar") {
-            dataGroupedByScale[props.unit[index]] = [];
+            dataGroupedByScale[`${props.unit[index]}|bar`] = [];
 
             const observationProps = getObsPropsFromChartProps(
               props.nivoProps,
-              props.observation[index]
+              props.observation[index],
+              props.observationCombinedKeys[index]
             );
 
             const unitData = dataGroupedByUnit.find(
@@ -196,12 +199,12 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
                 .domain([0, yScaleMax])
                 .range([height, 0]);
 
-            scales[props.unit[index]] = {
+            scales[`${props.unit[index]}|bar`] = {
               x: xScale,
               y: yScale,
             };
 
-            dataGroupedByScale[props.unit[index]].push({
+            dataGroupedByScale[`${props.unit[index]}|bar`].push({
               ...serie,
               unit: props.unit[index],
             });
@@ -210,13 +213,14 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       });
 
       props.data.forEach((serie, index) => {
-        if (!dataGroupedByScale[props.unit[index]]) {
+        if (!dataGroupedByScale[`${props.unit[index]}|line`]) {
           if (props.chartTypes[index] === "line") {
-            dataGroupedByScale[props.unit[index]] = [];
+            dataGroupedByScale[`${props.unit[index]}|line`] = [];
 
             const observationProps = getObsPropsFromChartProps(
               props.nivoProps,
-              props.observation[index]
+              props.observation[index],
+              props.observationCombinedKeys[index]
             );
 
             const unitData = dataGroupedByUnit.find(
@@ -225,7 +229,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
             const barScaleOffset =
                 scales[
-                  props.unit[props.chartTypes.indexOf("bar")]
+                  `${props.unit[props.chartTypes.indexOf("bar")]}|bar`
                 ].x.bandwidth() / 2,
               xScale = d3
                 .scaleTime()
@@ -249,13 +253,13 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
                 .domain([yScaleMin, yScaleMax])
                 .range([height, 0]);
 
-            scales[props.unit[index]] = {
+            scales[`${props.unit[index]}|line`] = {
               x: xScale,
               y: yScale,
               yScaleMin,
             };
 
-            dataGroupedByScale[props.unit[index]].push({
+            dataGroupedByScale[`${props.unit[index]}|line`].push({
               ...serie,
               unit: props.unit[index],
             });
@@ -273,7 +277,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         .attr("data-test", "x-axis")
         .call(
           d3
-            .axisBottom(scales[barCharUnit]["x"])
+            .axisBottom(scales[`${barCharUnit}|bar`]["x"])
             .tickSize(0)
             .tickPadding(6)
             .tickFormat((d) =>
@@ -292,10 +296,13 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       });
 
       let index = 0;
-      for (const [unit, value] of sortedScales) {
+      let unitsProcessed: string[] = [];
+      for (let [unit, value] of sortedScales) {
         if (index >= 2) {
           return;
         }
+
+        unit = unit.split("|").shift() as string;
 
         // Y Axis left.
         if (index === 0) {
@@ -321,7 +328,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
               "transform",
               `translate(${
                 getAxisLeftLegendOffset(
-                  props.observation[props.unit.indexOf(unit)]
+                  props.observation[`${props.unit.indexOf(unit)}`]
                 ) + 2.25
               }, ${height / 2}), rotate(-90)`
             )
@@ -355,7 +362,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         }
 
         // Only draw right axis if there are multiple units.
-        if (index > 0) {
+        if (index > 0 && !unitsProcessed.includes(unit)) {
           svgElement
             .append("g")
             .attr("data-test", "y-axis-right")
@@ -394,29 +401,33 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         }
 
         index++;
+        unitsProcessed = [...unitsProcessed, unit];
       }
 
       // Draw Data.
       props.data.forEach((serie, index) => {
         const observationProps = getObsPropsFromChartProps(
           props.nivoProps,
-          props.observation[index]
+          props.observation[index],
+          props.observationCombinedKeys[index]
         );
 
         if (props.chartTypes[index] === "line") {
           const curve = getCurve(observationProps.curve);
+          const lineScale = `${props.unit[index]}|line`;
 
           const lineGenerator = d3
             .line()
             .x(function (d: any) {
-              return scales[props.unit[index]]["x"](d.x * 1000); //+
-              //scales[props.unit[props.chartTypes.indexOf("bar")]][
-              //  "x"
-              //].bandwidth() /
-              //  2
+              return scales[lineScale]["x"](d.x * 1000); //+
+              // return (
+              //   scales[props.unit[props.chartTypes.indexOf("bar")]][
+              //     "x"
+              //   ].bandwidth() / 2
+              // );
             })
             .y(function (d: any) {
-              return scales[props.unit[index]]["y"](d.y);
+              return scales[lineScale]["y"](d.y);
             })
             .curve(curve);
 
@@ -429,10 +440,10 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
               .enter()
               .append("circle")
               .attr("cx", (d: any) => {
-                return scales[props.unit[index]]["x"](d["x"] * 1000);
+                return scales[lineScale]["x"](d["x"] * 1000);
               })
               .attr("cy", (d: any) => {
-                return scales[props.unit[index]]["y"](d["y"]);
+                return scales[lineScale]["y"](d["y"]);
               })
               .attr(
                 "r",
@@ -463,14 +474,10 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
                 "d",
                 d3
                   .area()
-                  .x((d: any) => scales[props.unit[index]]["x"](d.x * 1000))
+                  .x((d: any) => scales[lineScale]["x"](d.x * 1000))
                   // @todo Area base line value.
-                  .y0(
-                    scales[props.unit[index]]["y"](
-                      scales[props.unit[index]]["yScaleMin"]
-                    )
-                  )
-                  .y1((d: any) => scales[props.unit[index]]["y"](d.y))
+                  .y0(scales[lineScale]["y"](scales[lineScale]["yScaleMin"]))
+                  .y1((d: any) => scales[lineScale]["y"](d.y))
                   .curve(curve)
               );
           }
@@ -490,6 +497,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
         if (props.chartTypes[index] === "bar") {
           // Bars
+          const barScale = `${props.unit[index]}|bar`;
           svgElement
             .selectAll("bars")
             .data(serie.data)
@@ -498,15 +506,12 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
             .attr(
               "x",
               (d: any) =>
-                (scales[props.unit[index]]["x"](d.x) as number) +
-                scales[props.unit[index]]["x"].bandwidth() * 0.125
+                (scales[barScale]["x"](d.x) as number) +
+                scales[barScale]["x"].bandwidth() * 0.125
             )
-            .attr("y", (d: any) => scales[props.unit[index]]["y"](d.y))
-            .attr("width", scales[props.unit[index]]["x"].bandwidth() * 0.75)
-            .attr(
-              "height",
-              (d: any) => height - scales[props.unit[index]]["y"](d.y)
-            )
+            .attr("y", (d: any) => scales[barScale]["y"](d.y))
+            .attr("width", scales[barScale]["x"].bandwidth() * 0.75)
+            .attr("height", (d: any) => height - scales[barScale]["y"](d.y))
             .attr("fill", colors[index]);
 
           if (observationProps.enableLabel) {
@@ -520,10 +525,10 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
               .attr(
                 "x",
                 (d: any) =>
-                  (scales[props.unit[index]]["x"](d.x) as number) +
-                  scales[props.unit[index]]["x"].bandwidth() / 2
+                  (scales[barScale]["x"](d.x) as number) +
+                  scales[barScale]["x"].bandwidth() / 2
               )
-              .attr("y", (d: any) => scales[props.unit[index]]["y"](d.y) + 5)
+              .attr("y", (d: any) => scales[barScale]["y"](d.y) + 5)
               .attr("dy", ".75em")
               .style("font-size", "0.75em")
               .text(function (d: any) {
@@ -613,7 +618,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
           props.data.forEach((dataSet: any, index: number) => {
             if (props.chartTypes[index] === "line") {
-              const x0 = scales[props.unit[index]]["x"]
+              const x0 = scales[`${props.unit[index]}|line`]["x"]
                 .invert(pointerX)
                 .getTime();
               let i = d3
@@ -633,10 +638,10 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
 
               values = [...values, d];
 
-              tooltipX = scales[props.unit[index]]["x"](d.x * 1000);
+              tooltipX = scales[`${props.unit[index]}|line`]["x"](d.x * 1000);
             }
             if (props.chartTypes[index] === "bar") {
-              const xScaleStep = scales[props.unit[index]]["x"].step();
+              const xScaleStep = scales[`${props.unit[index]}|bar`]["x"].step();
               let i = Math.floor(d3.pointer(event)[0] / xScaleStep);
 
               if (i < 0) {

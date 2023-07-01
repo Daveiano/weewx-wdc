@@ -39,6 +39,8 @@
   #end if
 #end for
 
+#set $diagram_props = $get_diagram_props($comb_obs, $context)
+
 <div class="$diagram_classes">
   <div class="bx--tile diagram-tile combined" data-test="$combined_obs_string">
     <div class="bx--row">
@@ -72,6 +74,7 @@
           #set $series_labels = []
           #set $series_units = []
           #set $series_observations = []
+          #set $series_observation_keys = []
           #set $series_aggregate_type = []
           #set $diagram_types = []
           #set $combined_index = 0
@@ -82,12 +85,13 @@
             #silent $series_names.append($series_name)
             #silent $series_labels.append($obs.label[$series_observation])
             #silent $series_observations.append($series_observation)
-            #silent $series_aggregate_type.append($gettext($get_aggregate_type($series_observation, $context, combined=$combined_diagram.obs[$combined_obs]).capitalize()))
+            #silent $series_observation_keys.append($combined_obs)
+            #silent $series_aggregate_type.append($gettext($get_aggregate_type($combined_obs, $context, combined=$combined_diagram.obs[$combined_obs]).capitalize()))
             #silent $series_colors.append($get_color($comb_obs, $context, combined=True, combined_obs_key=$combined_obs, combined_obs=$series_observation))
             #set $series_observation_key = $get_custom_data_binding_obs_key($series_observation)
             #set $combined_obs_binding = $get_data_binding($combined_obs, $context, combined_key=$comb_obs)
             #silent $series_units.append($get_unit_label($get_unit_for_obs($combined_obs, $series_observation_key, $context, combined=$combined_diagram, combined_key=$comb_obs)))
-            #silent $diagram_types.append($get_diagram($series_observation_key))
+            #silent $diagram_types.append($get_diagram($series_observation_key, $context, combined_key=$comb_obs, combined_obs=$combined_obs))
 
           #if $context == 'month' and $use_parameter_month
             #set $obs_context = $month($data_binding=$combined_obs_binding)
@@ -136,10 +140,11 @@
             data-color="$series_colors"
             data-unit="$series_units"
             data-observations="$series_observations"
+            data-combinedkeys="$series_observation_keys"
             data-diagram="$diagram_types"
             data-context="$context_key"
             data-aggregate-type="$series_aggregate_type"
-            data-nivo-props="$get_diagram_props($comb_obs, $context)"
+            data-nivo-props="$diagram_props"
           ></div>
         </div>
       </div>

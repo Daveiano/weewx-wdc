@@ -1301,6 +1301,16 @@ class WdcDiagramUtil(SearchList):
         else:
             wobs = observation_key
 
+        # Include any given config to the XType call.
+        obs_props = self.get_diagram_props_obs(
+            observation, context_key, combined_key=combined_key)
+        if 'aggregate_type' in obs_props:
+            obs_props.pop("aggregate_type")
+        if 'aggregate_interval' in obs_props:
+            obs_props.pop("aggregate_interval")
+        if 'observations' in obs_props:
+            obs_props.pop('observations')
+
         obs_start_vt, obs_stop_vt, obs_vt = weewx.xtypes.get_series(
             wobs,
             TimeSpan(start_ts, end_ts),
@@ -1310,7 +1320,8 @@ class WdcDiagramUtil(SearchList):
                 observation=observation, context=context_key,
                 alltime_start=alltime_start, alltime_end=alltime_end,
                 combined_key=combined_key
-            )
+            ),
+            **obs_props
         )
 
         unit_default = self.generator.converter.getTargetUnit(
@@ -1342,26 +1353,48 @@ class WdcDiagramUtil(SearchList):
             zip(obs_start_vt[0], obs_stop_vt[0], obs_vt[0]))
         )
 
-    def get_diagram(self, observation):
+    def get_diagram(self, observation, context_key, *args, **kwargs):
         """
         Choose between line and bar.
 
         Args:
             observation (string): The observation
+            context_key (string): The context
 
         Returns:
             str: A diagram string
         """
+        combined_key = kwargs.get("combined_key", None)
+        combined_obs = kwargs.get("combined_obs", None)
+
+        type = "line"
+        if observation == "rain" or observation == "ET":
+            type = "bar"
+
         try:
             type = self.skin_dict["DisplayOptions"]["diagrams"][observation]["type"]
-            return type
         except KeyError:
             pass
 
-        if observation == "rain" or observation == "ET":
-            return "bar"
+        if combined_key is None:
+            try:
+                type = self.skin_dict["DisplayOptions"]["diagrams"][context_key]["observations"][observation]["type"]
+            except KeyError:
+                pass
 
-        return "line"
+        if combined_key is not None:
+            try:
+                type = self.skin_dict["DisplayOptions"]["diagrams"]["combined_observations"][combined_key]["obs"][combined_obs]["type"]
+            except KeyError:
+                pass
+
+            try:
+                type = self.skin_dict["DisplayOptions"]["diagrams"][context_key][
+                    "observations"][combined_key]["obs"][combined_obs]["type"]
+            except KeyError:
+                pass
+
+        return type
 
     def get_aggregate_type(self, observation, context, *args, **kwargs):
         """
@@ -1531,6 +1564,109 @@ class WdcDiagramUtil(SearchList):
                     return 3600 * 432  # 8 days
 
                 return 3600 * 96  # 4 days
+
+    def get_diagram_props(self, obs, context):
+        """
+        Get diagram props from skin.conf.
+
+        Args:
+            obs (string): Observation
+            context (string): Day, week, month, year, alltime
+
+        Returns:
+            dict: Diagram props for d3.js.
+        """
+        if context == "yesterday":
+            context = "day"
+
+        diagrams_config = self.skin_dict["DisplayOptions"]["diagrams"]
+        diagram_base_props = diagrams_config[self.get_diagram(obs, context)]
+
+        try:
+            diagram_context_props = accumulateLeaves(
+                diagrams_config[context]['observations'][obs], max_level=3)
+        except KeyError:
+            try:
+                diagram_context_props = accumulateLeaves(
+                    diagrams_config[context]['observations'], max_level=2)
+            except KeyError:
+                diagram_context_props = {}
+
+        if obs in diagrams_config:
+            return {
+                **diagram_base_props,
+                **diagrams_config[obs],
+                **diagram_context_props
+            }
+        elif obs in diagrams_config["combined_observations"]:
+            return {
+                **diagram_base_props,
+                **diagram_context_props,
+                **diagrams_config["combined_observations"][obs],
+            }
+        else:
+            return {
+                **diagram_base_props,
+                **diagram_context_props
+            }
+
+    def get_diagram_props_obs(self, observation, context, *args, **kwargs):
+        """
+        Same as get_diagram_props, but for specific observations. Returns
+        the values in [combined_observations][X][observations][obs]
+        instead of [combined_observations][X].
+
+        Args:
+            observation (string): The observation
+            context (string): Day, week, month, year, alltime
+
+        Returns:
+            dict: A dict of props
+        """
+        combined_key = kwargs.get("combined_key", None)
+
+        if context == "yesterday":
+            context = "day"
+
+        # Most basic config.
+        try:
+            props = self.skin_dict["DisplayOptions"]["diagrams"][observation]
+        except KeyError:
+            props = {}
+
+        # Context config.
+        try:
+            props_context = accumulateLeaves(self.skin_dict["DisplayOptions"]["diagrams"][context][
+                "observations"][observation], 3)
+        except KeyError:
+            props_context = self.skin_dict["DisplayOptions"]["diagrams"][context]
+        finally:
+            props = {**props, **props_context}
+
+        # Combined config.
+        if combined_key is not None:
+            try:
+                combined_props = accumulateLeaves(self.skin_dict["DisplayOptions"]["diagrams"][
+                    "combined_observations"][combined_key]["obs"][observation], 3)
+            except KeyError:
+                combined_props = self.skin_dict["DisplayOptions"]["diagrams"][
+                    "combined_observations"][combined_key]
+            finally:
+                props = {**props, **combined_props}
+
+            try:
+                props_context_obs = accumulateLeaves(self.skin_dict["DisplayOptions"]["diagrams"][
+                    context]["observations"][combined_key]["obs"][observation], 3)
+            except KeyError:
+                try:
+                    props_context_obs = self.skin_dict["DisplayOptions"]["diagrams"][
+                        context]["observations"][combined_key]
+                except KeyError:
+                    props_context_obs = {}
+            finally:
+                props = {**props, **props_context_obs}
+
+        return props
 
     def get_diagram_boundary(self, context):
         """
@@ -1712,51 +1848,6 @@ class WdcDiagramUtil(SearchList):
             hour_delta = 24 * days
 
         return hour_delta
-
-    def get_diagram_props(self, obs, context):
-        """
-        Get nivo props from skin.conf.
-
-        Args:
-            obs (string): Observation
-            context (string): Day, week, month, year, alltime
-
-        Returns:
-            dict: Diagram props for d3.js.
-        """
-        if context == "yesterday":
-            context = "day"
-
-        diagrams_config = self.skin_dict["DisplayOptions"]["diagrams"]
-        diagram_base_props = diagrams_config[self.get_diagram(obs)]
-
-        try:
-            diagram_context_props = accumulateLeaves(
-                diagrams_config[context]['observations'][obs], max_level=3)
-        except KeyError:
-            try:
-                diagram_context_props = accumulateLeaves(
-                    diagrams_config[context]['observations'], max_level=2)
-            except KeyError:
-                diagram_context_props = {}
-
-        if obs in diagrams_config:
-            return {
-                **diagram_base_props,
-                **diagrams_config[obs],
-                **diagram_context_props
-            }
-        elif obs in diagrams_config["combined_observations"]:
-            return {
-                **diagram_base_props,
-                **diagram_context_props,
-                **diagrams_config["combined_observations"][obs],
-            }
-        else:
-            return {
-                **diagram_base_props,
-                **diagram_context_props
-            }
 
     def get_gauge_diagram_props(self, obs, context):
         """

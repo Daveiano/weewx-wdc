@@ -44,7 +44,8 @@ export const D3BarDiagram: FunctionComponent<BarDiagramBaseProps> = (
     darkMode,
     props.nivoProps,
     props.color,
-    props.observation
+    props.observation,
+    []
   );
 
   // Combine all data into one array and sort by x value.

@@ -30,6 +30,7 @@ import { addLegend } from "./components/legend";
 type LineDiagramBaseProps = DiagramBaseProps & {
   unit: string[];
   locale: d3.TimeLocaleObject;
+  observationCombinedKeys: string[];
 };
 
 export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
@@ -56,7 +57,8 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
     darkMode,
     props.nivoProps,
     props.color,
-    props.observation
+    props.observation,
+    props.observationCombinedKeys
   );
 
   // Combine all data into one array and sort by x value.
@@ -234,7 +236,8 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
 
         const observationProps = getObsPropsFromChartProps(
           props.nivoProps,
-          props.observation[index]
+          props.observation[index],
+          props.observationCombinedKeys[index]
         );
 
         const yScaleMin = observationProps.yScaleMin
@@ -385,7 +388,8 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
     props.data.forEach((dataSet: any, index: number) => {
       const observationProps = getObsPropsFromChartProps(
         props.nivoProps,
-        props.observation[index]
+        props.observation[index],
+        props.observationCombinedKeys[index]
       );
 
       const curve = getCurve(observationProps.curve);

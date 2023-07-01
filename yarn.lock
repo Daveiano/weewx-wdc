@@ -612,7 +612,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:^1.35.1":
+"@playwright/test@npm:latest":
   version: 1.35.1
   resolution: "@playwright/test@npm:1.35.1"
   dependencies:
@@ -5832,7 +5832,7 @@ __metadata:
     "@nivo/calendar": ^0.79.1
     "@nivo/colors": ^0.82.1
     "@nivo/core": ^0.79.0
-    "@playwright/test": ^1.35.1
+    "@playwright/test": latest
     "@react-hook/media-query": ^1.1.1
     "@types/carbon-components-react": ^7.46.1
     "@types/carbon__icons-react": ^10.24.0

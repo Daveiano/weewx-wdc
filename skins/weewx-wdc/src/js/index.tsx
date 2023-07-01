@@ -166,13 +166,20 @@ diagrams.forEach((diagram) => {
       }
     }
 
-    if (diagramTypesUnique.length === 1 && diagramTypesUnique[0] === "line") {
+    if (
+      diagramTypesUnique.length === 1 &&
+      diagramTypesUnique[0] === "line" &&
+      diagram.dataset.combinedkeys
+    ) {
       root.render(
         <D3LineDiagram
           color={JSON.parse(diagram.dataset.color.replace(/'/g, '"'))}
           unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
           data={data}
           observation={diagramObservations}
+          observationCombinedKeys={JSON.parse(
+            diagram.dataset.combinedkeys.replace(/'/g, '"')
+          )}
           context={diagram.dataset.context as context}
           nivoProps={nivoProps}
           locale={locale}
@@ -198,7 +205,8 @@ diagrams.forEach((diagram) => {
     if (
       diagramTypesUnique.length === 2 &&
       diagramTypesUnique.includes("bar") &&
-      diagramTypesUnique.includes("line")
+      diagramTypesUnique.includes("line") &&
+      diagram.dataset.combinedkeys
     ) {
       root.render(
         <CombinedDiagram
@@ -206,6 +214,9 @@ diagrams.forEach((diagram) => {
           unit={JSON.parse(diagram.dataset.unit.replace(/'/g, '"'))}
           data={data}
           observation={diagramObservations}
+          observationCombinedKeys={JSON.parse(
+            diagram.dataset.combinedkeys.replace(/'/g, '"')
+          )}
           context={diagram.dataset.context as context}
           nivoProps={nivoProps}
           chartTypes={diagramTypes}

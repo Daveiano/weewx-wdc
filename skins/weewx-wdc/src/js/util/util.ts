@@ -126,18 +126,43 @@ export const getBackgroundColorDarkModeLightness = color("#393939").lightness();
 
 export const chartTransition = "left 0.25s ease-in-out, top 0.35s ease-in-out";
 
+/**
+ * Get observation props from chart props.
+ *
+ * @param chartProps ChartProp Object
+ * @param observation Observation name, eg. rain or outTemp
+ * @param observationCombinedKey Observation combined key, temp_min
+ */
 export const getObsPropsFromChartProps = (
   chartProps: DiagramBaseProps["nivoProps"],
-  observation: string
+  observation: string,
+  observationCombinedKey?: string
 ): DiagramBaseProps["nivoProps"] => {
-  const observationProps = chartProps.obs
-    ? {
+  let observationProps = chartProps;
+
+  if (chartProps.obs) {
+    const observationByObs = Object.entries(chartProps.obs).filter(
+      ([key, value]) => value.observation === observation
+    );
+
+    if (observationByObs.length > 0) {
+      observationProps = {
         ...chartProps,
-        ...Object.entries(chartProps.obs).filter(
-          ([key, value]) => value.observation === observation
-        )[0][1],
-      }
-    : chartProps;
+        ...observationByObs[0][1],
+      };
+    }
+  }
+
+  if (
+    observationCombinedKey &&
+    chartProps.obs &&
+    chartProps.obs[observationCombinedKey]
+  ) {
+    observationProps = {
+      ...chartProps,
+      ...chartProps.obs[observationCombinedKey],
+    };
+  }
 
   return observationProps;
 };
@@ -146,7 +171,8 @@ export const getColors = (
   darkMode: boolean,
   chartProps: DiagramBaseProps["nivoProps"],
   colors: string[],
-  observations: string[]
+  observations: string[],
+  observationCombinedKeys: string[]
 ): string[] => {
   if (!darkMode) {
     return colors;
@@ -155,7 +181,8 @@ export const getColors = (
   return colors.map((c, index) => {
     const observationProps = getObsPropsFromChartProps(
       chartProps,
-      observations[index]
+      observations[index],
+      observationCombinedKeys[index]
     );
 
     if (observationProps.color_dark) {

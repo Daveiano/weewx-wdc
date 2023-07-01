@@ -43,7 +43,7 @@
     "workbox-strategies": "^6.5.3"
   },
   "devDependencies": {
-    "@playwright/test": "^1.35.1",
+    "@playwright/test": "latest",
     "@types/carbon-components-react": "^7.46.1",
     "@types/carbon__icons-react": "^10.24.0",
     "@types/color": "^3.0.3",

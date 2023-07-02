@@ -21,14 +21,14 @@ test.describe("Gauges", () => {
   const gaugeTestExpectationsFullArc = [
     {
       url: "artifacts-custom-weewx-html/public_html/index.html",
-      current: "177°",
+      current: "S / 177°",
       min: "130°",
       max: "183°",
       title: "Wind Direction",
     },
     {
       url: "artifacts-custom-weewx-html/public_html/month.html",
-      current: "198°",
+      current: "SSW / 198°",
       min: "14°",
       max: "359°",
       title: "Wind Direction",
@@ -95,10 +95,8 @@ test.describe("Gauges", () => {
       ).toHaveText(testExpectation.max);
 
       await expect(windDirSVG.locator(".tick")).toHaveCount(7);
-      await expect(windDirSVG.locator(".tick-label >> nth=0")).toBeEmpty();
-      await expect(windDirSVG.locator(".tick-label >> nth=6")).toHaveText(
-        "360° / 0°"
-      );
+      await expect(windDirSVG.locator(".tick-label >> nth=0")).toHaveText("N");
+      await expect(windDirSVG.locator(".tick-label >> nth=6")).toHaveText("N");
 
       expect(
         await windDir.locator(".value script").innerText()

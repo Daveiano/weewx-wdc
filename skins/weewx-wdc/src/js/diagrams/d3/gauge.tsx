@@ -48,6 +48,10 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
   const [min, setMin] = useState(props.min);
   const [max, setMax] = useState(props.max);
 
+  const windDirOrdinals = (window as any).weewxWdcConfig.diagramWindDirOrdinals;
+  const ordinalCompass = (window as any).weewxWdcConfig.ordinalCompass;
+  const windDirAsOridnal = props.obs === "windDir" && windDirOrdinals;
+
   const svgRef: RefObject<SVGSVGElement> = useRef(null);
   const diagram = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -135,7 +139,7 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     deg = 180 / pi;
 
   const margin = small ? 0 : 10,
-    rotation = 0,
+    rotation = props.obs === "windDir" ? 180 : 0,
     thickness = 0.15,
     arc = parseFloat(props.properties.arc),
     ticksNumber = parseInt(props.properties.tick_number),
@@ -206,15 +210,23 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
         (scaleMin + d * tick_pct).toFixed(props.rounding) +
         he.decode(props.unit);
 
-      if (arc >= 1.97 && d == 0) {
-        label = "";
-      }
+      console.log(windDirAsOridnal);
+      if (windDirAsOridnal) {
+        label =
+          ordinalCompass[
+            Math.floor((scaleMin + d * tick_pct) / 22.5 + 0.5) % 16
+          ];
+      } else {
+        if (arc >= 1.97 && d == 0) {
+          label = "";
+        }
 
-      if (arc >= 1.97 && d == ticksNumber - 1) {
-        label = `${label} / ${
-          (scaleMin + 0 * tick_pct).toFixed(props.rounding) +
-          he.decode(props.unit)
-        }`;
+        if (arc >= 1.97 && d == ticksNumber - 1) {
+          label = `${label} / ${
+            (scaleMin + 0 * tick_pct).toFixed(props.rounding) +
+            he.decode(props.unit)
+          }`;
+        }
       }
 
       return {
@@ -498,15 +510,28 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     const textWrap = gaugeChart.append("g").attr("class", "gauge-text");
 
     // Current value as text.
-    textWrap
+    const currentValue = windDirAsOridnal
+      ? ordinalCompass[Math.floor(current / 22.5 + 0.5) % 16]
+      : current.toFixed(props.rounding) + he.decode(props.unit);
+    const currentValueTextNode = textWrap
       .append("text")
-      .text(current.toFixed(props.rounding) + he.decode(props.unit))
+      .text(currentValue)
       .attr("text-anchor", "middle")
       .attr("dx", 0)
       .attr("dy", "-0.95em")
       .attr("font-size", small ? "2em" : "2.5em")
       .attr("font-weight", "bold")
       .attr("alignment-baseline", "middle");
+
+    if (windDirAsOridnal) {
+      currentValueTextNode
+        .append("tspan")
+        .text(` / ${current.toFixed(props.rounding)}${he.decode(props.unit)}`)
+        .attr("text-anchor", "middle")
+        .attr("font-size", small ? "0.5em" : "0.5em")
+        .attr("font-weight", "bold")
+        .attr("alignment-baseline", "middle");
+    }
 
     const legendMin = textWrap
       .append("g")

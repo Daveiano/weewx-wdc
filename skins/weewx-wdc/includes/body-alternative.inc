@@ -71,7 +71,13 @@ $render_gauges($DisplayOptions['Gauges'][$context])
       ## ValueError: start time (1654034700) is greater than stop time (1640991600)
       #set $alltime_tag = $alltime($data_binding=$skin_obs_binding) if $context == 'alltime' else None
 
-      #if $getattr($get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime_tag, $yesterday($data_binding=$skin_obs_binding)), $get_custom_data_binding_obs_key($skin_obs)).has_data
+      #if $context == 'day' and not $daily_archive
+        #set $stat_tile_check = $current
+      #else
+        #set $stat_tile_check = $get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime_tag, $yesterday($data_binding=$skin_obs_binding))
+      #end if
+
+      #if $getattr($stat_tile_check, $get_custom_data_binding_obs_key($skin_obs)).has_data
         #set global $partial_obs = $skin_obs
         #include "includes/stat-tile.inc"
       #end if

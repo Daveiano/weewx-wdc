@@ -92,6 +92,7 @@ COPY src/cmon-extensions.py /tmp
 
 RUN sed -i -e 's/device_type = acurite-bridge/device_type = ecowitt-client\n    port = 9877\n    address = 0.0.0.0/g' weewx.conf &&\
     sed -i -z -e 's/skin = Seasons\n        enable = true/skin = Seasons\n        enable = false/g' weewx.conf &&\
+    sed -i -z -e 's/skin = cmon/skin = cmon\n        enable = false/g' weewx.conf &&\
     sed -i -z -e 's/skin = forecast/skin = forecast\n        enable = false/g' weewx.conf
 
 ADD src/weewx-db_06_23_2022_08_00.tar ./archive

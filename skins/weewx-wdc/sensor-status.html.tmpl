@@ -62,51 +62,100 @@
 #end def
 
 <!--prettier-ignore-->
-#def batteries($sensor_batteries, $layout)
-#set $recent=$span($day_delta=1, boundary='midnight')
-#if $layout == 'alternative'
-#set $classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-4"
+#def get_battery_multi($battery_raw)
+
+#end def
+
+<!--prettier-ignore-->
+#def get_battery_binary($battery_raw, $battery)
+#if $battery_raw == 1
+<bx-inline-notification
+  style="margin-bottom: 0.5rem"
+  title="$obs.label[$battery]"
+  subtitle="$gettext('Low')"
+  kind="warning"
+  hide-close-button
+>
+</bx-inline-notification>
+#else if $battery_raw is None
+<bx-inline-notification
+  style="margin-bottom: 0.5rem"
+  title="$obs.label[$battery]"
+  subtitle="$gettext('Unknown')"
+  kind="info"
+  hide-close-button
+>
+</bx-inline-notification>
 #else
-#set $classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-12 bx--col-max-6"
+<bx-inline-notification
+  style="margin-bottom: 0.5rem"
+  title="$obs.label[$battery]"
+  subtitle="$gettext('Ok')"
+  kind="success"
+  hide-close-button
+>
+</bx-inline-notification>
+<!--prettier-ignore-->
+#end if
+#end def
+
+<!--prettier-ignore-->
+#def get_battery_multi($battery_raw, $battery)
+#if $battery_raw <= 1
+<bx-inline-notification
+  style="margin-bottom: 0.5rem"
+  title="$obs.label[$battery]"
+  subtitle="$gettext('Low')"
+  kind="warning"
+  hide-close-button
+>
+</bx-inline-notification>
+#else if $battery_raw <= 5
+<bx-inline-notification
+  style="margin-bottom: 0.5rem"
+  title="$obs.label[$battery]"
+  subtitle="$gettext('OK')"
+  kind="info"
+  hide-close-button
+>
+</bx-inline-notification>
+#else if $battery_raw == 6
+<bx-inline-notification
+  style="margin-bottom: 0.5rem"
+  title="$obs.label[$battery]"
+  subtitle="$gettext('DC')"
+  kind="success"
+  hide-close-button
+>
+</bx-inline-notification>
+<!--prettier-ignore-->
+#end if
+#end def
+
+<!--prettier-ignore-->
+#def batteries($sensor_batteries, $layout)
+## Some Ecowitt sensors emit a battery state other than 1 or 2 (https://github.com/gjr80/weewx-gw1000/wiki/Sensor-battery-states).
+#set $batteries_multi = ['wh41_ch1_batt', 'wh41_ch2_batt', 'wh41_ch3_batt', 'wh41_ch4_batt', 'wh45_batt', 'wh55_ch1_batt', 'wh55_ch2_batt', 'wh55_ch3_batt', 'wh55_ch4_batt', 'wh57_batt']
+#if $layout == 'alternative'
+  #set $classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-6 bx--col-max-4"
+#else
+  #set $classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-12 bx--col-xlg-12 bx--col-max-6"
 #end if
 <!--prettier-ignore-->
 <script type="module" src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/notification.min.js"></script>
 <!--prettier-ignore-->
 #for $battery in $sensor_batteries
-  #if $getattr($recent, $battery).has_data
+  #if $getattr($current, $battery).has_data
 <!--prettier-ignore-->
 <div class="$classes">
     #set $battery_raw = $getVar('current.%s.raw' % $battery)
 
-    #if $battery_raw == 1
-      <bx-inline-notification
-        style="margin-bottom: .5rem"
-        title="$obs.label[$battery]"
-        subtitle="$gettext('Low')"
-        kind="warning"
-        hide-close-button
-      >
-      </bx-inline-notification>
-    #else if $battery_raw is None
-      <bx-inline-notification
-        style="margin-bottom: .5rem"
-        title="$obs.label[$battery]"
-        subtitle="$gettext('Unknown')"
-        kind="info"
-        hide-close-button
-      >
-      </bx-inline-notification>
+    #if $battery in $batteries_multi
+      $get_battery_multi($battery_raw, $battery)
     #else
-      <bx-inline-notification
-        style="margin-bottom: .5rem"
-        title="$obs.label[$battery]"
-        subtitle="$gettext('Ok')"
-        kind="success"
-        hide-close-button
-      >
-      </bx-inline-notification>
+      $get_battery_binary($battery_raw, $battery)
     #end if
-  </div>
+</div>
 <!--prettier-ignore-->
 #end if
 #end for
@@ -143,6 +192,7 @@
               #set global $stat_obs = $sensor_stat_tile_observations
               #include 'includes/conditions-table.inc'
 
+              <!--prettier-ignore-->
               <div class="bx--row">
                 $batteries($sensor_batteries, $layout)
               </div>
@@ -179,7 +229,7 @@
               #set $binding = $get_data_binding($obs)
               #set $alltime_tag = $alltime($data_binding=$binding) if $context == 'alltime' else None
 
-              #if $getattr($get_time_span_from_context($context, $day($data_binding=$binding), $week($data_binding=$binding), $month($data_binding=$binding), $year($data_binding=$binding), $alltime_tag, $yesterday($data_binding=$binding)), $get_custom_data_binding_obs_key($obs)).has_data
+              #if $getattr($current, $get_custom_data_binding_obs_key($obs)).has_data
                 #set global $partial_obs = $obs
                 #include "includes/stat-tile.inc"
               #end if

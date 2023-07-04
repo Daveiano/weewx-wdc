@@ -50,6 +50,7 @@ If you like the look and feel of the skin please consider having a look at the o
 - Station statics page (Telemetry)
 - Configurable historical data via [weewx-xaggs](https://github.com/tkeffer/weewx-xaggs)
 - Support for [weewx-cmon](https://github.com/matthewwall/weewx-cmon)
+- Gauge Charts
 
 ## [Demo](https://www.weewx-hbt.de)
 

@@ -674,9 +674,11 @@ https://github.com/Daveiano/weewx-wdc/compare/v3.1.1...00c79357#diff-ba225fb627d
 - Bugfix: (MQTT) Wind Speed Direction and Wind Gust Direction are Equal/Change At Same Time GH-177
 - Support for weewx-cmon GH-169
 - Add support for Classic layout on Sensor Status page
+- Added support for displaying observations in stat tiles (and batteries) that are not saved to DB (only available via the `$current` tag) GH-140 and https://groups.google.com/g/weewx-user/c/AwhvlJ-DRUQ/m/bzLWZV19DQAJ
 - Add support for weewx-xaggs (configurable tiles to show historical data) GH-170
 - Extend Stats/Climatological days table. Added rain stats (last rain, most consecutive days of rain) GH-171
 - New Chart Type: Gauge GH-155
+- Added support for custom XTypes (for charts) that need a \*\*config_dict GH-180
 - Extended Webcams/Externals (see the updated [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Webcams-and-Externals-Page)) GH-167
 
   - **Attention:** You need to update your skin.conf if you were using the webcams/externals:
@@ -709,3 +711,5 @@ https://github.com/Daveiano/weewx-wdc/compare/v3.1.1...00c79357#diff-ba225fb627d
     ```
 
 ## Changes made to skin.conf since 3.2.0
+
+See https://github.com/Daveiano/weewx-wdc/compare/v3.2.0...23dd62d3#diff-ba225fb627dcbf577d0d1fde0f18d93e8e2cf2097c37086cd28ef23e8e7bd820 for a complete diff.

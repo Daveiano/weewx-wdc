@@ -11,7 +11,7 @@
   #set $most_days_without_rain = None if $most_days_without_rain is None or $year_rain_table not in $most_days_without_rain else $most_days_without_rain[$year_rain_table]
 #end if
 
-#set $show_rain_stats_table = ($context == 'alltime' and $to_bool($DisplayOptions.get('show_last_rain', True))) or (($most_days_with_rain is not None and $to_bool($DisplayOptions.get('show_most_days_with_rain', 'True'))) or ($most_days_without_rain is not None and $to_bool($DisplayOptions.get('show_most_days_without_rain', 'True'))))
+#set $show_rain_stats_table = ($context == 'alltime' and $to_bool($DisplayOptions.get('show_last_rain', True))) or (($most_days_with_rain is not None and $to_bool($DisplayOptions.get('show_most_days_with_rain', 'True'))) or ($most_days_without_rain is not None and $to_bool($DisplayOptions.get('show_most_days_without_rain', 'True'))) or $to_bool($DisplayOptions.get('show_most_rain_within_one_day', 'True')))
 
 <script
   type="module"
@@ -186,6 +186,21 @@
             $most_days_without_rain.start.format('%x') -
             $most_days_without_rain.end.format('%x')
             ($most_days_without_rain.days_without_rain_delta.day.format("%.0f"))
+          </bx-structured-list-cell>
+        </bx-structured-list-row>
+        #end if
+        #if $to_bool($DisplayOptions.get('show_most_rain_within_one_day', 'True'))
+        <bx-structured-list-row>
+          <bx-structured-list-cell>
+            $gettext("Most rain within one day")
+          </bx-structured-list-cell>
+          <bx-structured-list-cell data-testid="most-rain-day">
+            #if $context == 'alltime'
+              $alltime.rain.maxsum ($alltime.rain.maxsumtime)
+            #end if
+            #if $context == 'year'
+              $year.rain.maxsum ($year.rain.maxsumtime)
+            #end if
           </bx-structured-list-cell>
         </bx-structured-list-row>
         #end if

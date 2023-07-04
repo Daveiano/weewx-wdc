@@ -104,6 +104,9 @@ test.describe("Climatological days", () => {
     await expect(rainTable.getByTestId("most-days-without-rain")).toContainText(
       "04/26/22 - 05/15/22 (20 days)"
     );
+    await expect(rainTable.getByTestId("most-rain-day")).toContainText(
+      "2.36 cm (11/04/21)"
+    );
 
     // 2021.
     await page.goto(
@@ -119,6 +122,9 @@ test.describe("Climatological days", () => {
     await expect(rainTable.getByTestId("most-days-without-rain")).toContainText(
       "10/27/21 - 10/31/21 (5 days)"
     );
+    await expect(rainTable.getByTestId("most-rain-day")).toContainText(
+      "2.36 cm (11/04/21)"
+    );
 
     // 2022.
     await page.goto(
@@ -132,7 +138,10 @@ test.describe("Climatological days", () => {
       "01/22/22 - 01/26/22 (5 days, Total: 1.05 cm)"
     );
     await expect(rainTable.getByTestId("most-days-without-rain")).toContainText(
-      "	04/26/22 - 05/15/22 (20 days)"
+      "04/26/22 - 05/15/22 (20 days)"
+    );
+    await expect(rainTable.getByTestId("most-rain-day")).toContainText(
+      "1.25 cm (01/04/22)"
     );
   });
 

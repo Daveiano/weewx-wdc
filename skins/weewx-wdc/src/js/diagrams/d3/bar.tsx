@@ -24,13 +24,15 @@ export const D3BarDiagram: FunctionComponent<BarDiagramBaseProps> = (
   const svgRef: RefObject<SVGSVGElement> = useRef(null);
   const tooltipRef: RefObject<HTMLDivElement> = useRef(null);
   const size: Size = useWindowSize();
-  const [tooltip, setTooltip] = useState<{ x: number; y: number; end: number }>(
-    {
-      x: 0,
-      y: 0,
-      end: 0,
-    }
-  );
+  const [tooltip, setTooltip] = useState<{
+    x: number;
+    y: number;
+    start: number;
+  }>({
+    x: 0,
+    y: 0,
+    start: 0,
+  });
 
   // @todo This adds one MutationObserver per LineDiagram. Add this to one
   //    general component which shares the state.
@@ -313,7 +315,7 @@ export const D3BarDiagram: FunctionComponent<BarDiagramBaseProps> = (
 
           const d = props.data[0].data[i];
 
-          setTooltip({ x: d.x, y: d.y, end: d.end });
+          setTooltip({ x: d.x, y: d.y, start: d.start });
 
           d3.select(tooltipRef.current)
             .style("display", "block")
@@ -374,8 +376,8 @@ export const D3BarDiagram: FunctionComponent<BarDiagramBaseProps> = (
                 <>{dateTimeFormatTooltip(new Date(tooltip.x * 1000))}</>
               ) : (
                 <>
-                  {dateTimeFormatTooltip(new Date(tooltip.x * 1000))} -{" "}
-                  {dateTimeFormatTooltip(new Date(tooltip.end * 1000))}
+                  {dateTimeFormatTooltip(new Date(tooltip.start * 1000))} -{" "}
+                  {dateTimeFormatTooltip(new Date(tooltip.x * 1000))}
                 </>
               )}
             </div>

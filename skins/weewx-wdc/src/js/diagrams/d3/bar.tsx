@@ -28,10 +28,12 @@ export const D3BarDiagram: FunctionComponent<BarDiagramBaseProps> = (
     x: number;
     y: number;
     start: number;
+    end: number;
   }>({
     x: 0,
     y: 0,
     start: 0,
+    end: 0,
   });
 
   // @todo This adds one MutationObserver per LineDiagram. Add this to one
@@ -315,7 +317,7 @@ export const D3BarDiagram: FunctionComponent<BarDiagramBaseProps> = (
 
           const d = props.data[0].data[i];
 
-          setTooltip({ x: d.x, y: d.y, start: d.start });
+          setTooltip({ x: d.x, y: d.y, start: d.start, end: d.end });
 
           d3.select(tooltipRef.current)
             .style("display", "block")
@@ -377,7 +379,7 @@ export const D3BarDiagram: FunctionComponent<BarDiagramBaseProps> = (
               ) : (
                 <>
                   {dateTimeFormatTooltip(new Date(tooltip.start * 1000))} -{" "}
-                  {dateTimeFormatTooltip(new Date(tooltip.x * 1000))}
+                  {dateTimeFormatTooltip(new Date(tooltip.end * 1000))}
                 </>
               )}
             </div>

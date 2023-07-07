@@ -131,11 +131,14 @@ diagrams.forEach((diagram) => {
             observation: diagramObservations[index],
             id: `${labels[index]} ${aggregate_types[index]}`,
             data: (window as any)[serie]
-              .map((item: number[]) => ({
-                x: item[1],
-                y: item[2],
-                start: item[0],
-              }))
+              .map((item: number[]) => {
+                return {
+                  x: item[0],
+                  y: item[2],
+                  start: item[0],
+                  end: item[1],
+                };
+              })
               .sort((a: Series, b: Series) => a.x - b.x),
           },
         ];
@@ -146,11 +149,14 @@ diagrams.forEach((diagram) => {
           observation: diagramObservations[0],
           id: diagramObservations[0],
           data: (window as any)[diagram.dataset.value]
-            .map((item: number[]) => ({
-              x: item[1],
-              y: item[2],
-              start: item[0],
-            }))
+            .map((item: number[]) => {
+              return {
+                x: item[0],
+                y: item[2],
+                start: item[0],
+                end: item[1],
+              };
+            })
             .sort((a: Series, b: Series) => a.x - b.x),
         },
       ];

@@ -268,8 +268,15 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
       });
 
       // Draw Axes.
-      // X Axis - use bar scaleBand for axis bottom.
+      // X Axis
+      // TODO: There should be some condition on which to either
+      // use bar scaleBand for axis bottom or the line scale? See GH-181
       const barCharUnit = props.unit[props.chartTypes.indexOf("bar")];
+      const lineCharUnit = props.unit[props.chartTypes.indexOf("line")];
+
+      const numberOfBars =
+          dataGroupedByScale[`${barCharUnit}|bar`][0].data.length,
+        scaleToUseForXAxis = "bar"; //numberOfBars > 5 ? "line" : "bar";
 
       svgElement
         .append("g")
@@ -277,12 +284,20 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         .attr("data-test", "x-axis")
         .call(
           d3
-            .axisBottom(scales[`${barCharUnit}|bar`]["x"])
+            .axisBottom(
+              scaleToUseForXAxis === "bar"
+                ? scales[`${barCharUnit}|bar`]["x"]
+                : scales[`${lineCharUnit}|line`]["x"]
+            )
             .tickSize(0)
             .tickPadding(6)
-            .tickFormat((d) =>
-              dateTimeFormat(new Date(parseInt(d as string) * 1000))
-            )
+            .tickFormat((d) => {
+              if (typeof d === "object") {
+                return dateTimeFormat(d as Date);
+              } else {
+                return dateTimeFormat(new Date(parseInt(d as string) * 1000));
+              }
+            })
         )
         .selectAll("text")
         .style("text-anchor", "end")

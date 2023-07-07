@@ -665,19 +665,19 @@ For a complete diff, please see:
 
 https://github.com/Daveiano/weewx-wdc/compare/v3.1.1...00c79357#diff-ba225fb627dcbf577d0d1fde0f18d93e8e2cf2097c37086cd28ef23e8e7bd820
 
-# Next
+# 3.3.0
 
 - Bugfix: Some observations with aggregate_imterval `sum` could be updated to `NaN` via MQTT under some circumstances GH-166
 - Bugfix: Getting the chart properties if observation is not included in [diagrams] config GH-172
 - Bugfix: Minor Spelling Error on Some Tiles GH-168
 - Added/fixed some more translations (Chart legends, Stats page)
 - Bugfix: (MQTT) Wind Speed Direction and Wind Gust Direction are Equal/Change At Same Time GH-177
-- Support for weewx-cmon GH-169
+- Support for weewx-cmon GH-169 (https://github.com/Daveiano/weewx-wdc/wiki/Support-for-weewx-cmon)
 - Add support for Classic layout on Sensor Status page
 - Added support for displaying observations in stat tiles (and batteries) that are not saved to DB (only available via the `$current` tag) GH-140 and https://groups.google.com/g/weewx-user/c/AwhvlJ-DRUQ/m/bzLWZV19DQAJ
-- Add support for weewx-xaggs (configurable tiles to show historical data) GH-170
+- Add support for weewx-xaggs (configurable tiles to show historical data) GH-170 (https://github.com/Daveiano/weewx-wdc/wiki/Support-for-weewx-xaggs)
 - Extend Stats/Climatological days table. Added rain stats (last rain, most consecutive days of rain) GH-171
-- New Chart Type: Gauge GH-155
+- New Chart Type: Gauge GH-155 (https://github.com/Daveiano/weewx-wdc/wiki/Gauges)
 - Added support for custom XTypes (for charts) that need a \*\*config_dict GH-180
 - Extended Webcams/Externals (see the updated [wiki](https://github.com/Daveiano/weewx-wdc/wiki/Webcams-and-Externals-Page)) GH-167
 
@@ -712,4 +712,10 @@ https://github.com/Daveiano/weewx-wdc/compare/v3.1.1...00c79357#diff-ba225fb627d
 
 ## Changes made to skin.conf since 3.2.0
 
-See https://github.com/Daveiano/weewx-wdc/compare/v3.2.0...23dd62d3#diff-ba225fb627dcbf577d0d1fde0f18d93e8e2cf2097c37086cd28ef23e8e7bd820 for a complete diff.
+See https://github.com/Daveiano/weewx-wdc/compare/v3.2.0...11eed6b3#diff-ba225fb627dcbf577d0d1fde0f18d93e8e2cf2097c37086cd28ef23e8e7bd820 for a complete diff.
+
+## Known Issues
+
+- GH-181 [BUG] xAxis: Date mismatch in combined charts. Especially when using cumulative aggregation. Feel free to comment if you have more infos, or also nooticed this issue.
+
+# Next

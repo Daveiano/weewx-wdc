@@ -5,6 +5,7 @@
 #attr $context = 'year'
 #attr $use_parameter_year = True
 #attr $use_parameter_month = False
+#set $NOAA_PATH = "NOAA/NOAA-" + $year.start.format('%Y') + ".txt"
 
 <!DOCTYPE html>
 <html lang="$lang">
@@ -27,7 +28,7 @@
                 <a
                   class="noaa-report-link"
                   target="_blank"
-                  href="NOAA/NOAA-${year.start.format('%Y')}.txt"
+                  href="$get_base_path(path=$NOAA_PATH)"
                 >
                   NOAA Report
                 </a>

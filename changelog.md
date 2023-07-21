@@ -721,3 +721,4 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.2.0...11eed6b3#diff-ba225fb
 # Next
 
 - Bugfix: base_path missing for NOAA Report HREF GH-184
+- Bugfix: Removed accidentally added Climatogram on year and stats page

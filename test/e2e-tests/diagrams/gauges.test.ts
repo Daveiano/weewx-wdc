@@ -22,15 +22,15 @@ test.describe("Gauges", () => {
     {
       url: "artifacts-custom-weewx-html/public_html/index.html",
       current: "S / 177°",
-      min: "130°",
-      max: "183°",
+      min: "SE",
+      max: "S",
       title: "Wind Direction",
     },
     {
       url: "artifacts-custom-weewx-html/public_html/month.html",
       current: "SSW / 198°",
-      min: "14°",
-      max: "359°",
+      min: "NNE",
+      max: "N",
       title: "Wind Direction",
     },
   ];
@@ -104,4 +104,28 @@ test.describe("Gauges", () => {
       await expect(windDir).toHaveScreenshot();
     });
   }
+
+  test("Barometer show_min_max = 0", async ({ page }) => {
+    let barometer = page.locator('[data-test="barometerGaugeSeries1"] '),
+      barometerSVG = barometer.locator('[data-test="d3-gauge-svg"]');
+
+    await expect(
+      barometerSVG.locator(".gauge-text .gauge-legend-min")
+    ).toHaveCount(0);
+    await expect(
+      barometerSVG.locator(".gauge-text .gauge-legend-max")
+    ).toHaveCount(0);
+
+    await page.goto("artifacts-custom-weewx-html/public_html/month.html");
+
+    barometer = page.locator('[data-test="barometerGaugeSeries1"] ');
+    barometerSVG = barometer.locator('[data-test="d3-gauge-svg"]');
+
+    await expect(
+      barometerSVG.locator(".gauge-text .gauge-legend-min")
+    ).toHaveText("1001.8 mbar");
+    await expect(
+      barometerSVG.locator(".gauge-text .gauge-legend-max")
+    ).toHaveText("1023.5 mbar");
+  });
 });

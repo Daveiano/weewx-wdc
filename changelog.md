@@ -722,3 +722,4 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.2.0...11eed6b3#diff-ba225fb
 
 - Bugfix: base_path missing for NOAA Report HREF GH-184
 - Bugfix: Removed accidentally added Climatogram on year and stats page
+- Added `show_min_max` configuration to gauges config, added ordinal display for windDir gauge min/max

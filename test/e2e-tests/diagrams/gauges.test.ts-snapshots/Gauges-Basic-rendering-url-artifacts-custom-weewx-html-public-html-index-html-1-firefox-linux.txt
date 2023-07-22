@@ -8,7 +8,7 @@
                 obs: 'outTemp',
                 unit: "&#176;C",
                 rounding: 1,
-                properties: {'tick_number': '7', 'arc': '1.2', 'offset': '20', 'mode': 'normal', 'color_scheme': 'interpolateRdBu', 'invert_color_scheme': '1', 'min': '-20', 'max': '40'},
+                properties: {'tick_number': '7', 'arc': '1.2', 'offset': '20', 'mode': 'normal', 'color_scheme': 'interpolateRdBu', 'invert_color_scheme': '1', 'show_min_max': '1', 'min': '-20', 'max': '40'},
                 label: "Outside Temperature"
             }
           

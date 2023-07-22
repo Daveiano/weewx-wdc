@@ -35,6 +35,7 @@ type GaugeDiagramBaseProps = {
     mode: "invert" | "normal";
     color_scheme: string;
     invert_color_scheme: string;
+    show_min_max: string;
   };
 };
 
@@ -210,7 +211,6 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
         (scaleMin + d * tick_pct).toFixed(props.rounding) +
         he.decode(props.unit);
 
-      console.log(windDirAsOridnal);
       if (windDirAsOridnal) {
         label =
           ordinalCompass[
@@ -533,43 +533,97 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
         .attr("alignment-baseline", "middle");
     }
 
-    const legendMin = textWrap
-      .append("g")
-      .attr("class", "gauge-legend-min")
-      .attr("transform", `translate(${-125}, ${0})`);
+    if (parseInt(props.properties.show_min_max)) {
+      const legendMin = textWrap
+        .append("g")
+        .attr("class", "gauge-legend-min")
+        .attr("transform", `translate(${-125}, ${0})`);
 
-    const legendMinX = -25;
+      const legendMinX = -25;
 
-    legendMin
-      .append("polygon")
-      .attr("transform", `translate(${-30}, ${legendMinX})`)
-      .attr("fill", darkMode ? "#f4f4f4" : "#afafaf")
-      .attr("points", "16,28 9,21 10.4,19.6 16,25.2 21.6,19.6 23,21 ");
+      legendMin
+        .append("polygon")
+        .attr("transform", `translate(${-30}, ${legendMinX})`)
+        .attr("fill", darkMode ? "#f4f4f4" : "#afafaf")
+        .attr("points", "16,28 9,21 10.4,19.6 16,25.2 21.6,19.6 23,21 ");
 
-    legendMin
-      .append("text")
-      .text(min.toFixed(props.rounding) + he.decode(props.unit))
-      .attr("alignment-baseline", "middle")
-      .attr("transform", `translate(${0}, ${0})`)
-      .attr("font-size", small ? "1em" : "1.25em");
+      legendMin
+        .append("text")
+        .text(
+          windDirAsOridnal
+            ? ordinalCompass[Math.floor(min / 22.5 + 0.5) % 16]
+            : min.toFixed(props.rounding) + he.decode(props.unit)
+        )
+        .attr("alignment-baseline", "middle")
+        .attr("transform", `translate(${0}, ${0})`)
+        .attr("font-size", small ? "1em" : "1.25em");
 
-    const legendMax = textWrap
-      .append("g")
-      .attr("class", "gauge-legend-max")
-      .attr("transform", `translate(${35}, ${0})`);
+      const legendMax = textWrap
+        .append("g")
+        .attr("class", "gauge-legend-max")
+        .attr("transform", `translate(${35}, ${0})`);
 
-    legendMax
-      .append("polygon")
-      .attr("transform", `translate(${0}, ${-10})`)
-      .attr("fill", darkMode ? "#f4f4f4" : "#afafaf")
-      .attr("points", "16,4 9,11 10.4,12.4 16,6.8 21.6,12.4 23,11 ");
+      legendMax
+        .append("polygon")
+        .attr("transform", `translate(${0}, ${-10})`)
+        .attr("fill", darkMode ? "#f4f4f4" : "#afafaf")
+        .attr("points", "16,4 9,11 10.4,12.4 16,6.8 21.6,12.4 23,11 ");
 
-    legendMax
-      .append("text")
-      .text(max.toFixed(props.rounding) + he.decode(props.unit))
-      .attr("transform", `translate(${30}, ${0})`)
-      .attr("alignment-baseline", "middle")
-      .attr("font-size", small ? "1em" : "1.25em");
+      legendMax
+        .append("text")
+        .text(
+          windDirAsOridnal
+            ? ordinalCompass[Math.floor(max / 22.5 + 0.5) % 16]
+            : max.toFixed(props.rounding) + he.decode(props.unit)
+        )
+        .attr("transform", `translate(${30}, ${0})`)
+        .attr("alignment-baseline", "middle")
+        .attr("font-size", small ? "1em" : "1.25em");
+
+      // Center legends.
+      const legendMinDimensions = legendMin.node()!.getBBox(),
+        legendMaxDimensions = legendMax.node()!.getBBox();
+
+      const legendWidth = legendMinDimensions.width + legendMaxDimensions.width;
+
+      // // Reduce width (margin) for small gauges.
+      // if (small) {
+      //   legendWidth = legendWidth - 25;
+      // }
+
+      if (small) {
+        // Legends centered on top of each other.
+        legendMin
+          .attr(
+            "transform",
+            `translate(${-legendMinDimensions.width / 2 + 23}, ${30})`
+          )
+          .attr("width", legendMinDimensions.width);
+
+        legendMax
+          .attr(
+            "transform",
+            `translate(${-legendMaxDimensions.width / 2 - 7}, ${5})`
+          )
+          .attr("width", legendMaxDimensions.width);
+      } else {
+        // Legends centered side by side.
+        legendMin
+          .attr("transform", `translate(${-legendWidth / 2 + 5}, ${0})`)
+          .attr("width", legendMinDimensions.width);
+
+        legendMax
+          .attr(
+            "transform",
+            `translate(${
+              legendWidth / 2 - legendMaxDimensions.width + 5
+            }, ${0})`
+          )
+          .attr("width", legendMaxDimensions.width);
+      }
+    } else {
+      textWrap.attr("transform", `translate(${0}, ${30})`);
+    }
 
     // Observation label, eg. Outside Temperature.
     textWrap
@@ -583,51 +637,19 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
       .attr("dy", small ? "-3.75em" : "-4.25em")
       .attr("alignment-baseline", "middle");
 
-    // Center legends.
-    const legendMinDimensions = legendMin.node()!.getBBox(),
-      legendMaxDimensions = legendMax.node()!.getBBox();
-
-    const legendWidth = legendMinDimensions.width + legendMaxDimensions.width;
-
-    // // Reduce width (margin) for small gauges.
-    // if (small) {
-    //   legendWidth = legendWidth - 25;
-    // }
-
-    if (small) {
-      // Legends centered on top of each other.
-      legendMin
-        .attr(
-          "transform",
-          `translate(${-legendMinDimensions.width / 2 + 23}, ${30})`
-        )
-        .attr("width", legendMinDimensions.width);
-
-      legendMax
-        .attr(
-          "transform",
-          `translate(${-legendMaxDimensions.width / 2 - 7}, ${5})`
-        )
-        .attr("width", legendMaxDimensions.width);
-    } else {
-      // Legends centered side by side.
-      legendMin
-        .attr("transform", `translate(${-legendWidth / 2 + 5}, ${0})`)
-        .attr("width", legendMinDimensions.width);
-
-      legendMax
-        .attr(
-          "transform",
-          `translate(${legendWidth / 2 - legendMaxDimensions.width + 5}, ${0})`
-        )
-        .attr("width", legendMaxDimensions.width);
-    }
     // Optimize text display.
     if (arc >= 1.97) {
       const textWrapDimensions = textWrap.node()!.getBBox();
+
+      let translateY = textWrapDimensions.height / 2;
+
+      if (!parseInt(props.properties.show_min_max)) {
+        translateY = textWrapDimensions.height / 2 + 30;
+      }
+
       textWrap.attr(
         "transform",
-        `translate(${0}, ${textWrapDimensions.height / 2}), scale(${1.25})`
+        `translate(${0}, ${translateY}), scale(${1.25})`
       );
     }
     if (arc < 1.97 && small) {

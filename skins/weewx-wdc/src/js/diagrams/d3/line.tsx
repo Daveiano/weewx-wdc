@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import * as d3 from "d3";
 import { useMediaQuery } from "@react-hook/media-query";
+import he from "he";
 
 import { Datum, DiagramBaseProps } from "../types";
 import {
@@ -285,7 +286,11 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
               .ticks(6)
               .tickFormat((d) => {
                 return windDirAsOridnal
-                  ? ordinalCompass[Math.floor((d as number) / 22.5 + 0.5) % 16]
+                  ? he.decode(
+                      ordinalCompass[
+                        Math.floor((d as number) / 22.5 + 0.5) % 16
+                      ]
+                    )
                   : d.toString();
               })
               .tickSize(0)

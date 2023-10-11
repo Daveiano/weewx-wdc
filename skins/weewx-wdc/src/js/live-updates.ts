@@ -437,9 +437,10 @@ const onConnect = () => {
 };
 
 // Called when initial connection fails.
-const onFailure = () => {
-  // Once a connection has been made, make a subscription and send a message.
-  console.log("MQTT WS: onConnect Failure.");
+const onFailure = (error: any) => {
+  console.log(
+    `MQTT WS: onConnect Failure: ${error.errorMessage} (Error Code ${error.errorCode})`
+  );
 
   notfication!.setAttribute("kind", "error");
   notfication!.setAttribute(

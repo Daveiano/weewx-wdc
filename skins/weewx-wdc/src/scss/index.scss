@@ -538,6 +538,7 @@ header.section-header {
     }
     .stat-value {
       @include carbon--type-style("productive-heading-01");
+      display: flex;
     }
   }
   .bx--row ~ .bx--row {

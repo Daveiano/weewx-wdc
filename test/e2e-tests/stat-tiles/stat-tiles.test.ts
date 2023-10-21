@@ -70,7 +70,7 @@ test.describe("Stat tiles", () => {
     );
     // No tooltip present.
     await expect(outTemp.locator("[data-test='max'] .stat-label")).toHaveText(
-      "Todays Max"
+      "Today's Max"
     );
     await expect(
       outTemp.locator("[data-test='max'] .stat-label bx-tooltip-definition")
@@ -84,7 +84,7 @@ test.describe("Stat tiles", () => {
     // Tooltip present.
     await expect(
       outTemp.locator("[data-test='max'] .stat-label")
-    ).toContainText("Todays Max");
+    ).toContainText("Today's Max");
 
     await expect(
       outTemp.locator("[data-test='max'] .stat-label bx-tooltip-definition")

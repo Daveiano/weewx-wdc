@@ -2045,12 +2045,14 @@ class WdcDiagramUtil(SearchList):
 
         # Calculate percentages.
         num_of_values = len(list(windSpeed_vt[0]))
-        for index, data in enumerate(windrose_data):
-            for p_index, percent in enumerate(data["r"]):
-                windrose_data[index]["r"][p_index] = round(
-                    # todo: division by zero
-                    (percent / num_of_values) * 100
-                )
+
+        if num_of_values > 0:
+            for index, data in enumerate(windrose_data):
+                for p_index, percent in enumerate(data["r"]):
+                    windrose_data[index]["r"][p_index] = round(
+                        # todo: division by zero
+                        (percent / num_of_values) * 100
+                    )
 
         return windrose_data
 

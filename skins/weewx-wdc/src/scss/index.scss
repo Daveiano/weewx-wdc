@@ -236,6 +236,9 @@ bx-header ~ bx-side-nav {
 
 bx-side-nav {
   z-index: 1400;
+  bx-side-nav-items {
+    overflow-y: auto;
+  }
   @include carbon--breakpoint-down(lg) {
     z-index: 1600;
   }

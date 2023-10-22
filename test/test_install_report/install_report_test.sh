@@ -96,8 +96,8 @@ testWeeReportRunAlternative() {
     assertContains "$output" "Starting weewx reports (alternative layout)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating as of last timestamp in the database."
-    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 30 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 32 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 17 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"
@@ -114,8 +114,8 @@ testWeeReportRunClassic() {
     assertContains "$output" "Starting weewx reports (classic layout)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating as of last timestamp in the database."
-    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 30 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 32 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 17 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"
@@ -132,8 +132,8 @@ testWeeReportRunForecast() {
 
     assertContains "$output" "Starting weewx reports (Alternative layout with forecast)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
-    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 30 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 10 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 32 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 9 files to /home/weewx/public_html"
     assertContains "$output" "ZambrettiThread: Zambretti: generated 1 forecast record"
 
     assertNotContains "$output" "failed with exception"
@@ -151,8 +151,8 @@ testWeeReportRunCustom() {
     assertContains "$output" "Starting weewx reports (Alternative layout with customisations)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating as of last timestamp in the database."
-    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 282 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 284 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 17 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"
@@ -169,8 +169,8 @@ testWeeReportRunDWD() {
     assertContains "$output" "Starting weewx reports (weewx-DWD)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating as of last timestamp in the database."
-    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 29 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 21 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 31 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 20 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"
@@ -186,8 +186,8 @@ testWeeReportRunCustomBinding() {
 
     assertContains "$output" "Starting weewx reports (Alternative layout with custom binding)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
-    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 29 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 31 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 17 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"
@@ -203,8 +203,8 @@ testWeeReportRunWithoutWeewxForecast() {
     assertContains "$output" "Starting weewx reports (without forecast)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating as of last timestamp in the database."
-    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 30 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 32 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 17 files to /home/weewx/public_html"
     assertContains "$output" "DEBUG user.weewx_wdc: weewx-forecast extension is not installed. Not providing any forecast data."
 
     assertNotContains "$output" "failed with exception"
@@ -222,8 +222,8 @@ testWeeReportRunMqtt() {
     assertContains "$output" "Starting weewx reports (mqtt)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating as of last timestamp in the database."
-    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 30 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 19 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 32 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"
@@ -240,8 +240,8 @@ testWeeReportRunSensorStatus() {
     assertContains "$output" "Starting weewx reports (sensor status)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating as of last timestamp in the database."
-    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 16 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 19 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 18 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"
@@ -257,8 +257,8 @@ testWeeReportRunCMNON() {
     assertContains "$output" "Starting weewx reports (CMON)"
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating as of last timestamp in the database."
-    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 13 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 19 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.cheetahgenerator: Generated 15 files for report WdcReport in"
+    assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"

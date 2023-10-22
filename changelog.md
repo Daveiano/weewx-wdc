@@ -725,6 +725,7 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.2.0...11eed6b3#diff-ba225fb
 - Bugfix: Fixed encoding issue when using special chars in oridinate labels
 - Bugfix: Wind and Gust speed have a space between unit and comma (and added missing apostrophe to Yesterday's and Today's) GH-200
 - Bugfix: Division by zero in get_windrose_data GH-192
+- Bugfix: Manifest.json does not use base_path GH-197
 - Added `show_min_max` configuration to gauges config, added ordinal display for windDir gauge min/max
 - Only show 3 decimals for the geocode provided by weewx-forecast GH-191
 - Make sidebar scrollable (if there are too many items) GH-193

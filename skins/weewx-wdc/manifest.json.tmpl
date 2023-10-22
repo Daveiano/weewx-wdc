@@ -1,30 +1,34 @@
+#errorCatcher Echo
+#encoding UTF-8
+
 {
   "theme_color": "#161616",
   "background_color": "#1F40AF",
   "display": "standalone",
-  "scope": "/",
-  "start_url": "/",
+  "scope": "$get_base_path(path='/')",
+  "start_url": "$get_base_path(path='/')",
   "name": "weewx WDC",
+  "testing": "test",
   "short_name": "weewx WDC",
   "description": "weewx Station site with WDC Skin",
   "icons": [
     {
-      "src": "/icon-192x192.png",
+      "src": "$get_base_path(path='icon-192x192.png')",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/icon-256x256.png",
+      "src": "$get_base_path(path='icon-256x256.png')",
       "sizes": "256x256",
       "type": "image/png"
     },
     {
-      "src": "/icon-384x384.png",
+      "src": "$get_base_path(path='icon-384x384.png')",
       "sizes": "384x384",
       "type": "image/png"
     },
     {
-      "src": "/icon-512x512.png",
+      "src": "$get_base_path(path='icon-512x512.png')",
       "sizes": "512x512",
       "type": "image/png"
     }
@@ -32,27 +36,27 @@
   "shortcuts": [
     {
       "name": "Week",
-      "url": "/week.html",
+      "url": "$get_base_path(path='week.html')",
       "description": "Weekly weather conditions"
     },
     {
       "name": "Month",
-      "url": "/month.html",
+      "url": "$get_base_path(path='month.html')",
       "description": "Monthly weather conditions"
     },
     {
       "name": "Year",
-      "url": "/year.html",
+      "url": "$get_base_path(path='year.html')",
       "description": "Yearly weather conditions"
     },
     {
       "name": "All time",
-      "url": "/statistics.html",
+      "url": "$get_base_path(path='statistics.html')",
       "description": "All time stats"
     },
     {
       "name": "Celestial",
-      "url": "/celestial.html",
+      "url": "$get_base_path(path='celestial.html')",
       "description": "Almanac"
     }
   ]

@@ -52,7 +52,7 @@ class BasicInstaller(ExtensionInstaller):
                         "skins/weewx-wdc/about.html.tmpl",
                         "skins/weewx-wdc/externals.html.tmpl",
                         "skins/weewx-wdc/offline.html.tmpl",
-                        "skins/weewx-wdc/manifest.json",
+                        "skins/weewx-wdc/manifest.json.tmpl",
                         "skins/weewx-wdc/icon-192x192.png",
                         "skins/weewx-wdc/icon-256x256.png",
                         "skins/weewx-wdc/icon-384x384.png",

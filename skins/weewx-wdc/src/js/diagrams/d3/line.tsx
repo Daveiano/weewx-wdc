@@ -597,32 +597,23 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
           setTooltip(values);
 
           // Combined tooltip position left or right from the cursor.
-          if (props.data.length > 1) {
-            // Is the cursor in the right half or in the left half of the chart?
-            if (pointerX > width / 2) {
-              // Right.
-              d3.select(tooltipRef.current).style(
-                "left",
-                margin.left +
-                  xScale(values[0].x * 1000) -
-                  (tooltipRef.current?.clientWidth as number) -
-                  20 +
-                  "px"
-              );
-            } else {
-              // Left.
-              d3.select(tooltipRef.current).style(
-                "left",
-                margin.left + xScale(values[0].x * 1000) + 20 + "px"
-              );
-            }
-          } else {
+
+          // Is the cursor in the right half or in the left half of the chart?
+          if (pointerX > width / 2) {
+            // Right.
             d3.select(tooltipRef.current).style(
               "left",
               margin.left +
                 xScale(values[0].x * 1000) -
-                (tooltipRef.current?.clientWidth as number) / 2 +
+                (tooltipRef.current?.clientWidth as number) -
+                20 +
                 "px"
+            );
+          } else {
+            // Left.
+            d3.select(tooltipRef.current).style(
+              "left",
+              margin.left + xScale(values[0].x * 1000) + 20 + "px"
             );
           }
 

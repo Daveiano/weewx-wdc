@@ -306,6 +306,8 @@ export const D3BarDiagram: FunctionComponent<BarDiagramBaseProps> = (
         .on("mousemove", (event: MouseEvent) => {
           // @see https://stackoverflow.com/questions/38633082/d3-getting-invert-value-of-band-scales
           const xScaleStep = xScale.step();
+          const pointerX = d3.pointer(event)[0];
+          const padingInner = xScale.paddingInner();
 
           let i = Math.floor(d3.pointer(event)[0] / xScaleStep);
 
@@ -321,9 +323,27 @@ export const D3BarDiagram: FunctionComponent<BarDiagramBaseProps> = (
 
           d3.select(tooltipRef.current)
             .style("display", "block")
-            .style("left", xScaleStep * i + "px")
             // Tooltip over the bars.
             .style("top", yScale(d.y) - 45 + "px");
+
+          // Is the cursor in the right half or in the left half of the chart?
+          if (pointerX > width / 2) {
+            // Right.
+            d3.select(tooltipRef.current).style(
+              "left",
+              margin.left +
+                padingInner * i +
+                xScaleStep * i -
+                (tooltipRef.current?.clientWidth as number) +
+                "px"
+            );
+          } else {
+            // Left.
+            d3.select(tooltipRef.current).style(
+              "left",
+              margin.left + xScaleStep * i + padingInner * i + 40 + "px"
+            );
+          }
 
           if (props.nivoProps.enableCrosshair) {
             focus

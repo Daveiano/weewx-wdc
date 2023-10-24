@@ -20,7 +20,13 @@
   ></bx-header-menu-button>
   <bx-header-name href="$get_base_path(path='index.html')" prefix="">
     <!--prettier-ignore-->
-    #include "includes/icons/wdc.svg"
+    #if 'logo_image' in $Extras
+    <img class="logo" src="$Extras['logo_image']" alt="$gettext('Logo')" />
+    <!--prettier-ignore-->
+    #else
+      #include "includes/icons/wdc.svg"
+    #end if
+
     <span part="prefix" class="bx--header__name--prefix">WeeWX</span>
     $station.location
   </bx-header-name>

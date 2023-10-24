@@ -258,7 +258,8 @@ body.theme-classic {
 }
 
 bx-header-name {
-  svg {
+  svg,
+  img.logo {
     height: auto;
     max-width: 32px;
     margin-right: $spacing-03;

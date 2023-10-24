@@ -63,7 +63,6 @@ $render_gauges($DisplayOptions['Gauges'][$context])
 
 <div class="bx--row">
   <!--prettier-ignore-->
-  $to_bool($DisplayOptions.get('show_min_max_time_day', False)))
   #for $skin_obs in $DisplayOptions.get('stat_tile_observations')
     #if $skin_obs != 'windDir' and $skin_obs != 'windGustDir' and $skin_obs != 'rainRate'
       #set $skin_obs_binding = $get_data_binding($skin_obs)

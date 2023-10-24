@@ -63,15 +63,23 @@ $render_gauges($DisplayOptions['Gauges'][$context])
 
 <div class="bx--row">
   <!--prettier-ignore-->
+  $to_bool($DisplayOptions.get('show_min_max_time_day', False)))
   #for $skin_obs in $DisplayOptions.get('stat_tile_observations')
     #if $skin_obs != 'windDir' and $skin_obs != 'windGustDir' and $skin_obs != 'rainRate'
       #set $skin_obs_binding = $get_data_binding($skin_obs)
+
+      #set $show_sum = $get_show_sum($skin_obs)
+      #set $show_min = $get_show_min($skin_obs)
+      #set $show_max = $get_show_max($skin_obs)
+      #set $use_day = $show_sum or $show_min or $show_max
 
       ## I dont know why but $alltime($data_binding=$skin_obs_binding) crashes on the month-%Y-%m and year-%Y pages:
       ## ValueError: start time (1654034700) is greater than stop time (1640991600)
       #set $alltime_tag = $alltime($data_binding=$skin_obs_binding) if $context == 'alltime' else None
 
-      #if $context == 'day' and not $daily_archive
+      #if $context == 'day' and not $daily_archive and $use_day
+        #set $stat_tile_check = $day
+      #elif $context == 'day' and not $daily_archive and not $use_day
         #set $stat_tile_check = $current
       #else
         #set $stat_tile_check = $get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime_tag, $yesterday($data_binding=$skin_obs_binding))

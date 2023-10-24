@@ -63,10 +63,17 @@
 
             #set $context_binded = $get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime_tag, $yesterday($data_binding=$skin_obs_binding))
 
-            #if $context == 'day' and not $daily_archive
+            #set $show_sum = $get_show_sum($skin_obs)
+            #set $show_min = $get_show_min($skin_obs)
+            #set $show_max = $get_show_max($skin_obs)
+            #set $use_day = $show_sum or $show_min or $show_max
+
+            #if $context == 'day' and not $daily_archive and $use_day
+              #set $context_binding = $day
+            #elif $context == 'day' and not $daily_archive and not $use_day
               #set $context_binding = $current
             #else
-              #set $context_binding = context_binded
+              #set $context_binding = $context_binded
             #end if
 
             #if $getattr($context_binding, $skin_obs_key).has_data and not $get_show_sum($skin_obs) and $skin_obs != 'windDir' and $skin_obs != 'windGustDir'

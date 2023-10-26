@@ -62,7 +62,8 @@ const _updateStatTile = (
   value: number,
   rounding: number,
   payLoad: any,
-  unitMQTT: string
+  unitMQTT: string,
+  dayChange: boolean
 ) => {
   // Update the main value.
   const sumObs = statTile
@@ -133,7 +134,7 @@ const _updateStatTile = (
       ? min!.querySelector(".stat-value span.value")!.innerHTML
       : "";
 
-  if (min && payLoad[key] < parseFloat(minValue)) {
+  if (min && (payLoad[key] < parseFloat(minValue) || dayChange)) {
     min.querySelector(".stat-value span.value")!.textContent = `${parseFloat(
       payLoad[key]
     ).toFixed(rounding)}${unit}`;
@@ -185,7 +186,7 @@ const _updateStatTile = (
       ? max!.querySelector(".stat-value span.value")!.innerHTML
       : "";
 
-  if (max && payLoad[key] > parseFloat(maxValue)) {
+  if (max && (payLoad[key] > parseFloat(maxValue) || dayChange)) {
     max.querySelector(".stat-value span.value")!.textContent = `${parseFloat(
       payLoad[key]
     ).toFixed(rounding)}${unit}`;
@@ -271,7 +272,7 @@ const _updateStatTile = (
       )!.textContent = `${rainRate.toFixed(rounding)}${rainRateUnit}`;
     }
 
-    if (rainRateMax && rainRate > parseFloat(rainRateMaxValue)) {
+    if (rainRateMax && (rainRate > parseFloat(rainRateMaxValue) || dayChange)) {
       rainRateMax.querySelector(
         ".stat-value span.value"
       )!.textContent = `${rainRate.toFixed(rounding)}${rainRateUnit}`;
@@ -286,7 +287,8 @@ const _updateTableRow = (
   unit: string,
   value: number,
   rounding: number,
-  payLoad: any
+  payLoad: any,
+  dayChange: boolean
 ) => {
   // Update the main value.
   tableRow.querySelector(
@@ -333,7 +335,7 @@ const _updateTableRow = (
     )!,
     minValue = minValueSpan.innerHTML;
 
-  if (min && payLoad[key] < parseFloat(minValue)) {
+  if (min && (payLoad[key] < parseFloat(minValue) || dayChange)) {
     minValueSpan.textContent = `${parseFloat(payLoad[key]).toFixed(
       rounding
     )}${unit}`;
@@ -380,7 +382,8 @@ const _updateTableRow = (
       "bx-structured-list-cell.cell-max > span"
     )!,
     maxValue = maxValueSpan.innerHTML;
-  if (max && payLoad[key] > parseFloat(maxValue)) {
+
+  if (max && (payLoad[key] > parseFloat(maxValue) || dayChange)) {
     maxValueSpan.textContent = `${parseFloat(payLoad[key]).toFixed(
       rounding
     )}${unit}`;
@@ -466,6 +469,30 @@ const onConnectionLost = (responseObject: any) => {
 const onMessageArrived = (message: Message) => {
   const payLoad = JSON.parse(message.payloadString);
 
+  const lastUpdate_ts = localStorage.getItem(
+      "weewx.weewx_wdc.mqtt-last-udpate"
+    ),
+    lastUpdate_formatted = lastUpdate_ts
+      ? dayjs(lastUpdate_ts).format("YYYY-MM-DD")
+      : null;
+  let dayChange = false;
+
+  console.log("lastUpdate_formatted", lastUpdate_formatted);
+  console.log(dayjs.unix(payLoad.dateTime).format("YYYY-MM-DD"));
+
+  // Day changed, reset min/max/sum.
+  if (
+    lastUpdate_formatted !== dayjs.unix(payLoad.dateTime).format("YYYY-MM-DD")
+  ) {
+    dayChange = true;
+    console.log("MQTT WS: Day changed, resetting min/max/sum.");
+  }
+
+  localStorage.setItem(
+    "weewx.weewx_wdc.mqtt-last-udpate",
+    dayjs.unix(payLoad.dateTime).toString()
+  );
+
   notfication!.setAttribute(
     "subtitle",
     `Last update was ${dayjs.unix(payLoad.dateTime).format("HH:mm:ss")}`
@@ -496,11 +523,17 @@ const onMessageArrived = (message: Message) => {
       const gaugeTileSeriesName = gaugeTile.getAttribute("data-test")!;
       (window as any)[gaugeTileSeriesName].current = payLoad[key];
 
-      if (payLoad[key] < (window as any)[gaugeTileSeriesName].min) {
+      if (
+        payLoad[key] < (window as any)[gaugeTileSeriesName].min ||
+        dayChange
+      ) {
         (window as any)[gaugeTileSeriesName].min = payLoad[key];
       }
 
-      if (payLoad[key] > (window as any)[gaugeTileSeriesName].max) {
+      if (
+        payLoad[key] > (window as any)[gaugeTileSeriesName].max ||
+        dayChange
+      ) {
         (window as any)[gaugeTileSeriesName].max = payLoad[key];
       }
     }
@@ -526,7 +559,8 @@ const onMessageArrived = (message: Message) => {
         newValue,
         statTileRounding,
         payLoad,
-        unitMQTT
+        unitMQTT,
+        dayChange
       );
     }
 
@@ -563,7 +597,8 @@ const onMessageArrived = (message: Message) => {
           tableRowUnit,
           newValue,
           tableRowRounding,
-          payLoad
+          payLoad,
+          dayChange
         );
       }
     }

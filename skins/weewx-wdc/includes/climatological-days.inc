@@ -134,6 +134,9 @@
         #end if
       </bx-structured-list-body>
     </bx-structured-list>
+
+    <!--prettier-ignore-->
+    #include "includes/year-stats-table.inc"
   </div>
   <!--prettier-ignore-->
   #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'rain').has_data

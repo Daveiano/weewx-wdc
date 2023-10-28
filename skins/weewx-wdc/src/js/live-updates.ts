@@ -482,6 +482,7 @@ const onMessageArrived = (message: Message) => {
 
   // Day changed, reset min/max/sum.
   if (
+    lastUpdate_ts &&
     lastUpdate_formatted !== dayjs.unix(payLoad.dateTime).format("YYYY-MM-DD")
   ) {
     dayChange = true;

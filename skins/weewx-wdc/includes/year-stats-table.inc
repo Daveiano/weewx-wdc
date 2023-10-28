@@ -48,66 +48,75 @@
       #if len($SummaryByYear) == 0
         #set $SummaryByYear = $fake_get_report_years($alltime.start.format("%Y"), $latest.dateTime.format("%Y"))
       #end if
+    #elif $context == 'year'
+      #set $SummaryByYear = [str($year_name)]
+      #set $archive_months = $filter_months($SummaryByMonth, $year_name)
+    #end if
 
-      #set $totals_per_month = {}
-      #set $totals_per_year = {}
+    #set $totals_per_month = {}
+    #set $totals_per_year = {}
 
-      <bx-structured-list>
-        <bx-structured-list-head>
-          <bx-structured-list-header-row>
+    <bx-structured-list>
+      <bx-structured-list-head>
+        <bx-structured-list-header-row>
+          #if $context == "alltime"
+          <bx-structured-list-header-cell>
+            $gettext('Year')
+          </bx-structured-list-header-cell>
+          #end if
+
+          #for $month in range(1, 13)
             <bx-structured-list-header-cell>
-              $gettext('Year')
+              $gettext(calendar.month_abbr[$month])
             </bx-structured-list-header-cell>
-
-            #for $month in range(1, 13)
-              <bx-structured-list-header-cell>
-                $gettext(calendar.month_abbr[$month])
-              </bx-structured-list-header-cell>
-            #end for
-
-            <bx-structured-list-header-cell>
-              $gettext('Total')
-            </bx-structured-list-header-cell>
-          </bx-structured-list-header-row>
-        </bx-structured-list-head>
-        <bx-structured-list-body>
-          #for $year in $SummaryByYear
-          <bx-structured-list-row>
-            <bx-structured-list-cell>$year</bx-structured-list-cell>
-
-            #set $months_for_year = $filter_months($archive_months, $year)
-
-            #for $month in range(1, 13)
-              #if not $month in $totals_per_month
-                #set $totals_per_month[$month] = []
-              #end if
-              #set $month_from_range = $year + '-' + str($month).zfill(2)
-
-              #if $month_from_range in $months_for_year
-                <bx-structured-list-cell data-testid="$month_from_range">
-                  #set $time_span_start_ts = $startOfDay($datetime.datetime.strptime($month_from_range, "%Y-%m").replace(day=1).timestamp())
-                  #set $time_span_end_ts = $datetime.datetime.strptime($month_from_range, "%Y-%m").replace(day=$calendar.monthrange(int($year), int($month))[1], hour=23, minute=59).timestamp()
-
-                  #set $number_of_days = $get_climatological_day($clim_day, $time_span_start_ts, $time_span_end_ts)
-                  #set $totals_per_year[$year] = $number_of_days + $totals_per_year[$year] if $year in $totals_per_year else $number_of_days
-                  #silent $totals_per_month[$month].append($number_of_days)
-
-                  $number_of_days
-                </bx-structured-list-cell>
-              #else
-                <bx-structured-list-cell>-</bx-structured-list-cell>
-              #end if
-            #end for
-
-            <bx-structured-list-cell data-testid="year-$year">
-              #if $year in $totals_per_year
-                <strong>$totals_per_year[$year]</strong>
-              #else
-                <strong>-</strong>
-              #end if
-            </bx-structured-list-cell>
-          </bx-structured-list-row>
           #end for
+
+          <bx-structured-list-header-cell>
+            $gettext('Total')
+          </bx-structured-list-header-cell>
+        </bx-structured-list-header-row>
+      </bx-structured-list-head>
+      <bx-structured-list-body>
+        #for $year in $SummaryByYear
+        <bx-structured-list-row>
+          #if $context == "alltime"
+          <bx-structured-list-cell>$year</bx-structured-list-cell>
+          #end if
+
+          #set $months_for_year = $filter_months($archive_months, $year)
+
+          #for $month in range(1, 13)
+            #if not $month in $totals_per_month
+              #set $totals_per_month[$month] = []
+            #end if
+            #set $month_from_range = $year + '-' + str($month).zfill(2)
+
+            #if $month_from_range in $months_for_year
+              <bx-structured-list-cell data-testid="$month_from_range">
+                #set $time_span_start_ts = $startOfDay($datetime.datetime.strptime($month_from_range, "%Y-%m").replace(day=1).timestamp())
+                #set $time_span_end_ts = $datetime.datetime.strptime($month_from_range, "%Y-%m").replace(day=$calendar.monthrange(int($year), int($month))[1], hour=23, minute=59).timestamp()
+
+                #set $number_of_days = $get_climatological_day($clim_day, $time_span_start_ts, $time_span_end_ts)
+                #set $totals_per_year[$year] = $number_of_days + $totals_per_year[$year] if $year in $totals_per_year else $number_of_days
+                #silent $totals_per_month[$month].append($number_of_days)
+
+                $number_of_days
+              </bx-structured-list-cell>
+            #else
+              <bx-structured-list-cell>-</bx-structured-list-cell>
+            #end if
+          #end for
+
+          <bx-structured-list-cell data-testid="year-$year">
+            #if $year in $totals_per_year
+              <strong>$totals_per_year[$year]</strong>
+            #else
+              <strong>-</strong>
+            #end if
+          </bx-structured-list-cell>
+        </bx-structured-list-row>
+        #end for
+        #if $context == 'alltime'
           <bx-structured-list-row data-test="total">
             <bx-structured-list-cell>
               <strong>$gettext("Total")</strong>
@@ -151,9 +160,9 @@
             <bx-structured-list-cell>-</bx-structured-list-cell>
             #end if
           </bx-structured-list-row>
-        </bx-structured-list-body>
-      </bx-structured-list>
-    #end if
+        #end if
+      </bx-structured-list-body>
+    </bx-structured-list>
   </div>
   #end for
 </div>

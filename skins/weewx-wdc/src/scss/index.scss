@@ -988,6 +988,10 @@ bx-structured-list.forecast-list,
   }
 }
 
+.climatological-day-table {
+  overflow-x: auto;
+}
+
 body.theme-classic {
   div.bx--grid.bx--grid--full-width {
     @include carbon--breakpoint-up(lg) {

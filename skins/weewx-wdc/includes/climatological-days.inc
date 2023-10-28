@@ -12,6 +12,7 @@
 #end if
 
 #set $show_rain_stats_table = ($context == 'alltime' and $to_bool($DisplayOptions.get('show_last_rain', True))) or (($most_days_with_rain is not None and $to_bool($DisplayOptions.get('show_most_days_with_rain', 'True'))) or ($most_days_without_rain is not None and $to_bool($DisplayOptions.get('show_most_days_without_rain', 'True'))) or $to_bool($DisplayOptions.get('show_most_rain_within_one_day', 'True')))
+#set $show_climatological_days_per_month = $to_bool($DisplayOptions.get('climatological_days_per_month', True))
 
 <script
   type="module"
@@ -35,9 +36,7 @@
     id="tab-diagram-rain"
     target="panel-diagram-rain"
     value="diagram-rain"
-  >
-    $gettext('rainDays')
-  </bx-tab>
+  >$obs.label.rain</bx-tab>
   #end if
   #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'outTemp').has_data
   <bx-tab
@@ -134,6 +133,11 @@
         #end if
       </bx-structured-list-body>
     </bx-structured-list>
+
+    <!--prettier-ignore-->
+    #if $show_climatological_days_per_month
+      #include "includes/year-stats-table.inc"
+    #end if
   </div>
   <!--prettier-ignore-->
   #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'rain').has_data

@@ -35,9 +35,7 @@
     id="tab-diagram-rain"
     target="panel-diagram-rain"
     value="diagram-rain"
-  >
-    $gettext('rainDays')
-  </bx-tab>
+  >$obs.label.rain</bx-tab>
   #end if
   #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'outTemp').has_data
   <bx-tab

@@ -89,10 +89,10 @@ test.describe("Climatological days", () => {
   test("Rain Stats table", async ({ page }) => {
     // Stats page.
     const rainTable = page
-      .getByRole("tabpanel", { name: "Rain days" })
+      .getByRole("tabpanel", { name: "Rain", exact: true })
       .locator(".clim-days-extended-table");
 
-    await page.getByRole("tab", { name: "Rain days" }).click();
+    await page.getByRole("tab", { name: "Rain", exact: true }).click();
     await expect(rainTable).toBeVisible();
 
     await expect(rainTable.getByTestId("last-rain")).toContainText(
@@ -112,7 +112,7 @@ test.describe("Climatological days", () => {
     await page.goto(
       "artifacts-alternative-weewx-html/public_html/year-2021.html"
     );
-    await page.getByRole("tab", { name: "Rain days" }).click();
+    await page.getByRole("tab", { name: "Rain", exact: true }).click();
     await expect(rainTable).toBeVisible();
 
     await expect(rainTable.getByTestId("last-rain")).toHaveCount(0);
@@ -130,7 +130,7 @@ test.describe("Climatological days", () => {
     await page.goto(
       "artifacts-alternative-weewx-html/public_html/year-2022.html"
     );
-    await page.getByRole("tab", { name: "Rain days" }).click();
+    await page.getByRole("tab", { name: "Rain", exact: true }).click();
     await expect(rainTable).toBeVisible();
 
     await expect(rainTable.getByTestId("last-rain")).toHaveCount(0);

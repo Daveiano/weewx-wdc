@@ -4,6 +4,7 @@
 
 #import calendar
 #import datetime
+#from weeutil.weeutil import startOfDay, startOfArchiveDay
 
 #set $first_option = $DisplayOptions.get('climatological_days', [])[0].replace(' ', '_').lower()
 
@@ -77,16 +78,19 @@
             #set $months_for_year = $filter_months($archive_months, $year)
 
             #for $month in range(1, 13)
+              #if not $month in $totals_per_month
+                #set $totals_per_month[$month] = []
+              #end if
               #set $month_from_range = $year + '-' + str($month).zfill(2)
 
               #if $month_from_range in $months_for_year
                 <bx-structured-list-cell data-testid="$month_from_range">
-                  #set $time_span_start_ts = $datetime.datetime.strptime($month_from_range, "%Y-%m").replace(day=1).timestamp()
-                  #set $time_span_end_ts = $datetime.datetime.strptime($month_from_range, "%Y-%m").replace(day=$calendar.monthrange(int($year), int($month))[1]).timestamp()
+                  #set $time_span_start_ts = $startOfDay($datetime.datetime.strptime($month_from_range, "%Y-%m").replace(day=1).timestamp())
+                  #set $time_span_end_ts = $datetime.datetime.strptime($month_from_range, "%Y-%m").replace(day=$calendar.monthrange(int($year), int($month))[1], hour=23, minute=59).timestamp()
 
                   #set $number_of_days = $get_climatological_day($clim_day, $time_span_start_ts, $time_span_end_ts)
                   #set $totals_per_year[$year] = $number_of_days + $totals_per_year[$year] if $year in $totals_per_year else $number_of_days
-                  #set $totals_per_month[$month] = $number_of_days + $totals_per_month[$month] if $month in $totals_per_month else $number_of_days
+                  #silent $totals_per_month[$month].append($number_of_days)
 
                   $number_of_days
                 </bx-structured-list-cell>
@@ -111,7 +115,7 @@
             #for $month in range(1, 13)
               #if $month in $totals_per_month
                 <bx-structured-list-cell data-testid="month-$month">
-                  <strong>$totals_per_month[$month]</strong>
+                  <strong>$sum($totals_per_month[$month])</strong>
                 </bx-structured-list-cell>
               #else
                 <bx-structured-list-cell>-</bx-structured-list-cell>
@@ -122,6 +126,30 @@
                 $get_climatological_day($clim_day, $alltime.start.raw, $alltime.end.raw)
               </strong>
             </bx-structured-list-cell>
+          </bx-structured-list-row>
+          <bx-structured-list-row data-test="average">
+            <bx-structured-list-cell>
+              <strong>$gettext("Average")</strong>
+            </bx-structured-list-cell>
+            #for $month in range(1, 13)
+              #if $month in $totals_per_month and $len($totals_per_month[$month]) > 0
+                <bx-structured-list-cell data-testid="month-$month">
+                  <strong>$round($sum($totals_per_month[$month]) / $len($totals_per_month[$month]), 1)</strong>
+                </bx-structured-list-cell>
+              #else
+                <bx-structured-list-cell>-</bx-structured-list-cell>
+              #end if
+            #end for
+
+            #if $len($SummaryByYear) > 0
+            <bx-structured-list-cell>
+              <strong>
+                $round($get_climatological_day($clim_day, $alltime.start.raw, $alltime.end.raw) / $len($SummaryByYear), 1)
+              </strong>
+            </bx-structured-list-cell>
+            #else
+            <bx-structured-list-cell>-</bx-structured-list-cell>
+            #end if
           </bx-structured-list-row>
         </bx-structured-list-body>
       </bx-structured-list>

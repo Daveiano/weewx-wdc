@@ -22,6 +22,7 @@ import localeDE from "./util/locale/de-DE.json";
 import localeEnUs from "./util/locale/en-US.json";
 import localeEnGb from "./util/locale/en-GB.json";
 import localeIT from "./util/locale/it-IT.json";
+import localeNL from "./util/locale/nl-NL.json";
 import { D3GaugeDiagram } from "./diagrams/d3/gauge";
 
 const localeString: locale = (window as any).weewxWdcConfig.locale;
@@ -38,6 +39,9 @@ switch (localeString) {
     break;
   case "it-IT":
     localeDefault = localeIT as d3.TimeLocaleDefinition;
+    break;
+  case "nl-NL":
+    localeDefault = localeNL as d3.TimeLocaleDefinition;
     break;
 }
 

@@ -733,3 +733,4 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.2.0...11eed6b3#diff-ba225fb
 - Make sidebar scrollable (if there are too many items) GH-193
 - Make icon/logo user configurable GH-205
 - Enhancement to the All Time Statistics: Show climatological days per month and per year. GH-196
+- Added NL translation, thanks to user @dystechnic

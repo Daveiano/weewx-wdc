@@ -376,6 +376,9 @@ class WdcGeneralUtil(SearchList):
             if report_lang == "it":
                 return 'it-IT'
 
+            if report_lang == "nl":
+                return 'nl-NL'
+
             return 'en-US'
 
     def getValueHelper(self, value_vt):

@@ -1,2 +1,3 @@
 # Ignore artifacts:
 dist
+skins/weewx-wdc/includes/stat-tile.inc

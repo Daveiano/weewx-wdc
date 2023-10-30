@@ -24,6 +24,10 @@
 
 <div class="bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-3 bx--col-max-2">
   <!--prettier-ignore-->
+  #if "stat_tile_links" in $DisplayOptions and $partial_obs in $DisplayOptions["stat_tile_links"]
+    #set $open_new_tab = "_blank" if $to_bool($DisplayOptions["stat_tile_links"][$partial_obs]["open_new_tab"]) else "_self"
+    <a class="stat-tile-link" href='$DisplayOptions["stat_tile_links"][$partial_obs]["link"]' target='$open_new_tab'>
+  #end if
   <div
   class="bx--tile stat-tile"
   data-test="$partial_obs"
@@ -36,6 +40,26 @@
   >
     <!-- Main row -->
     <div class="bx--row">
+
+      #if "stat_tile_links" in $DisplayOptions and $partial_obs in $DisplayOptions["stat_tile_links"]
+        <svg
+          class="icon-link"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 32 32"
+        >
+          <polygon
+            points="10 6 10 8 22.59 8 6 24.59 7.41 26 24 9.41 24 22 26 22 26 6 10 6"
+          />
+          <rect
+            id="_Transparent_Rectangle_"
+            data-name="&lt;Transparent Rectangle&gt;"
+            class="cls-1"
+            width="32"
+            height="32"
+          />
+        </svg>
+      #end if
+
       <div class="bx--col">
         <p class="label">$obs.label[$partial_obs]</p>
         <!--prettier-ignore-->
@@ -347,4 +371,7 @@
     </div>
     #end if
   </div>
+  #if "stat_tile_links" in $DisplayOptions and $partial_obs in $DisplayOptions["stat_tile_links"]
+    </a>
+  #end if
 </div>

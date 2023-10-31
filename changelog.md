@@ -728,6 +728,7 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.2.0...11eed6b3#diff-ba225fb
 - Bugfix: Manifest.json does not use base_path GH-197
 - Bugfix: Tool Tip out of Scope GH-194
 - Bugfix: Observations with $current N/A values are not shown anymore in stat-tiles/conditions table on day page GH-188
+- Bugfix: Fixed a bug where markers where not shown if multiple were added in a single unit chart GH-216
 - Added `show_min_max` configuration to gauges config, added ordinal display for windDir gauge min/max
 - Only show 3 decimals for the geocode provided by weewx-forecast GH-191
 - Make sidebar scrollable (if there are too many items) GH-193

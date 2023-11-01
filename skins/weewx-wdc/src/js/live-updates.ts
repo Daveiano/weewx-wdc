@@ -469,31 +469,6 @@ const onConnectionLost = (responseObject: any) => {
 const onMessageArrived = (message: Message) => {
   const payLoad = JSON.parse(message.payloadString);
 
-  const lastUpdate_ts = localStorage.getItem(
-      "weewx.weewx_wdc.mqtt-last-udpate"
-    ),
-    lastUpdate_formatted = lastUpdate_ts
-      ? dayjs(lastUpdate_ts).format("YYYY-MM-DD")
-      : null;
-  let dayChange = false;
-
-  console.log("lastUpdate_formatted", lastUpdate_formatted);
-  console.log(dayjs.unix(payLoad.dateTime).format("YYYY-MM-DD"));
-
-  // Day changed, reset min/max/sum.
-  if (
-    lastUpdate_ts &&
-    lastUpdate_formatted !== dayjs.unix(payLoad.dateTime).format("YYYY-MM-DD")
-  ) {
-    dayChange = true;
-    console.log("MQTT WS: Day changed, resetting min/max/sum.");
-  }
-
-  localStorage.setItem(
-    "weewx.weewx_wdc.mqtt-last-udpate",
-    dayjs.unix(payLoad.dateTime).toString()
-  );
-
   notfication!.setAttribute(
     "subtitle",
     `Last update was ${dayjs.unix(payLoad.dateTime).format("HH:mm:ss")}`
@@ -505,6 +480,34 @@ const onMessageArrived = (message: Message) => {
     const keySplitted = _splitMQTTProp(key);
     const observation = keySplitted[0];
     const unitMQTT = _getUnitFromMQTTProp(keySplitted);
+
+    const lastUpdate_ts = localStorage.getItem(
+        `weewx.weewx_wdc.mqtt-last-udpate-${key}`
+      ),
+      lastGenerated_ts = (window as any).weewxWdcConfig.time,
+      lastUpdate_formatted = lastUpdate_ts
+        ? dayjs(lastUpdate_ts).format("YYYY-MM-DD")
+        : null;
+    let dayChange = false;
+
+    console.log("lastUpdate_formatted", lastUpdate_formatted);
+    console.log(dayjs.unix(payLoad.dateTime).format("YYYY-MM-DD"));
+
+    // Day changed, reset min/max/sum.
+    if (
+      lastUpdate_ts &&
+      lastUpdate_formatted !==
+        dayjs.unix(payLoad.dateTime).format("YYYY-MM-DD") &&
+      lastUpdate_ts > lastGenerated_ts
+    ) {
+      dayChange = true;
+      console.log("MQTT WS: Day changed, resetting min/max/sum for ." + key);
+    }
+
+    localStorage.setItem(
+      `weewx.weewx_wdc.mqtt-last-udpate-${key}`,
+      dayjs.unix(payLoad.dateTime).toString()
+    );
 
     // Alternative layout.
     const statTile = document.querySelector(

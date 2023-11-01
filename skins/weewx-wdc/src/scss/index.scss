@@ -97,6 +97,11 @@ html.dark {
     fill: $text-02;
   }
 
+  .stat-tile svg.icon-link {
+    @include carbon--theme($carbon--theme--g90, true);
+    fill: $text-02;
+  }
+
   .bx-ce-demo-devenv--tab-panels {
     background: $ui-01;
   }
@@ -492,6 +497,12 @@ header.section-header {
   }
 }
 
+a.stat-tile-link,
+a.stat-tile-link * {
+  text-decoration: none;
+  color: inherit;
+}
+
 .stat-tile {
   margin-bottom: $spacing-05;
   height: calc(100% - #{$spacing-05});
@@ -499,6 +510,13 @@ header.section-header {
     padding-bottom: $spacing-01;
   }
   > .bx--row {
+    position: relative;
+    svg.icon-link {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 24px;
+    }
     align-items: center;
     .label {
       @include carbon--type-style("expressive-heading-02");

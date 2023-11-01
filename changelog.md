@@ -729,8 +729,11 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.2.0...11eed6b3#diff-ba225fb
 - Bugfix: Tool Tip out of Scope GH-194
 - Bugfix: Observations with $current N/A values are not shown anymore in stat-tiles/conditions table on day page GH-188
 - Bugfix: Day Mix/Max Values in Tiles Do Not reset at Midnight GH-198
+- Bugfix: Fixed a bug where markers where not shown if multiple were added in a single unit chart GH-216
 - Added `show_min_max` configuration to gauges config, added ordinal display for windDir gauge min/max
 - Only show 3 decimals for the geocode provided by weewx-forecast GH-191
 - Make sidebar scrollable (if there are too many items) GH-193
 - Make icon/logo user configurable GH-205
 - Enhancement to the All Time Statistics: Show climatological days per month and per year. GH-196
+- Added NL translation, thanks to user @dystechnic
+- Added configurable 'Clickable' tiles GH-211

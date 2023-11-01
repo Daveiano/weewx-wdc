@@ -475,6 +475,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
 
     // Markers.
     if (Object.entries(scales).length === 1) {
+      // Top level marker.
       if (props.nivoProps.markerValue) {
         addMarkers(
           svgElement,
@@ -486,6 +487,26 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
           props.nivoProps.markerLabel
         );
       }
+      // Obs level marker.
+      props.data.forEach((dataSet: any, index: number) => {
+        const observationProps = getObsPropsFromChartProps(
+          props.nivoProps,
+          props.observation[index],
+          props.observationCombinedKeys[index]
+        );
+
+        if (observationProps.markerValue) {
+          addMarkers(
+            svgElement,
+            width,
+            scales[props.unit[0]]["y"],
+            props.unit[index],
+            observationProps.markerValue,
+            observationProps.markerColor,
+            observationProps.markerLabel
+          );
+        }
+      });
     } else {
       props.nivoProps.obs &&
         Object.entries(props.nivoProps.obs).forEach(

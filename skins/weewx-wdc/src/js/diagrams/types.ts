@@ -12,7 +12,7 @@ interface Serie {
   [key: string]: any;
 }
 
-type locale = "de-DE" | "en-US" | "en-GB" | "it-IT";
+type locale = "de-DE" | "en-US" | "en-GB" | "it-IT" | "nl-NL";
 
 type context = "day" | "week" | "month" | "year" | "alltime";
 

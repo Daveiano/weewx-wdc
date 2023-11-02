@@ -619,5 +619,3 @@ client.connect({
   useSSL: mqtt_ssl === "1",
   reconnect: true,
 });
-
-alert("test 3");

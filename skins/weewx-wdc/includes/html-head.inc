@@ -2,6 +2,7 @@
 #errorCatcher Echo
 #encoding UTF-8
 #import html
+#import datetime
 #set $diagrams_config = $DisplayOptions.get("diagrams", {})
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -83,6 +84,7 @@
       "Format_is": "$gettext('Format is')",
     },
     locale: "$get_locale()",
+    time: $datetime.datetime.now().timestamp()
   };
 </script>
 

@@ -354,6 +354,23 @@ class WdcGeneralUtil(SearchList):
             "wx_binding"
         )
 
+        # print(self.generator.config_dict["StdWXCalculate"]["Calculations"])
+
+    def get_software_obs(self):
+        """
+        Get the observations provided by software (weewx calculations), was
+        added because the has_data check fails for GTS, seasonGDD or yearGDD.
+
+        Returns:
+            list: The software observations
+        """
+        try:
+            obs = filter(
+                lambda x: "software" in x[1], self.generator.config_dict["StdWXCalculate"]["Calculations"].items())
+            return list(dict(obs).keys())
+        except KeyError:
+            return []
+
     def get_locale(self):
         """
         Get the locale.

@@ -75,6 +75,10 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
     return a.x - b.x;
   });
 
+  if (combinedData.length === 0) {
+    return <></>;
+  }
+
   // Group data by unit.
   const dataGroupedByUnit: { unit: string; data: Datum[] }[] = [
     { unit: props.unit[0], data: props.data[0].data },
@@ -609,6 +613,10 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
 
             const d0 = props.data[index].data[i - 1];
             const d1 = props.data[index].data[i];
+
+            if (!d0 || !d1) {
+              return;
+            }
 
             const d: Datum = x0 - d0.x * 1000 > d1.x * 1000 - x0 ? d1 : d0;
 

@@ -469,6 +469,8 @@ const onConnectionLost = (responseObject: any) => {
 const onMessageArrived = (message: Message) => {
   const payLoad = JSON.parse(message.payloadString);
 
+  console.log(payLoad);
+
   notfication!.setAttribute(
     "subtitle",
     `Last update was ${dayjs.unix(payLoad.dateTime).format("HH:mm:ss")}`
@@ -484,21 +486,18 @@ const onMessageArrived = (message: Message) => {
     const lastUpdate_ts = localStorage.getItem(
         `weewx.weewx_wdc.mqtt-last-udpate-${key}`
       ),
-      lastGenerated_ts = (window as any).weewxWdcConfig.time,
       lastUpdate_formatted = lastUpdate_ts
-        ? dayjs(lastUpdate_ts).format("YYYY-MM-DD")
+        ? dayjs.unix(parseInt(lastUpdate_ts)).format("YYYY-MM-DD")
         : null;
     let dayChange = false;
 
     console.log("lastUpdate_formatted", lastUpdate_formatted);
-    console.log(dayjs.unix(payLoad.dateTime).format("YYYY-MM-DD"));
+    console.log(dayjs.unix(parseInt(payLoad.dateTime)).format("YYYY-MM-DD"));
 
     // Day changed, reset min/max/sum.
     if (
       lastUpdate_ts &&
-      lastUpdate_formatted !==
-        dayjs.unix(payLoad.dateTime).format("YYYY-MM-DD") &&
-      lastUpdate_ts > lastGenerated_ts
+      lastUpdate_formatted !== dayjs.unix(payLoad.dateTime).format("YYYY-MM-DD")
     ) {
       dayChange = true;
       console.log("MQTT WS: Day changed, resetting min/max/sum for ." + key);
@@ -506,7 +505,7 @@ const onMessageArrived = (message: Message) => {
 
     localStorage.setItem(
       `weewx.weewx_wdc.mqtt-last-udpate-${key}`,
-      dayjs.unix(payLoad.dateTime).toString()
+      payLoad.dateTime
     );
 
     // Alternative layout.
@@ -626,3 +625,5 @@ client.connect({
   useSSL: mqtt_ssl === "1",
   reconnect: true,
 });
+
+alert("test 3");

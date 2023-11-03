@@ -775,7 +775,7 @@
 <div class="issued">
   $gettext("Forecast")
   #if $wloc is not None and $wloc != ''
-    #set $wloc_list = $wloc.split(',')
+    #set $wloc_list = $wloc.replace("geocode=", "").split(',')
     #set $format_string = "{0:.3f}"
     for $format_string.format($float($wloc_list[0])), $format_string.format($float($wloc_list[1]))
   #end if

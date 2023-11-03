@@ -718,7 +718,7 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.2.0...11eed6b3#diff-ba225fb
 
 - GH-181 [BUG] xAxis: Date mismatch in combined charts. Especially when using cumulative aggregation. Feel free to comment if you have more infos, or also nooticed this issue.
 
-# Next
+# 3.4.0
 
 - Bugfix: base_path missing for NOAA Report HREF GH-184
 - Bugfix: Removed accidentally added Climatogram on year and stats page
@@ -740,8 +740,10 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.2.0...11eed6b3#diff-ba225fb
 
 ## Changes made to skin.conf since 3.3.0
 
-See https://github.com/Daveiano/weewx-wdc/compare/v3.3.0...435d74e1ffff90cfc8f91fb11734d4c6871474bc#diff-ba225fb627dcbf577d0d1fde0f18d93e8e2cf2097c37086cd28ef23e8e7bd820 for a complete diff.
+See https://github.com/Daveiano/weewx-wdc/compare/v3.3.0...580071ca175a03fe4924ba3d4d6a8feece6623df#diff-ba225fb627dcbf577d0d1fde0f18d93e8e2cf2097c37086cd28ef23e8e7bd820 for a complete diff.
 
 ## Known Issues
 
 - GH-181 [BUG] xAxis: Date mismatch in combined charts. Especially when using cumulative aggregation. Feel free to comment if you have more infos, or also nooticed this issue.
+
+# Next

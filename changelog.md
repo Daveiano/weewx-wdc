@@ -747,3 +747,5 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.3.0...580071ca175a03fe4924b
 - GH-181 [BUG] xAxis: Date mismatch in combined charts. Especially when using cumulative aggregation. Feel free to comment if you have more infos, or also nooticed this issue.
 
 # Next
+
+- Bugfix: Fixed "ValueError: could not convert string to float" in forecast, introduced in GH-191

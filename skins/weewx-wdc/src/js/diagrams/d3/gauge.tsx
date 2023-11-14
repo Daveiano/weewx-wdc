@@ -106,20 +106,35 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
 
     // MQTT handling.
     const gaugeData = (window as any)[props.seriesName];
+    // TODO: dayChange handling.
     const gaugeProxy = new Proxy(gaugeData, {
       set: function (target, key, value) {
-        console.log(`${String(key)} set to ${value}`);
+        //console.log(`${String(key)} set to ${value}`);
         target[key] = value;
+
+        console.log(`Set ${String(key)} to ${value}`);
+
+        if (target.dayChange) {
+          console.log("dayChange gauge");
+        }
+
+        console.log(target);
 
         if (String(key) === "current") {
           setCurrent(parseFloat(value));
         }
 
-        if (String(key) === "min" && parseFloat(value) < min) {
+        if (
+          String(key) === "min" &&
+          (parseFloat(value) < min || target.dayChange)
+        ) {
           setMin(parseFloat(value));
         }
 
-        if (String(key) === "max" && parseFloat(value) > max) {
+        if (
+          String(key) === "max" &&
+          (parseFloat(value) > max || target.dayChange)
+        ) {
           setMax(parseFloat(value));
         }
 
@@ -674,6 +689,11 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
         -gaugeContainerDimensions.y + margin
       })`
     );
+
+    console.log("obs", props.obs);
+    console.log("current", current);
+    console.log("min", min);
+    console.log("max", max);
   }, [current, min, max, darkMode, dimensions]);
 
   return (

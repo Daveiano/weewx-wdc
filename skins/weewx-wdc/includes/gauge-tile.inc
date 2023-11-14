@@ -55,7 +55,8 @@
                 unit: "$get_unit_label($get_unit_for_obs($partial_obs, $partial_obs_key, $context))",
                 rounding: $get_rounding($partial_obs, $partial_obs_key),
                 properties: $get_gauge_diagram_props($partial_obs, $context),
-                label: "$obs.label[$partial_obs]"
+                label: "$obs.label[$partial_obs]",
+                dayChange: false,
             }
           </script>
           <div class="diagram" data-value="$series_name"></div>

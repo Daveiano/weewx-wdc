@@ -77,11 +77,11 @@ const _updateStatTile = (
         `day${observation[0].toUpperCase()}${observation.slice(1)}_${unitMQTT}`
       ];
 
-    if (!sumValue) return;
-
-    statTile.querySelector(
-      ".stat-title-obs-value .raw"
-    )!.innerHTML = `${parseFloat(sumValue).toFixed(rounding)}${unit}`;
+    if (sumValue) {
+      statTile.querySelector(
+        ".stat-title-obs-value .raw"
+      )!.innerHTML = `${parseFloat(sumValue).toFixed(rounding)}${unit}`;
+    }
   } else {
     // Use the current value.
     statTile.querySelector(
@@ -254,6 +254,11 @@ const _updateStatTile = (
       rainRate = parseFloat(payLoad["rainRate_mm_per_hour"]);
     } else if (payLoad["rainRate_cm_per_hour"]) {
       rainRate = parseFloat(payLoad["rainRate_cm_per_hour"]);
+    }
+
+    // Ensure rainRate if reset in day change.
+    if (dayChange && rainRate === null) {
+      rainRate = 0;
     }
 
     if (rainRate === null) return;
@@ -516,23 +521,33 @@ const onMessageArrived = (message: Message) => {
       `.diagram-tile.gauge[data-observation="${observation}"]`
     );
 
+    // TODO: Min/Max reset on day change not working.
     if (gaugeTile) {
       const gaugeTileSeriesName = gaugeTile.getAttribute("data-test")!;
       (window as any)[gaugeTileSeriesName].current = payLoad[key];
 
+      // Respect day change.
+      if (dayChange) {
+        (window as any)[gaugeTileSeriesName].dayChange = true;
+      }
+
       if (
-        payLoad[key] < (window as any)[gaugeTileSeriesName].min ||
+        parseFloat(payLoad[key]) <
+          parseFloat((window as any)[gaugeTileSeriesName].min) ||
         dayChange
       ) {
         (window as any)[gaugeTileSeriesName].min = payLoad[key];
       }
 
       if (
-        payLoad[key] > (window as any)[gaugeTileSeriesName].max ||
+        parseFloat(payLoad[key]) >
+          parseFloat((window as any)[gaugeTileSeriesName].max) ||
         dayChange
       ) {
         (window as any)[gaugeTileSeriesName].max = payLoad[key];
       }
+
+      (window as any)[gaugeTileSeriesName].dayChange = false;
     }
 
     if (statTile) {

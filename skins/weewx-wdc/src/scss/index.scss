@@ -21,6 +21,18 @@ cds-modal {
   @include carbon--theme($carbon--theme--g10, true);
 }
 
+cds-modal cds-modal-body {
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+    max-height: 100%;
+    width: auto;
+    margin: 0 auto;
+    display: block;
+  }
+}
+
 html.dark {
   @include carbon--theme($carbon--theme--g90, true);
 

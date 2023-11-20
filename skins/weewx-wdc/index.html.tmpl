@@ -69,13 +69,14 @@
       </section>
     </main>
 
+    <script
+        type="module"
+        src="https://1.www.s81c.com/common/carbon/web-components/tag/v2/latest/modal.min.js"
+    ></script>
+
     <!--Stat tile Modals-->
     #if $DisplayOptions.get('layout', 'alternative') == 'alternative' and 'stat_tile_links' in $DisplayOptions
       #for $skin_obs in $DisplayOptions.get('stat_tile_links')
-      <script
-        type="module"
-        src="https://1.www.s81c.com/common/carbon/web-components/tag/v2/latest/modal.min.js"
-      ></script>
         #set $render_modal = "stat_tile_links" in $DisplayOptions and $skin_obs in $DisplayOptions["stat_tile_links"] and $DisplayOptions["stat_tile_links"][$skin_obs]["open"] == "modal"
         #set $skin_obs_key = $get_custom_data_binding_obs_key($skin_obs)
 

@@ -479,6 +479,11 @@ const onMessageArrived = (message: Message) => {
     `Last update was ${dayjs.unix(payLoad.dateTime).format("HH:mm:ss")}`
   );
 
+  const lastGenerated_ts = (window as any).weewxWdcConfig.time,
+    lastGenerated_formatted = dayjs
+      .unix(parseInt(lastGenerated_ts))
+      .format("YYYY-MM-DD");
+
   for (const key in payLoad) {
     if (["dateTime", "usUnits", "interval"].includes(key)) continue;
 
@@ -497,6 +502,8 @@ const onMessageArrived = (message: Message) => {
     // Day changed, reset min/max/sum.
     if (
       lastUpdate_ts &&
+      lastGenerated_formatted !==
+        dayjs.unix(payLoad.dateTime).format("YYYY-MM-DD") &&
       lastUpdate_formatted !== dayjs.unix(payLoad.dateTime).format("YYYY-MM-DD")
     ) {
       dayChange = true;

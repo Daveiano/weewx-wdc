@@ -143,12 +143,20 @@
             .addEventListener("click", () => {
               document.getElementById("modal-radar-default").open = true;
             });
-          document
-            .querySelector("#panel-radar a")
-            .addEventListener("click", (event) => {
-              event.preventDefault();
-            });
+
+          if (document .querySelector("#panel-radar a")) {
+            document
+              .querySelector("#panel-radar a")
+              .addEventListener("click", (event) => {
+                event.preventDefault();
+              });
+          }
         </script>
+        <style>
+          #panel-radar {
+            cursor: pointer;
+          }
+        </style>
       #end if
 
       #for $external in externals_list
@@ -170,12 +178,19 @@
               document.getElementById("modal-$external").open = true;
             });
 
-          document
-            .querySelector("#panel-$external a")
-            .addEventListener("click", (event) => {
-              event.preventDefault();
-            });
+          if (document .querySelector("#panel-$external a")) {
+            document
+              .querySelector("#panel-$external a")
+              .addEventListener("click", (event) => {
+                event.preventDefault();
+              });
+          }
         </script>
+        <style>
+          #panel-$external {
+            cursor: pointer;
+          }
+        </style>
       #end for
     #end if
 

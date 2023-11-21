@@ -14,6 +14,8 @@ const mqtt_host: string = (window as any).mqtt_host;
 const mqtt_port: string = (window as any).mqtt_port;
 const mqtt_topic: string = (window as any).mqtt_topic;
 const mqtt_ssl: string = (window as any).mqtt_ssl;
+const mqtt_username: string = (window as any).mqtt_username;
+const mqtt_password: string = (window as any).mqtt_password;
 
 const websiteMessageContainer = document.getElementById(
   "notification-container-mqtt"
@@ -640,4 +642,6 @@ client.connect({
   onFailure: onFailure,
   useSSL: mqtt_ssl === "1",
   reconnect: true,
+  userName: mqtt_username && mqtt_username !== "" ? mqtt_username : undefined,
+  password: mqtt_password && mqtt_password !== "" ? mqtt_password : undefined,
 });

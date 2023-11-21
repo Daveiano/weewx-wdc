@@ -37,6 +37,11 @@
       </section>
     </main>
 
+    <!--Stat tile Modals-->
+    #if $DisplayOptions.get('layout', 'alternative') == 'alternative'
+      #include "includes/stat-tile-modals.inc"
+    #end if
+
     #include "includes/footer.inc"
 
     <script src="$get_base_path(path='dist/main.js')" defer></script>

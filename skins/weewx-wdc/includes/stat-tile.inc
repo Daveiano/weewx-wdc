@@ -56,7 +56,6 @@
             points="10 6 10 8 22.59 8 6 24.59 7.41 26 24 9.41 24 22 26 22 26 6 10 6"
           />
           <rect
-            id="_Transparent_Rectangle_"
             data-name="&lt;Transparent Rectangle&gt;"
             class="cls-1"
             width="32"

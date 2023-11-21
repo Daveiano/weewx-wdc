@@ -752,3 +752,4 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.3.0...580071ca175a03fe4924b
 - Bugfixed Added missing `nl.conf` in `install.py` GH-221
 - Bugfix: Fixed Gauge tiles daily reset (via MQTT)
 - Open Webcam Links/Stat Tile links in a Modal GH-220
+- Bugfix: Max Rain Rate Does Not Reset GH-224

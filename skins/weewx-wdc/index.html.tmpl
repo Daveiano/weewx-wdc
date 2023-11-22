@@ -69,11 +69,98 @@
       </section>
     </main>
 
+    <!--Stat tile Modals-->
+    #if $DisplayOptions.get('layout', 'alternative') == 'alternative'
+      #include "includes/stat-tile-modals.inc"
+    #end if
+
+    <!--Externals Modals-->
+    #set $externals_list = []
+    #if 'externals' in $Extras and $len($Extras['externals']) > 0
+      #for $external in $Extras['externals']
+        #if $external == 'description'
+          #continue
+        #end if
+        #if $to_bool($Extras['externals'][$external].show_on_front)
+          #silent $externals_list.append($external)
+        #end if
+      #end for
+    #end if
+
+    #if ('radar_html' in $Extras or $len($externals_list) > 0) and 'open_radar_and_externals_modal' in $Extras and $to_bool($Extras['open_radar_and_externals_modal'])
+      #if 'radar_html' in $Extras
+        <cds-modal id="modal-radar-default" size="md" fullWidth>
+          <cds-modal-header>
+            <cds-modal-close-button></cds-modal-close-button>
+            <!-- <cds-modal-label>Label (Optional)</cds-modal-label> -->
+            <cds-modal-heading>$gettext("Recent radar")</cds-modal-heading>
+          </cds-modal-header>
+          <cds-modal-body>
+            $Extras.radar_html
+          </cds-modal-body>
+        </cds-modal>
+
+        <script type="text/javascript">
+          document
+            .getElementById("panel-radar")
+            .addEventListener("click", () => {
+              document.getElementById("modal-radar-default").open = true;
+            });
+
+          if (document .querySelector("#panel-radar a")) {
+            document
+              .querySelector("#panel-radar a")
+              .addEventListener("click", (event) => {
+                event.preventDefault();
+              });
+          }
+        </script>
+        <style>
+          #panel-radar {
+            cursor: pointer;
+          }
+        </style>
+      #end if
+
+      #for $external in externals_list
+        <cds-modal id="modal-$external" size="md" fullWidth>
+          <cds-modal-header>
+            <cds-modal-close-button></cds-modal-close-button>
+            <cds-modal-label>$Extras['externals'][$external].title_long</cds-modal-label>
+            <cds-modal-heading>$Extras['externals'][$external].title</cds-modal-heading>
+          </cds-modal-header>
+          <cds-modal-body>
+            $Extras['externals'][$external].source
+          </cds-modal-body>
+        </cds-modal>
+
+        <script type="text/javascript">
+          document
+            .getElementById("panel-$external")
+            .addEventListener("click", () => {
+              document.getElementById("modal-$external").open = true;
+            });
+
+          if (document .querySelector("#panel-$external a")) {
+            document
+              .querySelector("#panel-$external a")
+              .addEventListener("click", (event) => {
+                event.preventDefault();
+              });
+          }
+        </script>
+        <style>
+          #panel-$external {
+            cursor: pointer;
+          }
+        </style>
+      #end for
+    #end if
+
     #include "includes/footer.inc"
 
     <script src="$get_base_path(path='dist/main.js')" defer></script>
     #if $to_bool($Extras['mqtt']['mqtt_websockets_enabled'])
-    <!--prettier-ignore-->
     <script>
       var mqtt_host = "$Extras['mqtt']['mqtt_websockets_host']";
       var mqtt_port = "$Extras['mqtt']['mqtt_websockets_port']";

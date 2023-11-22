@@ -88,6 +88,11 @@
   };
 </script>
 
+<script
+  type="module"
+  src="https://1.www.s81c.com/common/carbon/web-components/version/v2.0.1/modal.min.js"
+></script>
+
 #if "heights" in $diagrams_config
 <!--prettier-ignore-->
 <style>

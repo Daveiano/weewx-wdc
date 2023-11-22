@@ -17,15 +17,20 @@
 #set $skin_obs_key = $get_custom_data_binding_obs_key($partial_obs)
 #set $rounding = $str($get_rounding($partial_obs, $skin_obs_key))
 #set $observation_binding =  $get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime($data_binding=$skin_obs_binding), $yesterday($data_binding=$skin_obs_binding))
+
+#set $render_link = "stat_tile_links" in $DisplayOptions and $partial_obs in $DisplayOptions["stat_tile_links"] and $DisplayOptions["stat_tile_links"][$partial_obs]["open"] in ["new_tab", "same_tab"]
+#set $render_modal = "stat_tile_links" in $DisplayOptions and $partial_obs in $DisplayOptions["stat_tile_links"] and $DisplayOptions["stat_tile_links"][$partial_obs]["open"] == "modal"
+
 <script
   type="module"
   src="https://1.www.s81c.com/common/carbon/web-components/version/v1.27.0/tooltip.min.js"
 ></script>
 
-<div class="bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-3 bx--col-max-2">
+
+<div class="bx--col-sm-4 bx--col-md-4 bx--col-lg-6 bx--col-xlg-3 bx--col-max-2 stat-tile-wrap-$skin_obs_key">
   <!--prettier-ignore-->
-  #if "stat_tile_links" in $DisplayOptions and $partial_obs in $DisplayOptions["stat_tile_links"]
-    #set $open_new_tab = "_blank" if $to_bool($DisplayOptions["stat_tile_links"][$partial_obs]["open_new_tab"]) else "_self"
+  #if $render_link
+    #set $open_new_tab = "_blank" if $DisplayOptions["stat_tile_links"][$partial_obs]["open"] == "new_tab" else "_self"
     <a class="stat-tile-link" href='$DisplayOptions["stat_tile_links"][$partial_obs]["link"]' target='$open_new_tab'>
   #end if
   <div
@@ -41,7 +46,7 @@
     <!-- Main row -->
     <div class="bx--row">
 
-      #if "stat_tile_links" in $DisplayOptions and $partial_obs in $DisplayOptions["stat_tile_links"]
+      #if $render_link or $render_modal
         <svg
           class="icon-link"
           xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +56,6 @@
             points="10 6 10 8 22.59 8 6 24.59 7.41 26 24 9.41 24 22 26 22 26 6 10 6"
           />
           <rect
-            id="_Transparent_Rectangle_"
             data-name="&lt;Transparent Rectangle&gt;"
             class="cls-1"
             width="32"
@@ -371,7 +375,8 @@
     </div>
     #end if
   </div>
-  #if "stat_tile_links" in $DisplayOptions and $partial_obs in $DisplayOptions["stat_tile_links"]
+  #if $render_link
     </a>
   #end if
 </div>
+

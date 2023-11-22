@@ -642,6 +642,6 @@ client.connect({
   onFailure: onFailure,
   useSSL: mqtt_ssl === "1",
   reconnect: true,
-  userName: mqtt_username && mqtt_username !== "" ? mqtt_username : undefined,
-  password: mqtt_password && mqtt_password !== "" ? mqtt_password : undefined,
+  userName: mqtt_username,
+  password: mqtt_password,
 });

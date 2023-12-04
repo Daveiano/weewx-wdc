@@ -754,3 +754,4 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.3.0...580071ca175a03fe4924b
 - Open Webcam Links/Stat Tile links in a Modal GH-220
 - Bugfix: Max Rain Rate Does Not Reset GH-224
 - Added MQTT connection with username/password GH-225
+- Added finnish translation GH-230

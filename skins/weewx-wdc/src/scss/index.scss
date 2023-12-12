@@ -728,6 +728,18 @@ div[id^="panel"] .tile-radar-forecast {
     & ~ .forecast {
       margin-top: $spacing-06;
     }
+    .precip-main + .precip-detail {
+      margin-top: $spacing-04;
+    }
+    div.precip-detail {
+      display: flex;
+      align-items: center;
+      svg {
+        max-width: 16px;
+        height: auto;
+        margin-right: 5px;
+      }
+    }
     // bx-structured-list-row,
     // bx-structured-list-header-row {
     //   @include carbon--breakpoint-down(md) {

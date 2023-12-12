@@ -755,3 +755,4 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.3.0...580071ca175a03fe4924b
 - Bugfix: Max Rain Rate Does Not Reset GH-224
 - Added MQTT connection with username/password GH-225
 - Added finnish translation GH-230
+- Added "Precipitation detail" on forecast display (show rain/snow separately) GH-231

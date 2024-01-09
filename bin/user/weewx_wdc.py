@@ -2232,12 +2232,15 @@ class WdcStatsUtil(SearchList):
                 aggregate_interval="day"
             )
 
+            # TODO: Programmatic conversion, WeeWX best practice?
             if windGust_target_unit_vt[0] in ("km_per_hour", "km_per_hour2"):
                 value = 62.0
             if windGust_target_unit_vt[0] in ("mile_per_hour", "mile_per_hour2"):
                 value = 38.5
             if windGust_target_unit_vt[0] in ("meter_per_second", "meter_per_second2"):
                 value = 17.2
+            if windGust_target_unit_vt[0] in ("knot"):
+                value = 33.5
 
             days = filter(
                 lambda windGust: windGust is not None and self.generator.converter.convert(
@@ -2333,12 +2336,15 @@ class WdcStatsUtil(SearchList):
             )
 
         if day == "stormDays":
+            # TODO: Programmatic conversion, WeeWX best practice?
             if windGust_target_unit_vt[0] == "km_per_hour":
                 value = "62"
             if windGust_target_unit_vt[0] == "mile_per_hour":
                 value = "38.5"
             if windGust_target_unit_vt[0] == "meter_per_second":
                 value = "17.2"
+            if windGust_target_unit_vt[0] == "knot":
+                value = "33.5"
 
             return (
                 self.obs.label["windGust"]

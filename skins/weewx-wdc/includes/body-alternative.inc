@@ -1,4 +1,3 @@
-<!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
 #from datetime import datetime, timedelta
@@ -53,16 +52,19 @@
   #end for
 #end if
 
-<!--prettier-ignore-->
+#if os.path.exists("custom-content-top.inc") and $context == 'day' and not $daily_archive
+  <div class="custom-content top">
+      #include "custom-content-top.inc"
+  </div>
+#end if
+
 #if $show_gauges and $gauges_display == 'before'
-<!--prettier-ignore-->
-<div class="bx--row">
-$render_gauges($DisplayOptions['Gauges'][$context])
-</div>
+  <div class="bx--row">
+    $render_gauges($DisplayOptions['Gauges'][$context])
+  </div>
 #end if
 
 <div class="bx--row">
-  <!--prettier-ignore-->
   #for $skin_obs in $DisplayOptions.get('stat_tile_observations')
     #if $skin_obs != 'windDir' and $skin_obs != 'windGustDir' and $skin_obs != 'rainRate'
       #set $skin_obs_binding = $get_data_binding($skin_obs)
@@ -91,7 +93,6 @@ $render_gauges($DisplayOptions['Gauges'][$context])
     #end if
   #end for
 
-  <!--prettier-ignore-->
   #if $stat_tiles_xaggs_same_row
     #set global $hide_xaggs_heading = False
     #for $stat_xaggs in $stat_tiles_xaggs_same_row
@@ -101,18 +102,14 @@ $render_gauges($DisplayOptions['Gauges'][$context])
   #end if
 </div>
 
-<!--prettier-ignore-->
 #if $show_gauges and $gauges_display == 'after'
-<!--prettier-ignore-->
-<div class="bx--row">
-$render_gauges($DisplayOptions['Gauges'][$context])
-</div>
+  <div class="bx--row">
+    $render_gauges($DisplayOptions['Gauges'][$context])
+  </div>
 #end if
 
-<!--prettier-ignore-->
 #if $stat_tiles_xaggs_extra_row
 #set global $hide_xaggs_heading = True
-<!--prettier-ignore-->
 <header class="bx--col section-header">
   #if $context == 'day'
   <h2>$gettext("Historical values for today")</h2>
@@ -120,7 +117,6 @@ $render_gauges($DisplayOptions['Gauges'][$context])
   <h2>$gettext("Historical values")</h2>
   #end if
 </header>
-<!--prettier-ignore-->
 <div class="bx--row">
   #for $stat_xaggs in $stat_tiles_xaggs_extra_row
     #set global $stat_xaggs = $stat_xaggs
@@ -129,17 +125,20 @@ $render_gauges($DisplayOptions['Gauges'][$context])
 </div>
 #end if
 
-<!--prettier-ignore-->
+#if os.path.exists("custom-content-after-stat.inc") and $context == 'day' and not $daily_archive
+  <div class="custom-content after-stat">
+      #include "custom-content-after-stat.inc"
+  </div>
+#end if
+
 #if $context == "day" and $daily_archive == False
 #include "includes/forecast.inc"
 #end if
 
-<!--prettier-ignore-->
 <div class="bx--row">
   #include "includes/section-heading.inc"
 </div>
 
-<!-- prettier-ignore -->
 <div class="bx--row">
 #set $diagram_index = 0
 #set $context_for_diagrams = $context if $context != 'yesterday' else 'day'
@@ -186,9 +185,14 @@ $render_gauges($DisplayOptions['Gauges'][$context])
 #end for
 </div>
 
+#if os.path.exists("custom-content-bottom.inc") and $context == 'day' and not $daily_archive
+  <div class="custom-content bottom">
+      #include "custom-content-bottom.inc"
+  </div>
+#end if
+
 #if 'table_tile_observations' in $DisplayOptions
 <div class="bx--row">
-  <!-- prettier-ignore -->
   #set global $table_obs = None
   #include "includes/data-table-tile.inc"
 </div>

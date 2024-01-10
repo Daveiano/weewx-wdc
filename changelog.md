@@ -751,6 +751,8 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.3.0...580071ca175a03fe4924b
 - Bugfix: Fixed "ValueError: could not convert string to float" in forecast, introduced in GH-191
 - Bugfix: Added missing `nl.conf` in `install.py` GH-221
 - Bugfix: Fixed Gauge tiles daily reset (via MQTT)
+- Bugfix: year-%Y.html.tmpl fails when changing group_speed to knots in weewx.conf GH-239
+- Bugfix: Translation Footer Text 'This station is controlled by...' GH-238
 - Open Webcam Links/Stat Tile links in a Modal GH-220
 - Bugfix: Max Rain Rate Does Not Reset GH-224
 - Added MQTT connection with username/password GH-225

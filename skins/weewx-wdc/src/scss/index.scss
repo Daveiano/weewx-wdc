@@ -749,6 +749,15 @@ div[id^="panel"] .tile-radar-forecast {
         margin-right: 5px;
       }
     }
+    .windgust {
+      display: flex;
+      align-items: center;
+      margin-top: 0.75em;
+      svg {
+        max-width: 24px;
+        margin-right: 5px;
+      }
+    }
     // bx-structured-list-row,
     // bx-structured-list-header-row {
     //   @include carbon--breakpoint-down(md) {

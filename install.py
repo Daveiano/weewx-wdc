@@ -133,6 +133,7 @@ class BasicInstaller(ExtensionInstaller):
                         "skins/weewx-wdc/includes/icons/wind-direction.svg",
                         "skins/weewx-wdc/includes/icons/wind-direction.inc",
                         "skins/weewx-wdc/includes/icons/wind-gust.svg",
+                        "skins/weewx-wdc/includes/icons/wind-gust-2.svg",
                         "skins/weewx-wdc/includes/icons/wind-speed.svg",
                         "skins/weewx-wdc/includes/icons/sunrise.svg",
                         "skins/weewx-wdc/includes/icons/sunset.svg",

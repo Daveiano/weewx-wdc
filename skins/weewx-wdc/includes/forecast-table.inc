@@ -325,7 +325,10 @@
           #else
             $summary.windSpeedMin.nolabel('%.0f','') - $summary.windSpeedMax.nolabel('%.0f',' ')
           #end if
-          <span class="windgust">$summary.windGust.nolabel('%.0f',' ')</span>
+          <div class="windgust">
+            #include "includes/icons/wind-gust-2.svg"
+            $summary.windGust.nolabel('%.0f',' ')
+          </div>
           $summary.windChar
         </bx-structured-list-cell>
         <!--prettier-ignore-->

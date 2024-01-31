@@ -75,10 +75,22 @@
       #end for
     </div>
     #end if
+
+    #if os.path.exists("custom-content-left.inc") and $context == 'day' and not $daily_archive
+      <div class="custom-content left">
+          #include "custom-content-left.inc"
+      </div>
+    #end if
   </div>
 
 
   <div class="bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-8 bx--col-max-8 layout-col">
+
+    #if os.path.exists("custom-content-top.inc") and $context == 'day' and not $daily_archive
+      <div class="custom-content top">
+          #include "custom-content-top.inc"
+      </div>
+    #end if
 
     <!--prettier-ignore-->
     #if $show_gauges
@@ -134,6 +146,12 @@
       #end if
     #end for
     </div>
+
+    #if os.path.exists("custom-content-bottom.inc") and $context == 'day' and not $daily_archive
+      <div class="custom-content bottom">
+          #include "custom-content-bottom.inc"
+      </div>
+    #end if
   </div>
 </div>
 

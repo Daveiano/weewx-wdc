@@ -321,6 +321,15 @@ bx-structured-list-cell,
   margin-right: -0.5rem;
 }
 
+.custom-content {
+  &.top {
+    margin-bottom: $spacing-05;
+  }
+  &.bottom {
+    margin-bottom: $spacing-05;
+  }
+}
+
 main.user-page {
   h1,
   h2,

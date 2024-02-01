@@ -325,11 +325,12 @@
           #else
             $summary.windSpeedMin.nolabel('%.0f','') - $summary.windSpeedMax.nolabel('%.0f',' ')
           #end if
-          <div class="windgust">
-            #include "includes/icons/wind-gust-2.svg"
-            $summary.windGust.nolabel('%.0f',' ')
-          </div>
-          $summary.windChar
+          #if $summary.windGust is not None and $summary.windGust.raw is not None
+            <div class="windgust">
+              #include "includes/icons/wind-gust-2.svg"
+              $summary.windGust.nolabel('%.0f',' ')
+            </div>
+          #end if
         </bx-structured-list-cell>
         <!--prettier-ignore-->
         #end if
@@ -774,15 +775,15 @@
   #end if
 </div>
 
-<!--prettier-ignore-->
 #set $wloc = $summary.location
-<!--prettier-ignore-->
 <div class="issued">
   $gettext("Forecast")
-  #if $wloc is not None and $wloc != ''
+  #if $wloc is not None and $wloc != '' and ',' in $wloc
     #set $wloc_list = $wloc.replace("geocode=", "").split(',')
     #set $format_string = "{0:.3f}"
     for $format_string.format($float($wloc_list[0])), $format_string.format($float($wloc_list[1]))
+  #else
+    for $wloc
   #end if
   #if $wts is not None and $wts != ''
     issued on $wts

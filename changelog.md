@@ -744,7 +744,7 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.3.0...580071ca175a03fe4924b
 
 ## Known Issues
 
-- GH-181 [BUG] xAxis: Date mismatch in combined charts. Especially when using cumulative aggregation. Feel free to comment if you have more infos, or also nooticed this issue.
+- GH-181 [BUG] xAxis: Date mismatch in combined charts. Especially when using cumulative aggregation. Feel free to comment if you have more infos, or also noticed this issue.
 
 # Next
 
@@ -762,3 +762,4 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.3.0...580071ca175a03fe4924b
 - Added "Precipitation detail" on forecast display (show rain/snow separately) GH-231
 - Allow to add custom content to front page via custom templates GH-217
 - Updated windGust display in forecast table GH-240
+- Updated sorting of min/max graphs in the `temp_min_max_avg` graph GH-247

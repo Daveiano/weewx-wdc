@@ -84,7 +84,8 @@
       "Format_is": "$gettext('Format is')",
     },
     locale: "$get_locale()",
-    time: $datetime.datetime.now().timestamp()
+    time: $datetime.datetime.now().timestamp(),
+    defaultTheme: '$DisplayOptions.get("default_theme", "auto")'
   };
 </script>
 

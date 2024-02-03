@@ -383,6 +383,13 @@
 </script>
 
 <script>
+  // Default theme.
+  const defaultTheme = window.weewxWdcConfig.defaultTheme;
+
+  if (!("weewx.weewx_wdc.color-theme" in localStorage) && defaultTheme !== "auto") {
+    localStorage.setItem("weewx.weewx_wdc.color-theme", defaultTheme);
+  }
+
   var themeToggleDarkIcon = document.querySelectorAll(
     '[data-id="theme-toggle-dark-icon"]'
   );

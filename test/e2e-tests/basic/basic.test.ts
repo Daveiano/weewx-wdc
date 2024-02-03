@@ -103,6 +103,8 @@ test.describe("Basic pages display", () => {
 test("Dark mode", async ({ page }) => {
   await page.goto("artifacts-alternative-weewx-html/public_html/index.html");
 
+  await expect(page).toHaveScreenshot({ fullPage: true });
+
   // Switch to dark theme.
   await page.locator("bx-header #header-global bx-btn").click();
   await expect(page).toHaveScreenshot({ fullPage: true });
@@ -126,5 +128,17 @@ test("Dark mode", async ({ page }) => {
       ".diagram-tile[data-test='appTemp'] svg[data-test='d3-diagram-svg'] g path[data-test='line-appTemp']"
     )
   ).toBeVisible();
+  await expect(page).toHaveScreenshot({ fullPage: true });
+});
+
+test("Default theme dark", async ({ page }) => {
+  await page.goto("artifacts-mqtt-weewx-html/public_html/index.html");
+  await expect(page.locator("html")).toHaveClass(/dark/);
+  await expect(page).toHaveScreenshot({ fullPage: true });
+});
+
+test("Default theme light", async ({ page }) => {
+  await page.goto("artifacts-sensor-status-weewx-html/public_html/index.html");
+  await expect(page.locator("html")).not.toHaveClass(/dark/);
   await expect(page).toHaveScreenshot({ fullPage: true });
 });

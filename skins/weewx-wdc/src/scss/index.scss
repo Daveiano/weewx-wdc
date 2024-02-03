@@ -651,6 +651,26 @@ a.stat-tile-link * {
   .diagram {
     position: relative;
     @include fullscreen();
+    .diagram-legend {
+      position: absolute;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: start;
+      margin-top: $spacing-04;
+      .legend-item {
+        display: flex;
+        align-items: center;
+        margin-right: $spacing-04;
+        margin-bottom: $spacing-02;
+        .legend-color {
+          margin-right: 5px;
+        }
+        .legend-label {
+          font-size: 11px;
+        }
+      }
+    }
   }
   &:hover {
     .maximize {
@@ -952,7 +972,8 @@ bx-structured-list.forecast-list,
 
 .diagram-tooltip,
 .diagram text,
-.calendar-diagram text {
+.calendar-diagram text,
+.diagram-legend {
   font-family: carbon--font-family("mono"), monospace;
 }
 

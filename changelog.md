@@ -763,3 +763,4 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.3.0...580071ca175a03fe4924b
 - Allow to add custom content to front page via custom templates GH-217
 - Updated windGust display in forecast table GH-240
 - Updated sorting of min/max graphs in the `temp_min_max_avg` graph GH-247
+- Added new property for charts: `legendPosition` - Change legend position GH-228

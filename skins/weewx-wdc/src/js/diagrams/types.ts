@@ -16,6 +16,14 @@ type locale = "de-DE" | "en-US" | "en-GB" | "it-IT" | "nl-NL";
 
 type context = "day" | "week" | "month" | "year" | "alltime";
 
+type legendPosition =
+  | "top right"
+  | "top left"
+  | "bottom right"
+  | "bottom left"
+  | "top"
+  | "bottom";
+
 type CalendarDiagramBaseProps = {
   color: string[];
   unit: string;
@@ -46,6 +54,7 @@ type DiagramBaseProps = {
     yScaleOffset: string;
     yScaleMin?: string;
     yScaleMax?: string;
+    legendPosition: legendPosition;
     curve:
       | "basis"
       | "cardinal"
@@ -89,6 +98,7 @@ export {
   CalendarDiagramBaseProps,
   DiagramBaseProps,
   context,
+  legendPosition,
   Datum,
   Serie,
   Series,

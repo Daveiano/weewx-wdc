@@ -25,6 +25,7 @@ import {
 import { Maximize } from "../../assets/maximize";
 import { Tooltip } from "./components/tooltip";
 import { addLegend } from "./components/legend";
+import { OutsideLegend } from "./components/outside-legend";
 import { addMarkers } from "./components/marker";
 
 type CombinedDiagramBaseProps = DiagramBaseProps & {
@@ -43,6 +44,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
   const size: Size = useWindowSize();
   const isVisible = useIsVisible(svgRef);
   const [tooltip, setTooltip] = useState<Datum[]>([] as Datum[]);
+  const [legendHeight, setLegendHeight] = useState(0);
 
   // @todo This adds one MutationObserver per LineDiagram. Add this to one
   //    general component which shares the state.
@@ -124,23 +126,37 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
     };
   }, []);
 
+  // Determine the number of unique units to display.
+  const unitCombinedDistinct: string[] = [...new Set(props.unit)];
+
   useEffect(() => {
     if (isVisible) {
       // Clean up (otherwise on resize it gets rendered multiple times).
       d3.select(svgRef.current).selectChildren().remove();
 
-      // Determine the number of unique units to display.
-      const unitCombinedDistinct: string[] = [...new Set(props.unit)];
-
       // @see https://gist.github.com/mbostock/3019563
       const margin = {
-          top: 20,
-          // Second axis on the right?
-          right: unitCombinedDistinct.length > 1 ? 50 : 10,
-          bottom: props.context === "alltime" ? 50 : 40,
-          left: getMargins(props.observation[0]).left - 2.5,
-        },
-        width = svgRef.current?.parentElement
+        top: 20,
+        // Second axis on the right?
+        right: unitCombinedDistinct.length > 1 ? 50 : 10,
+        bottom: props.context === "alltime" ? 50 : 40,
+        left: getMargins(props.observation[0]).left - 2.5,
+      };
+
+      if (
+        (props.nivoProps.legendPosition === "top" ||
+          props.nivoProps.legendPosition === "bottom") &&
+        legendHeight > 0
+      ) {
+        if (props.nivoProps.legendPosition === "top") {
+          margin.top = 20 + legendHeight;
+        }
+        if (props.nivoProps.legendPosition === "bottom") {
+          margin.bottom = 45 + legendHeight;
+        }
+      }
+
+      const width = svgRef.current?.parentElement
           ? svgRef.current?.parentElement.clientWidth -
             margin.left -
             margin.right
@@ -561,7 +577,21 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
         .style("stroke-width", "1");
 
       // Legend.
-      addLegend(svgElement, width, props.data, props.unit, colors, true);
+      if (
+        props.nivoProps.legendPosition !== "top" &&
+        props.nivoProps.legendPosition !== "bottom"
+      ) {
+        addLegend(
+          svgElement,
+          width,
+          height,
+          props.nivoProps.legendPosition,
+          props.data,
+          props.unit,
+          colors,
+          true
+        );
+      }
 
       // Markers.
       if (Object.entries(scales).length === 1) {
@@ -707,7 +737,7 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
           );
         });
     }
-  }, [size, props.data, darkMode, isVisible]);
+  }, [size, props.data, darkMode, isVisible, legendHeight]);
 
   const handleFullScreen = () => {
     if (document.fullscreenElement) {
@@ -723,11 +753,36 @@ export const CombinedDiagram: FunctionComponent<CombinedDiagramBaseProps> = (
     <>
       <Maximize onClick={handleFullScreen} />
       <div style={{ height: "100%", position: "relative" }}>
+        {props.nivoProps.legendPosition === "top" && isVisible ? (
+          <OutsideLegend
+            legendPosition={props.nivoProps.legendPosition}
+            data={props.data}
+            units={props.unit}
+            colors={colors}
+            setLegendHeight={setLegendHeight}
+            marginLeft={getMargins(props.observation[0]).left - 2.5}
+            showUnits={unitCombinedDistinct.length > 1}
+          />
+        ) : null}
+
         <svg
           ref={svgRef}
           xmlns="http://www.w3.org/2000/svg"
           data-test="d3-diagram-svg"
         />
+
+        {props.nivoProps.legendPosition === "bottom" && isVisible ? (
+          <OutsideLegend
+            legendPosition={props.nivoProps.legendPosition}
+            data={props.data}
+            units={props.unit}
+            colors={colors}
+            setLegendHeight={setLegendHeight}
+            marginLeft={getMargins(props.observation[0]).left - 2.5}
+            showUnits={unitCombinedDistinct.length > 1}
+          />
+        ) : null}
+
         <div
           ref={tooltipRef}
           className="d3-diagram-tooltip"

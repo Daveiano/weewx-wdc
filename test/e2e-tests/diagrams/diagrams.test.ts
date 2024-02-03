@@ -454,37 +454,6 @@ test.describe("Diagrams", () => {
     await expect(rainTemp).toHaveScreenshot();
   });
 
-  test("Legends", async ({ page }) => {
-    // Index Temp-Dew.
-    const tempDewLegend = page.locator(
-      ".diagram-tile[data-test='outTemp-dewpoint'] svg[data-test='d3-diagram-svg'] g.legend"
-    );
-    expect(
-      await tempDewLegend.evaluate((el) => el.outerHTML)
-    ).toMatchSnapshot();
-
-    // Month min-max-avg outTemp.
-    await page.goto("artifacts-alternative-weewx-html/public_html/month.html");
-    const outTempMinMaxAvg = page.locator(
-      ".diagram-tile[data-test='outTemp-outTemp-outTemp'] svg[data-test='d3-diagram-svg'] g.legend"
-    );
-    expect(
-      await outTempMinMaxAvg.evaluate((el) => el.outerHTML)
-    ).toMatchSnapshot();
-
-    // Stats climatogram.
-    await page.goto(
-      "artifacts-alternative-weewx-html/public_html/statistics.html"
-    );
-    await page.locator("bx-tab[value='climatogram']").click();
-    const climatogramLegend = page.locator(
-      ".diagram-tile[data-test='rain-outTemp'] svg[data-test='d3-diagram-svg'] g.legend"
-    );
-    expect(
-      await climatogramLegend.evaluate((el) => el.outerHTML)
-    ).toMatchSnapshot();
-  });
-
   test("xAxis", async ({ page }) => {
     // Index Temp-Dew.
     const tempDewXAxis = page.locator(

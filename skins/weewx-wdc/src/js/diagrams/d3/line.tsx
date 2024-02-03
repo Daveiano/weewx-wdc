@@ -27,6 +27,7 @@ import {
   getObsPropsFromChartProps,
 } from "./../../util/util";
 import { addLegend } from "./components/legend";
+import { OutsideLegend } from "./components/outside-legend";
 
 type LineDiagramBaseProps = DiagramBaseProps & {
   unit: string[];
@@ -42,6 +43,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
   const small = useMediaQuery("(max-width: 672px)");
   const size: Size = useWindowSize();
   const [tooltip, setTooltip] = useState<Datum[]>([] as Datum[]);
+  const [legendHeight, setLegendHeight] = useState(0);
 
   const windDirOrdinals = (window as any).weewxWdcConfig.diagramWindDirOrdinals;
   const ordinalCompass = (window as any).weewxWdcConfig.ordinalCompass;
@@ -149,22 +151,36 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
     };
   }, []);
 
+  // Determine the number of unique units to display.
+  const unitCombinedDistinct: string[] = [...new Set(props.unit)];
+
   useEffect(() => {
     // Clean up (otherwise on resize it gets rendered multiple times).
     d3.select(svgRef.current).selectChildren().remove();
 
-    // Determine the number of unique units to display.
-    const unitCombinedDistinct: string[] = [...new Set(props.unit)];
+    const margin = {
+      top: props.nivoProps.legendPosition === "top" ? 45 : 20,
+      // Second axis on the right?
+      right: unitCombinedDistinct.length > 1 ? 50 : 10,
+      bottom: props.nivoProps.legendPosition === "bottom" ? 55 : 20,
+      left: getMargins(props.observation[0]).left - 2.5,
+    };
+
+    if (
+      (props.nivoProps.legendPosition === "top" ||
+        props.nivoProps.legendPosition === "bottom") &&
+      legendHeight > 0
+    ) {
+      if (props.nivoProps.legendPosition === "top") {
+        margin.top = 20 + legendHeight;
+      }
+      if (props.nivoProps.legendPosition === "bottom") {
+        margin.bottom = 20 + legendHeight;
+      }
+    }
 
     // @see https://gist.github.com/mbostock/3019563
-    const margin = {
-        top: 20,
-        // Second axis on the right?
-        right: unitCombinedDistinct.length > 1 ? 50 : 10,
-        bottom: 20,
-        left: getMargins(props.observation[0]).left - 2.5,
-      },
-      width = svgRef.current?.parentElement
+    const width = svgRef.current?.parentElement
         ? svgRef.current?.parentElement.clientWidth - margin.left - margin.right
         : 0,
       height = svgRef.current?.parentElement
@@ -706,14 +722,21 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
         });
 
       // Legend.
-      addLegend(
-        svgElement,
-        width,
-        props.data,
-        props.unit,
-        colors,
-        unitCombinedDistinct.length > 1
-      );
+      if (
+        props.nivoProps.legendPosition !== "top" &&
+        props.nivoProps.legendPosition !== "bottom"
+      ) {
+        addLegend(
+          svgElement,
+          width,
+          height,
+          props.nivoProps.legendPosition,
+          props.data,
+          props.unit,
+          colors,
+          unitCombinedDistinct.length > 1
+        );
+      }
     }
   }, [size, props.data, darkMode]);
 
@@ -731,11 +754,36 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
     <>
       <Maximize onClick={handleFullScreen} />
       <div style={{ height: "100%", position: "relative" }}>
+        {props.nivoProps.legendPosition === "top" ? (
+          <OutsideLegend
+            legendPosition={props.nivoProps.legendPosition}
+            data={props.data}
+            units={props.unit}
+            colors={colors}
+            setLegendHeight={setLegendHeight}
+            marginLeft={getMargins(props.observation[0]).left - 2.5}
+            showUnits={unitCombinedDistinct.length > 1}
+          />
+        ) : null}
+
         <svg
           ref={svgRef}
           xmlns="http://www.w3.org/2000/svg"
           data-test="d3-diagram-svg"
         />
+
+        {props.nivoProps.legendPosition === "bottom" ? (
+          <OutsideLegend
+            legendPosition={props.nivoProps.legendPosition}
+            data={props.data}
+            units={props.unit}
+            colors={colors}
+            setLegendHeight={setLegendHeight}
+            marginLeft={getMargins(props.observation[0]).left - 2.5}
+            showUnits={unitCombinedDistinct.length > 1}
+          />
+        ) : null}
+
         <div
           ref={tooltipRef}
           className="d3-diagram-tooltip"

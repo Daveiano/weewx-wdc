@@ -288,7 +288,7 @@
           hidden
         >
           #set global $stat_table_obs = $DisplayOptions['stat_tables'][$stat_table]['observation']
-          #set global $stat_table_aggregate_types = $DisplayOptions['stat_tables'][$stat_table]['aggregate_types']
+          #set global $stat_table_aggregate_types = $to_list($DisplayOptions['stat_tables'][$stat_table]['aggregate_types'])
 
           #include "includes/stat-table.inc"
         </div>

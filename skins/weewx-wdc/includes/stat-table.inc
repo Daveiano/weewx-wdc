@@ -71,15 +71,21 @@
             #set $time_span_end_ts = $datetime.datetime.strptime($month_from_range, "%Y-%m").replace(day=$calendar.monthrange(int($year), int($month))[1], hour=23, minute=59).timestamp()
 
             #if $month_from_range in $months_for_year
+              #set $agg_for_value = $agg
+
+              #if $stat_table_obs in $DisplayOptions.get('stat_tiles_show_sum', ['rain', 'ET', 'hail', 'snow', 'lightning_strike_count', 'windrun'])
+                #set $agg_for_value = 'sum'
+              #end if
+
               #set $stat_month = $get_stat_table_month_obs($time_span_start_ts, $time_span_end_ts)
-              #set $raw_value = $getattr($getattr($stat_month, $stat_table_obs), $agg).raw
+              #set $raw_value = $getattr($getattr($stat_month, $stat_table_obs), $agg_for_value).raw
 
               #silent $per_month[$month].append($raw_value)
               #silent $per_year[$year].append($raw_value)
               #silent $per_all.append($raw_value)
 
               <bx-structured-list-cell data-testid="$month_from_range">
-                $getattr($getattr($stat_month, $stat_table_obs), $agg)
+                $getattr($getattr($stat_month, $stat_table_obs), $agg_for_value)
               </bx-structured-list-cell>
             #else
               <bx-structured-list-cell>-</bx-structured-list-cell>

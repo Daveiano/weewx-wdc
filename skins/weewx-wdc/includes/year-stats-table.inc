@@ -1,4 +1,3 @@
-<!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
 
@@ -19,7 +18,6 @@
 ></script>
 
 <bx-tabs trigger-content="Select an item" value="$first_option" type="default">
-  <!--prettier-ignore-->
   #for $clim_day in $DisplayOptions.get('climatological_days')
   #set $clim_day_class = $clim_day.replace(' ', '_').lower()
   <bx-tab
@@ -32,10 +30,8 @@
 </bx-tabs>
 
 <div class="bx-ce-demo-devenv--tab-panels">
-  <!--prettier-ignore-->
   #for $clim_day in $DisplayOptions.get('climatological_days')
   #set $clim_day_class = $clim_day.replace(' ', '_').lower()
-  <!--prettier-ignore-->
   <div
     class="climatological-day-table"
     id="panel-$clim_day_class"

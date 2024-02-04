@@ -1,4 +1,3 @@
-<!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
 #from datetime import datetime
@@ -28,7 +27,7 @@
   type="module"
   src="https://1.www.s81c.com/common/carbon/web-components/version/v1.21.0/tabs.min.js"
 ></script>
-<!--prettier-ignore-->
+
 <bx-tabs trigger-content="Select an item" value="table" type="container">
   <bx-tab id="tab-table" target="panel-table" value="table">$gettext('Table')</bx-tab>
   #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'rain').has_data
@@ -51,6 +50,20 @@
   <bx-tab id="tab-climatogram" target="panel-climatogram" value="climatogram"
     >$gettext('Climatogram')</bx-tab
   >
+  #end if
+
+  #if 'stat_tables' in $DisplayOptions
+    #for $stat_table in $DisplayOptions.get('stat_tables')
+      #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), $DisplayOptions['stat_tables'][$stat_table]['observation']).has_data
+        <bx-tab
+          id="tab-$stat_table"
+          target="panel-$stat_table"
+          value="$stat_table"
+        >
+          $DisplayOptions['stat_tables'][$stat_table]['label']
+        </bx-tab>
+      #end if
+    #end for
   #end if
 </bx-tabs>
 
@@ -81,7 +94,6 @@
         <bx-structured-list-row data-test="$clim_day">
           <bx-structured-list-cell>$gettext($clim_day)</bx-structured-list-cell>
           <bx-structured-list-cell>
-            <!--prettier-ignore-->
             #set $time_span = $get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday)
             $get_climatological_day($clim_day, $time_span.start.raw, $time_span.end.raw)
           </bx-structured-list-cell>
@@ -90,21 +102,18 @@
               <bx-tooltip>
                 <bx-tooltip-body>
                   <p>
-                    <!--prettier-ignore-->
                     $get_climatological_day_description($clim_day)
                   </p>
                 </bx-tooltip-body>
               </bx-tooltip>
             </div>
             <span>
-              <!--prettier-ignore-->
               $get_climatological_day_description($clim_day)
             </span>
           </bx-structured-list-cell>
         </bx-structured-list-row>
         #end for
 
-        <!--prettier-ignore-->
         #if $context == 'alltime'
         <bx-structured-list-row data-test="total-number">
           <bx-structured-list-cell
@@ -113,7 +122,6 @@
             ></bx-structured-list-cell
           >
           <bx-structured-list-cell>
-            <!--prettier-ignore-->
             #set $start_dt = datetime.fromtimestamp($alltime.start.raw)
             #set $end_dt = datetime.fromtimestamp($latest.dateTime.raw)
             #set $delta = $end_dt - $start_dt
@@ -134,12 +142,10 @@
       </bx-structured-list-body>
     </bx-structured-list>
 
-    <!--prettier-ignore-->
     #if $show_climatological_days_per_month
       #include "includes/year-stats-table.inc"
     #end if
   </div>
-  <!--prettier-ignore-->
   #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'rain').has_data
   <div
     id="panel-diagram-rain"
@@ -156,7 +162,6 @@
           >
         </bx-structured-list-header-row>
       </bx-structured-list-head>
-      <!--prettier-ignore-->
       <bx-structured-list-body>
         #if $context == 'alltime' and $to_bool($DisplayOptions.get('show_last_rain', True)) and $last_rain is not None
         <bx-structured-list-row>
@@ -213,7 +218,6 @@
     #end if
 
     <script>
-      /* prettier-ignore */
       #set $obs_context = $get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday)
       var calendarDataRain = $get_calendar_data('rain', 'sum', $obs_context.start.raw, $obs_context.end.raw);
     </script>
@@ -227,7 +231,6 @@
     ></div>
   </div>
   #end if
-  <!--prettier-ignore-->
   #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), 'outTemp').has_data
   <div
     id="panel-diagram-temp-avg"
@@ -236,7 +239,6 @@
     hidden
   >
     <script>
-      /* prettier-ignore */
       #set $obs_context = $get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday)
       var calendarDataTempAvg = $get_calendar_data('outTemp', 'avg', $obs_context.start.raw, $obs_context.end.raw);
     </script>
@@ -250,9 +252,8 @@
     ></div>
   </div>
   #end if
-  <!-- prettier-ignore -->
+
   #if $show_climatogram_year or $show_climatogram_alltime
-  <!-- prettier-ignore -->
   <div
     id="panel-climatogram"
     role="tabpanel"
@@ -275,5 +276,23 @@
       </div>
     #end if
   </div>
+  #end if
+
+  #if 'stat_tables' in $DisplayOptions
+    #for $stat_table in $DisplayOptions.get('stat_tables')
+      #if $getattr($get_time_span_from_context($context, $day, $week, $month, $year, $alltime, $yesterday), $DisplayOptions['stat_tables'][$stat_table]['observation']).has_data
+        <div
+          id="panel-$stat_table"
+          role="tabpanel"
+          aria-labelledby="tab-$stat_table"
+          hidden
+        >
+          #set global $stat_table_obs = $DisplayOptions['stat_tables'][$stat_table]['observation']
+          #set global $stat_table_aggregate_types = $DisplayOptions['stat_tables'][$stat_table]['aggregate_types']
+
+          #include "includes/stat-table.inc"
+        </div>
+      #end if
+    #end for
   #end if
 </div>

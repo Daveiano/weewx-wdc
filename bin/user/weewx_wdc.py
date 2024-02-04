@@ -26,7 +26,7 @@ from weewx.units import (
 from weewx.wxformulas import beaufort
 from weeutil.weeutil import TimeSpan, rounder, to_bool, to_int, startOfDay, startOfArchiveDay
 from weeutil.config import search_up, accumulateLeaves
-
+from weewx.tags import TimespanBinder
 
 try:
     import weeutil.logger
@@ -354,7 +354,20 @@ class WdcGeneralUtil(SearchList):
             "wx_binding"
         )
 
-        # print(self.generator.config_dict["StdWXCalculate"]["Calculations"])
+    def format_raw_value(self, value, obs):
+        """
+        Returns a ValueHelper for a raw value and an obs type.
+
+        Args:
+            value (float): The value
+            obs (string): The observation
+        """
+        target_unit_t = self.generator.converter.getTargetUnit(
+                obs_type=obs)
+        value_vt = (value, target_unit_t[0], target_unit_t[1])
+
+        return ValueHelper(value_t=value_vt, formatter=self.generator.formatter)
+
 
     def get_software_obs(self):
         """
@@ -1148,6 +1161,48 @@ class WdcGeneralUtil(SearchList):
 
 
 class WdcArchiveUtil(SearchList):
+    def __init__(self, generator):
+        SearchList.__init__(self, generator)
+
+    def get_extension_list(self, timespan, db_lookup):
+        """Returns a search list extension with two additions.
+
+        Parameters:
+          timespan: An instance of weeutil.weeutil.TimeSpan. This will
+                    hold the start and stop times of the domain of
+                    valid times.
+
+          db_lookup: This is a function that, given a data binding
+                     as its only parameter, will return a database manager
+                     object.
+        """
+
+        self.db_lookup = db_lookup
+
+        search_list_extension = {
+            "get_stat_table_month_obs": self.get_stat_table_month_obs,
+            "get_day_archive_enabled": self.get_day_archive_enabled,
+            "get_archive_days_array": self.get_archive_days_array,
+            "filter_months": self.filter_months,
+            "fake_get_report_years": self.fake_get_report_years,
+        }
+
+        return [search_list_extension]
+
+    def get_stat_table_month_obs(self, start_ts, end_ts):
+        """
+        Returns a TimeSpanBinder a period.
+
+        Args:
+            start_ts (int): The start timestamp
+            end_ts (int): The end timestamp
+        """
+        month_timespan = TimeSpan(start_ts, end_ts)
+        month_timespan_binder = TimespanBinder(month_timespan, self.db_lookup,
+                                               formatter=self.generator.formatter,
+                                               converter=self.generator.converter)
+        return month_timespan_binder
+
     def get_day_archive_enabled(self):
         """
         Get day archive enabled.

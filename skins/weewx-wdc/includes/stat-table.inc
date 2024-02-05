@@ -29,7 +29,7 @@
   #set $per_year = {}
   #set $per_all = []
 
-  <bx-structured-list class="year-obs-stat-table">
+  <bx-structured-list class="year-obs-stat-table" data-testid="$agg-$stat_table_obs">
     <bx-structured-list-head>
       <bx-structured-list-header-row>
         #if $context == "alltime"
@@ -84,7 +84,7 @@
               #silent $per_year[$year].append($raw_value)
               #silent $per_all.append($raw_value)
 
-              <bx-structured-list-cell data-testid="$month_from_range">
+              <bx-structured-list-cell data-testid="month-$month_from_range-$agg-$stat_table_obs">
                 $getattr($getattr($stat_month, $stat_table_obs), $agg_for_value)
               </bx-structured-list-cell>
             #else
@@ -92,9 +92,9 @@
             #end if
           #end for
 
-          <bx-structured-list-cell data-testid="year-$year">
+          <bx-structured-list-cell>
             #if $year in $per_year
-              <strong>
+              <strong data-testid="year-$year-$agg-$stat_table_obs">
                 #if $agg == 'max'
                   $format_raw_value($max($per_year[$year]), $stat_table_obs)
                 #elif $agg == 'min'
@@ -118,7 +118,7 @@
 
         #for $month in range(1, 13)
           #if $per_month[$month]
-            <bx-structured-list-cell>
+            <bx-structured-list-cell data-testid="agg-month-$month-$agg-$stat_table_obs">
               #if $agg == 'max'
                 $format_raw_value($max($per_month[$month]), $stat_table_obs)
               #elif $agg == 'min'
@@ -135,7 +135,7 @@
         #end for
 
         <bx-structured-list-cell>
-          <strong>
+          <strong data-testid="total-$agg-$stat_table_obs">
             #if $agg == 'max'
               $format_raw_value($max($per_all), $stat_table_obs)
             #elif $agg == 'min'

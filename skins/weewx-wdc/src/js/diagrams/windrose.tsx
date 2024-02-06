@@ -66,6 +66,12 @@ export const WindRoseDiagram: FunctionComponent<WindRoseProps> = (
           //orientation: "v",
           x: -0.5,
           y: 0.5,
+          title:
+            !props.showLegendUnits && !props.showBeaufort
+              ? {
+                  text: `   in ${props.unit}:`,
+                }
+              : undefined,
         },
         autosize: true,
         margin: {

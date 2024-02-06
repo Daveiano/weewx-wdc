@@ -765,4 +765,5 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.3.0...580071ca175a03fe4924b
 - Updated sorting of min/max graphs in the `temp_min_max_avg` graph GH-247
 - Added new property for charts: `legendPosition` - Change legend position GH-228
 - Added option to set default theme (light/dark/auto) GH-241
-- added per-month statistic tables GH-215
+- Added per-month statistic tables GH-215
+- Added `windRose_legend_show_units` to hide the units in the windRose legend GH-249

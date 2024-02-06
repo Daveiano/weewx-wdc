@@ -244,10 +244,18 @@ plotlyDiagrams.forEach((plotyDiagram) => {
   if (
     plotyDiagram.classList.contains("windrose") &&
     plotyDiagram instanceof HTMLElement &&
-    plotyDiagram.dataset.value
+    plotyDiagram.dataset.value &&
+    plotyDiagram.dataset.unit &&
+    plotyDiagram.dataset.showLegendUnit &&
+    plotyDiagram.dataset.showBeaufort
   ) {
     root.render(
-      <WindRoseDiagram data={(window as any)[plotyDiagram.dataset.value]} />
+      <WindRoseDiagram
+        data={(window as any)[plotyDiagram.dataset.value]}
+        unit={plotyDiagram.dataset.unit}
+        showLegendUnits={plotyDiagram.dataset.showLegendUnit === "True"}
+        showBeaufort={plotyDiagram.dataset.showBeaufort === "True"}
+      />
     );
   }
 });

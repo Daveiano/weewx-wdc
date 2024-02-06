@@ -85,6 +85,9 @@ type TooltipProps = {
 
 type WindRoseProps = {
   data: any[];
+  unit: string;
+  showLegendUnits: boolean;
+  showBeaufort: boolean;
 };
 
 // @todo What is this?

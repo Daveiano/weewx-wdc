@@ -270,6 +270,23 @@ test.describe("Diagrams", () => {
     await expect(windrose).toHaveScreenshot();
   });
 
+  test("Windrose with non-beaufort untis and without unit labels", async ({
+    page,
+  }) => {
+    await page.goto("artifacts-mqtt-weewx-html/public_html/index.html");
+
+    const windrose = page.locator(".diagram-tile[data-test='windrose']");
+    expect(
+      await windrose.locator(".value script").innerText()
+    ).toMatchSnapshot();
+
+    await expect(windrose.locator(".legendtitletext").first()).toContainText(
+      "in km/h"
+    );
+
+    await expect(windrose).toHaveScreenshot();
+  });
+
   test("Custom aggregate_interval", async ({ page }) => {
     await page.goto("artifacts-custom-weewx-html/public_html/index.html");
     const cloudbase = page.locator(".diagram-tile[data-test='cloudbase']");

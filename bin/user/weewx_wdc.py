@@ -363,11 +363,10 @@ class WdcGeneralUtil(SearchList):
             obs (string): The observation
         """
         target_unit_t = self.generator.converter.getTargetUnit(
-                obs_type=obs)
+            obs_type=obs)
         value_vt = (value, target_unit_t[0], target_unit_t[1])
 
         return ValueHelper(value_t=value_vt, formatter=self.generator.formatter)
-
 
     def get_software_obs(self):
         """
@@ -1985,6 +1984,11 @@ class WdcDiagramUtil(SearchList):
         except KeyError:
             show_beaufort = False
 
+        try:
+            show_legend_units = to_bool(self.generator.skin_dict["DisplayOptions"]["windRose_legend_show_units"])
+        except KeyError:
+            show_legend_units = True
+
         db_manager = self.generator.db_binder.get_manager(
             data_binding=search_up(
                 self.generator.config_dict["StdReport"]["WdcReport"], "data_binding", "wx_binding"))
@@ -2008,7 +2012,7 @@ class WdcDiagramUtil(SearchList):
                     wind_upper_vt = self.generator.converter.convert(
                         (5, "km_per_hour", "group_speed"))
                     name = ValueHelper(
-                        value_t=wind_upper_vt, formatter=self.generator.formatter).format()
+                        value_t=wind_upper_vt, formatter=self.generator.formatter).format(add_label=show_legend_units)
                 # Bft 2
                 elif i == 1:
                     wind_lower_vt = self.generator.converter.convert(
@@ -2016,9 +2020,9 @@ class WdcDiagramUtil(SearchList):
                     wind_upper_vt = self.generator.converter.convert(
                         (11, "km_per_hour", "group_speed"))
                     name = ValueHelper(value_t=wind_lower_vt,
-                                       formatter=self.generator.formatter).format(
-                    ) + " - " + ValueHelper(value_t=wind_upper_vt,
-                                            formatter=self.generator.formatter).format()
+                                       formatter=self.generator.formatter).format(add_label=show_legend_units
+                                                                                  ) + " - " + ValueHelper(value_t=wind_upper_vt,
+                                                                                                          formatter=self.generator.formatter).format(add_label=show_legend_units)
                 # Bft 3
                 elif i == 2:
                     wind_lower_vt = self.generator.converter.convert(
@@ -2026,9 +2030,9 @@ class WdcDiagramUtil(SearchList):
                     wind_upper_vt = self.generator.converter.convert(
                         (19, "km_per_hour", "group_speed"))
                     name = ValueHelper(value_t=wind_lower_vt,
-                                       formatter=self.generator.formatter).format(
-                    ) + " - " + ValueHelper(value_t=wind_upper_vt,
-                                            formatter=self.generator.formatter).format()
+                                       formatter=self.generator.formatter).format(add_label=show_legend_units
+                                                                                  ) + " - " + ValueHelper(value_t=wind_upper_vt,
+                                                                                                          formatter=self.generator.formatter).format(add_label=show_legend_units)
                 # Bft 4
                 elif i == 3:
                     wind_lower_vt = self.generator.converter.convert(
@@ -2036,9 +2040,9 @@ class WdcDiagramUtil(SearchList):
                     wind_upper_vt = self.generator.converter.convert(
                         (28, "km_per_hour", "group_speed"))
                     name = ValueHelper(value_t=wind_lower_vt,
-                                       formatter=self.generator.formatter).format(
-                    ) + " - " + ValueHelper(value_t=wind_upper_vt,
-                                            formatter=self.generator.formatter).format()
+                                       formatter=self.generator.formatter).format(add_label=show_legend_units
+                                                                                  ) + " - " + ValueHelper(value_t=wind_upper_vt,
+                                                                                                          formatter=self.generator.formatter).format(add_label=show_legend_units)
                 # Bft 5
                 elif i == 4:
                     wind_lower_vt = self.generator.converter.convert(
@@ -2046,15 +2050,15 @@ class WdcDiagramUtil(SearchList):
                     wind_upper_vt = self.generator.converter.convert(
                         (38, "km_per_hour", "group_speed"))
                     name = ValueHelper(value_t=wind_lower_vt,
-                                       formatter=self.generator.formatter).format(
-                    ) + " - " + ValueHelper(value_t=wind_upper_vt,
-                                            formatter=self.generator.formatter).format()
+                                       formatter=self.generator.formatter).format(add_label=show_legend_units
+                                                                                  ) + " - " + ValueHelper(value_t=wind_upper_vt,
+                                                                                                          formatter=self.generator.formatter).format(add_label=show_legend_units)
                 # Bft 6 and higher
                 elif i == 5:
                     wind_lower_vt = self.generator.converter.convert(
                         (39, "km_per_hour", "group_speed"))
                     name = ValueHelper(
-                        value_t=wind_lower_vt, formatter=self.generator.formatter).format()
+                        value_t=wind_lower_vt, formatter=self.generator.formatter).format(add_label=show_legend_units)
 
             windrose_data.append(
                 {

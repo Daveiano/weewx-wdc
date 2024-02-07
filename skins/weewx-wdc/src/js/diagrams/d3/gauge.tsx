@@ -36,6 +36,7 @@ type GaugeDiagramBaseProps = {
     color_scheme: string;
     invert_color_scheme: string;
     show_min_max: string;
+    hide_tick_unit: string;
   };
 };
 
@@ -208,8 +209,10 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
     const ticks = d3.range(ticksNumber).map(function (d) {
       const sub_angle = angles.start_angle + sub_arc_ticks * d;
       let label =
-        (scaleMin + d * tick_pct).toFixed(props.rounding) +
-        he.decode(props.unit);
+        `${(scaleMin + d * tick_pct).toFixed(props.rounding)}` +
+        (!parseInt(props.properties.hide_tick_unit)
+          ? he.decode(props.unit)
+          : "");
 
       if (windDirAsOridnal) {
         label =
@@ -222,10 +225,11 @@ export const D3GaugeDiagram: FunctionComponent<GaugeDiagramBaseProps> = (
         }
 
         if (arc >= 1.97 && d == ticksNumber - 1) {
-          label = `${label} / ${
-            (scaleMin + 0 * tick_pct).toFixed(props.rounding) +
-            he.decode(props.unit)
-          }`;
+          label =
+            `${label} / ${(scaleMin + 0 * tick_pct).toFixed(props.rounding)}` +
+            (!parseInt(props.properties.hide_tick_unit)
+              ? he.decode(props.unit)
+              : "");
         }
       }
 

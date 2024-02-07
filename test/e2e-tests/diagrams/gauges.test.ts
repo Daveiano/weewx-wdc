@@ -128,4 +128,32 @@ test.describe("Gauges", () => {
       barometerSVG.locator(".gauge-text .gauge-legend-max")
     ).toHaveText("1023.5 mbar");
   });
+
+  test("hide_tick_unit = 1", async ({ page }) => {
+    await page.goto("artifacts-custom-weewx-html/public_html/month.html");
+
+    // Check for each tick that unit is hidden.
+    const windSpeed = page.locator('[data-test="windSpeedGaugeSeries2"] '),
+      windSpeedSVG = windSpeed.locator('[data-test="d3-gauge-svg"]');
+
+    let ticks = windSpeedSVG.locator(".tick-label");
+
+    await expect(ticks).toHaveCount(7);
+
+    for (const tick of await windSpeedSVG.locator(".tick-label").all()) {
+      await expect(tick).not.toContainText("km/h");
+    }
+
+    // Check for each tick that unit is shown.
+    const outTemp = page.locator('[data-test="outTempGaugeSeries0"] '),
+      outTempSVG = outTemp.locator('[data-test="d3-gauge-svg"]');
+
+    ticks = outTempSVG.locator(".tick-label");
+
+    await expect(ticks).toHaveCount(7);
+
+    for (const tick of await outTempSVG.locator(".tick-label").all()) {
+      await expect(tick).toContainText("°C");
+    }
+  });
 });

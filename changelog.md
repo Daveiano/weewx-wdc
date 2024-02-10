@@ -767,3 +767,4 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.3.0...580071ca175a03fe4924b
 - Added option to set default theme (light/dark/auto) GH-241
 - Added per-month statistic tables GH-215
 - Added `windRose_legend_show_units` to hide the units in the windRose legend, added `hide_tick_unit` for gauges GH-249
+- Added colored Temperature GH-243

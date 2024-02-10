@@ -529,6 +529,7 @@ a.stat-tile-link * {
 .stat-tile {
   margin-bottom: $spacing-05;
   height: calc(100% - #{$spacing-05});
+  transition: background-color 350ms ease;
   bx-tooltip-definition {
     padding-bottom: $spacing-01;
   }

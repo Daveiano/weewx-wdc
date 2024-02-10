@@ -67,6 +67,7 @@ class BasicInstaller(ExtensionInstaller):
                         "skins/weewx-wdc/dist/main.css",
                         "skins/weewx-wdc/dist/main.js",
                         "skins/weewx-wdc/dist/live-updates.js",
+                        "skins/weewx-wdc/dist/colored-temperature.js",
                         "skins/weewx-wdc/dist/assets/IBMPlexMono-Regular.woff2",
                         "skins/weewx-wdc/dist/assets/IBMPlexMono-Regular.woff",
                         "skins/weewx-wdc/dist/assets/IBMPlexSans-Regular.woff2",

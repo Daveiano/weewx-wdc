@@ -1,4 +1,3 @@
-<!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
 #attr $context = 'day'
@@ -26,7 +25,6 @@
             <header class="bx--col page-header">
               <h1>$gettext("Current Weather Conditions")</h1>
               <h2>$current.dateTime</h2>
-              <!--prettier-ignore-->
               #if $to_bool($Extras['mqtt']['mqtt_websockets_enabled'])
               #if $DisplayOptions.get('layout', 'alternative') == 'alternative'
                 #set $mqtt_notfication_classes = "bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-6 bx--col-max-6"
@@ -59,7 +57,6 @@
             </header>
           </div>
 
-          <!--prettier-ignore-->
           #if $DisplayOptions.get('layout', 'alternative') == 'alternative'
             #include 'includes/body-alternative.inc'
           #else
@@ -158,6 +155,10 @@
     #end if
 
     #include "includes/footer.inc"
+
+    #if $to_bool($DisplayOptions.get("outTemp_stat_tile_color", "False"))
+    <script src="$get_base_path(path='dist/colored-temperature.js')" defer></script>
+    #end if
 
     <script src="$get_base_path(path='dist/main.js')" defer></script>
     #if $to_bool($Extras['mqtt']['mqtt_websockets_enabled'])

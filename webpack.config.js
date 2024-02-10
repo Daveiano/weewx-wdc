@@ -13,6 +13,10 @@ module.exports = {
       __dirname,
       "skins/weewx-wdc/src/js/live-updates.ts"
     ),
+    "colored-temperature": path.resolve(
+      __dirname,
+      "skins/weewx-wdc/src/js/colored-temperature.ts"
+    ),
   },
   module: {
     rules: [

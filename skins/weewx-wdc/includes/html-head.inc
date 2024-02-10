@@ -85,7 +85,11 @@
     },
     locale: "$get_locale()",
     time: $datetime.datetime.now().timestamp(),
-    defaultTheme: '$DisplayOptions.get("default_theme", "auto")'
+    defaultTheme: '$DisplayOptions.get("default_theme", "auto")',
+    color_temperature: $to_int($to_bool($DisplayOptions.get("outTemp_stat_tile_color", "False"))),
+    color_temperature_transparency: $DisplayOptions.get("outTemp_stat_tile_color_transparency", "0.5"),
+    color_temperature_min: $DisplayOptions.get("outTemp_stat_tile_color_min", "-20"),
+    color_temperature_max: $DisplayOptions.get("outTemp_stat_tile_color_max", "40"),
   };
 </script>
 

@@ -223,7 +223,7 @@ testWeeReportRunMqtt() {
     assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
     assertContains "$output" "Generating as of last timestamp in the database."
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 32 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.reportengine: Copied 19 files to /home/weewx/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"

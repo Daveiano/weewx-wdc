@@ -9,5 +9,6 @@ service rsyslog start
 
 # start weewx
 echo 'Starting weewx reports (alternative layout)'
-"${WEEWX_HOME}"/bin/wee_reports
+# shellcheck source=/dev/null
+. "${WEEWX_HOME}/weewx-venv/bin/activate" && weectl report run --config "${WEEWX_HOME}/weewx.conf"
 cat /var/log/syslog | grep weewx

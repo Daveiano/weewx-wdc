@@ -1,4 +1,3 @@
-<!--prettier-ignore-->
 #errorCatcher Echo
 #encoding UTF-8
 #from datetime import datetime, timedelta
@@ -15,7 +14,6 @@
 #set $computer_monitor_diagram_observations = $to_list($DisplayOptions.get('computer_monitor_diagram_observations', ['cpu_user', 'cpu_system', 'cpu_temp', 'load1', 'mem_used', 'proc_active', 'net_eth0_rbytes', 'net_eth0_tbytes', 'net_wlan0_rbytes', 'net_wlan0_tbytes']))
 #set $computer_monitor_diagram_period = $DisplayOptions.get('computer_monitor_diagram_period', 'week')
 
-<!--prettier-ignore-->
 #def diagrams($context, $diagrams_config, $diagram_obs)
   #set $diagram_index = 0
   #if "combined_observations" in $diagrams_config
@@ -80,9 +78,7 @@
             </header>
           </div>
 
-          <!--prettier-ignore-->
           #if $layout == 'classic'
-          <!--prettier-ignore-->
           <div class="bx--row">
             <div
               class="bx--col-sm-4 bx--col-md-8 bx--col-lg-6 bx--col-xlg-4 bx--col-max-4 layout-col"
@@ -99,17 +95,14 @@
             </div>
           </div>
           <div class="bx--row">
-            <!-- prettier-ignore -->
             #if 'computer_monitor_table_observations' in $DisplayOptions
             <div class="bx--row">
-              <!-- prettier-ignore -->
               #set global $table_obs = $DisplayOptions.get('computer_monitor_table_observations')
               #include "includes/data-table-tile.inc"
             </div>
             #end if
           </div>
           #else
-          <!--prettier-ignore-->
           #set global $context = 'day'
 
           <div class="bx--row">
@@ -125,27 +118,21 @@
             #end for
           </div>
 
-          <!--prettier-ignore-->
           #set global $context = $computer_monitor_diagram_period
 
-          <!--prettier-ignore-->
           <div class="bx--row">
             #include "includes/section-heading.inc"
           </div>
 
-          <!-- prettier-ignore -->
           <div class="bx--row">
             $diagrams($context, $diagrams_config, $computer_monitor_diagram_observations)
           </div>
 
-          <!-- prettier-ignore -->
           #if 'computer_monitor_table_observations' in $DisplayOptions
           <div class="bx--row">
-            <!-- prettier-ignore -->
             #set global $table_obs = $DisplayOptions.get('computer_monitor_table_observations')
             #include "includes/data-table-tile.inc"
           </div>
-          <!--prettier-ignore-->
           #end if
         #end if
         </div>

@@ -13,5 +13,6 @@ mv "${WEEWX_HOME}"/skins/weewx-wdc/skin-sensor-status.conf "${WEEWX_HOME}"/skins
 
 # start weewx
 echo 'Starting weewx reports (sensor status)'
-"${WEEWX_HOME}"/bin/wee_reports
+# shellcheck source=/dev/null
+. "${WEEWX_HOME}/weewx-venv/bin/activate" && weectl report run --config "${WEEWX_HOME}/weewx.conf"
 cat /var/log/syslog | grep weewx

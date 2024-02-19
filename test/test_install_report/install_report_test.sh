@@ -82,22 +82,22 @@ testInstall() {
     line1=$(sed '1q;d' "$DIR"/artifacts/testInstall.txt)
     lineLast=$(tail -n 1 "$DIR"/artifacts/testInstall.txt)
 
-    assertContains "$output" "Request to install '/tmp/weewx-wdc/'"
-    assertContains "$output" "Finished installing extension '/tmp/weewx-wdc/'"
+    assertContains "$output" "/home/weewx-data/weewx-venv/bin/weectl extension install -y --config /home/weewx-data/weewx.conf /tmp/weewx-wdc/"
+    assertContains "$output" "Finished installing extension weewx-wdc from /tmp/weewx-wdc/"
 }
 
 testWeeReportRunAlternative() {
     docker run --name weewx weewx > "$DIR"/artifacts/testWeeReportRunAlternative.txt 2>&1
-    docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-alternative-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
+    docker cp weewx:/home/weewx-data/public_html/ "$DIR"/artifacts-alternative-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
     docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
 
     output=$(cat "$DIR"/artifacts/testWeeReportRunAlternative.txt)
 
     assertContains "$output" "Starting weewx reports (alternative layout)"
-    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Using configuration file [1m/home/weewx-data/weewx.conf[0m"
     assertContains "$output" "Generating as of last timestamp in the database."
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 32 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 17 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.reportengine: Copied 17 files to /home/weewx-data/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"
@@ -106,16 +106,16 @@ testWeeReportRunAlternative() {
 
 testWeeReportRunClassic() {
     docker run --entrypoint "/start-classic.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunClassic.txt 2>&1
-    docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-classic-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
+    docker cp weewx:/home/weewx-data/public_html/ "$DIR"/artifacts-classic-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
     docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
 
     output=$(cat "$DIR"/artifacts/testWeeReportRunClassic.txt)
 
     assertContains "$output" "Starting weewx reports (classic layout)"
-    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Using configuration file [1m/home/weewx-data/weewx.conf[0m"
     assertContains "$output" "Generating as of last timestamp in the database."
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 32 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 17 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.reportengine: Copied 17 files to /home/weewx-data/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"
@@ -125,15 +125,15 @@ testWeeReportRunClassic() {
 testWeeReportRunForecast() {
     current_date=$(date +%Y-%m-%d\ %H:%M:%S)
     docker run --env CURRENT_DATE="$current_date" --env FAKETIME_DONT_RESET=1 --env LD_PRELOAD="/usr/local/lib/faketime/libfaketime.so.1" --env FAKETIME="@2022-06-23 07:54:50" --entrypoint "/start-forecast.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunForecast.txt 2>&1
-    docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-forecast-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
+    docker cp weewx:/home/weewx-data/public_html/ "$DIR"/artifacts-forecast-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
     docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
 
     output=$(cat "$DIR"/artifacts/testWeeReportRunForecast.txt)
 
     assertContains "$output" "Starting weewx reports (Alternative layout with forecast)"
-    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Using configuration file [1m/home/weewx-data/weewx.conf[0m"
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 32 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 9 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.reportengine: Copied 9 files to /home/weewx-data/public_html"
     assertContains "$output" "ZambrettiThread: Zambretti: generated 1 forecast record"
 
     assertNotContains "$output" "failed with exception"
@@ -143,34 +143,35 @@ testWeeReportRunForecast() {
 
 testWeeReportRunCustom() {
     docker run --entrypoint "/start-custom.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunCustom.txt 2>&1
-    docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-custom-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
+    docker cp weewx:/home/weewx-data/public_html/ "$DIR"/artifacts-custom-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
     docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
 
     output=$(cat "$DIR"/artifacts/testWeeReportRunCustom.txt)
 
     assertContains "$output" "Starting weewx reports (Alternative layout with customisations)"
-    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Using configuration file [1m/home/weewx-data/weewx.conf[0m"
     assertContains "$output" "Generating as of last timestamp in the database."
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 284 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 17 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.reportengine: Copied 17 files to /home/weewx-data/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"
     assertNotContains "$output" "Caught unrecoverable exception"
 }
 
+# TODO: Replace faketime by using weewx wuth the epoch argument.
 testWeeReportRunDWD() {
     docker run --entrypoint "/start-dwd.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunDWD.txt 2>&1
-    docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-dwd-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
+    docker cp weewx:/home/weewx-data/public_html/ "$DIR"/artifacts-dwd-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
     docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
 
     output=$(cat "$DIR"/artifacts/testWeeReportRunDWD.txt)
 
     assertContains "$output" "Starting weewx reports (weewx-DWD)"
-    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Using configuration file [1m/home/weewx-data/weewx.conf[0m"
     assertContains "$output" "Generating as of last timestamp in the database."
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 31 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 20 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.reportengine: Copied 20 files to /home/weewx-data/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"
@@ -179,15 +180,15 @@ testWeeReportRunDWD() {
 
 testWeeReportRunCustomBinding() {
     docker run --entrypoint "/start-custom-binding.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunCustomBinding.txt 2>&1
-    docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-custom-binding-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
+    docker cp weewx:/home/weewx-data/public_html/ "$DIR"/artifacts-custom-binding-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
     docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
 
     output=$(cat "$DIR"/artifacts/testWeeReportRunCustomBinding.txt)
 
     assertContains "$output" "Starting weewx reports (Alternative layout with custom binding)"
-    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Using configuration file [1m/home/weewx-data/weewx.conf[0m"
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 31 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 17 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.reportengine: Copied 17 files to /home/weewx-data/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"
@@ -201,10 +202,10 @@ testWeeReportRunWithoutWeewxForecast() {
     output=$(cat "$DIR"/artifacts/testWeeReportRunWithoutWeewxForecast.txt)
 
     assertContains "$output" "Starting weewx reports (without forecast)"
-    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Using configuration file [1m/home/weewx-data/weewx.conf[0m"
     assertContains "$output" "Generating as of last timestamp in the database."
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 32 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 17 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.reportengine: Copied 17 files to /home/weewx-data/public_html"
     assertContains "$output" "DEBUG user.weewx_wdc: weewx-forecast extension is not installed. Not providing any forecast data."
 
     assertNotContains "$output" "failed with exception"
@@ -214,16 +215,16 @@ testWeeReportRunWithoutWeewxForecast() {
 
 testWeeReportRunMqtt() {
     docker run --entrypoint "/start-mqtt.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunMqtt.txt 2>&1
-    docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-mqtt-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
+    docker cp weewx:/home/weewx-data/public_html/ "$DIR"/artifacts-mqtt-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
     docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
 
     output=$(cat "$DIR"/artifacts/testWeeReportRunMqtt.txt)
 
     assertContains "$output" "Starting weewx reports (mqtt)"
-    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Using configuration file [1m/home/weewx-data/weewx.conf[0m"
     assertContains "$output" "Generating as of last timestamp in the database."
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 32 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 19 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.reportengine: Copied 19 files to /home/weewx-data/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"
@@ -232,16 +233,16 @@ testWeeReportRunMqtt() {
 
 testWeeReportRunSensorStatus() {
     docker run --entrypoint "/start-sensor.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunSensorStatus.txt 2>&1
-    docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-sensor-status-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
+    docker cp weewx:/home/weewx-data/public_html/ "$DIR"/artifacts-sensor-status-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
     docker rm weewx > "$DIR"/artifacts/docker.txt 2>&1
 
     output=$(cat "$DIR"/artifacts/testWeeReportRunSensorStatus.txt)
 
     assertContains "$output" "Starting weewx reports (sensor status)"
-    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Using configuration file [1m/home/weewx-data/weewx.conf[0m"
     assertContains "$output" "Generating as of last timestamp in the database."
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 18 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx-data/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"
@@ -250,15 +251,15 @@ testWeeReportRunSensorStatus() {
 
 testWeeReportRunCMNON() {
     docker run --entrypoint "/start-cmon.sh" --name weewx weewx > "$DIR"/artifacts/testWeeReportRunCMON.txt 2>&1
-    docker cp weewx:/home/weewx/public_html/ "$DIR"/artifacts-cmon-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
+    docker cp weewx:/home/weewx-data/public_html/ "$DIR"/artifacts-cmon-weewx-html > "$DIR"/artifacts/docker.txt 2>&1
 
     output=$(cat "$DIR"/artifacts/testWeeReportRunCMON.txt)
 
     assertContains "$output" "Starting weewx reports (CMON)"
-    assertContains "$output" "Using configuration file /home/weewx/weewx.conf"
+    assertContains "$output" "Using configuration file [1m/home/weewx-data/weewx.conf[0m"
     assertContains "$output" "Generating as of last timestamp in the database."
     assertContains "$output" "INFO weewx.cheetahgenerator: Generated 15 files for report WdcReport in"
-    assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx/public_html"
+    assertContains "$output" "INFO weewx.reportengine: Copied 18 files to /home/weewx-data/public_html"
 
     assertNotContains "$output" "failed with exception"
     assertNotContains "$output" "Ignoring template"

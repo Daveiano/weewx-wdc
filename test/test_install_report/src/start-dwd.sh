@@ -23,26 +23,27 @@ cat /tmp/dwd-extensions.py >> "${WEEWX_HOME}"/bin/user/extensions.py
 cd /tmp && wget -nv -O "weewx-dwd.zip" "https://github.com/roe-dl/weewx-DWD/archive/refs/heads/master.zip"
 unzip /tmp/weewx-dwd.zip -d /tmp/weewx-dwd/
 cp -R /tmp/weewx-dwd/weewx-DWD-master/usr/ /
-sed -i -z -e "s|PTH=\"/etc/weewx/skins/Belchertown/dwd\"|PTH=\"/home/weewx/skins/weewx-wdc/dwd\"|g" /usr/local/bin/wget-dwd
-sed -i -z -e "s|config = configobj.ConfigObj(\"/etc/weewx/weewx.conf\")|config = configobj.ConfigObj(\"/home/weewx/weewx.conf\")|g" /usr/local/bin/dwd-warnings
-mkdir /home/weewx/skins/weewx-wdc/dwd
+sed -i -z -e "s|PTH=\"/etc/weewx/skins/Belchertown/dwd\"|PTH=\"/home/weewx-data/skins/weewx-wdc/dwd\"|g" /usr/local/bin/wget-dwd
+sed -i -z -e "s|config = configobj.ConfigObj(\"/etc/weewx/weewx.conf\")|config = configobj.ConfigObj(\"/home/weewx-data/weewx.conf\")|g" /usr/local/bin/dwd-warnings
+mkdir "${WEEWX_HOME}/skins/weewx-wdc/dwd"
 
 # Icons herunterladen.
 cd /tmp && wget -nv -O "icons-dwd.zip" "https://www.dwd.de/DE/wetter/warnungen_aktuell/objekt_einbindung/icons/wettericons_zip.zip?__blob=publicationFile&v=3"
 cd /tmp && wget -nv -O "warnicons-dwd.zip" "https://www.dwd.de/DE/wetter/warnungen_aktuell/objekt_einbindung/icons/warnicons_nach_stufen_50x50_zip.zip?__blob=publicationFile&v=2"
-mkdir -p /home/weewx/public_html/dwd/icons && mkdir -p /home/weewx/public_html/dwd/warn_icons
-unzip /tmp/icons-dwd.zip -d /home/weewx/public_html/dwd/icons
-unzip /tmp/warnicons-dwd.zip -d /home/weewx/public_html/dwd/warn_icons
+mkdir -p "${WEEWX_HOME}/public_html/dwd/icons" && mkdir -p "${WEEWX_HOME}/public_html/dwd/warn_icons"
+unzip /tmp/icons-dwd.zip -d "${WEEWX_HOME}/public_html/dwd/icons"
+unzip /tmp/warnicons-dwd.zip -d "${WEEWX_HOME}/public_html/dwd/warn_icons"
 
 # weewx-DWD ausführen.
 /usr/local/bin/wget-dwd
 /usr/local/bin/dwd-warnings
-/usr/local/bin/dwd-cap-warnings --config=/home/weewx/weewx.conf --resolution=city
-/usr/local/bin/dwd-mosmix --config=/home/weewx/weewx.conf --daily --hourly --json --database O461
+/usr/local/bin/dwd-cap-warnings --config="${WEEWX_HOME}/weewx.conf" --resolution=city
+/usr/local/bin/dwd-mosmix --config="${WEEWX_HOME}/weewx.conf" --daily --hourly --json --database O461
 
-ls -la /home/weewx/skins/weewx-wdc/dwd
-ls -la /home/weewx/public_html
+ls -la "${WEEWX_HOME}/skins/weewx-wdc/dwd"
+ls -la "${WEEWX_HOME}/public_html"
 
-"${WEEWX_HOME}"/bin/wee_reports
-ls -la /home/weewx/public_html
+# shellcheck source=/dev/null
+. "${WEEWX_HOME}/weewx-venv/bin/activate" && weectl report run --config "${WEEWX_HOME}/weewx.conf"
+ls -la "${WEEWX_HOME}/public_html"
 cat /var/log/syslog | grep weewx

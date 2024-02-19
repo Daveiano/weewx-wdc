@@ -13,21 +13,25 @@ echo 'Starting weewx reports (Alternative layout with forecast)'
 # TODO: Remove API key. SECRET_OWM.
 sed -i -z -e "s|debug = 0|debug = 1|g" "${WEEWX_HOME}"/weewx.conf
 sed -i -z -e 's/skin = forecast\n        enable = false/skin = forecast\n        enable = true/g' "${WEEWX_HOME}"/weewx.conf
-sed -i -z -e "s|INSERT_OWM_API_KEY_HERE|SECRET_OWM|g" "${WEEWX_HOME}"/weewx.conf
+sed -i -z -e "s|INSERT_OWM_API_KEY_HERE|7bf26a006ec22f851a7118fe1ba824be|g" "${WEEWX_HOME}"/weewx.conf
 sed -i -z -e "s|station_type = Interceptor|station_type = Simulator|g" "${WEEWX_HOME}"/weewx.conf
 #sed -i -z -e "s|#start = 2011-01-01T00:00|start = 2022-01-01T00:00|g" "${WEEWX_HOME}"/weewx.conf
 mv "${WEEWX_HOME}"/skins/weewx-wdc/skin-forecast.conf "${WEEWX_HOME}"/skins/weewx-wdc/skin.conf
 
 echo "Starting weewx"
-"${WEEWX_HOME}"/bin/weewxd "${WEEWX_HOME}"/weewx.conf --daemon
+# shellcheck source=/dev/null
+. "${WEEWX_HOME}/weewx-venv/bin/activate" && weewxd --config "${WEEWX_HOME}"/weewx.conf --daemon
 
 echo "$CURRENT_DATE"
 echo "Sleeping 40 seconds..."
 sleep 40
 
+# TODO: Replace faketime by using weewx wuth the epoch argument.
 echo "Starting wee_reports..."
+# shellcheck source=/dev/null
+. "${WEEWX_HOME}/weewx-venv/bin/activate"
 FAKETIME="@$CURRENT_DATE" date
-FAKETIME="@$CURRENT_DATE" "${WEEWX_HOME}"/bin/wee_reports
+FAKETIME="@$CURRENT_DATE" weectl report run --config "${WEEWX_HOME}/weewx.conf"
 
 #echo "Starting wee_reports..."
 #FAKETIME="@$CURRENT_DATE" date

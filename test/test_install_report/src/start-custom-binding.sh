@@ -18,6 +18,8 @@ mv "${WEEWX_HOME}"/skins/weewx-wdc/skin-custom-binding.conf "${WEEWX_HOME}"/skin
 ls -la "${WEEWX_HOME}"/archive
 
 date
-"${WEEWX_HOME}"/bin/wee_reports
+
+# shellcheck source=/dev/null
+. "${WEEWX_HOME}/weewx-venv/bin/activate" && weectl report run --config "${WEEWX_HOME}/weewx.conf"
 
 cat /var/log/syslog | grep weewx

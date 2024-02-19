@@ -135,6 +135,7 @@ diagrams.forEach((diagram) => {
             observation: diagramObservations[index],
             id: `${labels[index]} ${aggregate_types[index]}`,
             data: (window as any)[serie]
+              .filter((item: number[] | null[]) => item[2] !== null)
               .map((item: number[]) => {
                 return {
                   x: item[0],
@@ -153,6 +154,7 @@ diagrams.forEach((diagram) => {
           observation: diagramObservations[0],
           id: diagramObservations[0],
           data: (window as any)[diagram.dataset.value]
+            .filter((item: number[] | null[]) => item[2] !== null)
             .map((item: number[]) => {
               return {
                 x: item[0],

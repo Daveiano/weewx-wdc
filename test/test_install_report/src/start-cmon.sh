@@ -13,5 +13,7 @@ cat /tmp/cmon-extensions.py >> "${WEEWX_HOME}"/bin/user/extensions.py
 
 # start weewx
 echo 'Starting weewx reports (CMON)'
-"${WEEWX_HOME}"/bin/wee_reports
+
+# shellcheck source=/dev/null
+. "${WEEWX_HOME}/weewx-venv/bin/activate" && weectl report run --config "${WEEWX_HOME}/weewx.conf"
 cat /var/log/syslog | grep weewx

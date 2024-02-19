@@ -436,7 +436,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
         svgElement
           .append("g")
           .selectAll("dot")
-          .data(dataSet.data)
+          .data(dataSet.data.filter((d: any) => d.y !== null))
           .enter()
           .append("circle")
           .attr("cx", (d: any) => {
@@ -456,7 +456,7 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
       if (observationProps.enableArea) {
         svgElement
           .append("path")
-          .datum(dataSet.data as any)
+          .datum(dataSet.data.filter((d: any) => d.y !== null) as any)
           .attr("fill", colors[index])
           .attr(
             "fill-opacity",
@@ -490,7 +490,10 @@ export const D3LineDiagram: FunctionComponent<LineDiagramBaseProps> = (
           "stroke-width",
           observationProps.lineWidth ? observationProps.lineWidth : 2
         )
-        .attr("d", lineGenerator(dataSet.data as any));
+        .attr(
+          "d",
+          lineGenerator(dataSet.data.filter((d: any) => d.y !== null) as any)
+        );
     });
 
     // Markers.

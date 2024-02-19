@@ -2,15 +2,14 @@ FROM python:3.10-buster
 
 LABEL org.opencontainers.image.authors="David Baetge <david.baetge@gmail.com>"
 
-ARG WEEWX_VERSION="4.10.2"
+ARG WEEWX_VERSION="5.0.2"
 ARG WEEWX_UID=2749
-ENV WEEWX_HOME="/home/weewx"
+ENV WEEWX_HOME="/home/weewx-data"
 RUN current_date=$(date +%Y-%m-%d\ %H:%M:%S)
 ENV CURRENT_DATE=$current_date
 
 EXPOSE 9877
 
-COPY src/install-input.txt /tmp/
 COPY src/weewx-custom-binding.conf /weewx-custom-binding.conf
 COPY src/start.sh /start.sh
 COPY src/start-classic.sh /start-classic.sh
@@ -35,7 +34,7 @@ RUN chmod +x /start.sh &&\
 
 # @see https://blog.nuvotex.de/running-syslog-in-a-container/
 RUN apt-get update &&\
-    apt-get install -q -y --no-install-recommends gcc make git rsyslog=8.1901.0-1+deb10u2 python3-configobj python3-requests &&\
+    apt-get install -q -y --no-install-recommends gcc make git rsyslog=8.1901.0-1+deb10u2 python3-configobj python3-requests python3-pip python3-venv &&\
     apt-get clean &&\
     rm -rf /var/lib/apt/lists/*
 
@@ -53,29 +52,43 @@ RUN git clone https://github.com/wolfcw/libfaketime.git &&\
     make install
     #cd .. && make test
 
-RUN wget -nv -O "weewx-${WEEWX_VERSION}.tar.gz" "https://github.com/weewx/weewx/archive/refs/tags/v${WEEWX_VERSION}.tar.gz" &&\
-    wget -nv -O "weewx-interceptor.zip" "https://github.com/matthewwall/weewx-interceptor/archive/master.zip" &&\
+RUN wget -nv -O "weewx-interceptor.zip" "https://github.com/matthewwall/weewx-interceptor/archive/master.zip" &&\
     wget -nv -O "weewx-forecast.zip" "https://github.com/chaunceygardiner/weewx-forecast/archive/refs/heads/master.zip" &&\
-    wget -nv -O "weewx-cmon.zip" "https://github.com/bellrichm/weewx-cmon/archive/refs/heads/master.zip" &&\
-    tar xfz "weewx-${WEEWX_VERSION}.tar.gz"
+    wget -nv -O "weewx-cmon.zip" "https://github.com/bellrichm/weewx-cmon/archive/refs/heads/master.zip"
 
 COPY src/weewx-wdc.zip /tmp/weewx-wdc.zip
 
 RUN mkdir /tmp/weewx-wdc/ &&\
     unzip -q /tmp/weewx-wdc.zip -d /tmp/weewx-wdc/
 
-WORKDIR /tmp/weewx-${WEEWX_VERSION}
-
-RUN pip install --no-cache-dir -r ./requirements.txt &&\
-    python ./setup.py build && python ./setup.py install < /tmp/install-input.txt
-
 WORKDIR ${WEEWX_HOME}
 
-RUN bin/wee_extension --install /tmp/weewx-interceptor.zip &&\
-    bin/wee_extension --install /tmp/weewx-forecast.zip &&\
-    bin/wee_extension --install /tmp/weewx-cmon.zip &&\
-    bin/wee_extension --install /tmp/weewx-wdc/ &&\
-    bin/wee_config --reconfigure --driver=user.interceptor --no-prompt
+RUN python3 -m venv ${WEEWX_HOME}/weewx-venv &&\
+    # shellcheck source=/dev/null
+    . ${WEEWX_HOME}/weewx-venv/bin/activate &&\
+    python3 -m pip install --no-cache-dir weewx==${WEEWX_VERSION}
+
+RUN . ${WEEWX_HOME}/weewx-venv/bin/activate &&\
+    weectl station create "${WEEWX_HOME}" --no-prompt \
+        --driver=weewx.drivers.simulator \
+        --altitude="250,meter" \
+        --latitude=51.209 \
+        --longitude=14.085 \
+        --location="Haselbachtal, Saxony, Germany" \
+        --register="y" \
+        --station-url="https://www.weewx-hbt.de/" \
+        --units="metric"
+
+# shellcheck source=/dev/null
+RUN . "${WEEWX_HOME}/weewx-venv/bin/activate" &&\
+    weectl extension install -y --config "${WEEWX_HOME}/weewx.conf" /tmp/weewx-interceptor.zip &&\
+    weectl extension install -y --config "${WEEWX_HOME}/weewx.conf" /tmp/weewx-forecast.zip &&\
+    weectl extension install -y --config "${WEEWX_HOME}/weewx.conf" /tmp/weewx-cmon.zip &&\
+    weectl extension install -y --config "${WEEWX_HOME}/weewx.conf" /tmp/weewx-wdc/
+
+# shellcheck source=/dev/null
+RUN . "${WEEWX_HOME}/weewx-venv/bin/activate" && weectl extension list --config "${WEEWX_HOME}/weewx.conf"
+RUN . "${WEEWX_HOME}/weewx-venv/bin/activate" && weectl station reconfigure --weewx-root "${WEEWX_HOME}" --config "${WEEWX_HOME}/weewx.conf" --driver=user.interceptor --no-prompt
 
 COPY src/skin.conf ./skins/weewx-wdc/
 COPY src/skin-forecast.conf ./skins/weewx-wdc/
@@ -86,7 +99,7 @@ COPY src/skin-custom-binding.conf ./skins/weewx-wdc/
 COPY src/skin-sensor-status.conf ./skins/weewx-wdc/
 COPY src/skin-cmon.conf ./skins/weewx-wdc/
 COPY src/weewx-dwd.conf ./skins/weewx-wdc/
-COPY src/dwd.py ./bin/schemas/
+COPY src/dwd.py ./weewx-venv/lib/python3.10/site-packages/schemas/
 COPY src/dwd-extensions.py /tmp
 COPY src/cmon-extensions.py /tmp
 

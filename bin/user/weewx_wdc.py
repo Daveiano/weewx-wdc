@@ -2759,7 +2759,7 @@ class WdcTableUtil(SearchList):
                         carbon_values.append(
                             {
                                 "time": cs_time_dt.isoformat(),
-                                observation: table_data_rounded,
+                                observation: table_data_rounded if table_data_rounded is not None else "-",
                                 "id": table_start_ts,
                             }
                         )

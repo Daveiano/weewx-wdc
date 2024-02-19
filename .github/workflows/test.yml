@@ -26,16 +26,16 @@ jobs:
   shunit2:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "14"
+          node-version: "20"
           cache: "yarn"
 
       - name: Set timezone
-        uses: szenius/set-timezone@v1.2
+        uses: szenius/set-timezone@master
         with:
           timezoneLinux: "Europe/Berlin"
 
@@ -60,62 +60,62 @@ jobs:
         run: ./test/run_tests.sh
 
       - name: Upload log artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: test_install_report_artifacts
           path: test/test_install_report/artifacts/
 
       - name: Upload alternative html
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: artifacts-alternative-weewx-html
           path: test/test_install_report/artifacts-alternative-weewx-html/
 
       - name: Upload classic html
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: artifacts-classic-weewx-html
           path: test/test_install_report/artifacts-classic-weewx-html/
 
       - name: Upload forecast html
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: artifacts-forecast-weewx-html
           path: test/test_install_report/artifacts-forecast-weewx-html/
 
       - name: Upload custom html
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: artifacts-custom-weewx-html
           path: test/test_install_report/artifacts-custom-weewx-html/
 
       - name: Upload weewx-DWD html
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: artifacts-dwd-weewx-html
           path: test/test_install_report/artifacts-dwd-weewx-html/
 
       - name: Upload custom binding html
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: artifacts-custom-binding-weewx-html
           path: test/test_install_report/artifacts-custom-binding-weewx-html/
 
       - name: Upload mqtt html
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: artifacts-mqtt-weewx-html
           path: test/test_install_report/artifacts-mqtt-weewx-html/
 
       - name: Upload sensor status html
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: artifacts-sensor-status-weewx-html
           path: test/test_install_report/artifacts-sensor-status-weewx-html/
 
       - name: Upload cmon html
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: artifacts-cmon-weewx-html
           path: test/test_install_report/artifacts-cmon-weewx-html/
@@ -124,12 +124,12 @@ jobs:
     needs: shunit2
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: 🔨 Setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "14"
+          node-version: "20"
           cache: "yarn"
 
       - name: Set timezone
@@ -144,55 +144,55 @@ jobs:
         run: yarn playwright install --with-deps
 
       - name: Download alternative html
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: artifacts-alternative-weewx-html
           path: test/e2e-tests/artifacts-alternative-weewx-html
 
       - name: Download classic html
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: artifacts-classic-weewx-html
           path: test/e2e-tests/artifacts-classic-weewx-html
 
       - name: Download forecast html
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: artifacts-forecast-weewx-html
           path: test/e2e-tests/artifacts-forecast-weewx-html
 
       - name: Download custom html
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: artifacts-custom-weewx-html
           path: test/e2e-tests/artifacts-custom-weewx-html
 
       - name: Download weewx-dwd html
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: artifacts-dwd-weewx-html
           path: test/e2e-tests/artifacts-dwd-weewx-html
 
       - name: Download custom binding html
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: artifacts-custom-binding-weewx-html
           path: test/e2e-tests/artifacts-custom-binding-weewx-html
 
       - name: Download mqtt html
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: artifacts-mqtt-weewx-html
           path: test/e2e-tests/artifacts-mqtt-weewx-html
 
       - name: Download sensor status html
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: artifacts-sensor-status-weewx-html
           path: test/e2e-tests/artifacts-sensor-status-weewx-html
 
       - name: Download cmon html
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: artifacts-cmon-weewx-html
           path: test/e2e-tests/artifacts-cmon-weewx-html
@@ -202,7 +202,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: playwright-report
           path: test/e2e-tests/playwright-report

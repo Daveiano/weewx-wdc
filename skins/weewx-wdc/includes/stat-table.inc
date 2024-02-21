@@ -111,43 +111,45 @@
           </bx-structured-list-cell>
         </bx-structured-list-row>
       #end for
-      <bx-structured-list-row>
-        <bx-structured-list-cell>
-          $gettext($agg.capitalize())
-        </bx-structured-list-cell>
+      #if $context == 'alltime'
+        <bx-structured-list-row>
+          <bx-structured-list-cell>
+            $gettext($agg.capitalize())
+          </bx-structured-list-cell>
 
-        #for $month in range(1, 13)
-          #if $per_month[$month]
-            <bx-structured-list-cell data-testid="agg-month-$month-$agg-$stat_table_obs">
-              #if $agg == 'max'
-                $format_raw_value($max($per_month[$month]), $stat_table_obs)
-              #elif $agg == 'min'
-                $format_raw_value($min($per_month[$month]), $stat_table_obs)
-              #elif $agg == 'sum'
-                $format_raw_value($sum($per_month[$month]), $stat_table_obs)
-              #elif $agg == 'avg'
-                $format_raw_value($sum($per_month[$month])/$len($per_month[$month]), $stat_table_obs)
-              #end if
-            </bx-structured-list-cell>
-          #else
-            <bx-structured-list-cell>-</bx-structured-list-cell>
-          #end if
-        #end for
-
-        <bx-structured-list-cell>
-          <strong data-testid="total-$agg-$stat_table_obs">
-            #if $agg == 'max'
-              $format_raw_value($max($per_all), $stat_table_obs)
-            #elif $agg == 'min'
-              $format_raw_value($min($per_all), $stat_table_obs)
-            #elif $agg == 'sum'
-              $format_raw_value($sum($per_all), $stat_table_obs)
-            #elif $agg == 'avg'
-              $format_raw_value($sum($per_all)/$len($per_all), $stat_table_obs)
+          #for $month in range(1, 13)
+            #if $per_month[$month]
+              <bx-structured-list-cell data-testid="agg-month-$month-$agg-$stat_table_obs">
+                #if $agg == 'max'
+                  $format_raw_value($max($per_month[$month]), $stat_table_obs)
+                #elif $agg == 'min'
+                  $format_raw_value($min($per_month[$month]), $stat_table_obs)
+                #elif $agg == 'sum'
+                  $format_raw_value($sum($per_month[$month]), $stat_table_obs)
+                #elif $agg == 'avg'
+                  $format_raw_value($sum($per_month[$month])/$len($per_month[$month]), $stat_table_obs)
+                #end if
+              </bx-structured-list-cell>
+            #else
+              <bx-structured-list-cell>-</bx-structured-list-cell>
             #end if
-          </strong>
-        </bx-structured-list-cell>
-      </bx-structured-list-row>
+          #end for
+
+          <bx-structured-list-cell>
+            <strong data-testid="total-$agg-$stat_table_obs">
+              #if $agg == 'max'
+                $format_raw_value($max($per_all), $stat_table_obs)
+              #elif $agg == 'min'
+                $format_raw_value($min($per_all), $stat_table_obs)
+              #elif $agg == 'sum'
+                $format_raw_value($sum($per_all), $stat_table_obs)
+              #elif $agg == 'avg'
+                $format_raw_value($sum($per_all)/$len($per_all), $stat_table_obs)
+              #end if
+            </strong>
+          </bx-structured-list-cell>
+        </bx-structured-list-row>
+      #end if
     </bx-structured-list-body>
   </bx-structured-list>
 #end for

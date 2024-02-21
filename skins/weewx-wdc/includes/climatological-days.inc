@@ -285,6 +285,7 @@
           id="panel-$stat_table"
           role="tabpanel"
           aria-labelledby="tab-$stat_table"
+          class="climatological-day-table"
           hidden
         >
           #set global $stat_table_obs = $DisplayOptions['stat_tables'][$stat_table]['observation']

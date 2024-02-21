@@ -15,7 +15,7 @@ A Skin for [WeeWX](https://weewx.com/), Open source software for your weather st
   - [Screenshots](#screenshots)
   - [Installation](#installation)
   - [Updating the skin](#updating-the-skin)
-  - [Wiki](#wiki)
+  - [Configuration/Usage](#configurationusage)
   - [Free Software](#free-software)
   - [Credits](#credits)
 
@@ -96,7 +96,7 @@ unzip /tmp/weewx-wdc.zip -d /tmp/weewx-wdc/
 
 3. Install the extension:
 
-   `wee_extension --install /tmp/weewx-wdc/`
+   `weectl extension install -y /tmp/weewx-wdc/`
 
 4. Restart weewx
 
@@ -115,7 +115,7 @@ When updating the skin to the latest version:
 
 1. Uninstall the skin
 
-   `wee_extension --uninstall=weewx-wdc`
+   `weectl extension uninstall -y weewx-wdc`
 
 2. Remove all generated content from your weewx html directory
 
@@ -124,11 +124,11 @@ When updating the skin to the latest version:
 3. Do all 4 steps from the [Installation guide](#installation)
 4. Run the reports to re-generate the html files
 
-   `wee_reports`
+   `weectl report run weewx-wdc`
 
-## [Wiki](https://github.com/Daveiano/weewx-wdc/wiki)
+## [Configuration/Usage](https://github.com/Daveiano/weewx-wdc/wiki)
 
-For detailed information on how to configure the skin.conf or how to add a page with its own generated content, please have a look at the [Projects Wiki](https://github.com/Daveiano/weewx-wdc/wiki). It also covers some other important things.
+For detailed information on how to [configure the skin.conf](https://github.com/Daveiano/weewx-wdc/wiki/Configuration) or how to [add a page](<https://github.com/Daveiano/weewx-wdc/wiki/About-page-(user-generated-content)>) with its own generated content, please have a look at the [Projects Wiki](https://github.com/Daveiano/weewx-wdc/wiki). It also covers some other important things like a [FAQ](https://github.com/Daveiano/weewx-wdc/wiki#faq) or a guide to add [weewx-mqtt](https://github.com/Daveiano/weewx-wdc/wiki/Support-for-weewx-mqtt).
 
 ## Free Software
 

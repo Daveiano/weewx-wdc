@@ -746,7 +746,7 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.3.0...580071ca175a03fe4924b
 
 - GH-181 [BUG] xAxis: Date mismatch in combined charts. Especially when using cumulative aggregation. Feel free to comment if you have more infos, or also noticed this issue.
 
-# Next
+# 3.5.0
 
 - Bugfix: Fixed "ValueError: could not convert string to float" in forecast, introduced in GH-191
 - Bugfix: Added missing `nl.conf` in `install.py` GH-221
@@ -768,3 +768,21 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.3.0...580071ca175a03fe4924b
 - Added per-month statistic tables GH-215
 - Added `windRose_legend_show_units` to hide the units in the windRose legend, added `hide_tick_unit` for gauges GH-249
 - Added colored Temperature GH-243
+
+## Changes made to skin.conf since 3.4.0
+
+<details>
+
+<summary>Diff</summary>
+
+```diff
+
+```
+
+</details>
+
+## Known Issues
+
+- GH-181 [BUG] xAxis: Date mismatch in combined charts. Especially when using cumulative aggregation. Feel free to comment if you have more infos, or also noticed this issue.
+
+# Next

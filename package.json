@@ -1,6 +1,6 @@
 {
   "name": "weewx-wdc",
-  "version": "3.5.0-beta1",
+  "version": "3.5.0",
   "description": "Weather Data Center skin for weewx.",
   "author": "David Baetge <david.baetge@gmail.com>",
   "license": "MIT",
@@ -82,7 +82,7 @@
     "report": "NODE_ENV=production webpack --profile --json > stats.json; webpack-bundle-analyzer ./stats.json",
     "dev": "NODE_ENV=development webpack --watch",
     "build": "NODE_ENV=production webpack && mv skins/weewx-wdc/dist/service-worker.js skins/weewx-wdc/service-worker.js",
-    "deploy:local": "sudo rsync -vua ./skins/weewx-wdc/ /etc/weewx/skins/weewx-wdc/ && sudo cp -r ./bin/user/. /etc/weewx/bin/user/ && sudo weectl report run",
+    "deploy:local": "sudo rsync -vua ./skins/weewx-wdc/ /etc/weewx/skins/weewx-wdc/ && sudo cp -r ./bin/user/. /etc/weewx/bin/user/ && sudo weectl report run WdcReport",
     "serve:local": "docker run -it --rm -d -p 8080:80 --name web -v /var/www/html/weewx:/usr/share/nginx/html nginx",
     "deploy:pi": "yarn run build && sudo rsync -vua ./bin/ pi@weewx:/home/pi/bin && sudo rsync -vua --exclude 'weewx-wdc/dwd/*' --exclude 'weewx-wdc/skin.conf' ./skins/ pi@weewx:/home/pi/skins",
     "test:e2e": "yarn playwright test --config playwright.config.ts",

@@ -776,6 +776,148 @@ See https://github.com/Daveiano/weewx-wdc/compare/v3.3.0...580071ca175a03fe4924b
 <summary>Diff</summary>
 
 ```diff
+diff --git a/skins/weewx-wdc/skin.conf b/skins/weewx-wdc/skin.conf
+index 465d4ad..aa8bad6 100644
+--- a/skins/weewx-wdc/skin.conf
++++ b/skins/weewx-wdc/skin.conf
+@@ -1,6 +1,6 @@
+ # configuration file for the weewx-wdc skin
+ SKIN_NAME = Weather Data Center
+-SKIN_VERSION = 3.4.0
++SKIN_VERSION = 3.5.0
+
+ # For instructions, see https://github.com/Daveiano/weewx-wdc/wiki/Custom-data-bindings
+ [ObservationBindings]
+@@ -30,9 +30,13 @@ SKIN_VERSION = 3.4.0
+
+     # The radar code. Full html allowed.
+     #radar_html = ''
++
+     # The Foreacst/Radar/Webcam section heading.
+     #forecast_radar_heading = "Forecast & Recent radar"
+
++    # Open the radar and external images/videos in a modal.
++    open_radar_and_externals_modal = False
++
+     # Set to True to have the Forecast tile and the radar/externals tile to have the same width.
+     # Default is forecast = 2/3 and radar tile = 1/3.
+     forecast_radar_equal_width = False
+@@ -44,6 +48,8 @@ SKIN_VERSION = 3.4.0
+         mqtt_websockets_port = 9001
+         mqtt_websockets_ssl = 0
+         mqtt_websockets_topic = "weather/loop"
++        mqtt_websockets_username = ""
++        mqtt_websockets_password = ""
+
+     # For instructions, see https://github.com/Daveiano/weewx-wdc/wiki/Webcams-and-Externals-Page
+     # Include various external sources (eg. webcams) here.
+@@ -79,6 +85,7 @@ SKIN_VERSION = 3.4.0
+         show_moon = 1
+         show_pop = 1
+         show_precip = 1
++        show_precip_detail = 1
+
+     # For instructions, see https://github.com/Daveiano/weewx-wdc/wiki/Support-for-weewx-DWD
+     #[[weewx-DWD]]
+@@ -110,6 +117,9 @@ SKIN_VERSION = 3.4.0
+     # 'alternative' or 'classic'.
+     layout = 'alternative'
+
++    # 'auto', 'light' or 'dark'.
++    default_theme = 'auto'
++
+     # Date/Time localization for charts. Available locales: de-DE, en-US, en-GB, it-IT, nl-NL.
+     # If not set, the value from weewx.conf (reports section) will be used. If lang = en, then en-US will be used (sorry GB!).
+     #date_time_locale = en-US
+@@ -139,6 +149,12 @@ SKIN_VERSION = 3.4.0
+     show_min_max_time_week = False
+     show_min_max_time_month = False
+
++    # Color the outTemp stat tile based on the temperature. Only available for alternative layout.
++    outTemp_stat_tile_color = False
++    outTemp_stat_tile_color_transparency = 0.35
++    outTemp_stat_tile_color_min = -20
++    outTemp_stat_tile_color_max = 40
++
+     # windDir as oridnals (N, E, S, W).
+     stat_tile_winddir_ordinal = True
+     diagram_tile_winddir_ordinal = True
+@@ -146,6 +162,7 @@ SKIN_VERSION = 3.4.0
+     # Windrose.
+     windRose_colors = "#f3cec9", "#e7a4b6", "#cd7eaf", "#a262a9", "#6f4d96", "#3d3b72"
+     windRose_show_beaufort = True
++    windRose_legend_show_units = True
+
+     # Climatogram on year and statistics pages.
+     climatogram_enable_stats = True
+@@ -183,6 +200,7 @@ SKIN_VERSION = 3.4.0
+         color_scheme = interpolateRdBu
+         invert_color_scheme = 1
+         show_min_max = 1
++        hide_tick_unit = 0
+
+     # For instructions, see https://github.com/Daveiano/weewx-wdc/wiki/Support-for-weewx-xaggs
+     # ONLY enable these if you have weewx-xaggs installed!
+@@ -201,6 +219,17 @@ SKIN_VERSION = 3.4.0
+     #[[Rounding]]
+         #dewpoint = 3
+
++    # For instructions, see https://github.com/Daveiano/weewx-wdc/wiki/Configuration#stat_tables
++    [[stat_tables]]
++        [[[tables_outtemp]]]
++            observation = "outTemp"
++            label = "Temperature Stat Table"
++            aggregate_types = "min", "avg", "max"
++        [[[tables_rain]]]
++            observation = "rain"
++            label = "Rain Stat Table"
++            aggregate_types = "sum", "avg"
++
+     [[tables]]
+         #[[[Rounding]]]
+             #outTemp = 3
+@@ -251,18 +280,18 @@ SKIN_VERSION = 3.4.0
+                 markerValue = 0
+                 markerColor = "#00BFFF"
+                 [[[[[obs]]]]]
+-                    [[[[[[outTemp_min]]]]]]
++                    [[[[[[outTemp_max]]]]]]
+                         observation = "outTemp"
+-                        aggregate_type = "min"
+-                        color = "#0198E1"
++                        aggregate_type = "max"
++                        color = "#8B0000"
+                     [[[[[[outTemp_average]]]]]]
+                         observation = "outTemp"
+                         aggregate_type = "avg"
+                         color = "#666666"
+-                    [[[[[[outTemp_max]]]]]]
++                    [[[[[[outTemp_min]]]]]]
+                         observation = "outTemp"
+-                        aggregate_type = "max"
+-                        color = "#8B0000"
++                        aggregate_type = "min"
++                        color = "#0198E1"
+
+             [[[[tempdew]]]]
+                 label = 'Temperature / Dewpoint'
+@@ -314,6 +343,7 @@ SKIN_VERSION = 3.4.0
+             areaOpacity = 0.07
+             # @see https://github.com/Daveiano/weewx-wdc/wiki/Configuration#diagrams, at "curve".
+             curve = "natural"
++            legendPosition = "top right"
+         [[[bar]]]
+             enableLabel = False
+             isInteractive = True
+@@ -660,7 +690,7 @@ SKIN_VERSION = 3.4.0
+         daily_archive = %Y-%m-%d
+
+ [CopyGenerator]
+-    copy_once = dist/main.js, dist/main.css, plotly-custom-build.min.js, dist/live-updates.js, favicon.ico, icon-192x192.png, icon-256x256.png, icon-384x384.png, icon-512x512.png, service-worker.js, dist/assets
++    copy_once = dist/main.js, dist/main.css, plotly-custom-build.min.js, dist/live-updates.js, dist/colored-temperature.js, favicon.ico, icon-192x192.png, icon-256x256.png, icon-384x384.png, icon-512x512.png, service-worker.js, dist/assets
+     # copy_always =
+
+ [Generators]
 
 ```
 

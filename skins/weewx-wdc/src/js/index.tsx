@@ -128,6 +128,8 @@ diagrams.forEach((diagram) => {
         diagram.dataset.value.replace(/'/g, '"')
       );
 
+      // Filter out null values.
+      // @see https://groups.google.com/g/weewx-development/c/frA0Vc9Ku9Q
       series.forEach((serie, index) => {
         data = [
           ...data,

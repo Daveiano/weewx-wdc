@@ -80,9 +80,11 @@
               #set $stat_month = $get_stat_table_month_obs($time_span_start_ts, $time_span_end_ts)
               #set $raw_value = $getattr($getattr($stat_month, $stat_table_obs), $agg_for_value).raw
 
-              #silent $per_month[$month].append($raw_value)
-              #silent $per_year[$year].append($raw_value)
-              #silent $per_all.append($raw_value)
+              #if $raw_value is not None
+                #silent $per_month[$month].append($raw_value)
+                #silent $per_year[$year].append($raw_value)
+                #silent $per_all.append($raw_value)
+              #end if
 
               <bx-structured-list-cell data-testid="month-$month_from_range-$agg-$stat_table_obs">
                 $getattr($getattr($stat_month, $stat_table_obs), $agg_for_value)

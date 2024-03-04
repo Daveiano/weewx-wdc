@@ -930,3 +930,4 @@ index 465d4ad..aa8bad6 100644
 # Next
 
 - Bugfix: Reason: '<' not supported between instances of 'NoneType' and 'float' in the skins/weewx-wdc/year-%Y.html.tmpl file GH-256
+- Bugfix: Stat tile on page Today using custom data binding does not appear if the same observation does not exist in main data binding GH-258

@@ -79,9 +79,9 @@
       #set $alltime_tag = $alltime($data_binding=$skin_obs_binding) if $context == 'alltime' else None
 
       #if $context == 'day' and not $daily_archive and $use_day
-        #set $stat_tile_check = $day
+        #set $stat_tile_check = $day($data_binding=$skin_obs_binding)
       #elif $context == 'day' and not $daily_archive and not $use_day
-        #set $stat_tile_check = $current
+        #set $stat_tile_check = $current($data_binding=$skin_obs_binding)
       #else
         #set $stat_tile_check = $get_time_span_from_context($context, $day($data_binding=$skin_obs_binding), $week($data_binding=$skin_obs_binding), $month($data_binding=$skin_obs_binding), $year($data_binding=$skin_obs_binding), $alltime_tag, $yesterday($data_binding=$skin_obs_binding))
       #end if

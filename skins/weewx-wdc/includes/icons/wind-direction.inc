@@ -1,7 +1,7 @@
 #errorCatcher Echo
 #encoding UTF-8
 
-#set $style = "transform: rotate(" + str(int($windDir_deg.raw) + 90) + "deg)" if $windDir_deg else ""
+#set $style = "transform: rotate(" + str(int($windDir_deg.raw) + 90) + "deg)" if $windDir_deg.raw is not None else ""
 
 <svg
   data-name="Layer 1"

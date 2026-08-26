@@ -2092,7 +2092,9 @@ class WdcDiagramUtil(SearchList):
 
         # TODO: Gust speeds?
         for windSpeed, windDir in zip(windSpeed_vt[0], windDir_vt[0]):
-            if windSpeed is None:
+            # Calm has a speed of 0.0 and no direction at all, and
+            # 'N/A' has been popped off `ordinals` above.
+            if windSpeed is None or windDir is None:
                 continue
 
             # Convert windSpeed to knots, get beaufort.

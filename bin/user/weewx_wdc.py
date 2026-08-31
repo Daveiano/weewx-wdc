@@ -2681,6 +2681,7 @@ class WdcTableUtil(SearchList):
             list: Carbon data table rows.
         """
         carbon_values = []
+        carbon_values_by_time = {}
 
         # The aggregate_interval should be the multiple of a day for these contexts, so
         # we need to adjust the start and end timestamps to the start of the day.
@@ -2739,12 +2740,8 @@ class WdcTableUtil(SearchList):
                             table_stop_ts)
 
                     # The current series item by time.
-                    cs_item = list(
-                        filter(
-                            lambda x: (
-                                x["time"] == cs_time_dt.isoformat()), carbon_values
-                        )
-                    )
+                    time_key = cs_time_dt.isoformat()
+                    cs_item = carbon_values_by_time.get(time_key)
 
                     table_date_target_unit = self.generator.converter.convert((
                         table_data,
@@ -2755,19 +2752,16 @@ class WdcTableUtil(SearchList):
                     table_data_rounded = rounder(table_date_target_unit[0],
                                                  self.diagram_util.get_rounding(observation, observation, type="table"))
 
-                    if len(cs_item) == 0:
-                        carbon_values.append(
-                            {
-                                "time": cs_time_dt.isoformat(),
-                                observation: table_data_rounded if table_data_rounded is not None else "-",
-                                "id": table_start_ts,
-                            }
-                        )
+                    if cs_item is None:
+                        cs_item = {
+                            "time": time_key,
+                            observation: table_data_rounded if table_data_rounded is not None else "-",
+                            "id": table_start_ts,
+                        }
+                        carbon_values.append(cs_item)
+                        carbon_values_by_time[time_key] = cs_item
                     else:
-                        cs_item = cs_item[0]
-                        cs_item_index = carbon_values.index(cs_item)
                         cs_item[observation] = table_data_rounded if table_data_rounded is not None else "-"
-                        carbon_values[cs_item_index] = cs_item
 
         # Sort per time
         carbon_values.sort(

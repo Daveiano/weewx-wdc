@@ -294,9 +294,13 @@ class RainTags(SearchList):
                 at_days_with_rain_output, key=lambda x: x['days_with_rain'])
 
             # Add values for all years.
+            per_year = {}
+            for item in at_days_with_rain_output:
+                item_year = datetime.datetime.fromtimestamp(
+                    item['start'].raw).strftime('%Y')
+                per_year.setdefault(item_year, []).append(item)
             for year in years:
-                at_days_with_rain_output_per_year = list(filter(
-                    lambda x: datetime.datetime.fromtimestamp(x['start'].raw).strftime('%Y') == year, at_days_with_rain_output))
+                at_days_with_rain_output_per_year = per_year.get(year, [])
 
                 if len(at_days_with_rain_output_per_year) > 0:
                     at_days_with_rain[year] = max(
@@ -312,9 +316,13 @@ class RainTags(SearchList):
                 at_days_without_rain_output, key=lambda x: x['days_without_rain'])
 
             # Add values for all years.
+            per_year = {}
+            for item in at_days_without_rain_output:
+                item_year = datetime.datetime.fromtimestamp(
+                    item['start'].raw).strftime('%Y')
+                per_year.setdefault(item_year, []).append(item)
             for year in years:
-                at_days_without_rain_output_per_year = list(filter(
-                    lambda x: datetime.datetime.fromtimestamp(x['start'].raw).strftime('%Y') == year, at_days_without_rain_output))
+                at_days_without_rain_output_per_year = per_year.get(year, [])
 
                 if len(at_days_without_rain_output_per_year) > 0:
                     at_days_without_rain[year] = max(
@@ -2681,6 +2689,7 @@ class WdcTableUtil(SearchList):
             list: Carbon data table rows.
         """
         carbon_values = []
+        by_time = {}
 
         # The aggregate_interval should be the multiple of a day for these contexts, so
         # we need to adjust the start and end timestamps to the start of the day.
@@ -2739,12 +2748,8 @@ class WdcTableUtil(SearchList):
                             table_stop_ts)
 
                     # The current series item by time.
-                    cs_item = list(
-                        filter(
-                            lambda x: (
-                                x["time"] == cs_time_dt.isoformat()), carbon_values
-                        )
-                    )
+                    cs_time = cs_time_dt.isoformat()
+                    cs_item = by_time.get(cs_time)
 
                     table_date_target_unit = self.generator.converter.convert((
                         table_data,
@@ -2755,19 +2760,15 @@ class WdcTableUtil(SearchList):
                     table_data_rounded = rounder(table_date_target_unit[0],
                                                  self.diagram_util.get_rounding(observation, observation, type="table"))
 
-                    if len(cs_item) == 0:
-                        carbon_values.append(
-                            {
-                                "time": cs_time_dt.isoformat(),
-                                observation: table_data_rounded if table_data_rounded is not None else "-",
-                                "id": table_start_ts,
-                            }
-                        )
+                    if cs_item is None:
+                        by_time[cs_time] = {
+                            "time": cs_time,
+                            observation: table_data_rounded if table_data_rounded is not None else "-",
+                            "id": table_start_ts,
+                        }
+                        carbon_values.append(by_time[cs_time])
                     else:
-                        cs_item = cs_item[0]
-                        cs_item_index = carbon_values.index(cs_item)
                         cs_item[observation] = table_data_rounded if table_data_rounded is not None else "-"
-                        carbon_values[cs_item_index] = cs_item
 
         # Sort per time
         carbon_values.sort(

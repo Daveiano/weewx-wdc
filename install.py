@@ -63,6 +63,7 @@ class BasicInstaller(ExtensionInstaller):
                         "skins/weewx-wdc/lang/it.conf",
                         "skins/weewx-wdc/lang/nl.conf",
                         "skins/weewx-wdc/lang/fi.conf",
+                        "skins/weewx-wdc/lang/no.conf",
                         "skins/weewx-wdc/service-worker.js",
                         "skins/weewx-wdc/dist/main.css",
                         "skins/weewx-wdc/dist/main.js",
